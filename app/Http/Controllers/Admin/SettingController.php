@@ -71,9 +71,17 @@ class SettingController extends Controller
             'contact_maps_external_url' => ['nullable', 'string'],
         ]);
 
-        // Clean maps iframe embed code if user pasted full <iframe src="..."
-        if (preg_match('/src=["'](.*?)["']/', $validated['contact_maps'], $matches)) {
-            $validated['contact_maps'] = $matches[1];
+        // Clean maps iframe embed code if user pasted full <iframe src="...">
+        $mapsInput = $validated['contact_maps'];
+        if (str_contains($mapsInput, 'src=')) {
+            $parts = explode('src=', $mapsInput);
+            if (isset($parts[1])) {
+                $quote = $parts[1][0];
+                if ($quote === '"' || $quote === "'") {
+                    $urlParts = explode($quote, substr($parts[1], 1));
+                    $validated['contact_maps'] = $urlParts[0];
+                }
+            }
         }
 
         foreach ($validated as $key => $val) {
