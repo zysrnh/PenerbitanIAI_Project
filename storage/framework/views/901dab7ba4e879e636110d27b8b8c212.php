@@ -83,25 +83,32 @@
                     <i class="fa-solid fa-print w-4 text-center text-sm"></i>
                     <span>Antrean Cetak</span>
                 </a>
+
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 block pt-4 pb-1.5">Pengaturan Akun</span>
+
+                <a href="<?php echo e(route('admin.profile.edit')); ?>" class="flex items-center gap-3 px-3 py-2 rounded-lg font-semibold transition <?php echo e(request()->routeIs('admin.profile.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200'); ?>">
+                    <i class="fa-solid fa-user-gear w-4 text-center text-sm"></i>
+                    <span>Profil Saya</span>
+                </a>
             </nav>
         </div>
 
         <!-- User Profile Card -->
         <div class="p-3 border-t border-slate-800 bg-slate-900/50">
             <div class="flex items-center justify-between gap-2.5 p-1.5 rounded-lg">
-                <div class="flex items-center gap-2.5 overflow-hidden">
-                    <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0">
+                <a href="<?php echo e(route('admin.profile.edit')); ?>" class="flex items-center gap-2.5 overflow-hidden group">
+                    <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 group-hover:border-emerald-500 transition">
                         <?php echo e(strtoupper(substr(Auth::user()->name ?? 'A', 0, 1))); ?>
 
                     </div>
                     <div class="truncate">
-                        <h2 class="font-semibold text-xs text-white truncate"><?php echo e(Auth::user()->name ?? 'Admin'); ?></h2>
+                        <h2 class="font-semibold text-xs text-white truncate group-hover:text-emerald-400 transition"><?php echo e(Auth::user()->name ?? 'Admin'); ?></h2>
                         <span class="text-[10px] text-slate-400 block truncate">
                             <?php echo e((Auth::user()->role ?? '') === 'super_admin' ? 'Super Admin' : 'Admin'); ?>
 
                         </span>
                     </div>
-                </div>
+                </a>
 
                 <form method="POST" action="<?php echo e(route('admin.logout')); ?>">
                     <?php echo csrf_field(); ?>

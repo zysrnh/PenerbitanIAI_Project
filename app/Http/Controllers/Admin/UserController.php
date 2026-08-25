@@ -19,12 +19,18 @@ class UserController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
             });
         }
 
         if ($request->filled('role')) {
             $query->where('role', $request->role);
+        }
+
+        if ($request->filled('status')) {
+            $status = $request->status === 'active' ? 1 : 0;
+            $query->where('is_active', $status);
         }
 
         $users = $query->latest()->paginate(10)->withQueryString();
@@ -42,15 +48,17 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', 'in:super_admin,admin'],
-            'password' => ['required', 'string', 'min:6'],
+            'is_active' => ['required', 'boolean'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
 
-        return redirect()->route('admin.users.index')->with('success', 'Admin baru berhasil ditambahkan!');
+        return redirect()->route('admin.users.index')->with('success', 'Akun admin baru berhasil ditambahkan.');
     }
 
     public function edit(User $user)
@@ -63,8 +71,10 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:30'],
             'role' => ['required', 'in:super_admin,admin'],
-            'password' => ['nullable', 'string', 'min:6'],
+            'is_active' => ['required', 'boolean'],
+            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
         ]);
 
         if (empty($validated['password'])) {
@@ -73,9 +83,14 @@ class UserController extends Controller
             $validated['password'] = Hash::make($validated['password']);
         }
 
+        // Prevent self deactivation
+        if ($user->id === Auth::id() && !$validated['is_active']) {
+            return back()->with('error', 'Anda tidak dapat menonaktifkan akun yang sedang Anda gunakan.');
+        }
+
         $user->update($validated);
 
-        return redirect()->route('admin.users.index')->with('success', 'Data admin berhasil diperbarui!');
+        return redirect()->route('admin.users.index')->with('success', 'Data admin berhasil diperbarui.');
     }
 
     public function destroy(User $user)
@@ -86,6 +101,6 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'Admin berhasil dihapus.');
+        return redirect()->route('admin.users.index')->with('success', 'Akun admin berhasil dihapus.');
     }
 }

@@ -17,19 +17,19 @@
     <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs p-3.5 mb-6">
         <form method="GET" action="<?php echo e(route('admin.users.index')); ?>" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
             <!-- Search Input -->
-            <div class="sm:col-span-6 relative">
+            <div class="sm:col-span-5 relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input 
                     type="text" 
                     name="search" 
                     value="<?php echo e(request('search')); ?>" 
-                    placeholder="Cari nama atau email admin..." 
+                    placeholder="Cari nama, email, atau no. telp..." 
                     class="w-full pl-9 pr-3.5 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition bg-slate-50/50"
                 />
             </div>
 
             <!-- Role Select -->
-            <div class="sm:col-span-4">
+            <div class="sm:col-span-3">
                 <select name="role" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700">
                     <option value="">Semua Role</option>
                     <option value="super_admin" <?php echo e(request('role') == 'super_admin' ? 'selected' : ''); ?>>Super Admin</option>
@@ -37,12 +37,21 @@
                 </select>
             </div>
 
+            <!-- Status Select -->
+            <div class="sm:col-span-2">
+                <select name="status" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700">
+                    <option value="">Semua Status</option>
+                    <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>>Aktif</option>
+                    <option value="inactive" <?php echo e(request('status') == 'inactive' ? 'selected' : ''); ?>>Nonaktif</option>
+                </select>
+            </div>
+
             <!-- Actions -->
             <div class="sm:col-span-2 flex gap-2">
                 <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition">
-                    Cari
+                    Filter
                 </button>
-                <?php if(request('search') || request('role')): ?>
+                <?php if(request('search') || request('role') || request('status')): ?>
                     <a href="<?php echo e(route('admin.users.index')); ?>" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium rounded-lg transition flex items-center justify-center">
                         Reset
                     </a>
@@ -58,8 +67,9 @@
                 <thead class="bg-slate-50/75 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200/80 tracking-wider">
                     <tr>
                         <th class="px-5 py-3">Nama Lengkap</th>
-                        <th class="px-5 py-3">Alamat Email</th>
+                        <th class="px-5 py-3">Email & Kontak</th>
                         <th class="px-5 py-3">Role</th>
+                        <th class="px-5 py-3">Status</th>
                         <th class="px-5 py-3">Dibuat Pada</th>
                         <th class="px-5 py-3 text-right">Aksi</th>
                     </tr>
@@ -67,14 +77,31 @@
                 <tbody class="divide-y divide-slate-100">
                     <?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-slate-50/60 transition">
-                            <td class="px-5 py-3.5 font-semibold text-slate-900 flex items-center gap-3">
-                                <div class="w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-[11px] ring-1 ring-slate-200 shrink-0">
-                                    <?php echo e(strtoupper(substr($user->name, 0, 1))); ?>
+                            <!-- Name & Initial -->
+                            <td class="px-5 py-3.5 font-semibold text-slate-900">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs ring-1 ring-slate-200 shrink-0">
+                                        <?php echo e(strtoupper(substr($user->name, 0, 1))); ?>
 
+                                    </div>
+                                    <div>
+                                        <span class="block truncate"><?php echo e($user->name); ?></span>
+                                        <?php if($user->id === Auth::id()): ?>
+                                            <span class="text-[10px] text-emerald-600 font-medium">(Akun Anda)</span>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
-                                <span class="truncate"><?php echo e($user->name); ?></span>
                             </td>
-                            <td class="px-5 py-3.5 text-slate-600 font-normal"><?php echo e($user->email); ?></td>
+
+                            <!-- Email & Phone -->
+                            <td class="px-5 py-3.5">
+                                <span class="text-slate-700 block font-normal"><?php echo e($user->email); ?></span>
+                                <?php if($user->phone): ?>
+                                    <span class="text-slate-400 text-[11px] block mt-0.5"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1"></i><?php echo e($user->phone); ?></span>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- Role Badge -->
                             <td class="px-5 py-3.5">
                                 <?php if($user->role === 'super_admin'): ?>
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-rose-50 text-rose-700 ring-1 ring-rose-200/70">
@@ -86,13 +113,30 @@
                                     </span>
                                 <?php endif; ?>
                             </td>
+
+                            <!-- Status Badge -->
+                            <td class="px-5 py-3.5">
+                                <?php if($user->is_active): ?>
+                                    <span class="inline-flex items-center gap-1 text-emerald-700 text-[11px] font-semibold">
+                                        <i class="fa-solid fa-circle-check text-emerald-500 text-xs"></i> Aktif
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center gap-1 text-slate-400 text-[11px] font-semibold">
+                                        <i class="fa-solid fa-circle-xmark text-slate-400 text-xs"></i> Nonaktif
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- Date -->
                             <td class="px-5 py-3.5 text-slate-500 text-[11px]"><?php echo e($user->created_at ? $user->created_at->format('d M Y, H:i') : '-'); ?></td>
+
+                            <!-- Actions -->
                             <td class="px-5 py-3.5 text-right space-x-1.5">
                                 <a href="<?php echo e(route('admin.users.edit', $user)); ?>" class="inline-flex items-center px-2 py-1 rounded-md text-[11px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition border border-slate-200">
                                     <i class="fa-solid fa-pen text-[9px] mr-1 text-slate-400"></i> Edit
                                 </a>
                                 <?php if($user->id !== Auth::id()): ?>
-                                    <form method="POST" action="<?php echo e(route('admin.users.destroy', $user)); ?>" class="inline-block" onsubmit="return confirm('Hapus admin ini dari sistem?')">
+                                    <form method="POST" action="<?php echo e(route('admin.users.destroy', $user)); ?>" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus admin ini?')">
                                         <?php echo csrf_field(); ?>
                                         <?php echo method_field('DELETE'); ?>
                                         <button type="submit" class="inline-flex items-center px-2 py-1 rounded-md text-[11px] font-medium text-rose-600 hover:text-rose-800 hover:bg-rose-50 transition border border-rose-200/60">
@@ -104,8 +148,8 @@
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
-                            <td colspan="5" class="px-5 py-8 text-center text-slate-400">
-                                Belum ada data admin ditemukan.
+                            <td colspan="6" class="px-5 py-8 text-center text-slate-400">
+                                Tidak ada data admin ditemukan.
                             </td>
                         </tr>
                     <?php endif; ?>

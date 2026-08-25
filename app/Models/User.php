@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role'])]
+#[Fillable(['name', 'email', 'phone', 'password', 'role', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -33,6 +33,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the role display label.
+     */
+    public function getRoleLabelAttribute(): string
+    {
+        return match ($this->role) {
+            'super_admin' => 'Super Admin',
+            'admin' => 'Admin Biasa',
+            default => ucfirst($this->role),
+        };
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -41,6 +53,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'is_active' => 'boolean',
             'password' => 'hashed',
         ];
     }
