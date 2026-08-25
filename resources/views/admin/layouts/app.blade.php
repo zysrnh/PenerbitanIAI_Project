@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Admin Panel') | IAI PERSIS PRESS</title>
 
-    <!-- Google Fonts Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -33,9 +29,7 @@
             }
         }
     </script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
+    <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
 </head>
 <body class="h-full antialiased text-slate-800 bg-[#f8fafc] flex">
 
@@ -62,6 +56,19 @@
                     <span>Dashboard</span>
                 </a>
 
+                <a href="{{ route('admin.messages.index') }}" class="flex items-center justify-between px-3 py-2 rounded-lg font-semibold transition {{ request()->routeIs('admin.messages.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-envelope-open-text w-4 text-center text-sm"></i>
+                        <span>Pesan & Naskah</span>
+                    </div>
+                    @php
+                        $unreadCount = \App\Models\ContactMessage::where('status', 'pending')->count();
+                    @endphp
+                    @if($unreadCount > 0)
+                        <span class="px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-amber-500 text-slate-950">{{ $unreadCount }}</span>
+                    @endif
+                </a>
+
                 <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-semibold transition {{ request()->routeIs('admin.users.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
                     <i class="fa-solid fa-users-gear w-4 text-center text-sm"></i>
                     <span>Manajemen Admin</span>
@@ -75,16 +82,16 @@
                 </a>
 
                 <a href="#" onclick="alert('Modul ini akan disiapkan selanjutnya!')" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition">
-                    <i class="fa-solid fa-file-lines w-4 text-center text-sm"></i>
-                    <span>Pengajuan Naskah</span>
-                </a>
-
-                <a href="#" onclick="alert('Modul ini akan disiapkan selanjutnya!')" class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition">
                     <i class="fa-solid fa-print w-4 text-center text-sm"></i>
                     <span>Antrean Cetak</span>
                 </a>
 
-                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 block pt-4 pb-1.5">Pengaturan Akun</span>
+                <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 block pt-4 pb-1.5">Pengaturan</span>
+
+                <a href="{{ route('admin.settings.contact') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
+                    <i class="fa-solid fa-sliders w-4 text-center text-sm"></i>
+                    <span>Kelola Kontak & Web</span>
+                </a>
 
                 <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg font-semibold transition {{ request()->routeIs('admin.profile.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
                     <i class="fa-solid fa-user-gear w-4 text-center text-sm"></i>
@@ -145,7 +152,6 @@
 
         <!-- Page Body -->
         <main class="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
-            <!-- Flash Message Success -->
             @if(session('success'))
                 <div class="mb-6 p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 text-emerald-900 text-xs font-medium flex items-center justify-between shadow-xs">
                     <div class="flex items-center gap-2.5">
@@ -156,7 +162,6 @@
                 </div>
             @endif
 
-            <!-- Flash Message Error -->
             @if(session('error'))
                 <div class="mb-6 p-3.5 rounded-xl bg-rose-50/80 border border-rose-200/80 text-rose-900 text-xs font-medium flex items-center justify-between shadow-xs">
                     <div class="flex items-center gap-2.5">
