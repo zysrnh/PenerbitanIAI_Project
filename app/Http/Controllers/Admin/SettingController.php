@@ -11,6 +11,9 @@ class SettingController extends Controller
     public function contact()
     {
         $settings = [
+            // Email Notification Recipient
+            'notification_recipient_email' => SiteSetting::get('notification_recipient_email', 'zakiyh782@gmail.com'),
+
             // Banner
             'contact_banner_badge' => SiteSetting::get('contact_banner_badge', 'Layanan & Informasi'),
             'contact_banner_title' => SiteSetting::get('contact_banner_title', 'Hubungi Kami & Layanan Redaksi'),
@@ -44,6 +47,9 @@ class SettingController extends Controller
     public function updateContact(Request $request)
     {
         $validated = $request->validate([
+            // Notification Email
+            'notification_recipient_email' => ['required', 'email'],
+
             // Banner
             'contact_banner_badge' => ['required', 'string', 'max:100'],
             'contact_banner_title' => ['required', 'string', 'max:255'],
@@ -71,7 +77,6 @@ class SettingController extends Controller
             'contact_maps_external_url' => ['nullable', 'string'],
         ]);
 
-        // Clean maps iframe embed code if user pasted full <iframe src="...">
         $mapsInput = $validated['contact_maps'];
         if (str_contains($mapsInput, 'src=')) {
             $parts = explode('src=', $mapsInput);
@@ -88,6 +93,6 @@ class SettingController extends Controller
             SiteSetting::set($key, $val);
         }
 
-        return back()->with('success', 'Semua pengaturan halaman kontak berhasil diperbarui dan langsung aktif!');
+        return back()->with('success', 'Semua pengaturan halaman kontak dan email notifikasi berhasil disimpan!');
     }
 }
