@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="min-h-full bg-slate-50">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,7 +34,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="h-full antialiased text-slate-800 bg-[#f8fafc] flex overflow-x-hidden">
+<body class="min-h-screen antialiased text-slate-800 bg-[#f8fafc] flex flex-col lg:flex-row">
 
     @php
         $latestMessages = \App\Models\ContactMessage::latest()->take(6)->get();
@@ -92,6 +92,11 @@
                 </a>
 
                 <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-widest px-3 block pt-4 pb-1.5">Pengaturan</span>
+
+                <a href="{{ route('admin.settings.about') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.about') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
+                    <i class="fa-solid fa-circle-info w-5 text-center text-base"></i>
+                    <span>Kelola Tentang Kami</span>
+                </a>
 
                 <a href="{{ route('admin.settings.contact') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
                     <i class="fa-solid fa-sliders w-5 text-center text-base"></i>
@@ -254,7 +259,7 @@
         </header>
 
         <!-- Page Body - Contained within viewport -->
-        <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 w-full max-w-full overflow-hidden">
+        <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 w-full max-w-full">
             @if(session('success'))
                 <div class="mb-6 p-4 rounded-xl bg-emerald-50/90 border border-emerald-200 text-emerald-900 text-sm font-medium flex items-center justify-between shadow-xs">
                     <div class="flex items-center gap-2.5">

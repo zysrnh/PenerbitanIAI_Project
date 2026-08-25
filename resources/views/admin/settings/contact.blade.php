@@ -16,10 +16,13 @@
             <p class="text-sm text-slate-500 mt-1">Kelola email penerima notifikasi naskah, teks kontak, dan perhatikan visualisasinya secara live.</p>
         </div>
 
-        <div class="flex items-center gap-3">
-            <a href="{{ url('/kontak') }}" target="_blank" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-sm font-bold transition flex items-center gap-2 shadow-xs">
-                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Halaman Publik
+        <div class="flex items-center gap-2.5 shrink-0">
+            <a href="{{ url('/kontak') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Halaman
             </a>
+            <button type="submit" form="contactSettingsForm" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center">
+                <i class="fa-solid fa-floppy-disk text-base"></i>
+            </button>
         </div>
     </div>
 
@@ -364,14 +367,12 @@
                 </div>
 
                 <!-- Action Button Sticky -->
-                <div class="pt-3 sticky bottom-4 z-20">
-                    <div class="bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-xl flex items-center justify-between gap-4">
-                        <span class="text-xs text-slate-500 font-medium hidden sm:block">Perubahan akan langsung aktif secara instan pada website publik.</span>
-                        <button type="submit" class="w-full sm:w-auto px-7 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-extrabold uppercase tracking-wider transition shadow-sm hover:shadow-md flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-floppy-disk"></i> Simpan Semua Perubahan
-                        </button>
-                    </div>
-                </div>
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between gap-4">
+        <span class="text-xs text-slate-500 font-medium">Perubahan langsung aktif di website publik setelah disimpan.</span>
+        <button type="submit" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center">
+            <i class="fa-solid fa-floppy-disk text-base"></i>
+        </button>
+    </div>
 
             </form>
         </div>
