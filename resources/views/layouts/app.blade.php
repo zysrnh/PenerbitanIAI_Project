@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
@@ -56,66 +56,65 @@
             <div class="flex justify-between items-center h-20">
                 <!-- Brand Logo -->
                 <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 bg-brand-900 rounded-md flex items-center justify-center text-white">
+                    <div class="w-10 h-10 bg-brand-900 rounded-md flex items-center justify-center text-white shrink-0">
                         <i class="fa-solid fa-book-open-reader text-lg text-lime-400"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5">
-                            <span class="text-[11px] font-extrabold text-brand-700 uppercase tracking-widest">IAI PERSIS</span>
+                            <span class="text-[11px] font-extrabold text-brand-700 uppercase tracking-widest leading-none">IAI PERSIS</span>
                         </div>
-                        <h1 class="font-extrabold text-xl text-brand-950 leading-none tracking-tight">PRESS</h1>
+                        <h1 class="font-extrabold text-xl text-brand-950 leading-none tracking-tight mt-0.5">PRESS</h1>
                         <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Penerbitan & Percetakan</span>
                     </div>
                 </a>
 
                 <!-- Desktop Menu -->
                 <nav class="hidden lg:flex items-center space-x-6">
-                    <a href="{{ url('/') }}" class="text-brand-900 font-bold text-xs tracking-wider uppercase border-b-2 border-brand-900 pb-1">BERANDA</a>
-                    <a href="#tentang" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">TENTANG KAMI</a>
+                    <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">BERANDA</a>
+                    <a href="{{ url('/#tentang') }}" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">TENTANG KAMI</a>
                     
                     <!-- Dropdown Layanan -->
                     <div class="relative group">
-                        <button class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition flex items-center gap-1">
+                        <button class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition flex items-center gap-1 py-2">
                             LAYANAN <i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i>
                         </button>
-                        <div class="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1.5">
-                            <a href="#layanan" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Penerbitan Buku</a>
-                            <a href="#layanan" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Percetakan Umum</a>
-                            <a href="#layanan" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Jurnal & Majalah</a>
-                            <a href="#layanan" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Pengurusan ISBN</a>
+                        <div class="absolute top-full left-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 py-1.5">
+                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Penerbitan Buku</a>
+                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Percetakan Umum</a>
+                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Jurnal & Majalah</a>
+                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Pengurusan ISBN</a>
                         </div>
                     </div>
 
-                    <a href="#layanan" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">PENERBITAN</a>
-                    <a href="#katalog" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">KATALOG BUKU</a>
-                    <a href="#portfolio" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">PORTFOLIO</a>
-                    <a href="#berita" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">BERITA</a>
-                    <a href="#kontak" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">KONTAK</a>
+                    <a href="{{ url('/#layanan') }}" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">PENERBITAN</a>
+                    <a href="{{ url('/#katalog') }}" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">KATALOG BUKU</a>
+                    <a href="{{ url('/#portfolio') }}" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">PORTFOLIO</a>
+                    <a href="{{ url('/#berita') }}" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">BERITA</a>
+                    <a href="{{ url('/kontak') }}" class="{{ request()->is('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
                 <!-- Action Button -->
                 <div class="hidden lg:flex items-center">
-                    <a href="#kontak" class="bg-brand-950 hover:bg-brand-900 text-white px-5 py-2.5 rounded-md font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-sm">
+                    <a href="{{ url('/kontak') }}" class="bg-brand-950 hover:bg-brand-900 text-white px-5 py-2.5 rounded-md font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-cart-shopping text-sm text-lime-400"></i> ORDER ONLINE
                     </a>
                 </div>
 
                 <!-- Mobile Toggle Button -->
-                <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden p-2 text-slate-700 hover:text-brand-900 focus:outline-none">
+                <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden p-2 text-slate-700 hover:text-brand-900 focus:outline-none" aria-label="Buka Menu">
                     <i class="fa-solid fa-bars text-xl"></i>
                 </button>
             </div>
 
-            <!-- Mobile Navigation -->
-            <div id="mobile-menu" class="hidden lg:hidden py-4 border-t border-slate-100 space-y-2">
-                <a href="{{ url('/') }}" class="block px-3 py-2 text-brand-900 font-bold bg-brand-50 rounded-md text-xs uppercase">BERANDA</a>
-                <a href="#tentang" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">TENTANG KAMI</a>
-                <a href="#layanan" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">LAYANAN</a>
-                <a href="#katalog" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">KATALOG BUKU</a>
-                <a href="#portfolio" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">PORTFOLIO</a>
-                <a href="#kontak" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">KONTAK</a>
+            <!-- Mobile Navigation Drawer -->
+            <div id="mobile-menu" class="hidden lg:hidden py-4 border-t border-slate-100 space-y-1">
+                <a href="{{ url('/') }}" class="block px-3 py-2 {{ request()->is('/') ? 'text-brand-900 font-bold bg-brand-50' : 'text-slate-700 hover:bg-slate-50' }} rounded-md text-xs uppercase">BERANDA</a>
+                <a href="{{ url('/#tentang') }}" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">TENTANG KAMI</a>
+                <a href="{{ url('/#layanan') }}" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">LAYANAN</a>
+                <a href="{{ url('/#katalog') }}" class="block px-3 py-2 text-slate-700 hover:bg-slate-50 rounded-md text-xs font-semibold uppercase">KATALOG BUKU</a>
+                <a href="{{ url('/kontak') }}" class="block px-3 py-2 {{ request()->is('kontak') ? 'text-brand-900 font-bold bg-brand-50' : 'text-slate-700 hover:bg-slate-50' }} rounded-md text-xs uppercase">KONTAK</a>
                 <div class="pt-2">
-                    <a href="#kontak" class="block text-center bg-brand-950 text-white py-2.5 rounded-md font-bold text-xs uppercase">
+                    <a href="{{ url('/kontak') }}" class="block text-center bg-brand-950 text-white py-2.5 rounded-md font-bold text-xs uppercase">
                         <i class="fa-solid fa-cart-shopping mr-1.5 text-lime-400"></i> ORDER ONLINE
                     </a>
                 </div>
