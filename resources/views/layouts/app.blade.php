@@ -83,7 +83,7 @@
                 
                 <!-- Brand Logo -->
                 <a href="{{ url('/') }}" class="flex items-center py-1 group" title="PERSIS PERS">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-11 sm:h-13 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}?v={{ time() }}" alt="PERSIS PERS" class="h-11 sm:h-13 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
                 </a>
 
                 <!-- Desktop Nav Menu -->
