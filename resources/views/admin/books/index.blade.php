@@ -47,6 +47,35 @@
             z-index: 5;
         }
 
+        
+        /* Lightbox Directional Slide Animations */
+        .lightbox-slide-next {
+            animation: slideNext 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .lightbox-slide-prev {
+            animation: slidePrev 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideNext {
+            0% {
+                opacity: 0;
+                transform: translateX(45px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        @keyframes slidePrev {
+            0% {
+                opacity: 0;
+                transform: translateX(-45px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
         /* Smooth Tab Transition */
         .showcase-transition {
             animation: cleanFadeSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -75,8 +104,8 @@
         <div>
             <div class="flex items-center gap-2.5">
                 <h3 class="text-lg font-extrabold text-slate-900">Katalog Buku &amp; Publikasi Ilmiah</h3>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> {{ $books->total() }} Judul Terdaftar
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-sm text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-2 h-2 rounded-sm bg-emerald-500"></span> {{ $books->total() }} Judul Terdaftar
                 </span>
             </div>
             <p class="text-sm text-slate-500 mt-1">Kelola master buku, nomor ISBN, galeri foto naskah (Depan, Belakang, Isi 1 &amp; 2), harga cetak, dan status etalase.</p>
@@ -299,7 +328,7 @@
             <!-- Modal Header -->
             <div class="bg-[#032c21] text-white px-6 py-4 flex items-center justify-between border-b border-[#064e3b] shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="w-2.5 h-2.5 rounded-sm bg-emerald-400 animate-pulse"></span>
                     <h3 id="modalHeaderTitle" class="text-sm sm:text-base font-extrabold uppercase tracking-wide text-white">Tambah Data &amp; Foto Naskah Buku</h3>
                 </div>
                 <button type="button" onclick="closeBookModal()" class="w-8 h-8 rounded-xl bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-sm font-bold transition">
@@ -560,13 +589,13 @@
     
     <!-- ULTRA-HIGH DEFINITION FULLSCREEN LIGHTBOX / ZOOM MODAL FOR ADMIN -->
     <div id="adminLightboxModal" class="fixed inset-0 z-[100] bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md" onclick="if(event.target.id==='adminLightboxModal') closeAdminLightbox()">
-        <button type="button" onclick="closeAdminLightbox()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-lg transition z-50">
+        <button type="button" onclick="closeAdminLightbox()" class="absolute top-5 right-5 w-10 h-10 rounded-sm bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-lg transition z-50">
             <i class="fa-solid fa-xmark"></i>
         </button>
-        <button type="button" onclick="prevAdminLightbox()" class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+        <button type="button" onclick="prevAdminLightbox()" class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-sm bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
-        <button type="button" onclick="nextAdminLightbox()" class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+        <button type="button" onclick="nextAdminLightbox()" class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-sm bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
         <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center select-none animate-fade-in-up">
@@ -574,7 +603,7 @@
                 <img id="adminLightboxImage" src="" alt="Zoomed Cover" class="w-full h-full object-contain" />
             </div>
             <div class="mt-4 text-center">
-                <span id="adminLightboxLabel" class="inline-block px-3 py-1 rounded-full bg-white/15 text-emerald-300 text-xs font-bold font-mono tracking-wider mb-1">
+                <span id="adminLightboxLabel" class="inline-block px-3 py-1 rounded-sm bg-white/15 text-emerald-300 text-xs font-bold font-mono tracking-wider mb-1">
                     SAMPUL BUKU
                 </span>
                 <h4 id="adminLightboxTitle" class="text-white text-sm font-bold truncate max-w-xl">
@@ -628,14 +657,28 @@
             let idx = tabKeys.indexOf(activeTab);
             idx = (idx - 1 + tabKeys.length) % tabKeys.length;
             switchVisualizerTab(tabKeys[idx]);
-            openAdminLightbox();
+            const url = currentPhotoObj[activeTab];
+            if (!url) return;
+            const img = document.getElementById('adminLightboxImage');
+            img.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
+            void img.offsetWidth;
+            img.classList.add('lightbox-slide-prev');
+            img.src = url;
+            document.getElementById('adminLightboxLabel').innerText = tabLabels[activeTab].toUpperCase();
         }
 
         function nextAdminLightbox() {
             let idx = tabKeys.indexOf(activeTab);
             idx = (idx + 1) % tabKeys.length;
             switchVisualizerTab(tabKeys[idx]);
-            openAdminLightbox();
+            const url = currentPhotoObj[activeTab];
+            if (!url) return;
+            const img = document.getElementById('adminLightboxImage');
+            img.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
+            void img.offsetWidth;
+            img.classList.add('lightbox-slide-next');
+            img.src = url;
+            document.getElementById('adminLightboxLabel').innerText = tabLabels[activeTab].toUpperCase();
         }
     
         function openCreateModal() {

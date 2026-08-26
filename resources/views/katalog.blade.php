@@ -93,6 +93,35 @@
             }
         }
 
+        
+        /* Lightbox Directional Slide Animations */
+        .lightbox-slide-next {
+            animation: slideNext 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .lightbox-slide-prev {
+            animation: slidePrev 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideNext {
+            0% {
+                opacity: 0;
+                transform: translateX(45px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+        @keyframes slidePrev {
+            0% {
+                opacity: 0;
+                transform: translateX(-45px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
         /* Zoom Lightbox Pop-In */
         .lightbox-zoom-in {
             animation: lightboxZoom 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -727,42 +756,44 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 5. FULLSCREEN HIGH DEFINITION LIGHTBOX (LAYERED CLEANLY ON TOP Z-100) -->
+    <!-- 5. FULLSCREEN HIGH DEFINITION LIGHTBOX (CRISP & SMOOTH SLIDE ANIMATION) -->
     <!-- ========================================================================= -->
     <div id="bookLightboxModal" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4 backdrop-blur-md" onclick="handleLightboxBackdropClick(event)">
         
         <!-- Top Controls Bar -->
-        <div class="absolute top-4 inset-x-4 sm:inset-x-8 flex items-center justify-between text-white z-50">
-            <div class="flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-full border border-white/20">
-                <span id="lightboxLabel" class="text-xs font-bold text-emerald-400 font-mono">1 / 4 • SAMPUL DEPAN</span>
+        <div class="absolute top-4 inset-x-4 sm:inset-x-8 flex items-center justify-between text-white z-50 pointer-events-none">
+            <div class="flex items-center gap-2 bg-black/70 px-3.5 py-1.5 rounded-sm border border-white/20 pointer-events-auto shadow-md">
+                <span id="lightboxLabel" class="text-xs font-bold text-emerald-400 font-mono tracking-wider">1 / 4 • SAMPUL DEPAN</span>
             </div>
-            <button type="button" onclick="closeLightboxModal()" class="w-10 h-10 rounded-full bg-white/15 hover:bg-rose-600 text-white flex items-center justify-center text-lg transition shadow-lg" title="Tutup (Esc)">
+            <button type="button" onclick="closeLightboxModal()" class="w-9 h-9 rounded-sm bg-white/10 hover:bg-rose-600 text-white flex items-center justify-center text-sm transition pointer-events-auto shadow-md border border-white/20" title="Tutup (Esc)">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
         <!-- Previous Arrow -->
-        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-emerald-600 text-white flex items-center justify-center text-xl transition z-50 shadow-lg" title="Foto Sebelumnya (Panah Kiri)">
+        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-sm bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center text-lg transition z-50 shadow-lg border border-white/20" title="Foto Sebelumnya (Panah Kiri)">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
         <!-- Next Arrow -->
-        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-emerald-600 text-white flex items-center justify-center text-xl transition z-50 shadow-lg" title="Foto Selanjutnya (Panah Kanan)">
+        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-sm bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center text-lg transition z-50 shadow-lg border border-white/20" title="Foto Selanjutnya (Panah Kanan)">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 
         <!-- Lightbox Zoom Image Stage -->
-        <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center select-none lightbox-zoom-in my-auto">
-            <div class="relative rounded-sm overflow-hidden shadow-2xl border border-white/20 bg-slate-950 max-h-[72vh] aspect-[3/4.15]">
+        <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center select-none my-auto">
+            <div id="lightboxImgContainer" class="relative rounded-sm overflow-hidden shadow-2xl border border-white/20 bg-slate-950 max-h-[72vh] aspect-[3/4.15] lightbox-slide-next">
                 <img id="lightboxImage" src="" alt="Zoomed Book" class="w-full h-full object-contain" />
             </div>
             
             <div class="mt-3 text-center">
-                <h4 id="lightboxTitle" class="text-white text-sm font-bold truncate max-w-xl">
+                <h4 id="lightboxTitle" class="text-white text-sm font-bold truncate max-w-xl font-heading">
                     Judul Buku
                 </h4>
             </div>
         </div>
+
+    </div>
 
     </div>
 
