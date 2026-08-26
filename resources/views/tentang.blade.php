@@ -40,49 +40,19 @@
     </section>
 
     <!-- Profil & Sejarah Section -->
-    <section class="py-16 sm:py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <!-- Left: Content Narrative -->
-                <div class="lg:col-span-7 space-y-5 reveal-card">
-                    <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block">Profil & Kilas Sejarah</span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight leading-snug">
-                        {{ $about['about_profile_title'] ?? ($about['profile_title'] ?? 'Komitmen Membangun Peradaban Literasi & Riset Akademik') }}
-                    </h2>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {{ $about['about_profile_story_1'] ?? ($about['profile_story_1'] ?? '') }}
-                    </p>
-                    <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {{ $about['about_profile_story_2'] ?? ($about['profile_story_2'] ?? '') }}
-                    </p>
-
-                    </div>
-
-                <!-- Right: Visual Highlights Box -->
-                <div class="lg:col-span-5 reveal-card">
-                    <div class="bg-gradient-to-br from-brand-950 via-brand-900 to-emerald-950 rounded-sm p-7 text-white shadow-xl border border-brand-900 relative overflow-hidden">
-                        <div class="w-12 h-12 rounded-sm bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-xl mb-5 shadow-sm">
-                            <i class="fa-solid fa-building-columns"></i>
-                        </div>
-                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-1">Naungan Resmi</span>
-                        <h3 class="text-xl font-extrabold font-heading text-white mb-3">Institut Agama Islam Persatuan Islam Bandung</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed mb-6">
-                            Menghadirkan karya tulis ilmiah berkualitas yang berlandaskan Al-Qur'an dan As-Sunnah serta responsif terhadap perkembangan sains dan peradaban zaman.
-                        </p>
-
-                        <div class="p-4 rounded-sm bg-white/5 border border-white/10 backdrop-blur-xs flex items-center gap-3.5">
-                            <div class="w-10 h-10 rounded-sm bg-[#25D366] text-white flex items-center justify-center text-xl shrink-0">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </div>
-                            <div>
-                                <span class="text-[11px] text-slate-300 block">Konsultasi Penerbitan Naskah:</span>
-                                <a href="{{ route('kontak') }}" class="text-xs font-bold text-white hover:text-emerald-400 transition flex items-center gap-1">
-                                    Hubungi Tim Redaksi &rarr;
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <section class="py-14 sm:py-18 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="space-y-4">
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block">Profil &amp; Kilas Sejarah</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight leading-snug">
+                    {{ $about['about_profile_title'] ?? ($about['profile_title'] ?? 'Komitmen Membangun Peradaban Literasi & Riset Akademik') }}
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed text-justify">
+                    {{ $about['about_profile_story_1'] ?? ($about['profile_story_1'] ?? '') }}
+                </p>
+                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed text-justify">
+                    {{ $about['about_profile_story_2'] ?? ($about['profile_story_2'] ?? '') }}
+                </p>
             </div>
         </div>
     </section>
