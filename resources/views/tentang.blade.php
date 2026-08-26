@@ -56,26 +56,7 @@
                         {{ $about['about_profile_story_2'] ?? ($about['profile_story_2'] ?? '') }}
                     </p>
 
-                    <!-- Feature checkmarks -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_1'] ?? '' }}</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_2'] ?? '' }}</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_3'] ?? '' }}</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_4'] ?? '' }}</span>
-                        </div>
                     </div>
-                </div>
 
                 <!-- Right: Visual Highlights Box -->
                 <div class="lg:col-span-5 reveal-card">
@@ -161,53 +142,7 @@
         </div>
     </section>
 
-    <!-- 4 Core Values -->
-    <section class="py-16 sm:py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-1">Prinsip & Budaya Kerja</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight">Nilai-Nilai Utama (Core Values)</h2>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Value 1 -->
-                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-sm bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg mb-4">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-1.5">Integritas Akademik</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Menjunjung tinggi etika keilmuan, bebas plagiarisme, dan proses review yang independen.</p>
-                </div>
-
-                <!-- Value 2 -->
-                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-sm bg-blue-100 text-blue-800 flex items-center justify-center text-lg mb-4">
-                        <i class="fa-solid fa-gem"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-1.5">Kualitas & Presisi</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Standar tata letak, pemilihan kertas, dan penjilidan berkualitas tinggi berstandar industri.</p>
-                </div>
-
-                <!-- Value 3 -->
-                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-sm bg-amber-100 text-amber-800 flex items-center justify-center text-lg mb-4">
-                        <i class="fa-solid fa-handshake-angle"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-1.5">Amanah & Pelayanan</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Mendampingi penulis secara komunikatif dan transparan sejak draf naskah hingga buku siap didistribusikan.</p>
-                </div>
-
-                <!-- Value 4 -->
-                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-sm bg-purple-100 text-purple-800 flex items-center justify-center text-lg mb-4">
-                        <i class="fa-solid fa-book-quran"></i>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 mb-1.5">Literasi Islam & Dakwah</h3>
-                    <p class="text-xs text-slate-600 leading-relaxed">Menyebarluaskan khazanah keislaman dan peradaban yang mencerahkan ummat dan bangsa.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    
 
     <!-- Struktur Tim Pengelola / Dewan Redaksi -->
     <section class="py-16 sm:py-20 bg-slate-50 border-t border-slate-200/80">
