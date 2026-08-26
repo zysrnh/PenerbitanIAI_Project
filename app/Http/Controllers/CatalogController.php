@@ -6,15 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CatalogController extends Controller
 {
     public function index(Request $request)
     {
         $settings = [
-            'hero_badge' => SiteSetting::get('catalog_banner_badge', 'PUBLIKASI RESMI KAMPUS'),
-            'hero_title' => SiteSetting::get('catalog_banner_title', 'Katalog Buku & Karya Ilmiah'),
-            'hero_description' => SiteSetting::get('catalog_banner_desc', 'Koleksi buku ajar perguruan tinggi, monograf riset dosen, dan literatur keislaman ber-ISBN resmi terbitan PERSIS PERS.'),
+            'catalog_banner_badge' => SiteSetting::get('catalog_banner_badge', 'PUBLIKASI RESMI KAMPUS'),
+            'catalog_banner_title' => SiteSetting::get('catalog_banner_title', 'Katalog Buku & Karya Ilmiah'),
+            'catalog_banner_desc' => SiteSetting::get('catalog_banner_desc', 'Koleksi buku ajar perguruan tinggi, monograf riset dosen, dan literatur keislaman ber-ISBN resmi terbitan PERSIS PERS.'),
             'catalog_stat_books' => SiteSetting::get('catalog_stat_books', '150+ Judul Buku'),
             'catalog_stat_authors' => SiteSetting::get('catalog_stat_authors', 'Karya Dosen & Peneliti'),
             'catalog_stat_isbn' => SiteSetting::get('catalog_stat_isbn', 'ISBN Perpusnas'),
@@ -27,9 +28,9 @@ class CatalogController extends Controller
             'catalog_publish_box_desc' => SiteSetting::get('catalog_publish_box_desc', 'Terbitkan karya ilmiah Anda bersama PERSIS PERS dengan jaminan ISBN resmi dan mutu cetak prima.'),
         ];
 
+        // All Books Query with Filter & Search
         $query = Book::published()->latest();
 
-        // Search Keyword
         if ($request->filled('q')) {
             $search = $request->q;
             $query->where(function ($q) use ($search) {
@@ -39,8 +40,7 @@ class CatalogController extends Controller
             });
         }
 
-        // Filter Category
-        if ($request->filled('kategori') && !in_array($request->kategori, ['Semua', 'all', 'Semua Kategori'])) {
+        if ($request->filled('kategori') && !in_array($request->kategori, ['Semua', 'all', 'Semua Kategori', 'Semua Buku'])) {
             $kategori = $request->kategori;
             if ($kategori === 'new' || $kategori === 'Buku Baru') {
                 $query->where('is_new_release', true);
@@ -52,8 +52,24 @@ class CatalogController extends Controller
         }
 
         $books = $query->paginate(12)->withQueryString();
-        $categories = Book::published()->select('category')->distinct()->pluck('category');
 
-        return view('katalog', compact('books', 'categories', 'settings'));
+        // Distinct category list
+        $categoryList = Book::published()->select('category')->distinct()->pluck('category')->toArray();
+
+        // 4 New Releases Highlight
+        $newBooks = Book::published()->where('is_new_release', true)->latest()->take(4)->get();
+        if ($newBooks->isEmpty()) {
+            $newBooks = Book::published()->latest()->take(4)->get();
+        }
+
+        // 4 Best Sellers Highlight
+        $bestSellers = Book::published()->where('is_best_seller', true)->latest()->take(4)->get();
+        if ($bestSellers->isEmpty()) {
+            $bestSellers = Book::published()->latest()->take(4)->get();
+        }
+
+        $totalBooksCount = Book::published()->count();
+
+        return view('katalog', compact('books', 'categoryList', 'newBooks', 'bestSellers', 'settings', 'totalBooksCount'));
     }
 }
