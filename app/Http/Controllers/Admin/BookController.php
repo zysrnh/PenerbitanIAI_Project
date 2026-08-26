@@ -49,11 +49,6 @@ class BookController extends Controller
             'format' => 'required|string|max:100',
             'price' => 'required|string|max:50',
             'synopsis' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 1: Depan)
-            'back_cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 2: Belakang)
-            'inside_preview_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 3: Isi)
-            'additional_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 4: Fisik)
-            'sample_pdf' => 'nullable|file|mimes:pdf|max:102400', // 100MB
             'is_new_release' => 'nullable|boolean',
             'is_best_seller' => 'nullable|boolean',
             'status' => 'required|in:published,draft',
@@ -63,17 +58,36 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Handle 4 Dedicated Image Uploads
+        // Safe Image Upload (Without requiring php_fileinfo extension)
+        $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
+
         foreach ($imageSlots as $slot) {
             if ($request->hasFile($slot)) {
-                $validated[$slot] = $request->file($slot)->store('books/photos', 'public');
+                $file = $request->file($slot);
+                $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+
+                if (!in_array($ext, $allowedImgExt)) {
+                    return back()->withErrors([$slot => 'File foto harus berekstensi JPG, PNG, atau WebP.'])->withInput();
+                }
+
+                $filename = Str::random(30) . '.' . $ext;
+                $path = $file->storeAs('books/photos', $filename, 'public');
+                $validated[$slot] = $path;
             }
         }
 
-        // Handle Sample PDF Upload
+        // Safe PDF Upload
         if ($request->hasFile('sample_pdf')) {
-            $validated['sample_pdf'] = $request->file('sample_pdf')->store('books/samples', 'public');
+            $pdfFile = $request->file('sample_pdf');
+            $pdfExt = strtolower($pdfFile->getClientOriginalExtension() ?: 'pdf');
+
+            if ($pdfExt !== 'pdf') {
+                return back()->withErrors(['sample_pdf' => 'File dokumen sampel harus berformat PDF.'])->withInput();
+            }
+
+            $pdfName = Str::random(30) . '.pdf';
+            $validated['sample_pdf'] = $pdfFile->storeAs('books/samples', $pdfName, 'public');
         }
 
         Book::create($validated);
@@ -93,11 +107,6 @@ class BookController extends Controller
             'format' => 'required|string|max:100',
             'price' => 'required|string|max:50',
             'synopsis' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
-            'back_cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
-            'inside_preview_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
-            'additional_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
-            'sample_pdf' => 'nullable|file|mimes:pdf|max:102400',
             'is_new_release' => 'nullable|boolean',
             'is_best_seller' => 'nullable|boolean',
             'status' => 'required|in:published,draft',
@@ -106,23 +115,44 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Handle 4 Image Upload Updates
+        // Safe Image Upload Updates
+        $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
+
         foreach ($imageSlots as $slot) {
             if ($request->hasFile($slot)) {
+                $file = $request->file($slot);
+                $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+
+                if (!in_array($ext, $allowedImgExt)) {
+                    return back()->withErrors([$slot => 'File foto harus berekstensi JPG, PNG, atau WebP.'])->withInput();
+                }
+
                 if ($book->$slot && Storage::disk('public')->exists($book->$slot)) {
                     Storage::disk('public')->delete($book->$slot);
                 }
-                $validated[$slot] = $request->file($slot)->store('books/photos', 'public');
+
+                $filename = Str::random(30) . '.' . $ext;
+                $path = $file->storeAs('books/photos', $filename, 'public');
+                $validated[$slot] = $path;
             }
         }
 
-        // Handle Sample PDF Upload Update
+        // Safe PDF Upload Update
         if ($request->hasFile('sample_pdf')) {
+            $pdfFile = $request->file('sample_pdf');
+            $pdfExt = strtolower($pdfFile->getClientOriginalExtension() ?: 'pdf');
+
+            if ($pdfExt !== 'pdf') {
+                return back()->withErrors(['sample_pdf' => 'File dokumen sampel harus berformat PDF.'])->withInput();
+            }
+
             if ($book->sample_pdf && Storage::disk('public')->exists($book->sample_pdf)) {
                 Storage::disk('public')->delete($book->sample_pdf);
             }
-            $validated['sample_pdf'] = $request->file('sample_pdf')->store('books/samples', 'public');
+
+            $pdfName = Str::random(30) . '.pdf';
+            $validated['sample_pdf'] = $pdfFile->storeAs('books/samples', $pdfName, 'public');
         }
 
         $book->update($validated);
