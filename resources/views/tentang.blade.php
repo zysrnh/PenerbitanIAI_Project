@@ -222,28 +222,28 @@
                 <!-- Person 1: Director -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-card text-center">
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
-                        {{ strtoupper(substr($about['director_name'], 0, 1)) }}
+                        {{ strtoupper(substr($about['about_director_name'] ?? ($about['about_director_name'] ?? ($about['director_name'] ?? '') ?? 'A'), 0, 1)) }}
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['director_name'] ?? '' }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['director_title'] ?? '' }}</span>
+                    <h3 class="text-sm font-bold text-slate-900">{{ $about['about_director_name'] ?? ($about['director_name'] ?? '') ?? '' }}</h3>
+                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['about_director_title'] ?? ($about['director_title'] ?? '') ?? '' }}</span>
                 </div>
 
                 <!-- Person 2: Editor Chief -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-card text-center">
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
-                        {{ strtoupper(substr($about['editor_chief'], 0, 1)) }}
+                        {{ strtoupper(substr($about['about_editor_chief'] ?? ($about['about_editor_chief'] ?? ($about['editor_chief'] ?? '') ?? 'E'), 0, 1)) }}
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['editor_chief'] ?? '' }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['editor_chief_title'] ?? '' }}</span>
+                    <h3 class="text-sm font-bold text-slate-900">{{ $about['about_editor_chief'] ?? ($about['editor_chief'] ?? '') ?? '' }}</h3>
+                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['about_editor_chief_title'] ?? ($about['editor_chief_title'] ?? '') ?? '' }}</span>
                 </div>
 
                 <!-- Person 3: Production Lead -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-card text-center">
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
-                        {{ strtoupper(substr($about['production_lead'], 0, 1)) }}
+                        {{ strtoupper(substr($about['about_production_lead'] ?? ($about['about_production_lead'] ?? ($about['production_lead'] ?? '') ?? 'P'), 0, 1)) }}
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['production_lead'] ?? '' }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['production_lead_title'] ?? '' }}</span>
+                    <h3 class="text-sm font-bold text-slate-900">{{ $about['about_production_lead'] ?? ($about['production_lead'] ?? '') ?? '' }}</h3>
+                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['about_production_lead_title'] ?? ($about['production_lead_title'] ?? '') ?? '' }}</span>
                 </div>
             </div>
         </div>

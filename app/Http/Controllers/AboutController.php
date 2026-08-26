@@ -9,6 +9,13 @@ class AboutController extends Controller
 {
     public function index()
     {
+        $dirName = SiteSetting::get('about_director_name', 'Dr. H. Ahmad Fauzi, M.Ag.');
+        $dirTitle = SiteSetting::get('about_director_title', 'Kepala Unit Penerbitan & Percetakan');
+        $editChief = SiteSetting::get('about_editor_chief', 'Nurul Hidayah, M.Pd.');
+        $editTitle = SiteSetting::get('about_editor_chief_title', 'Editor Pelaksana & Mutu Naskah');
+        $prodLead = SiteSetting::get('about_production_lead', 'M. Zaki Farhan, S.Kom.');
+        $prodTitle = SiteSetting::get('about_production_lead_title', 'Kepala Produksi & Percetakan');
+
         $about = [
             'about_banner_badge' => SiteSetting::get('about_banner_badge', 'Mengenal Lembaga'),
             'about_banner_title' => SiteSetting::get('about_banner_title', 'Pusat Penerbitan, Percetakan, & Hilirisasi Karya Ilmiah'),
@@ -29,12 +36,19 @@ class AboutController extends Controller
             'about_stat_authors' => SiteSetting::get('about_stat_authors', '80+'),
             'about_stat_isbn' => SiteSetting::get('about_stat_isbn', '100%'),
             'about_stat_copies' => SiteSetting::get('about_stat_copies', '25.000+'),
-            'about_director_name' => SiteSetting::get('about_director_name', 'Dr. H. Ahmad Fauzi, M.Ag.'),
-            'about_director_title' => SiteSetting::get('about_director_title', 'Kepala Unit Penerbitan & Percetakan'),
-            'about_editor_chief' => SiteSetting::get('about_editor_chief', 'Nurul Hidayah, M.Pd.'),
-            'about_editor_chief_title' => SiteSetting::get('about_editor_chief_title', 'Editor Pelaksana & Mutu Naskah'),
-            'about_production_lead' => SiteSetting::get('about_production_lead', 'M. Zaki Farhan, S.Kom.'),
-            'about_production_lead_title' => SiteSetting::get('about_production_lead_title', 'Kepala Produksi & Percetakan'),
+            'about_director_name' => $dirName,
+            'about_director_title' => $dirTitle,
+            'about_editor_chief' => $editChief,
+            'about_editor_chief_title' => $editTitle,
+            'about_production_lead' => $prodLead,
+            'about_production_lead_title' => $prodTitle,
+            // Aliases without about_ prefix
+            'director_name' => $dirName,
+            'director_title' => $dirTitle,
+            'editor_chief' => $editChief,
+            'editor_chief_title' => $editTitle,
+            'production_lead' => $prodLead,
+            'production_lead_title' => $prodTitle,
         ];
 
         return view('tentang', compact('about'));
