@@ -559,7 +559,7 @@
 
     
     <!-- ULTRA-HIGH DEFINITION FULLSCREEN LIGHTBOX / ZOOM MODAL FOR ADMIN -->
-    <div id="adminLightboxModal" class="fixed inset-0 z-70 bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md" onclick="if(event.target.id==='adminLightboxModal') closeAdminLightbox()">
+    <div id="adminLightboxModal" class="fixed inset-0 z-[100] bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md" onclick="if(event.target.id==='adminLightboxModal') closeAdminLightbox()">
         <button type="button" onclick="closeAdminLightbox()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-lg transition z-50">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -598,6 +598,13 @@
         function openAdminLightbox() {
             const url = currentPhotoObj[activeTab];
             if (!url) return;
+            const bookModal = document.getElementById('bookModal');
+            if (bookModal) {
+                bookModal.classList.add('hidden');
+                bookModal.classList.remove('flex');
+            }
+            const url = currentPhotoObj[activeTab];
+            if (!url) return;
             document.getElementById('adminLightboxImage').src = url;
             document.getElementById('adminLightboxLabel').innerText = tabLabels[activeTab].toUpperCase();
             document.getElementById('adminLightboxTitle').innerText = document.getElementById('in_title').value || 'Pratinjau Naskah';
@@ -610,6 +617,11 @@
             const modal = document.getElementById('adminLightboxModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            const bookModal = document.getElementById('bookModal');
+            if (bookModal) {
+                bookModal.classList.remove('hidden');
+                bookModal.classList.add('flex');
+            }
         }
 
         function prevAdminLightbox() {

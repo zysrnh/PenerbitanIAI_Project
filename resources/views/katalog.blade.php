@@ -95,10 +95,10 @@
 
         /* Zoom Lightbox Pop-In */
         .lightbox-zoom-in {
-            animation: lightboxZoom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: lightboxZoom 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes lightboxZoom {
-            0% { opacity: 0; transform: scale(0.85); }
+            0% { opacity: 0; transform: scale(0.9); }
             100% { opacity: 1; transform: scale(1); }
         }
 
@@ -184,15 +184,13 @@
         </div>
     </section>
 
-    <!-- 3. MAIN BOOKSTORE CONTENT (SIDEBAR + 3D ANIMATED BOOK CARDS) -->
+    <!-- 3. MAIN BOOKSTORE CONTENT -->
     <section class="py-10 bg-slate-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
-                <!-- ============================================== -->
-                <!-- LEFT SIDEBAR: KATEGORI & INFO PROMO -->
-                <!-- ============================================== -->
+                <!-- LEFT SIDEBAR -->
                 <div class="lg:col-span-3 space-y-6">
                     
                     <!-- Search Widget -->
@@ -274,9 +272,7 @@
 
                 </div>
 
-                <!-- ============================================== -->
                 <!-- RIGHT MAIN CONTENT (3D HOVER TILT BOOK CARDS) -->
-                <!-- ============================================== -->
                 <div class="lg:col-span-9 space-y-6">
                     
                     @if(!request('kategori') || request('kategori') === 'all')
@@ -296,7 +292,6 @@
                                 @foreach($newBooks as $nBook)
                                     <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($nBook) }})">
                                         
-                                        <!-- 3D Perspective Stage on Cover -->
                                         <div class="book-cover-stage-3d w-full mb-3 py-1">
                                             <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
                                                 <div class="book-spine-strip"></div>
@@ -326,7 +321,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- Meta Info Block -->
                                         <div class="flex flex-col flex-1 justify-between text-left">
                                             <div>
                                                 <div class="flex items-center justify-between gap-1 mb-1.5">
@@ -541,7 +535,6 @@
                             @endforelse
                         </div>
 
-                        <!-- Numbered Pagination -->
                         @if($books->hasPages())
                             <div class="p-3 border-t border-slate-100 flex items-center justify-end text-xs">
                                 {{ $books->links() }}
@@ -580,7 +573,9 @@
         </div>
     </section>
 
-    <!-- MODAL DETAIL BUKU PUBLIK (WITH CLICK-TO-ZOOM / FULLSCREEN LIGHTBOX) -->
+    <!-- ========================================================================= -->
+    <!-- MODAL DETAIL BUKU PUBLIK (WITH CLEAN 3D PREVIEW & EXPAND BUTTON) -->
+    <!-- ========================================================================= -->
     <div id="publicBookModal" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
         <div class="bg-white rounded-sm max-w-4xl w-full shadow-2xl border border-slate-300 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-fade-in-up">
             
@@ -599,11 +594,11 @@
             <div class="p-5 sm:p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: 3D Interactive Showcase Visualizer (Click to Zoom Lightbox) -->
+                    <!-- Left: 3D Interactive Showcase Visualizer -->
                     <div class="md:col-span-5 flex flex-col items-center bg-slate-50 p-4 rounded-sm border border-slate-200 space-y-4">
                         
-                        <!-- 3D Perspective Stage with Click to Zoom Banner -->
-                        <div id="modalStage" class="modal-book-stage w-44 sm:w-52 aspect-[3/4.15] flex items-center justify-center py-2 cursor-zoom-in group relative" onclick="openLightboxModal()" title="Klik untuk Memperbesar / Fullscreen">
+                        <!-- 3D Perspective Stage (Clean & Elegant with click to enlarge) -->
+                        <div id="modalStage" class="modal-book-stage w-44 sm:w-52 aspect-[3/4.15] flex items-center justify-center py-2 cursor-pointer group relative" onclick="openLightboxFromDetail()" title="Klik untuk Pratinjau Layar Penuh">
                             
                             <div id="modalBookVisualizer" class="modal-book-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 select-none border border-slate-300">
                                 
@@ -611,10 +606,9 @@
                                 <div class="book-paper-edge"></div>
                                 <div class="modal-shine-layer absolute inset-0 pointer-events-none z-10"></div>
 
-                                <!-- Zoom Hint Overlay -->
-                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-200 z-20 flex flex-col items-center justify-center text-white p-2 text-center pointer-events-none">
-                                    <i class="fa-solid fa-magnifying-glass-plus text-2xl mb-1 text-emerald-300 animate-bounce"></i>
-                                    <span class="text-[10px] font-bold tracking-wide uppercase bg-black/60 px-2 py-0.5 rounded-sm">Klik Perbesar</span>
+                                <!-- Subtle Expand Icon Button Top-Right -->
+                                <div class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center text-xs backdrop-blur-xs opacity-0 group-hover:opacity-100 transition z-20 pointer-events-none shadow-xs">
+                                    <i class="fa-solid fa-expand"></i>
                                 </div>
 
                                 <!-- Photo Image Container -->
@@ -732,35 +726,38 @@
         </div>
     </div>
 
-    <!-- 5. ULTRA-HIGH DEFINITION FULLSCREEN LIGHTBOX / ZOOM MODAL -->
-    <div id="bookLightboxModal" class="fixed inset-0 z-60 bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md" onclick="handleLightboxBackdropClick(event)">
+    <!-- ========================================================================= -->
+    <!-- 5. FULLSCREEN HIGH DEFINITION LIGHTBOX (LAYERED CLEANLY ON TOP Z-100) -->
+    <!-- ========================================================================= -->
+    <div id="bookLightboxModal" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4 backdrop-blur-md" onclick="handleLightboxBackdropClick(event)">
         
-        <!-- Close Button -->
-        <button type="button" onclick="closeLightboxModal()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-lg transition z-50">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
+        <!-- Top Controls Bar -->
+        <div class="absolute top-4 inset-x-4 sm:inset-x-8 flex items-center justify-between text-white z-50">
+            <div class="flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-full border border-white/20">
+                <span id="lightboxLabel" class="text-xs font-bold text-emerald-400 font-mono">1 / 4 • SAMPUL DEPAN</span>
+            </div>
+            <button type="button" onclick="closeLightboxModal()" class="w-10 h-10 rounded-full bg-white/15 hover:bg-rose-600 text-white flex items-center justify-center text-lg transition shadow-lg" title="Tutup (Esc)">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
 
         <!-- Previous Arrow -->
-        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-emerald-600 text-white flex items-center justify-center text-xl transition z-50 shadow-lg" title="Foto Sebelumnya (Panah Kiri)">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
         <!-- Next Arrow -->
-        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-emerald-600 text-white flex items-center justify-center text-xl transition z-50 shadow-lg" title="Foto Selanjutnya (Panah Kanan)">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 
         <!-- Lightbox Zoom Image Stage -->
-        <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center select-none lightbox-zoom-in">
-            <div class="relative rounded-sm overflow-hidden shadow-2xl border border-white/20 bg-slate-900 max-h-[75vh] aspect-[3/4.15]">
+        <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center select-none lightbox-zoom-in my-auto">
+            <div class="relative rounded-sm overflow-hidden shadow-2xl border border-white/20 bg-slate-950 max-h-[72vh] aspect-[3/4.15]">
                 <img id="lightboxImage" src="" alt="Zoomed Book" class="w-full h-full object-contain" />
             </div>
             
-            <!-- Caption Bottom -->
-            <div class="mt-4 text-center">
-                <span id="lightboxLabel" class="inline-block px-3 py-1 rounded-full bg-white/15 text-emerald-300 text-xs font-bold font-mono tracking-wider mb-1">
-                    SAMPUL DEPAN
-                </span>
+            <div class="mt-3 text-center">
                 <h4 id="lightboxTitle" class="text-white text-sm font-bold truncate max-w-xl">
                     Judul Buku
                 </h4>
@@ -884,7 +881,7 @@
                 imgEl.src = photo.url;
                 imgEl.classList.remove('hidden');
                 imgEl.classList.remove('showcase-fade-slide');
-                void imgEl.offsetWidth; // reflow
+                void imgEl.offsetWidth;
                 imgEl.classList.add('showcase-fade-slide');
             } else {
                 if (photo.type === 'cover' || photo.type === 'back') {
@@ -907,10 +904,10 @@
             modal.classList.remove('flex');
         }
 
-        // ==========================================
-        // LIGHTBOX / FULLSCREEN ZOOM FUNCTIONALITY
-        // ==========================================
-        function openLightboxModal() {
+        // =======================================================
+        // CLEAN FULLSCREEN LIGHTBOX (CLEAN LAYER HIDING DETAIL)
+        // =======================================================
+        function openLightboxFromDetail() {
             const photo = currentModalPhotos[currentPhotoIndex];
             if (!photo || !photo.url) return;
 
@@ -918,6 +915,12 @@
             document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
             document.getElementById('lightboxTitle').innerText = currentModalBook ? currentModalBook.title : 'Pratinjau Naskah';
 
+            // Hide detail modal to avoid overlapping
+            const detailModal = document.getElementById('publicBookModal');
+            detailModal.classList.add('hidden');
+            detailModal.classList.remove('flex');
+
+            // Open clean lightbox
             const lightbox = document.getElementById('bookLightboxModal');
             lightbox.classList.remove('hidden');
             lightbox.classList.add('flex');
@@ -927,20 +930,37 @@
             const lightbox = document.getElementById('bookLightboxModal');
             lightbox.classList.add('hidden');
             lightbox.classList.remove('flex');
+
+            // Restore detail modal cleanly
+            if (currentModalBook) {
+                const detailModal = document.getElementById('publicBookModal');
+                detailModal.classList.remove('hidden');
+                detailModal.classList.add('flex');
+            }
         }
 
         function prevLightboxPhoto() {
             if (currentModalPhotos.length <= 1) return;
             currentPhotoIndex = (currentPhotoIndex - 1 + currentModalPhotos.length) % currentModalPhotos.length;
             switchModalPhoto(currentPhotoIndex);
-            openLightboxModal();
+            
+            const photo = currentModalPhotos[currentPhotoIndex];
+            if (photo && photo.url) {
+                document.getElementById('lightboxImage').src = photo.url;
+                document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
+            }
         }
 
         function nextLightboxPhoto() {
             if (currentModalPhotos.length <= 1) return;
             currentPhotoIndex = (currentPhotoIndex + 1) % currentModalPhotos.length;
             switchModalPhoto(currentPhotoIndex);
-            openLightboxModal();
+
+            const photo = currentModalPhotos[currentPhotoIndex];
+            if (photo && photo.url) {
+                document.getElementById('lightboxImage').src = photo.url;
+                document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
+            }
         }
 
         function handleLightboxBackdropClick(e) {
@@ -949,16 +969,18 @@
             }
         }
 
-        // Escape Key Listener for Lightbox & Modal
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeLightboxModal();
-            } else if (e.key === 'ArrowLeft') {
-                const lightbox = document.getElementById('bookLightboxModal');
-                if (!lightbox.classList.contains('hidden')) prevLightboxPhoto();
-            } else if (e.key === 'ArrowRight') {
-                const lightbox = document.getElementById('bookLightboxModal');
-                if (!lightbox.classList.contains('hidden')) nextLightboxPhoto();
+            const lightbox = document.getElementById('bookLightboxModal');
+            if (lightbox && !lightbox.classList.contains('hidden')) {
+                if (e.key === 'Escape') {
+                    closeLightboxModal();
+                } else if (e.key === 'ArrowLeft') {
+                    prevLightboxPhoto();
+                } else if (e.key === 'ArrowRight') {
+                    nextLightboxPhoto();
+                }
+            } else if (e.key === 'Escape') {
+                closeBookModal();
             }
         });
 
