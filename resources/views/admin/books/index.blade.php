@@ -165,16 +165,20 @@
     </div>
 
     <!-- Main Table Card with Search & Filters -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs">
         
         <!-- Filter Header -->
         <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <form id="adminSearchForm" action="{{ route('admin.books.index') }}" method="GET" class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3 relative z-30" autocomplete="off">
                 <div class="relative w-full sm:w-80">
                     <input 
-                        type="text" 
-                        name="q" 
-                        id="adminSearchInput"
+                        type="search" 
+                        name="search_query_custom" 
+                        id="adminSearchInput" 
+                        autocomplete="off" 
+                        autocorrect="off" 
+                        autocapitalize="off" 
+                        spellcheck="false"
                         value="{{ request('q') }}" 
                         placeholder="Cari judul, nama penulis, nomor ISBN..." 
                         class="w-full pl-9 pr-8 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 font-medium transition"
@@ -197,7 +201,7 @@
                     <!-- Instant Suggestion Dropdown -->
                     <div 
                         id="adminAutocompleteDropdown" 
-                        class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-50 animate-fade-in divide-y divide-slate-100 max-h-72 overflow-y-auto"
+                        class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-emerald-600/30 overflow-hidden z-[9999] divide-y divide-slate-100 max-h-72 overflow-y-auto ring-4 ring-black/5"
                     >
                         <div id="adminAutocompleteList" class="p-1.5 space-y-1"></div>
                     </div>

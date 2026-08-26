@@ -228,9 +228,13 @@
                     <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-sm relative z-30">
                         <form id="catalogSearchForm" action="{{ route('katalog') }}#daftar-katalog" method="GET" class="relative" autocomplete="off">
                             <input 
-                                type="text" 
+                                type="search" 
                                 name="q" 
-                                id="catalogSearchInput"
+                                id="catalogSearchInput" 
+                                autocomplete="off" 
+                                autocorrect="off" 
+                                autocapitalize="off" 
+                                spellcheck="false"
                                 value="{{ request('q') }}" 
                                 placeholder="Cari judul, penulis, ISBN..." 
                                 class="w-full pl-8 pr-8 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 font-medium transition"
@@ -254,7 +258,7 @@
                             <!-- Autocomplete Dropdown Panel -->
                             <div 
                                 id="autocompleteDropdown" 
-                                class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-sm shadow-xl border border-slate-200 overflow-hidden z-50 animate-fade-in divide-y divide-slate-100 max-h-80 overflow-y-auto"
+                                class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-sm shadow-2xl border border-emerald-600/30 overflow-hidden z-[9999] divide-y divide-slate-100 max-h-80 overflow-y-auto ring-4 ring-black/5"
                             >
                                 <div id="autocompleteResultsList" class="p-1 space-y-1"></div>
                                 
@@ -846,9 +850,32 @@
     <!-- Public Catalog JS -->
     <script>
         // =======================================================
-        // SMART AUTOCOMPLETE LIVE SEARCH LOGIC
+        // ROBUST SMART AUTOCOMPLETE LIVE SEARCH LOGIC
         // =======================================================
-        const searchableBooksData = @json($allSearchableBooks ?? []);
+        let searchableBooksData = @json($allSearchableBooks ?? []);
+        
+        // Fallback: If empty, collect all books directly from page DOM
+        if (!searchableBooksData || searchableBooksData.length === 0) {
+            searchableBooksData = [];
+            document.querySelectorAll('.persis-book-card').forEach(card => {
+                const titleEl = card.querySelector('h4');
+                const authorEl = card.querySelector('.fa-pen-nib')?.nextElementSibling;
+                const catEl = card.querySelector('span');
+                const priceEl = card.querySelector('.font-mono');
+                const imgEl = card.querySelector('img');
+                
+                if (titleEl) {
+                    searchableBooksData.push({
+                        title: titleEl.innerText.trim(),
+                        author: authorEl ? authorEl.innerText.trim() : '',
+                        category: catEl ? catEl.innerText.trim() : 'Buku',
+                        price: priceEl ? priceEl.innerText.trim() : '',
+                        cover_image: imgEl ? imgEl.getAttribute('src') : null
+                    });
+                }
+            });
+        }
+
         let selectedAutocompleteIndex = -1;
         let currentFilteredSuggestions = [];
 
