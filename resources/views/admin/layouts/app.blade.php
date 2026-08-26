@@ -91,7 +91,11 @@
 
                 <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-widest px-3 block pt-4 pb-1.5">Pengaturan</span>
 
-                <a href="{{ route('admin.settings.about') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.about') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
+                <a href="{{ route('admin.settings.catalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.catalog*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
+            <i class="fa-solid fa-book-open {{ request()->routeIs('admin.settings.catalog*') ? 'text-emerald-400' : 'text-slate-400' }}"></i>
+            <span>Kelola Halaman Katalog</span>
+        </a>
+        <a href="{{ route('admin.settings.about') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.about') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
                     <i class="fa-solid fa-circle-info w-5 text-center text-base"></i>
                     <span>Kelola Tentang Kami</span>
                 </a>

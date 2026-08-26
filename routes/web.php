@@ -52,6 +52,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     // Messages & Naskah Submissions
     Route::resource('messages', ContactMessageController::class)->only(['index', 'show', 'update', 'destroy']);
 
+    // Books & Catalog Collection
+    Route::resource('books', BookController::class);
+
     // Admin Users Management
     Route::resource('users', UserController::class);
 
@@ -62,6 +65,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // Settings
+    Route::get('/settings/catalog', [CatalogSettingController::class, 'index'])->name('settings.catalog');
+    Route::put('/settings/catalog', [CatalogSettingController::class, 'update'])->name('settings.catalog.update');
     Route::get('/settings/contact', [SettingController::class, 'contact'])->name('settings.contact');
     Route::put('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
     Route::get('/settings/about', [AboutSettingController::class, 'index'])->name('settings.about');

@@ -8,10 +8,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
                 <div>
-                    <span class="text-[10px] sm:text-[11px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">PUBLIKASI RESMI KAMPUS</span>
-                    <h1 class="text-xl sm:text-3xl font-extrabold font-heading tracking-tight">Katalog Buku &amp; Karya Ilmiah</h1>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">{{ $settings["catalog_banner_badge"] ?? "PUBLIKASI RESMI KAMPUS" }}</span>
+                    <h1 class="text-xl sm:text-3xl font-extrabold font-heading tracking-tight">{{ $settings["catalog_banner_title"] ?? "Katalog Buku & Karya Ilmiah" }}</h1>
                     <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                        Koleksi buku ajar perguruan tinggi, monograf riset dosen, dan literatur keislaman ber-ISBN resmi terbitan PERSIS PERS.
+                        {{ $settings["catalog_banner_desc"] ?? "Koleksi buku ajar perguruan tinggi, monograf riset dosen, dan literatur keislaman ber-ISBN resmi terbitan PERSIS PERS." }}
                     </p>
                 </div>
                 <!-- Flat Search Box -->
@@ -34,7 +34,7 @@
                     <i class="fa-solid fa-book-bookmark text-[10px] sm:text-xs"></i>
                 </div>
                 <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">150+ Judul</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_books"] ?? "150+ Judul" }}</span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Terbitan Resmi</span>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                     <i class="fa-solid fa-graduation-cap text-[10px] sm:text-xs"></i>
                 </div>
                 <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">Karya Dosen</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_authors"] ?? "Karya Dosen" }}</span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Buku Ajar &amp; Riset</span>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                     <i class="fa-solid fa-barcode text-[10px] sm:text-xs"></i>
                 </div>
                 <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">ISBN Perpusnas</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_isbn"] ?? "ISBN Perpusnas" }}</span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Legalitas Resmi</span>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                     <i class="fa-solid fa-print text-[10px] sm:text-xs"></i>
                 </div>
                 <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">Mutu Prima</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_print"] ?? "Mutu Prima" }}</span>
                     <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Standar UNESCO</span>
                 </div>
             </div>
@@ -138,16 +138,16 @@
                             <div class="pt-1.5 first:pt-0">
                                 <span class="text-[9px] font-bold text-[#006830] block uppercase">Program Khusus</span>
                                 <h4 class="font-bold text-slate-900 mt-0.5 hover:text-[#006830] cursor-pointer">
-                                    Diskon Biaya Cetak 15% untuk Konversi Skripsi &amp; Tesis
+                                    {{ $settings["catalog_promo_title"] ?? "Diskon Biaya Cetak 15% untuk Konversi Skripsi & Tesis" }}
                                 </h4>
-                                <p class="text-[11px] text-slate-500 mt-1">Paket lengkap pengurusan ISBN, layout standar UNESCO, dan proofreading.</p>
+                                <p class="text-[11px] text-slate-500 mt-1">{{ $settings["catalog_promo_desc"] ?? "Paket lengkap pengurusan ISBN, layout standar UNESCO, dan proofreading." }}</p>
                             </div>
                             <div class="pt-2">
                                 <span class="text-[9px] font-bold text-amber-700 block uppercase">Agenda Akademik</span>
                                 <h4 class="font-bold text-slate-900 mt-0.5 hover:text-[#006830] cursor-pointer">
-                                    Bedah Buku &amp; Call for Book Chapters Dosen
+                                    {{ $settings["catalog_agenda_title"] ?? "Bedah Buku & Call for Book Chapters Dosen" }}
                                 </h4>
-                                <p class="text-[11px] text-slate-500 mt-1">Terbuka untuk civitas akademika dan peneliti eksternal.</p>
+                                <p class="text-[11px] text-slate-500 mt-1">{{ $settings["catalog_agenda_desc"] ?? "Terbuka untuk civitas akademika dan peneliti eksternal." }}</p>
                             </div>
                         </div>
                     </div>
@@ -155,9 +155,9 @@
                     <!-- Box 4: Banner Pengajuan Naskah -->
                     <div class="bg-[#032c21] rounded-sm p-4 text-white border border-[#064e3b] space-y-2">
                         <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-widest block">LAYANAN PENERBITAN</span>
-                        <h4 class="font-bold text-xs">Punya Naskah Buku Sendiri?</h4>
+                        <h4 class="font-bold text-xs">{{ $settings["catalog_publish_box_title"] ?? "Punya Naskah Buku Sendiri?" }}</h4>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
-                            Terbitkan karya ilmiah Anda bersama PERSIS PERS dengan jaminan ISBN resmi dan mutu cetak prima.
+                            {{ $settings["catalog_publish_box_desc"] ?? "Terbitkan karya ilmiah Anda bersama PERSIS PERS dengan jaminan ISBN resmi dan mutu cetak prima." }}
                         </p>
                         <a href="{{ route('kontak') }}" class="block text-center py-2 px-3 bg-[#006830] hover:bg-[#005226] text-white font-bold text-xs rounded-sm transition">
                             Konsultasikan Naskah &rarr;

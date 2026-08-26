@@ -1,14 +1,14 @@
 <?php
 
-namespace AppHttpControllers;
+namespace AppHttpControllersAdmin;
 
-use AppModelsBook;
+use AppHttpControllersController;
 use AppModelsSiteSetting;
 use IlluminateHttpRequest;
 
-class CatalogController extends Controller
+class CatalogSettingController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $settings = [
             'catalog_banner_badge' => SiteSetting::get('catalog_banner_badge', 'PUBLIKASI RESMI KAMPUS'),
@@ -26,35 +26,31 @@ class CatalogController extends Controller
             'catalog_publish_box_desc' => SiteSetting::get('catalog_publish_box_desc', 'Terbitkan karya ilmiah Anda bersama PERSIS PERS dengan jaminan ISBN resmi dan mutu cetak prima.'),
         ];
 
-        // Fetch categories dynamically
-        $rawCategories = Book::published()->select('category')->distinct()->pluck('category');
-        $categories = [
-            ['name' => 'Semua Buku', 'slug' => 'all', 'count' => Book::published()->count()],
-            ['name' => 'Buku Baru', 'slug' => 'new', 'count' => Book::published()->where('is_new_release', true)->count()],
-            ['name' => 'Best Seller', 'slug' => 'bestseller', 'count' => Book::published()->where('is_best_seller', true)->count()],
-        ];
+        return view('admin.settings.catalog', compact('settings'));
+    }
 
-        foreach ($rawCategories as $catName) {
-            $categories[] = [
-                'name' => $catName,
-                'slug' => IlluminateSupportStr::slug($catName),
-                'count' => Book::published()->where('category', $catName)->count(),
-            ];
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'catalog_banner_badge' => 'required|string|max:100',
+            'catalog_banner_title' => 'required|string|max:200',
+            'catalog_banner_desc' => 'required|string',
+            'catalog_stat_books' => 'required|string|max:100',
+            'catalog_stat_authors' => 'required|string|max:100',
+            'catalog_stat_isbn' => 'required|string|max:100',
+            'catalog_stat_print' => 'required|string|max:100',
+            'catalog_promo_title' => 'required|string|max:200',
+            'catalog_promo_desc' => 'required|string',
+            'catalog_agenda_title' => 'required|string|max:200',
+            'catalog_agenda_desc' => 'required|string',
+            'catalog_publish_box_title' => 'required|string|max:200',
+            'catalog_publish_box_desc' => 'required|string',
+        ]);
+
+        foreach ($validated as $key => $value) {
+            SiteSetting::set($key, $value);
         }
 
-        // Fetch new books & best sellers
-        $newBooks = Book::published()->where('is_new_release', true)->latest()->take(4)->get();
-        if ($newBooks->isEmpty()) {
-            $newBooks = Book::published()->latest()->take(4)->get();
-        }
-
-        $bestSellers = Book::published()->where('is_best_seller', true)->latest()->take(4)->get();
-        if ($bestSellers->isEmpty()) {
-            $bestSellers = Book::published()->latest()->take(4)->get();
-        }
-
-        $totalBooksCount = Book::published()->count();
-
-        return view('katalog', compact('categories', 'newBooks', 'bestSellers', 'settings', 'totalBooksCount'));
+        return back()->with('success', 'Pengaturan tampilan halaman katalog berhasil diperbarui.');
     }
 }
