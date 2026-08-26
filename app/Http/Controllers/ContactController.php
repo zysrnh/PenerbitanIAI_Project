@@ -55,7 +55,7 @@ class ContactController extends Controller
 
         // Send Email Notification to Recipient
         try {
-            $recipient = SiteSetting::get('notification_recipient_email', 'zakiyh782@gmail.com');
+            $recipient = SiteSetting::get('notification_recipient_email', 'hbudiman953@gmail.com');
             if (!empty($recipient)) {
                 Mail::to($recipient)->send(new NewContactMessageMail($contactMessage));
             }

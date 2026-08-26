@@ -12,7 +12,7 @@ class SettingController extends Controller
     {
         $settings = [
             // Email Notification Recipient
-            'notification_recipient_email' => SiteSetting::get('notification_recipient_email', 'zakiyh782@gmail.com'),
+            'notification_recipient_email' => SiteSetting::get('notification_recipient_email', 'hbudiman953@gmail.com'),
 
             // Banner
             'contact_banner_badge' => SiteSetting::get('contact_banner_badge', 'Layanan & Informasi'),

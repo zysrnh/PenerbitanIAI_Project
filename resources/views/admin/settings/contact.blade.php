@@ -64,7 +64,7 @@
                                 name="notification_recipient_email" 
                                 value="{{ old('notification_recipient_email', $settings['notification_recipient_email']) }}" 
                                 required 
-                                placeholder="zakiyh782@gmail.com"
+                                placeholder="hbudiman953@gmail.com"
                                 class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-emerald-700/80 bg-slate-950/70 text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                             />
                         </div>
