@@ -5,38 +5,53 @@
 
 @section('content')
     <style>
-        /* 3D Realistic Book Styling & Micro-Animations */
-        .book-container-3d {
-            perspective: 1000px;
+        /* 3D Realistic Book Styling & Page-Turn Micro-Animations */
+        .book-stage-3d {
+            perspective: 1200px;
+            perspective-origin: 50% 50%;
         }
-        .book-3d {
+        .book-flipper-3d {
             transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-            box-shadow: 12px 16px 28px -6px rgba(0, 0, 0, 0.35), 2px 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .book-container-3d:hover .book-3d {
-            transform: rotateY(-18deg) rotateX(6deg) translateY(-4px) scale(1.03);
-            box-shadow: 18px 24px 36px -6px rgba(0, 0, 0, 0.45), 4px 4px 10px rgba(0,0,0,0.2);
+        
+        /* Realistic Page Turn Animation */
+        @keyframes pageTurnLeft {
+            0% {
+                transform: rotateY(0deg) scale(0.95);
+                box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+            }
+            50% {
+                transform: rotateY(-80deg) scale(1.04) translateZ(10px);
+                box-shadow: 20px 25px 35px rgba(0,0,0,0.3);
+            }
+            100% {
+                transform: rotateY(0deg) scale(1);
+                box-shadow: 10px 15px 25px rgba(0,0,0,0.25);
+            }
         }
-        .book-spine-effect {
-            background: linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 15%, rgba(0,0,0,0.25) 85%, rgba(0,0,0,0.4) 100%);
+
+        .animate-page-turn {
+            animation: pageTurnLeft 0.65s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .book-shine {
-            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%);
+
+        /* 3D Book Spine & Page Edges */
+        .book-spine-crease {
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.25) 0%, 
+                rgba(255,255,255,0) 12%, 
+                rgba(0,0,0,0.18) 85%, 
+                rgba(0,0,0,0.4) 100%
+            );
         }
-        .photo-card-hover {
-            transition: all 0.25s ease;
+        
+        .bookpaper-texture {
+            background-color: #fdfbf7;
+            background-image: linear-gradient(90deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0) 8%, rgba(0,0,0,0) 92%, rgba(0,0,0,0.06) 100%);
         }
-        .photo-card-hover:hover {
-            transform: translateY(-2px);
-            border-color: #006830;
-        }
-        .animate-flip-3d {
-            animation: flipIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        @keyframes flipIn {
-            0% { transform: scale(0.92) rotateY(35deg); opacity: 0.7; }
-            100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+
+        .book-hover-tilt:hover {
+            transform: rotateY(-15deg) rotateX(5deg) translateY(-3px);
         }
     </style>
 
@@ -49,7 +64,7 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> {{ $totalBooks }} Judul Terdaftar
                 </span>
             </div>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">Kelola master buku, nomor ISBN, galeri 4 foto naskah, harga cetak, dan status etalase.</p>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Kelola master buku, nomor ISBN, galeri 4 foto naskah (Depan, Belakang, Isi 1 &amp; 2), harga cetak, dan status etalase.</p>
         </div>
 
         <div class="flex items-center gap-2.5 shrink-0">
@@ -63,7 +78,7 @@
     </div>
 
     @if(session('success'))
-        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-medium flex items-center justify-between shadow-xs animate-fade-in-up">
+        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-medium flex items-center justify-between shadow-xs">
             <div class="flex items-center gap-2.5">
                 <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
                 <span>{{ session('success') }}</span>
@@ -265,7 +280,7 @@
         @endif
     </div>
 
-    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (ANIMATED 3D VISUALIZER + 4 PHOTO SLOTS) -->
+    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (PAGE-TURN 3D VISUALIZER + 4 PHOTO SLOTS) -->
     <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
         <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[95vh] flex flex-col">
             
@@ -287,40 +302,39 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: Interactive Animated 3D Showcase + 4 Photo Slots -->
+                    <!-- Left: Interactive Animated Page-Flip Showcase + 4 Clear Photo Slots -->
                     <div class="lg:col-span-5 space-y-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
                         
-                        <!-- Top: Animated 3D Book Showcase Box -->
+                        <!-- Top: Animated 3D Page-Turn Showcase Box -->
                         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col items-center">
                             
-                            <!-- Angle Switcher Pills -->
-                            <div class="flex items-center justify-center gap-1.5 mb-3 w-full border-b border-slate-100 pb-2.5">
-                                <button type="button" onclick="switchShowcaseAngle('cover')" id="btnAngleCover" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs">
-                                    Depan
+                            <!-- Angle Switcher Pills with Clear Labels (Depan, Belakang, Isi 1, Isi 2) -->
+                            <div class="flex items-center justify-center gap-1.5 mb-3.5 w-full border-b border-slate-100 pb-2.5">
+                                <button type="button" onclick="switchShowcaseAngle('cover')" id="btnAngleCover" class="px-3 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs flex items-center gap-1">
+                                    <i class="fa-solid fa-book-bookmark text-[9px]"></i> Depan
                                 </button>
-                                <button type="button" onclick="switchShowcaseAngle('back')" id="btnAngleBack" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-                                    Belakang
+                                <button type="button" onclick="switchShowcaseAngle('back')" id="btnAngleBack" class="px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-book text-[9px]"></i> Belakang
                                 </button>
-                                <button type="button" onclick="switchShowcaseAngle('inside')" id="btnAngleInside" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-                                    Isi
+                                <button type="button" onclick="switchShowcaseAngle('inside')" id="btnAngleInside" class="px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-book-open-reader text-[9px]"></i> Isi 1
                                 </button>
-                                <button type="button" onclick="switchShowcaseAngle('physical')" id="btnAnglePhysical" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-                                    Fisik
+                                <button type="button" onclick="switchShowcaseAngle('inside2')" id="btnAngleInside2" class="px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-book-open text-[9px]"></i> Isi 2
                                 </button>
                             </div>
 
-                            <!-- 3D Perspective Book Wrapper -->
-                            <div class="book-container-3d py-1 flex items-center justify-center">
-                                <div id="main3dBookWrapper" class="book-3d relative w-36 aspect-[3/4.2] rounded-xs overflow-hidden select-none cursor-pointer">
+                            <!-- 3D Realistic Book Stage with Page Turn Animation -->
+                            <div class="book-stage-3d py-1 flex items-center justify-center">
+                                <div id="main3dBookWrapper" class="book-flipper-3d book-hover-tilt relative w-36 aspect-[3/4.2] rounded-xs overflow-hidden select-none cursor-pointer shadow-lg border border-slate-200">
                                     
-                                    <!-- Dynamic Image Display (Active when photo selected) -->
-                                    <img id="main3dBookImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden" />
+                                    <!-- A. Real Uploaded Image Display (Active when photo exists) -->
+                                    <img id="main3dBookImage" src="" alt="Book Showcase" class="w-full h-full object-cover hidden" />
 
-                                    <!-- Realistic Spine Crease Bar & Edge Highlight -->
-                                    <div id="spineCrease" class="absolute inset-0 pointer-events-none book-spine-effect"></div>
-                                    <div class="absolute inset-0 pointer-events-none book-shine"></div>
+                                    <!-- B. Realistic Spine Crease Effect -->
+                                    <div id="spineCrease" class="absolute inset-0 pointer-events-none book-spine-crease"></div>
 
-                                    <!-- Vector Cover (Active by default or when no image) -->
+                                    <!-- C. Fallback: Vector Front Cover -->
                                     <div id="main3dVectorCover" class="w-full h-full bg-[#032c21] text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400">
                                         <div class="flex justify-between items-center border-b border-white/20 pb-1">
                                             <span id="prev_cover_cat" class="text-[7.5px] font-extrabold uppercase px-1 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300 truncate">Buku Ajar</span>
@@ -337,23 +351,55 @@
                                             <span id="prev_cover_author" class="text-[8.5px] text-slate-200 block font-medium truncate">Nama Penulis</span>
                                         </div>
                                     </div>
+
+                                    <!-- D. Fallback: Vector Back Cover -->
+                                    <div id="main3dVectorBack" class="w-full h-full bg-[#043327] text-white p-3 flex flex-col justify-between hidden border-r-4 border-emerald-500">
+                                        <div class="border-b border-white/20 pb-1">
+                                            <span class="text-[7.5px] font-extrabold text-amber-300 uppercase block">Sinopsis Singkat Belakang</span>
+                                        </div>
+                                        <div class="text-[7.5px] text-slate-200 leading-tight my-auto space-y-1 line-clamp-6">
+                                            <p id="prev_back_synopsis">Buku teks akademik berkualitas tinggi terbitan resmi PERSIS PERS dengan nomor ISBN resmi Perpusnas RI.</p>
+                                        </div>
+                                        <div class="pt-1 border-t border-white/20 flex items-center justify-between text-[7px] text-slate-300 font-mono">
+                                            <span>PERSIS PERS</span>
+                                            <span id="prev_back_isbn">ISBN: -</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- E. Fallback: Vector Inside Pages (Isi 1 & Isi 2) -->
+                                    <div id="main3dVectorInside" class="w-full h-full bookpaper-texture text-slate-800 p-3 flex flex-col justify-between hidden border-l-2 border-slate-300">
+                                        <div class="border-b border-slate-300 pb-1 flex justify-between items-center text-[7px] font-bold text-slate-500">
+                                            <span id="prev_inside_label">BAB 1: PENDAHULUAN</span>
+                                            <span>hlm. 1</span>
+                                        </div>
+                                        <div class="text-[6.5px] text-slate-600 leading-relaxed my-auto space-y-1 font-serif">
+                                            <p class="font-bold text-slate-800 text-[7.5px]" id="prev_inside_title">Pratinjau Lembaran Halaman Buku</p>
+                                            <p>Kajian terstruktur metodologi dan sistematika keilmuan perguruan tinggi...</p>
+                                            <div class="w-full h-0.5 bg-slate-200 my-0.5"></div>
+                                            <p>Disusun sesuai standar kurikulum pendidikan tinggi nasional.</p>
+                                        </div>
+                                        <div class="pt-1 border-t border-slate-200 text-center text-[6.5px] text-slate-400 font-mono">
+                                            <span>PERSIS PERS PRESS</span>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
                             <!-- Live Price Tag & Hint -->
                             <div class="mt-3 flex items-center justify-between w-full pt-2 border-t border-slate-100 text-xs">
                                 <span class="text-[10px] text-slate-400 font-medium">
-                                    <i class="fa-solid fa-hand-pointer text-emerald-600"></i> Sorot kursor utk efek 3D
+                                    <i class="fa-solid fa-arrows-spin text-emerald-600"></i> Klik tab utk animasi buka lembaran
                                 </span>
                                 <span id="prev_cover_price" class="font-black text-[#006830] font-mono text-sm">Rp 75.000</span>
                             </div>
                         </div>
 
-                        <!-- 4 Image Upload Cards Grid -->
+                        <!-- 4 Clear Image Upload Cards Grid -->
                         <div class="space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-                                    <i class="fa-solid fa-images text-emerald-600 mr-1"></i> Galeri Naskah (2 - 4 Foto)
+                                    <i class="fa-solid fa-images text-emerald-600 mr-1"></i> Galeri Foto (Sampul &amp; 2 Halaman Isi)
                                 </span>
                                 <span class="text-[9px] text-slate-400 font-medium">Maks. 50MB/foto</span>
                             </div>
@@ -363,7 +409,7 @@
                                 <!-- Foto 1: Sampul Depan -->
                                 <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">1. Depan <span class="text-rose-500">*</span></span>
+                                        <span class="font-bold text-slate-700 text-[9.5px]">1. Sampul Depan <span class="text-rose-500">*</span></span>
                                         <span id="badgeCover" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
                                     </div>
                                     <div id="previewBoxCover" onclick="switchShowcaseAngle('cover')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
@@ -375,7 +421,7 @@
                                 <!-- Foto 2: Sampul Belakang -->
                                 <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">2. Belakang</span>
+                                        <span class="font-bold text-slate-700 text-[9.5px]">2. Sampul Belakang</span>
                                         <span id="badgeBack" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
                                     </div>
                                     <div id="previewBoxBack" onclick="switchShowcaseAngle('back')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
@@ -384,10 +430,10 @@
                                     <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxBack', 'badgeBack', 'back')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
                                 </div>
 
-                                <!-- Foto 3: Halaman Isi / Daftar Isi -->
+                                <!-- Foto 3: Halaman Isi 1 (Daftar Isi / Bab 1) -->
                                 <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">3. Isi / Daftar</span>
+                                        <span class="font-bold text-slate-700 text-[9.5px]">3. Halaman Isi 1</span>
                                         <span id="badgeInside" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
                                     </div>
                                     <div id="previewBoxInside" onclick="switchShowcaseAngle('inside')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
@@ -396,16 +442,16 @@
                                     <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside', 'badgeInside', 'inside')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
                                 </div>
 
-                                <!-- Foto 4: Foto Fisik / Mockup -->
+                                <!-- Foto 4: Halaman Isi 2 (Pratinjau Materi / Halaman Dalam) -->
                                 <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">4. Fisik / Detail</span>
-                                        <span id="badgePhysical" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                        <span class="font-bold text-slate-700 text-[9.5px]">4. Halaman Isi 2</span>
+                                        <span id="badgeInside2" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
                                     </div>
-                                    <div id="previewBoxPhysical" onclick="switchShowcaseAngle('physical')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
+                                    <div id="previewBoxInside2" onclick="switchShowcaseAngle('inside2')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
                                         <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxPhysical', 'badgePhysical', 'physical')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside2', 'badgeInside2', 'inside2')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
                                 </div>
 
                             </div>
@@ -454,7 +500,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Nomor ISBN Resmi (Perpusnas)</label>
-                                <input type="text" name="isbn" id="form_isbn" placeholder="978-623-8812-40-1" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono shadow-2xs" />
+                                <input type="text" name="isbn" id="form_isbn" oninput="updateModalMockup()" placeholder="978-623-8812-40-1" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono shadow-2xs" />
                             </div>
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Harga Cetak Resmi <span class="text-rose-500">*</span></label>
@@ -489,7 +535,7 @@
                         <!-- 4. Sinopsis -->
                         <div>
                             <label class="block font-bold text-slate-700 mb-1">Sinopsis Ringkas</label>
-                            <textarea name="synopsis" id="form_synopsis" rows="3" placeholder="Tuliskan ringkasan isi naskah buku..." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs leading-relaxed"></textarea>
+                            <textarea name="synopsis" id="form_synopsis" rows="3" oninput="updateModalMockup()" placeholder="Tuliskan ringkasan isi naskah buku..." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs leading-relaxed"></textarea>
                         </div>
 
                         <!-- 5. Checkbox Etalase Highlight -->
@@ -524,20 +570,20 @@
 
     <!-- Modal JS -->
     <script>
-        // Track uploaded/cached data URLs for the 4 slots
+        // Track uploaded/cached data URLs for the 4 slots: cover, back, inside, inside2
         let slotImages = {
             cover: null,
             back: null,
             inside: null,
-            physical: null
+            inside2: null
         };
 
         function switchShowcaseAngle(slot) {
             // Update active pill button style
-            ['btnAngleCover', 'btnAngleBack', 'btnAngleInside', 'btnAnglePhysical'].forEach(id => {
+            ['btnAngleCover', 'btnAngleBack', 'btnAngleInside', 'btnAngleInside2'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
-                    btn.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+                    btn.className = 'px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition flex items-center gap-1';
                 }
             });
 
@@ -545,32 +591,51 @@
                 cover: 'btnAngleCover',
                 back: 'btnAngleBack',
                 inside: 'btnAngleInside',
-                physical: 'btnAnglePhysical'
+                inside2: 'btnAngleInside2'
             };
             const activeBtn = document.getElementById(activeBtnMap[slot]);
             if (activeBtn) {
-                activeBtn.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs';
+                activeBtn.className = 'px-3 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs flex items-center gap-1';
             }
 
             const imgElement = document.getElementById('main3dBookImage');
             const vectorCover = document.getElementById('main3dVectorCover');
+            const vectorBack = document.getElementById('main3dVectorBack');
+            const vectorInside = document.getElementById('main3dVectorInside');
             const wrapper = document.getElementById('main3dBookWrapper');
+            const spine = document.getElementById('spineCrease');
 
-            // Add smooth flip micro-animation
-            wrapper.classList.remove('animate-flip-3d');
+            // Trigger smooth realistic Page-Turn CSS animation
+            wrapper.classList.remove('animate-page-turn');
             void wrapper.offsetWidth; // trigger reflow
-            wrapper.classList.add('animate-flip-3d');
+            wrapper.classList.add('animate-page-turn');
+
+            // Reset visibility
+            imgElement.classList.add('hidden');
+            vectorCover.classList.add('hidden');
+            vectorBack.classList.add('hidden');
+            vectorInside.classList.add('hidden');
+            spine.classList.remove('hidden');
 
             if (slotImages[slot]) {
                 imgElement.src = slotImages[slot];
                 imgElement.classList.remove('hidden');
-                vectorCover.classList.add('hidden');
-            } else if (slot === 'cover') {
-                imgElement.classList.add('hidden');
-                vectorCover.classList.remove('hidden');
             } else {
-                imgElement.classList.add('hidden');
-                vectorCover.classList.remove('hidden');
+                // Render rich contextual vector fallback depending on slot!
+                if (slot === 'cover') {
+                    vectorCover.classList.remove('hidden');
+                } else if (slot === 'back') {
+                    vectorBack.classList.remove('hidden');
+                    spine.classList.add('hidden');
+                } else if (slot === 'inside') {
+                    document.getElementById('prev_inside_label').innerText = 'BAGIAN 1: DAFTAR ISI & BAB 1';
+                    document.getElementById('prev_inside_title').innerText = 'Daftar Isi & Sistematika Buku';
+                    vectorInside.classList.remove('hidden');
+                } else if (slot === 'inside2') {
+                    document.getElementById('prev_inside_label').innerText = 'BAGIAN 2: PRATINJAU MATERI';
+                    document.getElementById('prev_inside_title').innerText = 'Pembahasan Inti & Teori Riset';
+                    vectorInside.classList.remove('hidden');
+                }
             }
         }
 
@@ -585,7 +650,7 @@
                     box.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover rounded" />';
                     if (badge) badge.classList.remove('hidden');
                     
-                    // Switch 3D preview to the newly selected photo immediately
+                    // Switch 3D preview with page-turn animation to the newly selected photo immediately
                     switchShowcaseAngle(slot);
                 }
                 reader.readAsDataURL(input.files[0]);
@@ -597,19 +662,23 @@
             const author = document.getElementById('form_author').value || 'Nama Penulis';
             const category = document.getElementById('form_category').value || 'Buku Ajar';
             const price = document.getElementById('form_price').value || 'Rp 75.000';
+            const isbn = document.getElementById('form_isbn').value || '-';
+            const synopsis = document.getElementById('form_synopsis').value || 'Buku teks akademik berkualitas tinggi terbitan resmi PERSIS PERS dengan nomor ISBN resmi Perpusnas RI.';
 
             document.getElementById('prev_cover_title').innerText = title;
             document.getElementById('prev_cover_author').innerText = author;
             document.getElementById('prev_cover_cat').innerText = category;
             document.getElementById('prev_cover_price').innerText = price;
+            document.getElementById('prev_back_isbn').innerText = 'ISBN: ' + isbn;
+            document.getElementById('prev_back_synopsis').innerText = synopsis;
         }
 
         function resetAllPreviews() {
-            slotImages = { cover: null, back: null, inside: null, physical: null };
-            ['previewBoxCover', 'previewBoxBack', 'previewBoxInside', 'previewBoxPhysical'].forEach(id => {
+            slotImages = { cover: null, back: null, inside: null, inside2: null };
+            ['previewBoxCover', 'previewBoxBack', 'previewBoxInside', 'previewBoxInside2'].forEach(id => {
                 document.getElementById(id).innerHTML = '<span class="text-[8.5px] text-slate-400">Pilih Foto</span>';
             });
-            ['badgeCover', 'badgeBack', 'badgeInside', 'badgePhysical'].forEach(id => {
+            ['badgeCover', 'badgeBack', 'badgeInside', 'badgeInside2'].forEach(id => {
                 const badge = document.getElementById(id);
                 if (badge) badge.classList.add('hidden');
             });
@@ -679,9 +748,9 @@
                 document.getElementById('badgeInside').classList.remove('hidden');
             }
             if (book.additional_image) {
-                slotImages.physical = '/storage/' + book.additional_image;
-                document.getElementById('previewBoxPhysical').innerHTML = '<img src="/storage/' + book.additional_image + '" class="w-full h-full object-cover rounded" />';
-                document.getElementById('badgePhysical').classList.remove('hidden');
+                slotImages.inside2 = '/storage/' + book.additional_image;
+                document.getElementById('previewBoxInside2').innerHTML = '<img src="/storage/' + book.additional_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('badgeInside2').classList.remove('hidden');
             }
 
             switchShowcaseAngle('cover');
