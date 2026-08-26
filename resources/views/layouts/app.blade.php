@@ -82,8 +82,8 @@
             <div class="flex items-center justify-between h-20">
                 
                 <!-- Brand Logo -->
-                <a href="{{ url('/') }}" class="flex items-center py-1 group">
-                    <img src="{{ asset('images/logo/logo_iai_persis_press_full.svg') }}" alt="IAI PERSIS PRESS" class="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
+                <a href="{{ url('/') }}" class="flex items-center py-1 group" title="PERSIS PERS">
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-11 sm:h-13 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
                 </a>
 
                 <!-- Desktop Nav Menu -->
