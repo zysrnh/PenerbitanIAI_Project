@@ -1712,5 +1712,102 @@
         document.getElementById('publicBookModal').addEventListener('click', function(e) {
             if (e.target === this) closeBookModal();
         });
+    
+        // =======================================================
+        // AUTOCOMPLETE LIVE SEARCH (BULLETPROOF)
+        // =======================================================
+        const searchableBooksData = @json($allSearchableBooks ?? []);
+        let acSelectedIdx = -1;
+        let acSuggestions = [];
+
+        const acInput = document.getElementById('catalogSearchInput');
+        const acDropdown = document.getElementById('autocompleteDropdown');
+        const acList = document.getElementById('autocompleteResultsList');
+
+        if (acInput) {
+            acInput.addEventListener('input', function() { runAutocomplete(this.value); });
+            acInput.addEventListener('focus', function() { runAutocomplete(this.value); });
+            acInput.addEventListener('keydown', function(e) {
+                if (!acDropdown || acDropdown.style.display === 'none') return;
+                if (e.key === 'ArrowDown') { e.preventDefault(); acSelectedIdx = Math.min(acSelectedIdx + 1, acSuggestions.length - 1); renderAcSelection(); }
+                else if (e.key === 'ArrowUp') { e.preventDefault(); acSelectedIdx = Math.max(acSelectedIdx - 1, 0); renderAcSelection(); }
+                else if (e.key === 'Enter' && acSelectedIdx >= 0) { e.preventDefault(); openBookModal(acSuggestions[acSelectedIdx]); acDropdown.style.display = 'none'; }
+                else if (e.key === 'Escape') { acDropdown.style.display = 'none'; }
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (acDropdown && acInput && !acInput.closest('form').contains(e.target)) {
+                acDropdown.style.display = 'none';
+            }
+        });
+
+        function runAutocomplete(query) {
+            const q = (query || '').trim().toLowerCase();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+
+            if (!acDropdown || !acList) return;
+
+            if (!q) { acDropdown.style.display = 'none'; return; }
+
+            acSuggestions = searchableBooksData.filter(b =>
+                (b.title || '').toLowerCase().includes(q) ||
+                (b.author || '').toLowerCase().includes(q) ||
+                (b.category || '').toLowerCase().includes(q) ||
+                (b.isbn || '').toLowerCase().includes(q)
+            ).slice(0, 6);
+
+            acList.innerHTML = '';
+            acSelectedIdx = -1;
+
+            if (acSuggestions.length === 0) {
+                acList.innerHTML = '<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-magnifying-glass text-slate-300 text-base block mb-1"></i>Tidak ada hasil untuk "' + q + '"</div>';
+            } else {
+                acSuggestions.forEach(function(book, idx) {
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center gap-2.5 px-3 py-2.5 cursor-pointer hover:bg-emerald-50 transition border-b border-slate-100 last:border-0';
+
+                    const coverSrc = book.cover_image
+                        ? (book.cover_image.startsWith('/') || book.cover_image.startsWith('http') ? book.cover_image : '/storage/' + book.cover_image)
+                        : null;
+
+                    const titleHL = (book.title || '').replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\</script>
+@endsection') + ')', 'gi'), '<mark class="bg-amber-100 text-amber-900 font-bold">$1</mark>');
+
+                    row.innerHTML =
+                        '<div class="w-9 h-12 rounded-xs overflow-hidden shrink-0 border border-slate-200 bg-[#032c21]">' +
+                            (coverSrc ? '<img src="' + coverSrc + '" class="w-full h-full object-cover" />' : '<div class="w-full h-full flex items-center justify-center text-emerald-400 text-[7px] font-bold p-1 text-center leading-tight">PERSIS PERS</div>') +
+                        '</div>' +
+                        '<div class="flex-1 min-w-0">' +
+                            '<span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 rounded-xs">' + (book.category || '') + '</span>' +
+                            '<h5 class="text-xs font-bold text-slate-900 truncate mt-0.5">' + titleHL + '</h5>' +
+                            '<p class="text-[10px] text-slate-400 truncate">' + (book.author || '') + '</p>' +
+                        '</div>' +
+                        '<span class="text-xs font-mono font-bold text-emerald-700 shrink-0">' + (book.price || '') + '</span>';
+
+                    row.onclick = function() {
+                        openBookModal(book);
+                        acDropdown.style.display = 'none';
+                    };
+                    acList.appendChild(row);
+                });
+            }
+
+            const label = document.getElementById('autocompleteSubmitLabel');
+            if (label) label.innerText = acSuggestions.length > 0 ? ('Lihat Semua ' + acSuggestions.length + ' Hasil') : ('Cari "' + q + '" di Semua Koleksi');
+
+            acDropdown.style.cssText = 'display: block !important; position: absolute; left: 0; right: 0; top: 100%; z-index: 99999; background: white; margin-top: 4px;';
+        }
+
+        function renderAcSelection() {
+            Array.from(acList.children).forEach(function(el, i) {
+                el.style.background = i === acSelectedIdx ? '#f0fdf4' : '';
+            });
+        }
+
+        function clearSearchInput() {
+            if (acInput) { acInput.value = ''; runAutocomplete(''); acInput.focus(); }
+        }
     </script>
 @endsection
