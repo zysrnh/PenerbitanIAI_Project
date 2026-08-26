@@ -225,16 +225,49 @@
                 <div class="lg:col-span-3 space-y-6 animate-cascade-up" style="animation-delay: 100ms;">
                     
                     <!-- Search Widget -->
-                    <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-sm">
-                        <form action="{{ route('katalog') }}#daftar-katalog" method="GET" class="relative">
+                    <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-sm relative z-30">
+                        <form id="catalogSearchForm" action="{{ route('katalog') }}#daftar-katalog" method="GET" class="relative" autocomplete="off">
                             <input 
                                 type="text" 
                                 name="q" 
+                                id="catalogSearchInput"
                                 value="{{ request('q') }}" 
                                 placeholder="Cari judul, penulis, ISBN..." 
-                                class="w-full pl-8 pr-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium"
+                                class="w-full pl-8 pr-8 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 font-medium transition"
+                                oninput="handleSearchAutocomplete(this.value)"
+                                onfocus="handleSearchAutocomplete(this.value)"
+                                onkeydown="handleSearchKeydown(event)"
                             />
-                            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                            
+                            <!-- Clear Input Button -->
+                            <button 
+                                type="button" 
+                                id="clearSearchBtn" 
+                                onclick="clearSearchInput()" 
+                                class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs"
+                                title="Hapus pencarian"
+                            >
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+
+                            <!-- Autocomplete Dropdown Panel -->
+                            <div 
+                                id="autocompleteDropdown" 
+                                class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-sm shadow-xl border border-slate-200 overflow-hidden z-50 animate-fade-in divide-y divide-slate-100 max-h-80 overflow-y-auto"
+                            >
+                                <div id="autocompleteResultsList" class="p-1 space-y-1"></div>
+                                
+                                <div class="p-2 bg-slate-50 text-center border-t border-slate-100">
+                                    <button 
+                                        type="submit" 
+                                        class="w-full py-1.5 px-3 bg-emerald-50 hover:bg-emerald-700 text-emerald-800 hover:text-white font-bold rounded-xs text-[11px] transition flex items-center justify-center gap-1.5"
+                                    >
+                                        <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                                        <span id="autocompleteSubmitLabel">Lihat Semua Hasil Pencarian</span>
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                     </div>
 
@@ -825,6 +858,159 @@
                         window.scrollTo({ top: y, behavior: 'smooth' });
                     }, 60);
                 }
+            }
+        });
+
+        
+        // =======================================================
+        // SMART AUTOCOMPLETE LIVE SEARCH LOGIC
+        // =======================================================
+        const searchableBooksData = @json($allSearchableBooks ?? []);
+        let selectedAutocompleteIndex = -1;
+        let currentFilteredSuggestions = [];
+
+        function handleSearchAutocomplete(query) {
+            const trimmed = (query || '').trim().toLowerCase();
+            const dropdown = document.getElementById('autocompleteDropdown');
+            const list = document.getElementById('autocompleteResultsList');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const submitLabel = document.getElementById('autocompleteSubmitLabel');
+
+            if (clearBtn) {
+                if (trimmed.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            if (trimmed.length === 0) {
+                dropdown.classList.add('hidden');
+                selectedAutocompleteIndex = -1;
+                currentFilteredSuggestions = [];
+                return;
+            }
+
+            // Filter books matching title, author, category, or ISBN
+            currentFilteredSuggestions = searchableBooksData.filter(b => {
+                const titleMatch = (b.title || '').toLowerCase().includes(trimmed);
+                const authorMatch = (b.author || '').toLowerCase().includes(trimmed);
+                const categoryMatch = (b.category || '').toLowerCase().includes(trimmed);
+                const isbnMatch = (b.isbn || '').toLowerCase().includes(trimmed);
+                return titleMatch || authorMatch || categoryMatch || isbnMatch;
+            }).slice(0, 6); // Take top 6 results
+
+            list.innerHTML = '';
+            selectedAutocompleteIndex = -1;
+
+            if (currentFilteredSuggestions.length === 0) {
+                list.innerHTML = '<div class="p-4 text-center text-xs text-slate-400"><i class="fa-solid fa-book-open text-lg mb-1 block text-slate-300"></i>Tidak ada buku yang cocok dengan "' + escapeHtml(trimmed) + '"</div>';
+                submitLabel.innerText = 'Cari "' + escapeHtml(trimmed) + '" di Seluruh Koleksi';
+            } else {
+                currentFilteredSuggestions.forEach((book, idx) => {
+                    const item = document.createElement('div');
+                    item.id = 'auto_item_' + idx;
+                    item.className = 'autocomplete-item flex items-center gap-2.5 p-2 rounded-xs hover:bg-emerald-50/80 cursor-pointer transition text-left group';
+                    
+                    const coverUrl = book.cover_image ? ('/storage/' + book.cover_image) : null;
+                    const highlightedTitle = highlightKeyword(book.title, trimmed);
+                    const highlightedAuthor = highlightKeyword(book.author, trimmed);
+
+                    item.innerHTML = `
+                        <div class="w-8 h-11 bg-slate-900 rounded-xs overflow-hidden shrink-0 border border-slate-200 shadow-2xs">
+                            ${coverUrl ? '<img src="' + coverUrl + '" class="w-full h-full object-cover" />' : '<div class="w-full h-full bg-[#032c21] text-[6px] text-white p-0.5 flex flex-col justify-between"><span class="text-emerald-300 font-bold">PERSIS</span><span class="truncate">${book.category}</span></div>'}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-1 mb-0.5">
+                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded-xs border border-emerald-200/80 truncate">
+                                    ${book.category}
+                                </span>
+                                <span class="text-[10.5px] font-mono font-bold text-emerald-700 shrink-0">
+                                    ${book.price || ''}
+                                </span>
+                            </div>
+                            <h5 class="text-xs font-bold text-slate-900 truncate group-hover:text-emerald-700 transition">
+                                ${highlightedTitle}
+                            </h5>
+                            <p class="text-[10px] text-slate-500 truncate flex items-center gap-1">
+                                <i class="fa-solid fa-pen-nib text-[8px] text-emerald-600"></i>
+                                <span>${highlightedAuthor}</span>
+                            </p>
+                        </div>
+                    `;
+
+                    item.onclick = function() {
+                        openBookModal(book);
+                        dropdown.classList.add('hidden');
+                    };
+
+                    list.appendChild(item);
+                });
+
+                submitLabel.innerText = 'Lihat Semua Hasil Pencarian (' + currentFilteredSuggestions.length + ' buku)';
+            }
+
+            dropdown.classList.remove('hidden');
+        }
+
+        function highlightKeyword(text, keyword) {
+            if (!text || !keyword) return text || '';
+            const regex = new RegExp('(' + keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\let currentModalBook = null;') + ')', 'gi');
+            return text.replace(regex, '<mark class="bg-amber-100 text-amber-900 font-bold px-0.5 rounded-xs">$1</mark>');
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function clearSearchInput() {
+            const input = document.getElementById('catalogSearchInput');
+            input.value = '';
+            handleSearchAutocomplete('');
+            input.focus();
+        }
+
+        function handleSearchKeydown(e) {
+            const dropdown = document.getElementById('autocompleteDropdown');
+            if (dropdown.classList.contains('hidden')) return;
+
+            const items = currentFilteredSuggestions;
+            if (!items || items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedAutocompleteIndex = (selectedAutocompleteIndex + 1) % items.length;
+                updateAutocompleteSelection();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedAutocompleteIndex = (selectedAutocompleteIndex - 1 + items.length) % items.length;
+                updateAutocompleteSelection();
+            } else if (e.key === 'Enter') {
+                if (selectedAutocompleteIndex >= 0 && selectedAutocompleteIndex < items.length) {
+                    e.preventDefault();
+                    openBookModal(items[selectedAutocompleteIndex]);
+                    dropdown.classList.add('hidden');
+                }
+            } else if (e.key === 'Escape') {
+                dropdown.classList.add('hidden');
+            }
+        }
+
+        function updateAutocompleteSelection() {
+            const list = document.getElementById('autocompleteResultsList');
+            Array.from(list.children).forEach((child, idx) => {
+                if (idx === selectedAutocompleteIndex) {
+                    child.classList.add('bg-emerald-100/80', 'border-emerald-300');
+                    child.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                } else {
+                    child.classList.remove('bg-emerald-100/80', 'border-emerald-300');
+                }
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const form = document.getElementById('catalogSearchForm');
+            const dropdown = document.getElementById('autocompleteDropdown');
+            if (form && !form.contains(e.target) && dropdown) {
+                dropdown.classList.add('hidden');
             }
         });
 

@@ -76,6 +76,11 @@ class CatalogController extends Controller
         }
 
         $totalBooksCount = Book::published()->count();
+        $allSearchableBooks = Book::published()->select(
+            'id', 'title', 'slug', 'author', 'category', 'isbn', 'price', 'year', 'format', 
+            'pages', 'synopsis', 'is_new_release', 'is_best_seller', 'cover_image', 
+            'back_cover_image', 'inside_preview_image', 'additional_image', 'sample_pdf'
+        )->get();
 
         return view('katalog', compact(
             'books', 
@@ -85,6 +90,7 @@ class CatalogController extends Controller
             'bestSellers', 
             'settings', 
             'totalBooksCount',
+            'allSearchableBooks',
             'activeCategory'
         ));
     }
