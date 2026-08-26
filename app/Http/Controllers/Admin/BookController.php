@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BookController extends Controller
@@ -48,6 +49,8 @@ class BookController extends Controller
             'format' => 'required|string|max:100',
             'price' => 'required|string|max:50',
             'synopsis' => 'nullable|string',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB
+            'sample_pdf' => 'nullable|file|mimes:pdf|max:102400', // 100MB
             'is_new_release' => 'nullable|boolean',
             'is_best_seller' => 'nullable|boolean',
             'status' => 'required|in:published,draft',
@@ -57,9 +60,23 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
+        // Handle Cover Image Upload
+        if ($request->hasFile('cover_image')) {
+            $file = $request->file('cover_image');
+            $path = $file->store('books/covers', 'public');
+            $validated['cover_image'] = $path;
+        }
+
+        // Handle Sample PDF Upload
+        if ($request->hasFile('sample_pdf')) {
+            $file = $request->file('sample_pdf');
+            $path = $file->store('books/samples', 'public');
+            $validated['sample_pdf'] = $path;
+        }
+
         Book::create($validated);
 
-        return back()->with('success', 'Buku baru berhasil ditambahkan ke katalog.');
+        return back()->with('success', 'Buku baru "' . $validated['title'] . '" berhasil ditambahkan ke katalog.');
     }
 
     public function update(Request $request, Book $book)
@@ -74,6 +91,8 @@ class BookController extends Controller
             'format' => 'required|string|max:100',
             'price' => 'required|string|max:50',
             'synopsis' => 'nullable|string',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB
+            'sample_pdf' => 'nullable|file|mimes:pdf|max:102400', // 100MB
             'is_new_release' => 'nullable|boolean',
             'is_best_seller' => 'nullable|boolean',
             'status' => 'required|in:published,draft',
@@ -81,6 +100,26 @@ class BookController extends Controller
 
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
+
+        // Handle Cover Image Upload
+        if ($request->hasFile('cover_image')) {
+            if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
+                Storage::disk('public')->delete($book->cover_image);
+            }
+            $file = $request->file('cover_image');
+            $path = $file->store('books/covers', 'public');
+            $validated['cover_image'] = $path;
+        }
+
+        // Handle Sample PDF Upload
+        if ($request->hasFile('sample_pdf')) {
+            if ($book->sample_pdf && Storage::disk('public')->exists($book->sample_pdf)) {
+                Storage::disk('public')->delete($book->sample_pdf);
+            }
+            $file = $request->file('sample_pdf');
+            $path = $file->store('books/samples', 'public');
+            $validated['sample_pdf'] = $path;
+        }
 
         $book->update($validated);
 
@@ -90,6 +129,12 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $title = $book->title;
+        if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
+            Storage::disk('public')->delete($book->cover_image);
+        }
+        if ($book->sample_pdf && Storage::disk('public')->exists($book->sample_pdf)) {
+            Storage::disk('public')->delete($book->sample_pdf);
+        }
         $book->delete();
 
         return back()->with('success', 'Buku "' . $title . '" berhasil dihapus dari katalog.');
