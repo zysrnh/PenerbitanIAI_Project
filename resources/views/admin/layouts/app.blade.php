@@ -106,10 +106,7 @@
                             <span>Katalog Buku &amp; ISBN</span>
                         </a>
 
-                        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.orders.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
-                            <i class="fa-solid fa-print w-4 text-center"></i>
-                            <span>Antrean Cetak</span>
-                        </a>
+                        
                     </div>
                 </div>
 
@@ -153,7 +150,7 @@
                 </div>
             </a>
             
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('admin.logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition" title="Keluar / Logout">
                     <i class="fa-solid fa-right-from-bracket text-xs"></i>
