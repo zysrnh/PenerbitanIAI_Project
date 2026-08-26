@@ -352,9 +352,9 @@
                                 </a>
                             </div>
 
-                            <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div class="p-3 sm:p-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
                                 @foreach($newBooks as $nBook)
-                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 200 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($nBook) }})">
+                                    <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 200 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($nBook) }})">
                                         
                                         <div class="book-cover-stage-3d w-full mb-3 py-1">
                                             <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -394,11 +394,11 @@
                                                     <span class="text-[10px] text-slate-400 font-mono font-semibold">{{ $nBook->year ?? '2026' }}</span>
                                                 </div>
 
-                                                <h4 class="font-extrabold text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                                <h4 class="font-extrabold text-slate-900 text-[11px] sm:text-xs md:text-[13px] leading-snug line-clamp-2 mb-0.5 sm:mb-1 group-hover:text-emerald-700 transition">
                                                     {{ $nBook->title }}
                                                 </h4>
 
-                                                <div class="flex items-center gap-1.5 text-slate-500 text-[11px] font-medium mb-2.5">
+                                                <div class="flex items-center gap-1 text-slate-500 text-[10px] sm:text-[11px] font-medium mb-1.5 sm:mb-2.5">
                                                     <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600 shrink-0"></i>
                                                     <span class="truncate">{{ $nBook->author }}</span>
                                                 </div>
@@ -407,9 +407,9 @@
                                             <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
                                                 <div>
                                                     <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
-                                                    <span class="text-xs sm:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $nBook->price }}</span>
+                                                    <span class="text-[11px] sm:text-xs md:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $nBook->price }}</span>
                                                 </div>
-                                                <button type="button" class="px-2.5 py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[10px] transition flex items-center gap-1">
+                                                <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
                                                     <span>Detail</span>
                                                     <i class="fa-solid fa-arrow-right text-[8px]"></i>
                                                 </button>
@@ -434,7 +434,7 @@
 
                             <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 @foreach($bestSellers as $bBook)
-                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 300 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($bBook) }})">
+                                    <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 300 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($bBook) }})">
                                         
                                         <div class="book-cover-stage-3d w-full mb-3 py-1">
                                             <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -474,11 +474,11 @@
                                                     <span class="text-[10px] text-slate-400 font-mono font-semibold">{{ $bBook->year ?? '2026' }}</span>
                                                 </div>
 
-                                                <h4 class="font-extrabold text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                                <h4 class="font-extrabold text-slate-900 text-[11px] sm:text-xs md:text-[13px] leading-snug line-clamp-2 mb-0.5 sm:mb-1 group-hover:text-emerald-700 transition">
                                                     {{ $bBook->title }}
                                                 </h4>
 
-                                                <div class="flex items-center gap-1.5 text-slate-500 text-[11px] font-medium mb-2.5">
+                                                <div class="flex items-center gap-1 text-slate-500 text-[10px] sm:text-[11px] font-medium mb-1.5 sm:mb-2.5">
                                                     <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600 shrink-0"></i>
                                                     <span class="truncate">{{ $bBook->author }}</span>
                                                 </div>
@@ -487,9 +487,9 @@
                                             <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
                                                 <div>
                                                     <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
-                                                    <span class="text-xs sm:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $bBook->price }}</span>
+                                                    <span class="text-[11px] sm:text-xs md:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $bBook->price }}</span>
                                                 </div>
-                                                <button type="button" class="px-2.5 py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[10px] transition flex items-center gap-1">
+                                                <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
                                                     <span>Detail</span>
                                                     <i class="fa-solid fa-arrow-right text-[8px]"></i>
                                                 </button>
@@ -536,7 +536,7 @@
 
                         <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                             @forelse($books as $book)
-                                <div class="persis-book-card p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 100 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($book) }})">
+                                <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 100 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($book) }})">
                                     
                                     <div class="book-cover-stage-3d w-full mb-3 py-1">
                                         <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -582,11 +582,11 @@
                                                 <span class="text-[10px] text-slate-400 font-mono font-semibold">{{ $book->year ?? '2026' }}</span>
                                             </div>
 
-                                            <h4 class="font-extrabold text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                            <h4 class="font-extrabold text-slate-900 text-[11px] sm:text-xs md:text-[13px] leading-snug line-clamp-2 mb-0.5 sm:mb-1 group-hover:text-emerald-700 transition">
                                                 {{ $book->title }}
                                             </h4>
 
-                                            <div class="flex items-center gap-1.5 text-slate-500 text-[11px] font-medium mb-2.5">
+                                            <div class="flex items-center gap-1 text-slate-500 text-[10px] sm:text-[11px] font-medium mb-1.5 sm:mb-2.5">
                                                 <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600 shrink-0"></i>
                                                 <span class="truncate">{{ $book->author }}</span>
                                             </div>
@@ -595,9 +595,9 @@
                                         <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
                                             <div>
                                                 <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
-                                                <span class="text-xs sm:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $book->price }}</span>
+                                                <span class="text-[11px] sm:text-xs md:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $book->price }}</span>
                                             </div>
-                                            <button type="button" class="px-2.5 py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[10px] transition flex items-center gap-1">
+                                            <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
                                                 <span>Detail</span>
                                                 <i class="fa-solid fa-arrow-right text-[8px]"></i>
                                             </button>
@@ -819,12 +819,12 @@
         </div>
 
         <!-- Previous Arrow -->
-        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-sm bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center text-lg transition z-50 shadow-lg border border-white/20" title="Foto Sebelumnya (Panah Kiri)">
+        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-sm bg-black/60 sm:bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center text-sm sm:text-lg transition z-50 shadow-lg border border-white/20" title="Foto Sebelumnya (Panah Kiri)">
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
         <!-- Next Arrow -->
-        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-sm bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center text-lg transition z-50 shadow-lg border border-white/20" title="Foto Selanjutnya (Panah Kanan)">
+        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-11 sm:h-11 rounded-sm bg-black/60 sm:bg-white/10 hover:bg-emerald-600 text-white flex items-center justify-center text-sm sm:text-lg transition z-50 shadow-lg border border-white/20" title="Foto Selanjutnya (Panah Kanan)">
             <i class="fa-solid fa-chevron-right"></i>
         </button>
 
@@ -952,7 +952,36 @@
 
         function highlightKeyword(text, keyword) {
             if (!text || !keyword) return text || '';
-            const regex = new RegExp('(' + keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\let currentModalBook = null;') + ')', 'gi');
+            const regex = new RegExp('(' + keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\
+        // Mobile Touch Swipe Navigation for Lightbox
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        const lightboxEl = document.getElementById('bookLightboxModal');
+        if (lightboxEl) {
+            lightboxEl.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            lightboxEl.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipeGesture();
+            }, { passive: true });
+        }
+
+        function handleSwipeGesture() {
+            const swipeThreshold = 40;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swiped Left -> Go Next
+                nextLightboxPhoto();
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                // Swiped Right -> Go Prev
+                prevLightboxPhoto();
+            }
+        }
+
+        let currentModalBook = null;') + ')', 'gi');
             return text.replace(regex, '<mark class="bg-amber-100 text-amber-900 font-bold px-0.5 rounded-xs">$1</mark>');
         }
 
