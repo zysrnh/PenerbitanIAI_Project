@@ -145,7 +145,7 @@
 
             <!-- 4 Keunggulan (Floating Bottom Right Bar) -->
             <div class="hidden lg:block absolute bottom-6 right-8 xl:right-16 z-30 max-w-3xl w-full">
-                <div class="bg-white rounded-xl border border-slate-200 shadow-md px-6 py-4 text-slate-800">
+                <div class="bg-white rounded-sm border border-slate-200 shadow-md px-6 py-4 text-slate-800">
                     <div class="grid grid-cols-4 gap-4 divide-x divide-slate-100">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
@@ -194,7 +194,7 @@
 
         <!-- 4 Keunggulan Mobile / Tablet (Below Hero) -->
         <div class="lg:hidden relative z-20 max-w-7xl mx-auto px-4 sm:px-6 -mt-6 mb-8">
-            <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-4 text-slate-800">
+            <div class="bg-white rounded-sm border border-slate-200 shadow-sm p-4 text-slate-800">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
                     <div class="flex items-center gap-3 sm:px-2">
                         <div class="w-9 h-9 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
@@ -336,7 +336,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                 
                 <!-- Kolom 1: Tentang Kami -->
-                <div id="tentang" class="lg:col-span-4 bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div id="tentang" class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex flex-col justify-between">
                     <div>
                         <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block mb-1">TENTANG KAMI</span>
                         <h4 class="font-extrabold text-base text-slate-900 mb-3">Persis Pers</h4>
@@ -361,7 +361,7 @@
                 </div>
 
                 <!-- Kolom 2: Proses Kami -->
-                <div class="lg:col-span-4 bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex flex-col justify-between">
                     <div>
                         <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block mb-1">PROSES KAMI</span>
                         <h4 class="font-extrabold text-base text-slate-900 mb-4">Proses Produksi Profesional</h4>
@@ -427,7 +427,7 @@
                 </div>
 
                 <!-- Kolom 3: Katalog Buku Terbaru -->
-                <div id="katalog" class="lg:col-span-4 bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div id="katalog" class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex flex-col justify-between">
                     <div>
                         <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block mb-1">PRODUK TERBARU</span>
                         <h4 class="font-extrabold text-base text-slate-900 mb-3">Katalog Buku Terbaru</h4>

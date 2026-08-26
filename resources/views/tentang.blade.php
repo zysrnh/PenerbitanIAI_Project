@@ -20,19 +20,19 @@
     <!-- Stats Bar -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-md reveal-card text-center">
                 <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['about_stat_books'] ?? ($about['stat_books'] ?? '150+') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Judul Buku Terbit</span>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-md reveal-card text-center">
                 <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['about_stat_authors'] ?? ($about['stat_authors'] ?? '80+') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Penulis & Dosen</span>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-md reveal-card text-center">
                 <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['about_stat_isbn'] ?? ($about['stat_isbn'] ?? '100%') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Legalitas ISBN Resmi</span>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-md reveal-card text-center">
                 <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['about_stat_copies'] ?? ($about['stat_copies'] ?? '25.000+') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Eksemplar Tercetak</span>
             </div>
@@ -79,8 +79,8 @@
 
                 <!-- Right: Visual Highlights Box -->
                 <div class="lg:col-span-5 reveal-card">
-                    <div class="bg-gradient-to-br from-brand-950 via-brand-900 to-emerald-950 rounded-3xl p-7 text-white shadow-xl border border-brand-900 relative overflow-hidden">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-xl mb-5 shadow-sm">
+                    <div class="bg-gradient-to-br from-brand-950 via-brand-900 to-emerald-950 rounded-sm p-7 text-white shadow-xl border border-brand-900 relative overflow-hidden">
+                        <div class="w-12 h-12 rounded-sm bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-xl mb-5 shadow-sm">
                             <i class="fa-solid fa-building-columns"></i>
                         </div>
                         <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-1">Naungan Resmi</span>
@@ -89,8 +89,8 @@
                             Menghadirkan karya tulis ilmiah berkualitas yang berlandaskan Al-Qur'an dan As-Sunnah serta responsif terhadap perkembangan sains dan peradaban zaman.
                         </p>
 
-                        <div class="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs flex items-center gap-3.5">
-                            <div class="w-10 h-10 rounded-lg bg-[#25D366] text-white flex items-center justify-center text-xl shrink-0">
+                        <div class="p-4 rounded-sm bg-white/5 border border-white/10 backdrop-blur-xs flex items-center gap-3.5">
+                            <div class="w-10 h-10 rounded-sm bg-[#25D366] text-white flex items-center justify-center text-xl shrink-0">
                                 <i class="fa-brands fa-whatsapp"></i>
                             </div>
                             <div>
@@ -116,9 +116,9 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                 <!-- Visi Box -->
-                <div class="lg:col-span-5 bg-white p-7 sm:p-8 rounded-3xl border border-slate-200 shadow-sm reveal-card flex flex-col justify-between">
+                <div class="lg:col-span-5 bg-white p-7 sm:p-8 rounded-sm border border-slate-200 shadow-sm reveal-card flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl mb-5">
+                        <div class="w-12 h-12 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl mb-5">
                             <i class="fa-solid fa-bullseye"></i>
                         </div>
                         <span class="text-xs font-extrabold text-emerald-700 uppercase tracking-widest block mb-2">Visi Kami</span>
@@ -132,26 +132,26 @@
                 </div>
 
                 <!-- Misi List -->
-                <div class="lg:col-span-7 bg-white p-7 sm:p-8 rounded-3xl border border-slate-200 shadow-sm reveal-card">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl mb-5">
+                <div class="lg:col-span-7 bg-white p-7 sm:p-8 rounded-sm border border-slate-200 shadow-sm reveal-card">
+                    <div class="w-12 h-12 rounded-sm bg-blue-50 text-blue-700 flex items-center justify-center text-xl mb-5">
                         <i class="fa-solid fa-list-check"></i>
                     </div>
                     <span class="text-xs font-extrabold text-blue-700 uppercase tracking-widest block mb-4">4 Pilar Misi Kami</span>
                     
                     <div class="space-y-4">
-                        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
+                        <div class="flex items-start gap-3.5 p-3.5 rounded-sm bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
                             <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_1'] ?? '' }}</p>
                         </div>
-                        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
+                        <div class="flex items-start gap-3.5 p-3.5 rounded-sm bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
                             <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_2'] ?? '' }}</p>
                         </div>
-                        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
+                        <div class="flex items-start gap-3.5 p-3.5 rounded-sm bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
                             <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_3'] ?? '' }}</p>
                         </div>
-                        <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
+                        <div class="flex items-start gap-3.5 p-3.5 rounded-sm bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">4</span>
                             <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_4'] ?? '' }}</p>
                         </div>
@@ -171,8 +171,8 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Value 1 -->
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg mb-4">
+                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
+                    <div class="w-10 h-10 rounded-sm bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg mb-4">
                         <i class="fa-solid fa-graduation-cap"></i>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-1.5">Integritas Akademik</h3>
@@ -180,8 +180,8 @@
                 </div>
 
                 <!-- Value 2 -->
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-lg mb-4">
+                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
+                    <div class="w-10 h-10 rounded-sm bg-blue-100 text-blue-800 flex items-center justify-center text-lg mb-4">
                         <i class="fa-solid fa-gem"></i>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-1.5">Kualitas & Presisi</h3>
@@ -189,8 +189,8 @@
                 </div>
 
                 <!-- Value 3 -->
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-lg mb-4">
+                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
+                    <div class="w-10 h-10 rounded-sm bg-amber-100 text-amber-800 flex items-center justify-center text-lg mb-4">
                         <i class="fa-solid fa-handshake-angle"></i>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-1.5">Amanah & Pelayanan</h3>
@@ -198,8 +198,8 @@
                 </div>
 
                 <!-- Value 4 -->
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
-                    <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center text-lg mb-4">
+                <div class="bg-slate-50 p-6 rounded-sm border border-slate-200/80 reveal-card hover:border-emerald-500 transition">
+                    <div class="w-10 h-10 rounded-sm bg-purple-100 text-purple-800 flex items-center justify-center text-lg mb-4">
                         <i class="fa-solid fa-book-quran"></i>
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 mb-1.5">Literasi Islam & Dakwah</h3>
@@ -220,7 +220,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
                 <!-- Person 1: Director -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-card text-center">
+                <div class="bg-white p-6 rounded-sm border border-slate-200 shadow-sm reveal-card text-center">
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
                         {{ strtoupper(substr($about['about_director_name'] ?? ($about['about_director_name'] ?? ($about['director_name'] ?? '') ?? 'A'), 0, 1)) }}
                     </div>
@@ -229,7 +229,7 @@
                 </div>
 
                 <!-- Person 2: Editor Chief -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-card text-center">
+                <div class="bg-white p-6 rounded-sm border border-slate-200 shadow-sm reveal-card text-center">
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
                         {{ strtoupper(substr($about['about_editor_chief'] ?? ($about['about_editor_chief'] ?? ($about['editor_chief'] ?? '') ?? 'E'), 0, 1)) }}
                     </div>
@@ -238,7 +238,7 @@
                 </div>
 
                 <!-- Person 3: Production Lead -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm reveal-card text-center">
+                <div class="bg-white p-6 rounded-sm border border-slate-200 shadow-sm reveal-card text-center">
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
                         {{ strtoupper(substr($about['about_production_lead'] ?? ($about['about_production_lead'] ?? ($about['production_lead'] ?? '') ?? 'P'), 0, 1)) }}
                     </div>
@@ -261,10 +261,10 @@
             </p>
 
             <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="{{ route('kontak') }}" class="px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-sm flex items-center gap-2">
+                <a href="{{ route('kontak') }}" class="px-6 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-sm font-bold text-xs uppercase tracking-wider transition shadow-sm flex items-center gap-2">
                     <i class="fa-brands fa-whatsapp text-base"></i> Konsultasi Naskah Sekarang
                 </a>
-                <a href="{{ url('/#layanan') }}" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition border border-white/20">
+                <a href="{{ url('/#layanan') }}" class="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-sm font-bold text-xs uppercase tracking-wider transition border border-white/20">
                     Lihat Paket Layanan
                 </a>
             </div>
