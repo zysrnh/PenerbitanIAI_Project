@@ -223,28 +223,7 @@
                             >{{ old('about_profile_story_2', $about['about_profile_story_2']) }}</textarea>
                         </div>
                     
-                        <div class="pt-3 border-t border-slate-100">
-                            <label class="block text-xs font-bold text-slate-700 mb-2">4 Poin Ceklis Keunggulan Mutu</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 1 <span class="text-rose-500">*</span></label>
-                                    <input type="text" name="about_feature_1" id="in_feature_1" value="{{ old('about_feature_1', $about['about_feature_1']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 2 <span class="text-rose-500">*</span></label>
-                                    <input type="text" name="about_feature_2" id="in_feature_2" value="{{ old('about_feature_2', $about['about_feature_2']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 3 <span class="text-rose-500">*</span></label>
-                                    <input type="text" name="about_feature_3" id="in_feature_3" value="{{ old('about_feature_3', $about['about_feature_3']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 4 <span class="text-rose-500">*</span></label>
-                                    <input type="text" name="about_feature_4" id="in_feature_4" value="{{ old('about_feature_4', $about['about_feature_4']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </div></div>
                 </div>
 
                 <!-- 4. Visi & Misi -->
