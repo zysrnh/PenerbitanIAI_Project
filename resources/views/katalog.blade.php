@@ -1,497 +1,341 @@
 @extends('layouts.app')
 
-@section('title', 'Katalog Buku & Karya Ilmiah | PERSIS PERS')
+@section('title', 'Katalog Buku & Karya Ilmiah — PERSIS PERS')
 
 @section('content')
-    <!-- Flat Header Banner -->
-    <section class="bg-[#032c21] text-white py-7 sm:py-10 border-b border-[#064e3b]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
-                <div>
-                    <span class="text-[10px] sm:text-[11px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">{{ $settings["catalog_banner_badge"] ?? "PUBLIKASI RESMI KAMPUS" }}</span>
-                    <h1 class="text-xl sm:text-3xl font-extrabold font-heading tracking-tight">{{ $settings["catalog_banner_title"] ?? "Katalog Buku & Karya Ilmiah" }}</h1>
-                    <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                        {{ $settings["catalog_banner_desc"] ?? "Koleksi buku ajar perguruan tinggi, monograf riset dosen, dan literatur keislaman ber-ISBN resmi terbitan PERSIS PERS." }}
-                    </p>
-                </div>
-                <!-- Flat Search Box -->
-                <div class="w-full md:w-80 shrink-0">
-                    <div class="relative">
-                        <input type="text" id="catalogSearch" placeholder="Cari judul, penulis, ISBN..." class="w-full pl-9 pr-4 py-2 rounded-sm bg-[#064e3b] border border-emerald-700/60 text-white placeholder-emerald-200 text-xs focus:outline-hidden focus:ring-1 focus:ring-emerald-400" />
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-emerald-300"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <style>
+        /* 3D Perspective Hover Tilt on Public Catalog */
+        .book-stage-public {
+            perspective: 1000px;
+        }
+        .book-hover-public {
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            box-shadow: 8px 12px 20px -4px rgba(0, 0, 0, 0.25);
+        }
+        .book-card-item:hover .book-hover-public {
+            transform: rotateY(-14deg) rotateX(4deg) translateY(-4px) scale(1.02);
+            box-shadow: 14px 18px 28px -4px rgba(0, 0, 0, 0.35);
+        }
+        .book-modal-hover:hover {
+            transform: rotateY(-12deg) rotateX(4deg) translateY(-2px);
+            box-shadow: 16px 20px 30px -4px rgba(0, 0, 0, 0.4);
+        }
+        .spine-strip-public {
+            box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.18);
+        }
+        .bookpaper-public {
+            background-color: #fdfbf7;
+        }
+    </style>
 
-    <!-- 4 Flat Quick Highlight Cards (1-Col on Mobile, 2-Col on Tablet, 4-Col on Desktop) -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-5 sm:-mt-6 relative z-20">
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
-            <!-- Card 1 -->
-            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-book-bookmark text-[10px] sm:text-xs"></i>
-                </div>
-                <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_books"] ?? "150+ Judul" }}</span>
-                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Terbitan Resmi</span>
-                </div>
-            </div>
-            <!-- Card 2 -->
-            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-graduation-cap text-[10px] sm:text-xs"></i>
-                </div>
-                <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_authors"] ?? "Karya Dosen" }}</span>
-                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Buku Ajar &amp; Riset</span>
-                </div>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-barcode text-[10px] sm:text-xs"></i>
-                </div>
-                <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_isbn"] ?? "ISBN Perpusnas" }}</span>
-                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Legalitas Resmi</span>
-                </div>
-            </div>
-            <!-- Card 4 -->
-            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
-                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-print text-[10px] sm:text-xs"></i>
-                </div>
-                <div class="min-w-0">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">{{ $settings["catalog_stat_print"] ?? "Mutu Prima" }}</span>
-                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Standar UNESCO</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Catalog Body -->
-    <section class="py-6 sm:py-8 bg-slate-50 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                
-                <!-- Left Sidebar -->
-                <aside class="lg:col-span-3 space-y-4">
-                    
-                    <!-- Box 1: Kategori Buku -->
-                    <div class="bg-white rounded-sm border border-slate-200 shadow-xs overflow-hidden">
-                        <div class="bg-[#032c21] px-3.5 py-2 text-white flex items-center justify-between">
-                            <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-layer-group text-emerald-400"></i> Kategori Buku
-                            </span>
-                            <span class="text-[10px] bg-[#064e3b] text-emerald-300 font-bold px-1.5 py-0.5 rounded-xs border border-emerald-800">24</span>
-                        </div>
-                        <div class="p-1 divide-y divide-slate-100 text-xs">
-                            @foreach($categories as $cat)
-                                <button type="button" class="w-full flex items-center justify-between px-3 py-2 rounded-xs font-medium text-slate-700 hover:bg-slate-100 hover:text-[#006830] transition text-left group {{ $cat['slug'] === 'all' ? 'bg-emerald-50 text-[#006830] font-bold' : '' }}">
-                                    <span class="flex items-center gap-1.5 truncate">
-                                        <i class="fa-solid fa-angle-right text-[9px] text-slate-400 group-hover:text-[#006830] shrink-0"></i>
-                                        <span class="truncate">{{ $cat['name'] }}</span>
-                                    </span>
-                                    <span class="text-[10px] font-bold text-slate-400 group-hover:text-[#006830] bg-slate-100 px-1.5 py-0.5 rounded-xs shrink-0 ml-1">
-                                        {{ $cat['count'] }}
-                                    </span>
-                                </button>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Box 2: Filter Legalitas -->
-                    <div class="bg-white rounded-sm border border-slate-200 shadow-xs p-3.5 space-y-2.5">
-                        <span class="text-xs font-bold text-slate-900 uppercase tracking-wider block border-b border-slate-100 pb-1.5">
-                            <i class="fa-solid fa-sliders text-[#006830]"></i> Spesifikasi &amp; Format
-                        </span>
-                        <div class="space-y-2 text-xs text-slate-600">
-                            <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
-                                <input type="checkbox" checked class="rounded-xs border-slate-300 text-[#006830] focus:ring-[#006830]" />
-                                <span>ISBN Resmi Perpusnas (100%)</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
-                                <input type="checkbox" class="rounded-xs border-slate-300 text-[#006830] focus:ring-[#006830]" />
-                                <span>Katalog Dalam Terbitan (KDT)</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
-                                <input type="checkbox" class="rounded-xs border-slate-300 text-[#006830] focus:ring-[#006830]" />
-                                <span>Buku Softcover (Bookpaper)</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
-                                <input type="checkbox" class="rounded-xs border-slate-300 text-[#006830] focus:ring-[#006830]" />
-                                <span>Edisi Eksklusif Hardcover</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Box 3: Info & Agenda Redaksi -->
-                    <div class="bg-white rounded-sm border border-slate-200 shadow-xs overflow-hidden">
-                        <div class="bg-[#b45309] px-3.5 py-2 text-white">
-                            <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-solid fa-bullhorn"></i> Info &amp; Agenda Redaksi
-                            </span>
-                        </div>
-                        <div class="p-3 space-y-2.5 text-xs text-slate-700 divide-y divide-slate-100">
-                            <div class="pt-1.5 first:pt-0">
-                                <span class="text-[9px] font-bold text-[#006830] block uppercase">Program Khusus</span>
-                                <h4 class="font-bold text-slate-900 mt-0.5 hover:text-[#006830] cursor-pointer">
-                                    {{ $settings["catalog_promo_title"] ?? "Diskon Biaya Cetak 15% untuk Konversi Skripsi & Tesis" }}
-                                </h4>
-                                <p class="text-[11px] text-slate-500 mt-1">{{ $settings["catalog_promo_desc"] ?? "Paket lengkap pengurusan ISBN, layout standar UNESCO, dan proofreading." }}</p>
-                            </div>
-                            <div class="pt-2">
-                                <span class="text-[9px] font-bold text-amber-700 block uppercase">Agenda Akademik</span>
-                                <h4 class="font-bold text-slate-900 mt-0.5 hover:text-[#006830] cursor-pointer">
-                                    {{ $settings["catalog_agenda_title"] ?? "Bedah Buku & Call for Book Chapters Dosen" }}
-                                </h4>
-                                <p class="text-[11px] text-slate-500 mt-1">{{ $settings["catalog_agenda_desc"] ?? "Terbuka untuk civitas akademika dan peneliti eksternal." }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Box 4: Banner Pengajuan Naskah -->
-                    <div class="bg-[#032c21] rounded-sm p-4 text-white border border-[#064e3b] space-y-2">
-                        <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-widest block">LAYANAN PENERBITAN</span>
-                        <h4 class="font-bold text-xs">{{ $settings["catalog_publish_box_title"] ?? "Punya Naskah Buku Sendiri?" }}</h4>
-                        <p class="text-[11px] text-slate-300 leading-relaxed">
-                            {{ $settings["catalog_publish_box_desc"] ?? "Terbitkan karya ilmiah Anda bersama PERSIS PERS dengan jaminan ISBN resmi dan mutu cetak prima." }}
-                        </p>
-                        <a href="{{ route('kontak') }}" class="block text-center py-2 px-3 bg-[#006830] hover:bg-[#005226] text-white font-bold text-xs rounded-sm transition">
-                            Konsultasikan Naskah &rarr;
-                        </a>
-                    </div>
-
-                </aside>
-
-                <!-- Right Main Content -->
-                <main class="lg:col-span-9 space-y-7">
-                    
-                    <!-- SECTION 1: BUKU TERBITAN BARU -->
-                    <div class="space-y-3">
-                        <!-- Solid Header Bar -->
-                        <div class="bg-[#006830] px-4 py-2 rounded-sm text-white flex items-center justify-between shadow-xs">
-                            <h2 class="font-extrabold text-xs sm:text-sm font-heading tracking-wide uppercase flex items-center gap-2">
-                                <i class="fa-solid fa-book-bookmark text-xs text-emerald-300"></i> Buku Terbitan Baru
-                            </h2>
-                            <span class="text-[10px] sm:text-[11px] text-emerald-100 font-semibold cursor-pointer hover:text-white transition flex items-center gap-1">
-                                Koleksi 2026 <i class="fa-solid fa-angle-right text-[10px]"></i>
-                            </span>
-                        </div>
-
-                        <!-- Grid 2-Kolom di HP, 4-Kolom di Desktop -->
-                        <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-3.5">
-                            @foreach($newBooks as $book)
-                                <div class="bg-white rounded-sm border border-slate-200 shadow-xs hover:border-[#006830] transition flex flex-col justify-between p-2.5 sm:p-3">
-                                    
-                                    <div>
-                                        <!-- Realistic Academic Book Cover -->
-                                        <div class="relative aspect-[3/4.1] rounded-xs bg-[#064e3b] text-white p-2.5 sm:p-3 flex flex-col justify-between border-l-4 border-emerald-400 border-r-2 border-r-slate-200 shadow-sm overflow-hidden select-none">
-                                            <!-- Top Header -->
-                                            <div class="flex items-center justify-between border-b border-white/20 pb-1">
-                                                <span class="text-[7.5px] sm:text-[8px] font-extrabold uppercase bg-black/40 text-emerald-300 px-1 py-0.5 rounded-xs">
-                                                    {{ $book['category'] }}
-                                                </span>
-                                                <span class="text-[7.5px] sm:text-[8px] text-slate-300 font-mono">
-                                                    {{ $book['year'] }}
-                                                </span>
-                                            </div>
-
-                                            <!-- Center Title -->
-                                            <div class="my-auto py-1 sm:py-2 text-center">
-                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mb-1 sm:mb-2"></div>
-                                                <h3 class="font-black text-[11px] sm:text-[13px] text-white leading-tight font-heading line-clamp-3">
-                                                    {{ $book['title'] }}
-                                                </h3>
-                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mt-1 sm:mt-2"></div>
-                                            </div>
-
-                                            <!-- Footer Author -->
-                                            <div class="pt-1 border-t border-white/20 text-center">
-                                                <span class="text-[8.5px] sm:text-[9.5px] font-bold text-slate-100 line-clamp-1 block">
-                                                    {{ $book['author'] }}
-                                                </span>
-                                                <span class="text-[7px] sm:text-[7.5px] font-mono text-emerald-300 block mt-0.5 uppercase tracking-wider truncate">
-                                                    ISBN {{ $book['isbn'] }}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Meta Info Below Cover -->
-                                        <div class="mt-2 space-y-0.5">
-                                            <h4 class="font-bold text-[11px] sm:text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2rem] sm:min-h-[2.25rem] flex items-center">
-                                                {{ $book['title'] }}
-                                            </h4>
-                                            <p class="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
-                                                {{ $book['author'] }}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Price & Actions Bar -->
-                                    <div>
-                                        <div class="mt-2 pt-2 border-t border-slate-100 flex items-baseline justify-between">
-                                            <span class="text-[9px] sm:text-[10px] text-slate-500 font-medium">Harga Cetak:</span>
-                                            <span class="text-[11px] sm:text-xs font-black text-slate-900 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
-                                        </div>
-
-                                        <div class="mt-1.5 grid grid-cols-2 gap-1">
-                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1">
-                                                <i class="fa-solid fa-eye text-[9px] text-slate-500"></i> Detail
-                                            </button>
-                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-[#006830] hover:bg-[#005226] text-white text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1 shadow-xs">
-                                                <i class="fa-brands fa-whatsapp text-xs"></i> Pesan
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- SECTION 2: BUKU BEST SELLER -->
-                    <div class="space-y-3 pt-2">
-                        <!-- Solid Header Bar -->
-                        <div class="bg-[#b45309] px-4 py-2 rounded-sm text-white flex items-center justify-between shadow-xs">
-                            <h2 class="font-extrabold text-xs sm:text-sm font-heading tracking-wide uppercase flex items-center gap-2">
-                                <i class="fa-solid fa-trophy text-xs text-amber-200"></i> Koleksi Best Seller
-                            </h2>
-                            <span class="text-[10px] sm:text-[11px] text-amber-100 font-semibold cursor-pointer hover:text-white transition flex items-center gap-1">
-                                Paling Banyak Dirujuk <i class="fa-solid fa-angle-right text-[10px]"></i>
-                            </span>
-                        </div>
-
-                        <!-- Grid 2-Kolom di HP, 4-Kolom di Desktop -->
-                        <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-3.5">
-                            @foreach($bestSellers as $book)
-                                <div class="bg-white rounded-sm border border-slate-200 shadow-xs hover:border-amber-600 transition flex flex-col justify-between p-2.5 sm:p-3">
-                                    
-                                    <div>
-                                        <!-- Realistic Heritage Academic Cover -->
-                                        <div class="relative aspect-[3/4.1] rounded-xs bg-[#032c21] text-white p-2.5 sm:p-3 flex flex-col justify-between border-l-4 border-amber-500 border-r-2 border-r-slate-200 shadow-sm overflow-hidden select-none">
-                                            <!-- Top Header -->
-                                            <div class="flex items-center justify-between border-b border-amber-500/30 pb-1">
-                                                <span class="text-[7.5px] sm:text-[8px] font-extrabold uppercase bg-black/40 text-amber-300 px-1 py-0.5 rounded-xs">
-                                                    {{ $book['category'] }}
-                                                </span>
-                                                <span class="text-[7.5px] sm:text-[8px] text-amber-300 font-bold flex items-center gap-0.5">
-                                                    <i class="fa-solid fa-star text-[7px]"></i> Top
-                                                </span>
-                                            </div>
-
-                                            <!-- Center Title -->
-                                            <div class="my-auto py-1 sm:py-2 text-center">
-                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mb-1 sm:mb-2"></div>
-                                                <h3 class="font-black text-[11px] sm:text-[13px] text-white leading-tight font-heading line-clamp-3">
-                                                    {{ $book['title'] }}
-                                                </h3>
-                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mt-1 sm:mt-2"></div>
-                                            </div>
-
-                                            <!-- Footer Author -->
-                                            <div class="pt-1 border-t border-amber-500/30 text-center">
-                                                <span class="text-[8.5px] sm:text-[9.5px] font-bold text-slate-100 line-clamp-1 block">
-                                                    {{ $book['author'] }}
-                                                </span>
-                                                <span class="text-[7px] sm:text-[7.5px] font-mono text-amber-300 block mt-0.5 uppercase tracking-wider truncate">
-                                                    ISBN {{ $book['isbn'] }}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <!-- Meta Info Below Cover -->
-                                        <div class="mt-2 space-y-0.5">
-                                            <h4 class="font-bold text-[11px] sm:text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2rem] sm:min-h-[2.25rem] flex items-center">
-                                                {{ $book['title'] }}
-                                            </h4>
-                                            <p class="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
-                                                {{ $book['author'] }}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <!-- Price & Actions Bar -->
-                                    <div>
-                                        <div class="mt-2 pt-2 border-t border-slate-100 flex items-baseline justify-between">
-                                            <span class="text-[9px] sm:text-[10px] text-slate-500 font-medium">Harga Cetak:</span>
-                                            <span class="text-[11px] sm:text-xs font-black text-amber-900 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
-                                        </div>
-
-                                        <div class="mt-1.5 grid grid-cols-2 gap-1">
-                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1">
-                                                <i class="fa-solid fa-eye text-[9px] text-slate-500"></i> Detail
-                                            </button>
-                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-[#006830] hover:bg-[#005226] text-white text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1 shadow-xs">
-                                                <i class="fa-brands fa-whatsapp text-xs"></i> Pesan
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- Clean Pagination Bar -->
-                    <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
-                        <span>Menampilkan <strong class="text-slate-900">8</strong> dari <strong class="text-slate-900">24</strong> buku terbitan</span>
-                        <div class="flex items-center gap-1 font-bold">
-                            <button class="px-2.5 py-1 rounded-sm bg-[#006830] text-white">1</button>
-                            <button class="px-2.5 py-1 rounded-sm bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 transition">2</button>
-                            <button class="px-2.5 py-1 rounded-sm bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 transition">3</button>
-                            <button class="px-2.5 py-1 rounded-sm bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 transition">Berikutnya &rarr;</button>
-                        </div>
-                    </div>
-
-                </main>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modal Quick-View Detail Buku (Zero Layout Shift, 100% Mobile Responsive) -->
-    <div id="bookModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-sm max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-300 overflow-hidden relative animate-fade-in-up my-auto">
+    <!-- Hero Header -->
+    <section class="relative pt-32 pb-16 bg-[#032c21] text-white overflow-hidden border-b-4 border-[#006830]">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             
-            <!-- Modal Header (Fixed at top) -->
-            <div class="bg-[#032c21] text-white px-4 sm:px-5 py-3 flex items-center justify-between border-b border-[#064e3b] shrink-0">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-[#064e3b] text-emerald-300 border border-emerald-500/30 mb-4 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>{{ $settings['hero_badge'] ?? 'ETALASE RESMI KARYA AKADEMIK' }}</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black font-heading tracking-tight mb-4 text-white">
+                {{ $settings['hero_title'] ?? 'Katalog Buku & Publikasi Ilmiah' }}
+            </h1>
+
+            <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-8">
+                {{ $settings['hero_description'] ?? 'Koleksi lengkap buku ajar, monograf, dan referensi akademik ber-ISBN resmi terbitan PERSIS PERS.' }}
+            </p>
+
+            <!-- Search & Filter Bar -->
+            <div class="max-w-3xl mx-auto">
+                <form action="{{ route('katalog') }}" method="GET" class="bg-white p-2 rounded-2xl shadow-xl border border-slate-200/80 flex flex-col sm:flex-row items-center gap-2 text-slate-800">
+                    <div class="relative flex-1 w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input 
+                            type="text" 
+                            name="q" 
+                            value="{{ request('q') }}" 
+                            placeholder="Cari judul buku, penulis, atau nomor ISBN..." 
+                            class="w-full pl-11 pr-4 py-2.5 text-xs sm:text-sm bg-transparent border-0 focus:ring-0 focus:outline-hidden font-medium"
+                        />
+                    </div>
+
+                    <div class="w-full sm:w-48 border-t sm:border-t-0 sm:border-l border-slate-200">
+                        <select name="kategori" onchange="this.form.submit()" class="w-full px-4 py-2.5 text-xs sm:text-sm bg-transparent border-0 focus:ring-0 focus:outline-hidden font-medium text-slate-700 cursor-pointer">
+                            <option value="Semua">Semua Kategori</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}" {{ request('kategori') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-[#006830] hover:bg-[#005226] text-white rounded-xl text-xs sm:text-sm font-bold transition shadow-md flex items-center justify-center gap-2 shrink-0">
+                        <span>Cari</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Catalog Grid Section -->
+    <section class="py-12 bg-slate-50 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Category Pills & Result Summary -->
+            <div class="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-2">
+                    <a href="{{ route('katalog') }}" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition {{ !request('kategori') || request('kategori') === 'Semua' ? 'bg-[#006830] text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
+                        Semua Koleksi
+                    </a>
+                    @foreach($categories as $cat)
+                        <a href="{{ route('katalog', ['kategori' => $cat, 'q' => request('q')]) }}" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition {{ request('kategori') === $cat ? 'bg-[#006830] text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
+                            {{ $cat }}
+                        </a>
+                    @endforeach
+                </div>
+
+                <span class="text-xs text-slate-500 font-medium">
+                    Menampilkan <strong class="text-slate-800 font-bold">{{ $books->total() }}</strong> judul buku
+                </span>
+            </div>
+
+            <!-- Books Grid (UNESCO 3:4.1 Ratio Cards with 3D Hover) -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                @forelse($books as $book)
+                    <div class="book-card-item bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-xl transition-all duration-300 p-3 sm:p-4 flex flex-col justify-between group">
+                        
+                        <div>
+                            <!-- Cover Container with 3D Hover Tilt -->
+                            <div class="book-stage-public aspect-[3/4.1] rounded-xl overflow-hidden bg-slate-100 relative mb-3.5 flex items-center justify-center cursor-pointer" onclick="openBookModal({{ json_encode($book) }})">
+                                
+                                @if($book->cover_image && file_exists(public_path('storage/' . $book->cover_image)))
+                                    <div class="book-hover-public w-full h-full relative rounded-xs overflow-hidden border border-slate-200">
+                                        <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover" loading="lazy" />
+                                        <div class="absolute inset-0 pointer-events-none spine-strip-public"></div>
+                                    </div>
+                                @else
+                                    <!-- Fallback Vector Cover -->
+                                    <div class="book-hover-public w-full h-full bg-[#032c21] text-white p-3 flex flex-col justify-between rounded-xs border-l-4 border-emerald-400">
+                                        <div class="flex justify-between items-center border-b border-white/20 pb-1">
+                                            <span class="text-[7.5px] font-extrabold uppercase px-1.5 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300 truncate">{{ $book->category }}</span>
+                                            <span class="text-[7.5px] text-slate-300 font-mono">PERSIS</span>
+                                        </div>
+                                        <div class="text-center my-auto py-1">
+                                            <div class="w-4 h-0.5 bg-amber-400 mx-auto mb-1"></div>
+                                            <h5 class="font-black text-[11px] text-white leading-tight font-heading line-clamp-3">{{ $book->title }}</h5>
+                                            <div class="w-4 h-0.5 bg-amber-400 mx-auto mt-1"></div>
+                                        </div>
+                                        <div class="pt-1 border-t border-white/20 text-center">
+                                            <span class="text-[8.5px] text-slate-200 block font-medium truncate">{{ $book->author }}</span>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <!-- Quick Preview Badge Overlay -->
+                                <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-md text-[9px] font-bold bg-black/70 text-white opacity-0 group-hover:opacity-100 transition shadow-xs">
+                                    <i class="fa-solid fa-eye mr-1"></i> Detail
+                                </span>
+                            </div>
+
+                            <!-- Category & Badges -->
+                            <div class="flex items-center justify-between gap-1 mb-1.5">
+                                <span class="text-[10px] font-bold text-[#006830] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 truncate">
+                                    {{ $book->category }}
+                                </span>
+                                @if($book->is_new_release)
+                                    <span class="text-[9px] font-extrabold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200 shrink-0">
+                                        Baru
+                                    </span>
+                                @elseif($book->is_best_seller)
+                                    <span class="text-[9px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 shrink-0">
+                                        Best Seller
+                                    </span>
+                                @endif
+                            </div>
+
+                            <!-- Title & Author -->
+                            <h3 class="font-bold text-slate-900 text-xs sm:text-sm leading-snug line-clamp-2 mb-1 group-hover:text-[#006830] transition cursor-pointer" onclick="openBookModal({{ json_encode($book) }})">
+                                {{ $book->title }}
+                            </h3>
+                            <p class="text-[11px] text-slate-500 line-clamp-1 mb-2">
+                                Oleh: <span class="text-slate-700 font-medium">{{ $book->author }}</span>
+                            </p>
+                        </div>
+
+                        <!-- Price & Action Button -->
+                        <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
+                            <div>
+                                <span class="text-[9px] text-slate-400 block leading-tight">Harga Cetak</span>
+                                <span class="text-xs sm:text-sm font-black text-[#006830] font-mono">{{ $book->price }}</span>
+                            </div>
+                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="px-3 py-1.5 bg-slate-100 hover:bg-[#006830] text-slate-700 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5">
+                                <span>Lihat</span>
+                                <i class="fa-solid fa-angle-right text-[10px]"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                @empty
+                    <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-slate-200 shadow-xs">
+                        <i class="fa-solid fa-book-open text-4xl text-slate-300 mb-3 block"></i>
+                        <h3 class="text-base font-bold text-slate-800 mb-1">Buku Tidak Ditemukan</h3>
+                        <p class="text-xs text-slate-500 mb-4">Tidak ada koleksi buku yang cocok dengan pencarian Anda.</p>
+                        <a href="{{ route('katalog') }}" class="px-4 py-2 bg-[#006830] text-white rounded-xl text-xs font-bold hover:bg-[#005226] transition">Reset Pencarian</a>
+                    </div>
+                @endforelse
+            </div>
+
+            <!-- Pagination -->
+            @if($books->hasPages())
+                <div class="mt-10 flex items-center justify-center">
+                    {{ $books->links() }}
+                </div>
+            @endif
+
+        </div>
+    </section>
+
+    <!-- MODAL DETAIL BUKU PUBLIK (4-PHOTO SWITCHER + 3D PREVIEW + ORDER WHATSAPP) -->
+    <div id="publicBookModal" class="fixed inset-0 z-50 bg-black/70 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
+        <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-fade-in-up">
+            
+            <!-- Modal Header -->
+            <div class="bg-[#032c21] text-white px-5 py-3.5 flex items-center justify-between border-b border-[#064e3b] shrink-0">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Spesifikasi &amp; Detail Terbitan Resmi</span>
+                    <span class="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-300">Detail Koleksi &amp; Pemesanan Naskah</span>
                 </div>
-                <button onclick="closeBookModal()" class="w-7 h-7 rounded-sm bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-xs font-bold transition">
+                <button type="button" onclick="closeBookModal()" class="w-7 h-7 rounded-lg bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-xs font-bold transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <!-- Modal Scrollable Content -->
-            <div class="p-4 sm:p-6 overflow-y-auto">
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-5 items-start">
+            <!-- Modal Body (2-Column Grid: Left Multi-Photo Showcase, Right Specs & Order) -->
+            <div class="p-5 sm:p-6 overflow-y-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: Standard Book Cover with Multi-Photo Gallery -->
-                    <div class="sm:col-span-5 flex flex-col items-center">
-                        <div class="relative w-36 sm:w-full aspect-[3/4.2] rounded-xs overflow-hidden shadow-md border-r-2 border-r-slate-300">
-                            <!-- Real Image Display -->
-                            <img id="modalMainImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden" />
+                    <!-- Left: Multi-Photo Showcase (Depan, Belakang, Isi 1, Isi 2) -->
+                    <div class="md:col-span-5 flex flex-col items-center bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3.5">
+                        
+                        <!-- Main Viewport -->
+                        <div class="book-stage-public w-44 sm:w-48 aspect-[3/4.1] flex items-center justify-center">
+                            <div id="modalBook3dWrapper" class="book-modal-hover book-hover-public relative w-full h-full rounded-xs overflow-hidden shadow-xl border border-slate-200 bg-[#032c21] select-none cursor-pointer">
+                                
+                                <!-- Real Image Container -->
+                                <img id="modalMainImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden" />
 
-                            <!-- Fallback Vector Cover -->
-                            <div id="modalVectorCover" class="w-full h-full bg-[#032c21] text-white p-3 sm:p-3.5 flex flex-col justify-between border-l-4 border-[#006830]">
-                                <div class="flex justify-between items-center border-b border-white/20 pb-1">
-                                    <span id="modalCategoryBadge" class="text-[8px] sm:text-[8.5px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300"></span>
-                                    <span class="text-[8px] sm:text-[8.5px] text-slate-300 font-mono">PERSIS PERS</span>
+                                <!-- Spine Crease -->
+                                <div id="modalSpineCrease" class="absolute inset-0 pointer-events-none spine-strip-public"></div>
+
+                                <!-- Vector Fallback Front -->
+                                <div id="modalVectorFront" class="w-full h-full bg-[#032c21] text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400">
+                                    <div class="flex justify-between items-center border-b border-white/20 pb-1">
+                                        <span id="modalVectorCat" class="text-[7.5px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-[#064e3b] text-emerald-300">Buku Ajar</span>
+                                        <span class="text-[7.5px] text-slate-300 font-mono">PERSIS</span>
+                                    </div>
+                                    <div class="text-center my-auto py-1">
+                                        <div class="w-4 h-0.5 bg-amber-400 mx-auto mb-1"></div>
+                                        <h5 id="modalVectorTitle" class="font-black text-[11px] text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
+                                        <div class="w-4 h-0.5 bg-amber-400 mx-auto mt-1"></div>
+                                    </div>
+                                    <div class="pt-1 border-t border-white/20 text-center">
+                                        <span id="modalVectorAuthor" class="text-[8.5px] text-slate-200 block font-medium truncate">Nama Penulis</span>
+                                    </div>
                                 </div>
 
-                                <div class="text-center my-auto py-2">
-                                    <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mb-1.5"></div>
-                                    <h4 id="modalCoverTitle" class="font-black text-[11px] sm:text-xs text-white leading-snug font-heading"></h4>
-                                    <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mt-1.5"></div>
+                                <!-- Vector Fallback Inside -->
+                                <div id="modalVectorInside" class="w-full h-full bookpaper-public text-slate-800 p-3 flex flex-col justify-between hidden border-l-2 border-slate-300">
+                                    <div class="border-b border-slate-300 pb-1 flex justify-between items-center text-[7px] font-bold text-slate-500">
+                                        <span id="modalInsideLabel">BAGIAN ISI NASKAH</span>
+                                        <span>hlm. 1</span>
+                                    </div>
+                                    <div class="text-[7px] text-slate-600 leading-relaxed my-auto space-y-1 font-serif">
+                                        <p class="font-bold text-slate-800 text-[8px]" id="modalInsideTitle">Pratinjau Isi Halaman</p>
+                                        <p>Kajian akademik dan riset ilmiah kurikulum perguruan tinggi...</p>
+                                        <div class="w-full h-0.5 bg-slate-200 my-0.5"></div>
+                                        <p>Standar UNESCO B5 Bookpaper.</p>
+                                    </div>
+                                    <div class="pt-1 border-t border-slate-200 text-center text-[6.5px] text-slate-400 font-mono">
+                                        <span>PERSIS PERS</span>
+                                    </div>
                                 </div>
 
-                                <div class="pt-1 border-t border-white/20 text-center">
-                                    <span id="modalCoverAuthor" class="text-[8.5px] sm:text-[9.5px] text-slate-200 block font-medium"></span>
-                                </div>
                             </div>
                         </div>
 
-                        <!-- 4-Thumbnail Switcher Strip -->
-                        <div id="modalPhotoThumbnails" class="mt-2.5 flex items-center justify-center gap-1.5 overflow-x-auto w-full py-1 hidden">
+                        <!-- 4 Multi-Photo Switcher Buttons -->
+                        <div id="modalPhotoSwitcherContainer" class="w-full flex flex-wrap items-center justify-center gap-1.5 pt-1">
+                            <!-- Injected dynamically via JS -->
                         </div>
 
-                        <!-- Price Box -->
-                        <div class="mt-2.5 sm:mt-3 w-36 sm:w-full bg-slate-50 border border-slate-200 rounded-sm p-2 text-center">
-                            <span class="text-[9px] text-slate-500 font-medium block">Harga Cetak Resmi:</span>
-                            <span id="modalPrice" class="text-sm sm:text-base font-black text-[#006830] font-heading"></span>
-                        </div>
                     </div>
 
-                    <!-- Right: Metadata & Specs -->
-                    <div class="sm:col-span-7 space-y-3">
+                    <!-- Right: Specs, Synopsis, Order Button -->
+                    <div class="md:col-span-7 space-y-4">
+                        
                         <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[8.5px] sm:text-[9px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-xs">
-                                    <i class="fa-solid fa-circle-check text-[8px]"></i> ISBN Terverifikasi
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <span id="modalCategory" class="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-[#006830] border border-emerald-200">
+                                    Kategori
                                 </span>
-                                <span class="text-[8.5px] sm:text-[9px] text-slate-400">Katalog Dalam Terbitan (KDT)</span>
+                                <span id="modalBadgeStatus" class="hidden px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                    Baru 2026
+                                </span>
                             </div>
-                            <h3 id="modalTitle" class="text-sm sm:text-base font-extrabold text-slate-900 font-heading leading-tight"></h3>
-                            <p id="modalAuthor" class="text-xs font-semibold text-[#006830] mt-0.5 flex items-center gap-1">
-                                <i class="fa-solid fa-user-pen text-[10px] text-slate-400"></i> <span id="modalAuthorText"></span>
+
+                            <h2 id="modalTitle" class="text-base sm:text-lg md:text-xl font-extrabold text-slate-900 leading-snug">
+                                Judul Lengkap Buku
+                            </h2>
+                            <p class="text-xs text-slate-500 mt-1">
+                                Penulis: <strong id="modalAuthor" class="text-slate-800 font-bold">Nama Penulis</strong>
                             </p>
                         </div>
 
-                        <!-- Technical Specs Grid -->
-                        <div class="grid grid-cols-2 gap-2 text-[10.5px] sm:text-[11px] bg-slate-50 p-2.5 rounded-sm border border-slate-200">
+                        <!-- Specs Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
                             <div>
-                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Nomor ISBN:</span>
-                                <span id="modalIsbn" class="font-mono font-bold text-slate-900"></span>
+                                <span class="text-[10px] text-slate-400 block font-medium">Nomor ISBN</span>
+                                <span id="modalIsbn" class="font-mono font-bold text-slate-800 text-[11px] block mt-0.5">978-623-xxxx</span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Tahun Terbit:</span>
-                                <span id="modalYear" class="font-bold text-slate-900"></span>
+                                <span class="text-[10px] text-slate-400 block font-medium">Format &amp; Kertas</span>
+                                <span id="modalFormat" class="font-semibold text-slate-800 text-[11px] block mt-0.5">UNESCO B5</span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Jumlah Halaman:</span>
-                                <span id="modalPages" class="font-bold text-slate-900"></span>
+                                <span class="text-[10px] text-slate-400 block font-medium">Tebal Halaman</span>
+                                <span id="modalPages" class="font-semibold text-slate-800 text-[11px] block mt-0.5">240 hlm</span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Format Cetak:</span>
-                                <span class="font-bold text-slate-900">UNESCO B5 (Bookpaper)</span>
+                                <span class="text-[10px] text-slate-400 block font-medium">Tahun Terbit</span>
+                                <span id="modalYear" class="font-mono font-semibold text-slate-800 text-[11px] block mt-0.5">2026</span>
+                            </div>
+                            <div class="col-span-2 sm:col-span-2">
+                                <span class="text-[10px] text-slate-400 block font-medium">Harga Cetak Resmi</span>
+                                <span id="modalPrice" class="font-mono font-black text-[#006830] text-sm block mt-0.5">Rp 75.000</span>
                             </div>
                         </div>
 
-                        <!-- Tabs -->
+                        <!-- Synopsis -->
                         <div>
-                            <div class="flex items-center gap-3 border-b border-slate-200 pb-1 text-xs">
-                                <button type="button" onclick="switchModalTab('synopsis')" id="tabBtnSynopsis" class="font-bold text-[#006830] border-b-2 border-[#006830] pb-1">
-                                    Sinopsis
-                                </button>
-                                <button type="button" onclick="switchModalTab('specs')" id="tabBtnSpecs" class="font-medium text-slate-500 hover:text-slate-900 pb-1">
-                                    Spesifikasi
-                                </button>
-                                <button type="button" onclick="switchModalTab('citation')" id="tabBtnCitation" class="font-medium text-slate-500 hover:text-slate-900 pb-1">
-                                    Sitasi APA
-                                </button>
-                            </div>
-
-                            <!-- Tab 1: Synopsis -->
-                            <div id="tabContentSynopsis" class="pt-2">
-                                <p id="modalSynopsis" class="text-xs text-slate-600 leading-relaxed max-h-24 sm:max-h-28 overflow-y-auto pr-1"></p>
-                            </div>
-
-                            <!-- Tab 2: Specs -->
-                            <div id="tabContentSpecs" class="hidden pt-2 space-y-1 text-xs text-slate-600">
-                                <div class="flex justify-between py-0.5 border-b border-slate-100">
-                                    <span class="text-slate-400">Penerbit:</span>
-                                    <span class="font-semibold text-slate-800">PERSIS PERS (IAI Persis Bandung)</span>
-                                </div>
-                                <div class="flex justify-between py-0.5 border-b border-slate-100">
-                                    <span class="text-slate-400">Kertas Isi:</span>
-                                    <span class="font-semibold text-slate-800">Bookpaper Premium 72 GSM</span>
-                                </div>
-                                <div class="flex justify-between py-0.5">
-                                    <span class="text-slate-400">Sampul:</span>
-                                    <span class="font-semibold text-slate-800">Art Carton 260gr, Doff</span>
-                                </div>
-                            </div>
-
-                            <!-- Tab 3: Citation -->
-                            <div id="tabContentCitation" class="hidden pt-2">
-                                <div class="bg-slate-100 p-2 rounded-xs text-[10px] sm:text-[10.5px] text-slate-700 font-mono border border-slate-200">
-                                    <span id="modalCitationText"></span>
-                                </div>
+                            <span class="text-xs font-bold text-slate-800 block mb-1">Sinopsis Buku</span>
+                            <div id="modalSynopsis" class="text-xs text-slate-600 leading-relaxed max-h-36 overflow-y-auto pr-1 space-y-1">
+                                Sinopsis buku akan dimuat di sini...
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
-                        <div class="pt-2.5 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <a id="modalWaBtn" href="#" target="_blank" class="w-full py-2 px-3 rounded-sm bg-[#006830] hover:bg-[#005226] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition">
-                                <i class="fa-brands fa-whatsapp text-sm"></i> Pesan via WhatsApp
+                        <!-- Order via WhatsApp / Download Sample PDF Actions -->
+                        <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-2.5">
+                            <a id="modalWaOrderBtn" href="#" target="_blank" class="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-[#006830] hover:bg-[#005226] text-white text-xs sm:text-sm font-bold transition shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Pesan Buku via WhatsApp</span>
                             </a>
-                            <button type="button" onclick="alert('Sampel Bab 1 & Daftar Isi PDF siap diunduh!')" class="w-full py-2 px-3 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition border border-slate-200">
-                                <i class="fa-solid fa-file-pdf text-red-600"></i> Unduh Sampel PDF
-                            </button>
+                            <a id="modalSamplePdfBtn" href="#" target="_blank" class="hidden w-full sm:w-auto py-2.5 px-4 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs sm:text-sm font-bold transition border border-red-200 flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Sampel PDF</span>
+                            </a>
                         </div>
 
                     </div>
@@ -502,74 +346,141 @@
         </div>
     </div>
 
-    <!-- Script for Modal Handling & Tab Switching (Zero Layout Shift) -->
+    <!-- Public Catalog JS -->
     <script>
+        let currentModalBook = null;
+        let currentModalPhotos = [];
+
         function openBookModal(book) {
+            currentModalBook = book;
+            currentModalPhotos = [];
+
+            // Populate Text Fields
             document.getElementById('modalTitle').innerText = book.title;
-            document.getElementById('modalCoverTitle').innerText = book.title;
-            document.getElementById('modalAuthorText').innerText = book.author;
-            document.getElementById('modalCoverAuthor').innerText = book.author;
-            document.getElementById('modalCategoryBadge').innerText = book.category;
-            document.getElementById('modalIsbn').innerText = book.isbn;
-            document.getElementById('modalYear').innerText = book.year;
-            document.getElementById('modalPages').innerText = book.pages;
-            document.getElementById('modalPrice').innerText = book.price;
-            document.getElementById('modalSynopsis').innerText = book.synopsis;
+            document.getElementById('modalAuthor').innerText = book.author;
+            document.getElementById('modalCategory').innerText = book.category;
+            document.getElementById('modalIsbn').innerText = book.isbn || 'Dalam Proses';
+            document.getElementById('modalFormat').innerText = book.format || 'UNESCO B5';
+            document.getElementById('modalPages').innerText = book.pages || '-';
+            document.getElementById('modalYear').innerText = book.year || '2026';
+            document.getElementById('modalPrice').innerText = book.price || 'Hubungi Admin';
+            document.getElementById('modalSynopsis').innerText = book.synopsis || 'Belum ada sinopsis untuk buku ini.';
 
-            const citation = book.author + '. (' + book.year + '). ' + book.title + '. Bandung: PERSIS PERS. ISBN: ' + book.isbn + '.';
-            document.getElementById('modalCitationText').innerText = citation;
+            // Vector Fallbacks
+            document.getElementById('modalVectorTitle').innerText = book.title;
+            document.getElementById('modalVectorAuthor').innerText = book.author;
+            document.getElementById('modalVectorCat').innerText = book.category;
 
-            const waMsg = encodeURIComponent('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' + book.title + ' (ISBN: ' + book.isbn + ')');
-            document.getElementById('modalWaBtn').href = 'https://wa.me/6282116116133?text=' + waMsg;
+            // Badges
+            const badge = document.getElementById('modalBadgeStatus');
+            if (book.is_new_release) {
+                badge.innerText = 'Baru 2026';
+                badge.className = 'px-2 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200';
+                badge.classList.remove('hidden');
+            } else if (book.is_best_seller) {
+                badge.innerText = 'Best Seller';
+                badge.className = 'px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
 
-            switchModalTab('synopsis');
+            // WhatsApp Order Link
+            const waNumber = '6281220000000'; // official WhatsApp
+            const waText = encodeURIComponent('Halo PERSIS PERS, saya ingin memesan buku "' + book.title + '" (ISBN: ' + (book.isbn || '-') + ') dengan harga ' + book.price + '.');
+            document.getElementById('modalWaOrderBtn').href = 'https://wa.me/' + waNumber + '?text=' + waText;
 
-            const modal = document.getElementById('bookModal');
+            // Sample PDF Button
+            const pdfBtn = document.getElementById('modalSamplePdfBtn');
+            if (book.sample_pdf) {
+                pdfBtn.href = '/storage/' + book.sample_pdf;
+                pdfBtn.classList.remove('hidden');
+            } else {
+                pdfBtn.classList.add('hidden');
+            }
+
+            // Assemble 4 Photo Slots: Depan, Belakang, Isi 1, Isi 2
+            if (book.cover_image) currentModalPhotos.push({ label: 'Depan', url: '/storage/' + book.cover_image, type: 'cover' });
+            if (book.back_cover_image) currentModalPhotos.push({ label: 'Belakang', url: '/storage/' + book.back_cover_image, type: 'back' });
+            if (book.inside_preview_image) currentModalPhotos.push({ label: 'Isi 1', url: '/storage/' + book.inside_preview_image, type: 'inside' });
+            if (book.additional_image) currentModalPhotos.push({ label: 'Isi 2', url: '/storage/' + book.additional_image, type: 'inside2' });
+
+            // If no photos uploaded, create default placeholder slots
+            if (currentModalPhotos.length === 0) {
+                currentModalPhotos = [
+                    { label: 'Depan', url: null, type: 'cover' },
+                    { label: 'Belakang', url: null, type: 'back' },
+                    { label: 'Isi 1', url: null, type: 'inside' },
+                    { label: 'Isi 2', url: null, type: 'inside2' }
+                ];
+            }
+
+            // Render Switcher Buttons
+            const container = document.getElementById('modalPhotoSwitcherContainer');
+            container.innerHTML = '';
+
+            currentModalPhotos.forEach((photo, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = idx === 0 
+                    ? 'px-3 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs'
+                    : 'px-3 py-1 rounded-md text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
+                btn.innerText = photo.label;
+                btn.onclick = () => switchModalPhoto(idx);
+                container.appendChild(btn);
+            });
+
+            // Set initial active photo
+            switchModalPhoto(0);
+
+            // Show Modal
+            const modal = document.getElementById('publicBookModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            // Do NOT touch document.body.style.overflow to prevent scrollbar shifting/jumping!
+        }
+
+        function switchModalPhoto(index) {
+            const photo = currentModalPhotos[index];
+            if (!photo) return;
+
+            // Update button styles
+            const container = document.getElementById('modalPhotoSwitcherContainer');
+            Array.from(container.children).forEach((btn, idx) => {
+                btn.className = idx === index
+                    ? 'px-3 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs'
+                    : 'px-3 py-1 rounded-md text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
+            });
+
+            const imgEl = document.getElementById('modalMainImage');
+            const frontVec = document.getElementById('modalVectorFront');
+            const insideVec = document.getElementById('modalVectorInside');
+            const spine = document.getElementById('modalSpineCrease');
+
+            // Reset
+            imgEl.classList.add('hidden');
+            frontVec.classList.add('hidden');
+            insideVec.classList.add('hidden');
+            spine.classList.remove('hidden');
+
+            if (photo.url) {
+                imgEl.src = photo.url;
+                imgEl.classList.remove('hidden');
+            } else {
+                if (photo.type === 'cover' || photo.type === 'back') {
+                    frontVec.classList.remove('hidden');
+                } else {
+                    insideVec.classList.remove('hidden');
+                }
+            }
         }
 
         function closeBookModal() {
-            const modal = document.getElementById('bookModal');
+            const modal = document.getElementById('publicBookModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
 
-        function switchModalTab(tab) {
-            const synopsisContent = document.getElementById('tabContentSynopsis');
-            const specsContent = document.getElementById('tabContentSpecs');
-            const citationContent = document.getElementById('tabContentCitation');
-
-            const synopsisBtn = document.getElementById('tabBtnSynopsis');
-            const specsBtn = document.getElementById('tabBtnSpecs');
-            const citationBtn = document.getElementById('tabBtnCitation');
-
-            const activeBtnClasses = ['text-[#006830]', 'border-b-2', 'border-[#006830]', 'font-bold'];
-            const inactiveBtnClasses = ['text-slate-500', 'font-medium'];
-
-            [synopsisContent, specsContent, citationContent].forEach(c => c.classList.add('hidden'));
-            [synopsisBtn, specsBtn, citationBtn].forEach(b => {
-                b.classList.remove(...activeBtnClasses);
-                b.classList.add(...inactiveBtnClasses);
-            });
-
-            if (tab === 'synopsis') {
-                synopsisContent.classList.remove('hidden');
-                synopsisBtn.classList.add(...activeBtnClasses);
-                synopsisBtn.classList.remove(...inactiveBtnClasses);
-            } else if (tab === 'specs') {
-                specsContent.classList.remove('hidden');
-                specsBtn.classList.add(...activeBtnClasses);
-                specsBtn.classList.remove(...inactiveBtnClasses);
-            } else if (tab === 'citation') {
-                citationContent.classList.remove('hidden');
-                citationBtn.classList.add(...activeBtnClasses);
-                citationBtn.classList.remove(...inactiveBtnClasses);
-            }
-        }
-
-        document.getElementById('bookModal').addEventListener('click', function(e) {
+        document.getElementById('publicBookModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeBookModal();
             }
