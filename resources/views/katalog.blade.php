@@ -258,7 +258,8 @@
                             <!-- Autocomplete Dropdown Panel -->
                             <div 
                                 id="autocompleteDropdown" 
-                                class="hidden absolute left-0 right-0 top-full mt-2 bg-white rounded-sm shadow-2xl border border-emerald-600/30 overflow-hidden z-[9999] divide-y divide-slate-100 max-h-80 overflow-y-auto ring-4 ring-black/5"
+                                style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 99999; background-color: #ffffff;"
+                                class="bg-white rounded-sm shadow-2xl border-2 border-emerald-700/40 overflow-hidden divide-y divide-slate-100 max-h-80 overflow-y-auto ring-4 ring-black/10"
                             >
                                 <div id="autocompleteResultsList" class="p-1 space-y-1"></div>
                                 
@@ -358,7 +359,7 @@
 
                             <div class="p-3 sm:p-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
                                 @foreach($newBooks as $nBook)
-                                    <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 200 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($nBook) }})">
+                                    <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group catalog-card-item animate-cascade-up" style="animation-delay: {{ 200 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($nBook) }})">
                                         
                                         <div class="book-cover-stage-3d w-full mb-3 py-1">
                                             <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -438,7 +439,7 @@
 
                             <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 @foreach($bestSellers as $bBook)
-                                    <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 300 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($bBook) }})">
+                                    <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group catalog-card-item animate-cascade-up" style="animation-delay: {{ 300 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($bBook) }})">
                                         
                                         <div class="book-cover-stage-3d w-full mb-3 py-1">
                                             <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -540,7 +541,7 @@
 
                         <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                             @forelse($books as $book)
-                                <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 100 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($book) }})">
+                                <div class="persis-book-card p-2 sm:p-3 rounded-sm cursor-pointer group catalog-card-item animate-cascade-up" style="animation-delay: {{ 100 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($book) }})">
                                     
                                     <div class="book-cover-stage-3d w-full mb-3 py-1">
                                         <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
