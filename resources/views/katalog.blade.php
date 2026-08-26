@@ -65,7 +65,8 @@
                         <select name="kategori" onchange="this.form.submit()" class="w-full px-4 py-2.5 text-xs sm:text-sm bg-transparent border-0 focus:ring-0 focus:outline-hidden font-medium text-slate-700 cursor-pointer">
                             <option value="Semua">Semua Kategori</option>
                             @foreach($categories as $cat)
-                                <option value="{{ $cat }}" {{ request('kategori') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                @php $catVal = is_array($cat) ? ($cat['name'] ?? '') : (is_object($cat) ? ($cat->name ?? '') : (string)$cat); @endphp
+                                <option value="{{ $catVal }}" {{ request('kategori') === $catVal ? 'selected' : '' }}>{{ $catVal }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -91,8 +92,9 @@
                         Semua Koleksi
                     </a>
                     @foreach($categories as $cat)
-                        <a href="{{ route('katalog', ['kategori' => $cat, 'q' => request('q')]) }}" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition {{ request('kategori') === $cat ? 'bg-[#006830] text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
-                            {{ $cat }}
+                        @php $catVal = is_array($cat) ? ($cat['name'] ?? '') : (is_object($cat) ? ($cat->name ?? '') : (string)$cat); @endphp
+                        <a href="{{ route('katalog', ['kategori' => $catVal, 'q' => request('q')]) }}" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition {{ request('kategori') === $catVal ? 'bg-[#006830] text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100' }}">
+                            {{ $catVal }}
                         </a>
                     @endforeach
                 </div>
