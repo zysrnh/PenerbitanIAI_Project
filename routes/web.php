@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\CatalogController;
-
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AboutSettingController;
+use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\CatalogSettingController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 

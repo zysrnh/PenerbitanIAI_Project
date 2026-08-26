@@ -1,10 +1,10 @@
 <?php
 
-namespace AppHttpControllersAdmin;
+namespace App\Http\Controllers\Admin;
 
-use AppHttpControllersController;
-use AppModelsSiteSetting;
-use IlluminateHttpRequest;
+use App\Http\Controllers\Controller;
+use App\Models\SiteSetting;
+use Illuminate\Http\Request;
 
 class CatalogSettingController extends Controller
 {

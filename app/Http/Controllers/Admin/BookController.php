@@ -1,11 +1,11 @@
 <?php
 
-namespace AppHttpControllersAdmin;
+namespace App\Http\Controllers\Admin;
 
-use AppHttpControllersController;
-use AppModelsBook;
-use IlluminateHttpRequest;
-use IlluminateSupportStr;
+use App\Http\Controllers\Controller;
+use App\Models\Book;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BookController extends Controller
 {
