@@ -82,16 +82,12 @@
             <div class="flex items-center justify-between h-20">
                 
                 <!-- Brand Logo -->
-                <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 bg-brand-900 rounded-lg flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform duration-300 shadow-sm">
-                        <i class="fa-solid fa-book-open-reader text-lg text-emerald-400"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-[11px] font-extrabold text-brand-700 uppercase tracking-widest leading-none">PENERBITAN</span>
-                        </div>
-                        <h1 class="font-extrabold text-xl text-brand-950 font-heading leading-none tracking-tight mt-0.5">PERSIS PERS</h1>
-                        <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Penerbitan & Percetakan</span>
+                <a href="{{ url('/') }}" class="flex items-center gap-2.5 sm:gap-3 group py-1">
+                    <img src="{{ asset('images/logo/logo_persis_pers_icon_transparent.png') }}" alt="Logo IAI PERSIS PRESS" class="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 transition-transform duration-300 group-hover:scale-105" />
+                    <div class="flex flex-col justify-center">
+                        <span class="text-[11px] sm:text-xs font-black text-slate-900 uppercase tracking-wider leading-none">IAI PERSIS</span>
+                        <span class="text-lg sm:text-xl font-black text-[#006830] leading-none tracking-tight mt-1 font-heading">PRESS</span>
+                        <span class="text-[9px] sm:text-[10px] text-slate-500 font-semibold block mt-0.5 leading-none">Penerbitan &amp; Percetakan</span>
                     </div>
                 </a>
 
