@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CatalogController;
+
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AboutSettingController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -21,6 +23,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');
+Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
 Route::post('/kontak/kirim', [ContactController::class, 'store'])->name('kontak.store')->middleware('throttle:6,1');
 
