@@ -4,6 +4,10 @@
 @section('header_title', 'Manajemen Koleksi Buku & Terbitan')
 
 @section('content')
+    <!-- Include Cropper.js for Ultra-Precise Interactive Book Image Cropping -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
     <style>
         /* 3D Realistic Perspective Hover Tilt */
         .book-stage-3d {
@@ -48,6 +52,19 @@
             border-color: #006830;
             background-color: #f0fdf4;
             transform: translateY(-1px);
+        }
+
+        /* Custom styling for cropper modal elements */
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 2px;
+        }
+        .cropper-line, .cropper-point {
+            background-color: #006830;
+        }
+        .cropper-point.point-se {
+            width: 8px;
+            height: 8px;
         }
     </style>
 
@@ -184,7 +201,7 @@
                             <!-- Cover Mini -->
                             <td class="py-3.5 px-4">
                                 @if($book->cover_image && Storage::disk('public')->exists($book->cover_image))
-                                    <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-11 aspect-[3/4.2] object-cover rounded-xs shadow-xs border border-slate-200 hover:scale-110 transition cursor-pointer" onclick="openEditBookModal({{ json_encode($book) }})" />
+                                    <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-11 aspect-[3/4.2] object-cover rounded-xs shadow-xs border border-slate-200" />
                                 @else
                                     <div class="w-10 aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-1 flex flex-col justify-between border-l-2 border-emerald-400 shadow-2xs text-[6px]">
                                         <span class="font-extrabold truncate text-emerald-300">{{ $book->category }}</span>
@@ -276,7 +293,7 @@
         @endif
     </div>
 
-    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (ONE-CLICK UPLOAD BOXES + 3D HOVER) -->
+    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU -->
     <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
         <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[95vh] flex flex-col">
             
@@ -392,7 +409,7 @@
                             </div>
                         </div>
 
-                        <!-- 4 DIRECT CLICKABLE UPLOAD CARDS (CLICK ANYWHERE TO CHOOSE FILE!) -->
+                        <!-- 4 DIRECT CLICKABLE UPLOAD CARDS WITH CROPPER TRIGGER -->
                         <div class="space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-slate-800 uppercase tracking-wider">
@@ -410,10 +427,10 @@
                                         <span id="badgeCover" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
                                     <div id="previewBoxCover" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
+                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
                                     </div>
-                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxCover', 'badgeCover', 'cover')" class="hidden" />
+                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="startCropperFlow(this, 'previewBoxCover', 'badgeCover', 'cover', 3/4.1)" class="hidden" />
                                 </label>
 
                                 <!-- Foto 2: Sampul Belakang -->
@@ -423,10 +440,10 @@
                                         <span id="badgeBack" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
                                     <div id="previewBoxBack" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
+                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
                                     </div>
-                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxBack', 'badgeBack', 'back')" class="hidden" />
+                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="startCropperFlow(this, 'previewBoxBack', 'badgeBack', 'back', 3/4.1)" class="hidden" />
                                 </label>
 
                                 <!-- Foto 3: Halaman Isi 1 -->
@@ -436,10 +453,10 @@
                                         <span id="badgeInside" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
                                     <div id="previewBoxInside" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
+                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
                                     </div>
-                                    <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside', 'badgeInside', 'inside')" class="hidden" />
+                                    <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="startCropperFlow(this, 'previewBoxInside', 'badgeInside', 'inside', 1/1.41)" class="hidden" />
                                 </label>
 
                                 <!-- Foto 4: Halaman Isi 2 -->
@@ -449,10 +466,10 @@
                                         <span id="badgeInside2" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
                                     <div id="previewBoxInside2" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
+                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
                                     </div>
-                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside2', 'badgeInside2', 'inside2')" class="hidden" />
+                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="startCropperFlow(this, 'previewBoxInside2', 'badgeInside2', 'inside2', 1/1.41)" class="hidden" />
                                 </label>
 
                             </div>
@@ -577,7 +594,84 @@
         </div>
     </div>
 
-    <!-- Modal JS -->
+    <!-- MODAL PEMOTONG GAMBAR INTERAKTIF (CROPPER MODAL WITH MULTIPLE MODES & 8-POINT HANDLES) -->
+    <div id="cropperModal" class="fixed inset-0 z-[60] bg-black/80 hidden items-center justify-center p-3 sm:p-5 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-fade-in-up">
+            
+            <!-- Cropper Header -->
+            <div class="bg-[#032c21] text-white px-5 py-3.5 flex items-center justify-between border-b border-[#064e3b]">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-crop-simple text-emerald-400"></i>
+                    <span class="text-sm font-bold uppercase tracking-wider text-emerald-300">Sesuaikan &amp; Potong Foto Naskah</span>
+                </div>
+                <button type="button" onclick="cancelCropper()" class="w-7 h-7 rounded-lg bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-xs font-bold transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Cropper Body -->
+            <div class="p-4 sm:p-5 overflow-y-auto space-y-4">
+                
+                <!-- Crop Mode Selection Pills -->
+                <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+                    <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-sliders text-[#006830]"></i> Pilihan Mode Crop:
+                    </span>
+
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <button type="button" onclick="setCropRatio(3/4.1, this)" id="cropModeBook" class="px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs">
+                            📗 Sampul UNESCO (3:4.1)
+                        </button>
+                        <button type="button" onclick="setCropRatio(1/1.41, this)" id="cropModePaper" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
+                            📄 Halaman Isi (1:1.4)
+                        </button>
+                        <button type="button" onclick="setCropRatio(NaN, this)" id="cropModeFree" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
+                            ✂️ Bebas Titik Sudut (Freeform)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Canvas Image Container -->
+                <div class="w-full h-[50vh] max-h-[420px] bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center relative">
+                    <img id="cropperImageTarget" src="" alt="Crop Target" class="max-w-full max-h-full block" />
+                </div>
+
+                <!-- Toolbar Tools (Rotate, Flip, Zoom) -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" onclick="cropperInstance.rotate(-90)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Putar Kiri 90°">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button type="button" onclick="cropperInstance.rotate(90)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Putar Kanan 90°">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                        <button type="button" onclick="cropperInstance.zoom(0.1)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Perbesar">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                        </button>
+                        <button type="button" onclick="cropperInstance.zoom(-0.1)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Perkecil">
+                            <i class="fa-solid fa-magnifying-glass-minus"></i>
+                        </button>
+                        <button type="button" onclick="cropperInstance.reset()" class="px-2.5 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-semibold transition" title="Reset">
+                            Reset
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="cancelCropper()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                            Batal
+                        </button>
+                        <button type="button" onclick="applyCroppedResult()" class="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs transition shadow-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-check"></i> Terapkan &amp; Pasang ke Buku
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Handling Cropper Flow & Modal Sync -->
     <script>
         // Track uploaded/cached data URLs for the 4 slots: cover, back, inside, inside2
         let slotImages = {
@@ -586,6 +680,129 @@
             inside: null,
             inside2: null
         };
+
+        // Cropper Active State Variables
+        let cropperInstance = null;
+        let activeCropSlot = null;
+        let activeCropInput = null;
+        let activeCropBoxId = null;
+        let activeCropBadgeId = null;
+
+        function startCropperFlow(input, boxId, badgeId, slot, defaultRatio) {
+            if (input.files && input.files[0]) {
+                activeCropSlot = slot;
+                activeCropInput = input;
+                activeCropBoxId = boxId;
+                activeCropBadgeId = badgeId;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgTarget = document.getElementById('cropperImageTarget');
+                    imgTarget.src = e.target.result;
+
+                    // Open Cropper Modal
+                    const modal = document.getElementById('cropperModal');
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+
+                    // Reset buttons
+                    updateCropButtonStyles(defaultRatio);
+
+                    // Destroy old instance if exists
+                    if (cropperInstance) {
+                        cropperInstance.destroy();
+                    }
+
+                    // Initialize Cropper.js with 8-point handles and free/constrained modes
+                    cropperInstance = new Cropper(imgTarget, {
+                        aspectRatio: defaultRatio,
+                        viewMode: 1,
+                        dragMode: 'move',
+                        autoCropArea: 0.92,
+                        restore: false,
+                        guides: true,
+                        center: true,
+                        highlight: false,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        toggleDragModeOnDblclick: false,
+                    });
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function setCropRatio(ratio, buttonElement) {
+            if (cropperInstance) {
+                cropperInstance.setAspectRatio(ratio);
+            }
+            updateCropButtonStyles(ratio);
+        }
+
+        function updateCropButtonStyles(ratio) {
+            ['cropModeBook', 'cropModePaper', 'cropModeFree'].forEach(id => {
+                const b = document.getElementById(id);
+                if (b) {
+                    b.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition';
+                }
+            });
+
+            if (isNaN(ratio)) {
+                document.getElementById('cropModeFree').className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs';
+            } else if (Math.abs(ratio - (3/4.1)) < 0.05) {
+                document.getElementById('cropModeBook').className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs';
+            } else {
+                document.getElementById('cropModePaper').className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs';
+            }
+        }
+
+        function applyCroppedResult() {
+            if (!cropperInstance) return;
+
+            const canvas = cropperInstance.getCroppedCanvas({
+                maxWidth: 2400,
+                maxHeight: 3200,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+            slotImages[activeCropSlot] = croppedDataUrl;
+
+            // Update Thumbnail Box
+            const box = document.getElementById(activeCropBoxId);
+            box.innerHTML = '<img src="' + croppedDataUrl + '" class="w-full h-full object-cover rounded-lg" />';
+
+            // Update Badge
+            const badge = document.getElementById(activeCropBadgeId);
+            if (badge) {
+                badge.innerText = 'Terpotong';
+                badge.classList.remove('hidden');
+            }
+
+            // Sync with 3D Preview Frame
+            switchShowcaseAngle(activeCropSlot);
+
+            // Convert canvas to real File and assign to input.files via DataTransfer
+            canvas.toBlob(function(blob) {
+                const file = new File([blob], activeCropSlot + '_cropped.jpg', { type: 'image/jpeg' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                activeCropInput.files = dataTransfer.files;
+            }, 'image/jpeg', 0.92);
+
+            cancelCropper();
+        }
+
+        function cancelCropper() {
+            const modal = document.getElementById('cropperModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            if (cropperInstance) {
+                cropperInstance.destroy();
+                cropperInstance = null;
+            }
+        }
 
         function switchShowcaseAngle(slot) {
             // Update active pill button style
@@ -647,27 +864,6 @@
             }
         }
 
-        function handleImageSlotChange(input, boxId, badgeId, slot) {
-            const box = document.getElementById(boxId);
-            const badge = document.getElementById(badgeId);
-
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    slotImages[slot] = e.target.result;
-                    box.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover rounded-lg" />';
-                    if (badge) {
-                        badge.innerText = 'Terunggah';
-                        badge.classList.remove('hidden');
-                    }
-                    
-                    // Switch to the newly selected photo smoothly in 3D mockup
-                    switchShowcaseAngle(slot);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
         function handlePdfSelected(input) {
             if (input.files && input.files[0]) {
                 const fileName = input.files[0].name;
@@ -694,7 +890,7 @@
         function resetAllPreviews() {
             slotImages = { cover: null, back: null, inside: null, inside2: null };
             ['previewBoxCover', 'previewBoxBack', 'previewBoxInside', 'previewBoxInside2'].forEach(id => {
-                document.getElementById(id).innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i><span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>';
+                document.getElementById(id).innerHTML = '<i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i><span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>';
             });
             ['badgeCover', 'badgeBack', 'badgeInside', 'badgeInside2'].forEach(id => {
                 const badge = document.getElementById(id);
