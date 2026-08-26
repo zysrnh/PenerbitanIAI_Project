@@ -530,7 +530,7 @@
                             </div>
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Harga Cetak Resmi <span class="text-rose-500">*</span></label>
-                                <input type="text" name="price" id="form_price" required oninput="updateModalMockup()" placeholder="Rp 75.000" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono font-bold shadow-2xs text-[#006830]" />
+                                <input type="text" name="price" id="form_price" required oninput="formatRupiahInput(this)" placeholder="Rp 75.000" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono font-bold shadow-2xs text-[#006830]" />
                             </div>
                         </div>
 
@@ -869,6 +869,18 @@
                 const fileName = input.files[0].name;
                 document.getElementById('pdfLabel').innerText = fileName;
             }
+        }
+
+        function formatRupiahInput(input) {
+            let val = input.value.replace(/[^0-9]/g, '');
+            if (!val) {
+                input.value = '';
+                updateModalMockup();
+                return;
+            }
+            let formatted = new Intl.NumberFormat('id-ID').format(val);
+            input.value = 'Rp ' + formatted;
+            updateModalMockup();
         }
 
         function updateModalMockup() {
