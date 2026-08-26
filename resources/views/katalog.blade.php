@@ -4,16 +4,46 @@
 
 @section('content')
     <style>
-        .book-card-item {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        /* Signature PERSIS PERS Book Card Design */
+        .persis-book-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .book-card-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px -4px rgba(0,0,0,0.1);
+        .persis-book-card:hover {
+            border-color: #047857;
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px -6px rgba(4, 120, 87, 0.12), 0 2px 6px rgba(0,0,0,0.04);
         }
-        .spine-crease {
-            box-shadow: inset -2.5px 0 5px rgba(0,0,0,0.18);
+
+        /* 3D Book Cover Presentation */
+        .book-spine-strip {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 7px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0.08) 60%, rgba(0,0,0,0.25) 100%);
+            border-right: 1px solid rgba(0,0,0,0.12);
+            z-index: 10;
         }
+        .book-paper-edge {
+            position: absolute;
+            right: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3px;
+            background: repeating-linear-gradient(180deg, #f8fafc, #f8fafc 1px, #cbd5e1 1px, #cbd5e1 2px);
+            border-left: 1px solid #94a3b8;
+            border-radius: 0 2px 2px 0;
+        }
+        
+        /* Category Navigation */
         .cat-link {
             transition: all 0.15s ease;
         }
@@ -29,7 +59,7 @@
         }
     </style>
 
-    <!-- 1. HEADER BANNER (Managed from Admin /admin/settings/catalog) -->
+    <!-- 1. HEADER BANNER (Identical to Kontak & Tentang) -->
     <section class="bg-brand-950 text-white py-14 sm:py-16 relative overflow-hidden border-b border-brand-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
             <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
@@ -48,7 +78,6 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-7 relative z-20">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <!-- Card 1: Total Buku -->
             <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-book"></i>
@@ -60,7 +89,6 @@
                 </div>
             </div>
 
-            <!-- Card 2: Penulis -->
             <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-user-graduate"></i>
@@ -72,7 +100,6 @@
                 </div>
             </div>
 
-            <!-- Card 3: ISBN -->
             <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-barcode"></i>
@@ -84,7 +111,6 @@
                 </div>
             </div>
 
-            <!-- Card 4: Standar Cetak -->
             <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-award"></i>
@@ -99,7 +125,7 @@
         </div>
     </section>
 
-    <!-- 3. MAIN BOOKSTORE CONTENT (SIDEBAR + BOOKS GRID) -->
+    <!-- 3. MAIN BOOKSTORE CONTENT (SIDEBAR + SIGNATURE PERSIS PERS BOOK CARDS) -->
     <section class="py-10 bg-slate-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -162,7 +188,7 @@
                         </div>
                     </div>
 
-                    <!-- INFO & PROMO WIDGET (Managed from Admin) -->
+                    <!-- INFO & PROMO WIDGET -->
                     <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm">
                         <div class="bg-brand-950 text-white px-4 py-3 font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 border-b border-brand-900">
                             <i class="fa-solid fa-bullhorn text-emerald-400"></i> Info &amp; Promo
@@ -190,7 +216,7 @@
                 </div>
 
                 <!-- ============================================== -->
-                <!-- RIGHT MAIN CONTENT (BUKU BARU, BEST SELLER, ALL) -->
+                <!-- RIGHT MAIN CONTENT (DISTINCT SIGNATURE PERSIS PERS CARDS) -->
                 <!-- ============================================== -->
                 <div class="lg:col-span-9 space-y-6">
                     
@@ -207,29 +233,72 @@
                                 </a>
                             </div>
 
+                            <!-- Signature PERSIS PERS Book Cards Grid -->
                             <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 @foreach($newBooks as $nBook)
-                                    <div class="book-card-item flex flex-col justify-between text-center p-2.5 rounded-sm hover:bg-slate-50 transition cursor-pointer" onclick="openBookModal({{ json_encode($nBook) }})">
-                                        <div class="w-full aspect-[3/4.1] bg-slate-100 rounded-xs overflow-hidden mb-2 relative shadow-xs border border-slate-200">
+                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($nBook) }})">
+                                        
+                                        <!-- Realistic 3D UNESCO Book Mockup Container -->
+                                        <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-sm border border-slate-300 select-none">
+                                            
+                                            <!-- Spine & Paper Edge Simulation -->
+                                            <div class="book-spine-strip"></div>
+                                            <div class="book-paper-edge"></div>
+
                                             @if($nBook->cover_image && file_exists(public_path('storage/' . $nBook->cover_image)))
-                                                <img src="{{ asset('storage/' . $nBook->cover_image) }}" alt="{{ $nBook->title }}" class="w-full h-full object-cover" />
+                                                <img src="{{ asset('storage/' . $nBook->cover_image) }}" alt="{{ $nBook->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                                             @else
-                                                <div class="w-full h-full bg-brand-950 p-2 flex flex-col justify-between text-white border-l-2 border-emerald-400 text-[7px]">
-                                                    <span class="font-bold text-emerald-300 truncate">{{ $nBook->category }}</span>
-                                                    <span class="font-black leading-tight line-clamp-3">{{ $nBook->title }}</span>
-                                                    <span class="font-mono text-slate-300">{{ $nBook->year }}</span>
+                                                <div class="w-full h-full bg-[#032c21] p-2.5 pl-3.5 flex flex-col justify-between text-white border-l-2 border-emerald-400 text-[7px]">
+                                                    <div class="flex justify-between items-center border-b border-white/20 pb-0.5">
+                                                        <span class="font-bold text-emerald-300 truncate">{{ $nBook->category }}</span>
+                                                        <span class="font-mono text-slate-300 text-[6px]">PERSIS</span>
+                                                    </div>
+                                                    <div class="text-center my-auto py-1">
+                                                        <span class="font-black text-[8.5px] leading-tight line-clamp-3 text-white">{{ $nBook->title }}</span>
+                                                    </div>
+                                                    <div class="pt-0.5 border-t border-white/20 text-center">
+                                                        <span class="font-mono text-slate-300 text-[6.5px] truncate block">{{ $nBook->author }}</span>
+                                                    </div>
                                                 </div>
                                             @endif
-                                            <div class="absolute inset-0 pointer-events-none spine-crease"></div>
+
+                                            <!-- Overlay Badge on Image -->
+                                            <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-xs text-[8px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-xs z-20">
+                                                Baru
+                                            </span>
                                         </div>
 
-                                        <div>
-                                            <h4 class="font-bold text-slate-900 text-xs leading-snug line-clamp-2 mb-0.5 hover:text-emerald-700">
-                                                {{ $nBook->title }}
-                                            </h4>
-                                            <span class="text-[10px] text-slate-500 block truncate">{{ $nBook->author }}</span>
-                                            <span class="text-xs font-bold text-emerald-700 font-mono block mt-1.5">{{ $nBook->price }}</span>
+                                        <!-- Content Block -->
+                                        <div class="flex flex-col flex-1 justify-between text-left">
+                                            <div>
+                                                <!-- Category Badge -->
+                                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200/80 inline-block mb-1">
+                                                    {{ $nBook->category }}
+                                                </span>
+
+                                                <!-- Book Title -->
+                                                <h4 class="font-extrabold text-slate-900 text-xs leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                                    {{ $nBook->title }}
+                                                </h4>
+
+                                                <!-- Author -->
+                                                <p class="text-[10.5px] text-slate-500 truncate mb-2">
+                                                    <i class="fa-solid fa-pen-nib text-[8.5px] text-emerald-600 mr-1"></i>{{ $nBook->author }}
+                                                </p>
+                                            </div>
+
+                                            <!-- Bottom Price & Action Footer -->
+                                            <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
+                                                <div>
+                                                    <span class="text-[8.5px] text-slate-400 block leading-none">Harga Cetak</span>
+                                                    <span class="text-xs font-black text-emerald-700 font-mono mt-0.5 block">{{ $nBook->price }}</span>
+                                                </div>
+                                                <span class="w-6 h-6 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 flex items-center justify-center text-[10px] transition">
+                                                    <i class="fa-solid fa-angle-right"></i>
+                                                </span>
+                                            </div>
                                         </div>
+
                                     </div>
                                 @endforeach
                             </div>
@@ -248,27 +317,60 @@
 
                             <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 @foreach($bestSellers as $bBook)
-                                    <div class="book-card-item flex flex-col justify-between text-center p-2.5 rounded-sm hover:bg-slate-50 transition cursor-pointer" onclick="openBookModal({{ json_encode($bBook) }})">
-                                        <div class="w-full aspect-[3/4.1] bg-slate-100 rounded-xs overflow-hidden mb-2 relative shadow-xs border border-slate-200">
+                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($bBook) }})">
+                                        
+                                        <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-sm border border-slate-300 select-none">
+                                            <div class="book-spine-strip"></div>
+                                            <div class="book-paper-edge"></div>
+
                                             @if($bBook->cover_image && file_exists(public_path('storage/' . $bBook->cover_image)))
-                                                <img src="{{ asset('storage/' . $bBook->cover_image) }}" alt="{{ $bBook->title }}" class="w-full h-full object-cover" />
+                                                <img src="{{ asset('storage/' . $bBook->cover_image) }}" alt="{{ $bBook->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                                             @else
-                                                <div class="w-full h-full bg-brand-950 p-2 flex flex-col justify-between text-white border-l-2 border-emerald-400 text-[7px]">
-                                                    <span class="font-bold text-emerald-300 truncate">{{ $bBook->category }}</span>
-                                                    <span class="font-black leading-tight line-clamp-3">{{ $bBook->title }}</span>
-                                                    <span class="font-mono text-slate-300">{{ $bBook->year }}</span>
+                                                <div class="w-full h-full bg-[#032c21] p-2.5 pl-3.5 flex flex-col justify-between text-white border-l-2 border-emerald-400 text-[7px]">
+                                                    <div class="flex justify-between items-center border-b border-white/20 pb-0.5">
+                                                        <span class="font-bold text-emerald-300 truncate">{{ $bBook->category }}</span>
+                                                        <span class="font-mono text-slate-300 text-[6px]">PERSIS</span>
+                                                    </div>
+                                                    <div class="text-center my-auto py-1">
+                                                        <span class="font-black text-[8.5px] leading-tight line-clamp-3 text-white">{{ $bBook->title }}</span>
+                                                    </div>
+                                                    <div class="pt-0.5 border-t border-white/20 text-center">
+                                                        <span class="font-mono text-slate-300 text-[6.5px] truncate block">{{ $bBook->author }}</span>
+                                                    </div>
                                                 </div>
                                             @endif
-                                            <div class="absolute inset-0 pointer-events-none spine-crease"></div>
+
+                                            <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-xs text-[8px] font-black uppercase tracking-wider bg-amber-600 text-white shadow-xs z-20">
+                                                Populer
+                                            </span>
                                         </div>
 
-                                        <div>
-                                            <h4 class="font-bold text-slate-900 text-xs leading-snug line-clamp-2 mb-0.5 hover:text-emerald-700">
-                                                {{ $bBook->title }}
-                                            </h4>
-                                            <span class="text-[10px] text-slate-500 block truncate">{{ $bBook->author }}</span>
-                                            <span class="text-xs font-bold text-emerald-700 font-mono block mt-1.5">{{ $bBook->price }}</span>
+                                        <div class="flex flex-col flex-1 justify-between text-left">
+                                            <div>
+                                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200/80 inline-block mb-1">
+                                                    {{ $bBook->category }}
+                                                </span>
+
+                                                <h4 class="font-extrabold text-slate-900 text-xs leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                                    {{ $bBook->title }}
+                                                </h4>
+
+                                                <p class="text-[10.5px] text-slate-500 truncate mb-2">
+                                                    <i class="fa-solid fa-pen-nib text-[8.5px] text-emerald-600 mr-1"></i>{{ $bBook->author }}
+                                                </p>
+                                            </div>
+
+                                            <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
+                                                <div>
+                                                    <span class="text-[8.5px] text-slate-400 block leading-none">Harga Cetak</span>
+                                                    <span class="text-xs font-black text-emerald-700 font-mono mt-0.5 block">{{ $bBook->price }}</span>
+                                                </div>
+                                                <span class="w-6 h-6 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 flex items-center justify-center text-[10px] transition">
+                                                    <i class="fa-solid fa-angle-right"></i>
+                                                </span>
+                                            </div>
                                         </div>
+
                                     </div>
                                 @endforeach
                             </div>
@@ -295,30 +397,64 @@
 
                         <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                             @forelse($books as $book)
-                                <div class="book-card-item flex flex-col justify-between text-center p-2.5 rounded-sm border border-slate-100 hover:border-slate-300 hover:bg-slate-50/50 transition cursor-pointer" onclick="openBookModal({{ json_encode($book) }})">
+                                <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($book) }})">
                                     
-                                    <div class="w-full aspect-[3/4.1] bg-slate-100 rounded-xs overflow-hidden mb-2 relative shadow-xs border border-slate-200">
+                                    <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-sm border border-slate-300 select-none">
+                                        <div class="book-spine-strip"></div>
+                                        <div class="book-paper-edge"></div>
+
                                         @if($book->cover_image && file_exists(public_path('storage/' . $book->cover_image)))
-                                            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover" />
+                                            <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                                         @else
-                                            <div class="w-full h-full bg-brand-950 p-2 flex flex-col justify-between text-white border-l-2 border-emerald-400 text-[7px]">
-                                                <span class="font-bold text-emerald-300 truncate">{{ $book->category }}</span>
-                                                <span class="font-black leading-tight line-clamp-3">{{ $book->title }}</span>
-                                                <span class="font-mono text-slate-300">{{ $book->year }}</span>
+                                            <div class="w-full h-full bg-[#032c21] p-2.5 pl-3.5 flex flex-col justify-between text-white border-l-2 border-emerald-400 text-[7px]">
+                                                <div class="flex justify-between items-center border-b border-white/20 pb-0.5">
+                                                    <span class="font-bold text-emerald-300 truncate">{{ $book->category }}</span>
+                                                    <span class="font-mono text-slate-300 text-[6px]">PERSIS</span>
+                                                </div>
+                                                <div class="text-center my-auto py-1">
+                                                    <span class="font-black text-[8.5px] leading-tight line-clamp-3 text-white">{{ $book->title }}</span>
+                                                </div>
+                                                <div class="pt-0.5 border-t border-white/20 text-center">
+                                                    <span class="font-mono text-slate-300 text-[6.5px] truncate block">{{ $book->author }}</span>
+                                                </div>
                                             </div>
                                         @endif
-                                        <div class="absolute inset-0 pointer-events-none spine-crease"></div>
+
+                                        @if($book->is_new_release)
+                                            <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-xs text-[8px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-xs z-20">
+                                                Baru
+                                            </span>
+                                        @elseif($book->is_best_seller)
+                                            <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-xs text-[8px] font-black uppercase tracking-wider bg-amber-600 text-white shadow-xs z-20">
+                                                Best Seller
+                                            </span>
+                                        @endif
                                     </div>
 
-                                    <div>
-                                        <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200 inline-block mb-1">
-                                            {{ $book->category }}
-                                        </span>
-                                        <h4 class="font-bold text-slate-900 text-xs leading-snug line-clamp-2 mb-0.5 hover:text-emerald-700">
-                                            {{ $book->title }}
-                                        </h4>
-                                        <span class="text-[10px] text-slate-500 block truncate">{{ $book->author }}</span>
-                                        <span class="text-xs font-bold text-emerald-700 font-mono block mt-1.5">{{ $book->price }}</span>
+                                    <div class="flex flex-col flex-1 justify-between text-left">
+                                        <div>
+                                            <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200/80 inline-block mb-1">
+                                                {{ $book->category }}
+                                            </span>
+
+                                            <h4 class="font-extrabold text-slate-900 text-xs leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                                {{ $book->title }}
+                                            </h4>
+
+                                            <p class="text-[10.5px] text-slate-500 truncate mb-2">
+                                                <i class="fa-solid fa-pen-nib text-[8.5px] text-emerald-600 mr-1"></i>{{ $book->author }}
+                                            </p>
+                                        </div>
+
+                                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
+                                            <div>
+                                                <span class="text-[8.5px] text-slate-400 block leading-none">Harga Cetak</span>
+                                                <span class="text-xs font-black text-emerald-700 font-mono mt-0.5 block">{{ $book->price }}</span>
+                                            </div>
+                                            <span class="w-6 h-6 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 flex items-center justify-center text-[10px] transition">
+                                                <i class="fa-solid fa-angle-right"></i>
+                                            </span>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -345,7 +481,7 @@
         </div>
     </section>
 
-    <!-- 4. CTA PUBLISH YOUR BOOK BOX (Managed from Admin /admin/settings/catalog) -->
+    <!-- 4. CTA PUBLISH YOUR BOOK BOX -->
     <section class="py-12 bg-white border-t border-slate-200">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-brand-950 rounded-sm p-6 sm:p-8 text-white border border-brand-900 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden">
