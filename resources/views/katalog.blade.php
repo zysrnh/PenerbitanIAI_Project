@@ -370,23 +370,33 @@
             <div class="p-4 sm:p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-5 items-start">
                     
-                    <!-- Left: Standard Book Cover -->
+                    <!-- Left: Standard Book Cover with Multi-Photo Gallery -->
                     <div class="sm:col-span-5 flex flex-col items-center">
-                        <div class="relative w-36 sm:w-full aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-3 sm:p-3.5 flex flex-col justify-between border-l-4 border-[#006830] border-r-2 border-r-slate-300 shadow-md">
-                            <div class="flex justify-between items-center border-b border-white/20 pb-1">
-                                <span id="modalCategoryBadge" class="text-[8px] sm:text-[8.5px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300"></span>
-                                <span class="text-[8px] sm:text-[8.5px] text-slate-300 font-mono">PERSIS PERS</span>
-                            </div>
+                        <div class="relative w-36 sm:w-full aspect-[3/4.2] rounded-xs overflow-hidden shadow-md border-r-2 border-r-slate-300">
+                            <!-- Real Image Display -->
+                            <img id="modalMainImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden" />
 
-                            <div class="text-center my-auto py-2">
-                                <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mb-1.5"></div>
-                                <h4 id="modalCoverTitle" class="font-black text-[11px] sm:text-xs text-white leading-snug font-heading"></h4>
-                                <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mt-1.5"></div>
-                            </div>
+                            <!-- Fallback Vector Cover -->
+                            <div id="modalVectorCover" class="w-full h-full bg-[#032c21] text-white p-3 sm:p-3.5 flex flex-col justify-between border-l-4 border-[#006830]">
+                                <div class="flex justify-between items-center border-b border-white/20 pb-1">
+                                    <span id="modalCategoryBadge" class="text-[8px] sm:text-[8.5px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300"></span>
+                                    <span class="text-[8px] sm:text-[8.5px] text-slate-300 font-mono">PERSIS PERS</span>
+                                </div>
 
-                            <div class="pt-1 border-t border-white/20 text-center">
-                                <span id="modalCoverAuthor" class="text-[8.5px] sm:text-[9.5px] text-slate-200 block font-medium"></span>
+                                <div class="text-center my-auto py-2">
+                                    <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mb-1.5"></div>
+                                    <h4 id="modalCoverTitle" class="font-black text-[11px] sm:text-xs text-white leading-snug font-heading"></h4>
+                                    <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mt-1.5"></div>
+                                </div>
+
+                                <div class="pt-1 border-t border-white/20 text-center">
+                                    <span id="modalCoverAuthor" class="text-[8.5px] sm:text-[9.5px] text-slate-200 block font-medium"></span>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- 4-Thumbnail Switcher Strip -->
+                        <div id="modalPhotoThumbnails" class="mt-2.5 flex items-center justify-center gap-1.5 overflow-x-auto w-full py-1 hidden">
                         </div>
 
                         <!-- Price Box -->

@@ -13,7 +13,7 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> {{ $totalBooks }} Judul Terdaftar
                 </span>
             </div>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">Kelola master buku, nomor ISBN, kategori, harga cetak, dan status etalase katalog publik.</p>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1">Kelola master buku, nomor ISBN, galeri 4 foto naskah, harga cetak, dan status etalase.</p>
         </div>
 
         <div class="flex items-center gap-2.5 shrink-0">
@@ -127,7 +127,7 @@
                         <th class="py-3.5 px-4">Kategori &amp; ISBN</th>
                         <th class="py-3.5 px-4">Format &amp; Hlm</th>
                         <th class="py-3.5 px-4">Harga Cetak</th>
-                        <th class="py-3.5 px-4">Etalase / Status</th>
+                        <th class="py-3.5 px-4">Etalase / Foto</th>
                         <th class="py-3.5 px-4 text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -172,28 +172,33 @@
                                 <span class="font-extrabold text-[#006830] text-xs font-mono">{{ $book->price }}</span>
                             </td>
 
-                            <!-- Badges & Status -->
+                            <!-- Badges & Photos Count -->
                             <td class="py-3.5 px-4 space-y-1">
-                                @if($book->is_new_release)
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                                        <i class="fa-solid fa-sparkles text-[8px]"></i> Baru 2026
-                                    </span>
-                                @endif
-                                @if($book->is_best_seller)
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                                        <i class="fa-solid fa-trophy text-[8px]"></i> Best Seller
-                                    </span>
-                                @endif
-                                <span class="block text-[10px] text-slate-400 font-medium">Status: {{ ucfirst($book->status) }}</span>
+                                <div class="flex flex-wrap gap-1">
+                                    @if($book->is_new_release)
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                            <i class="fa-solid fa-sparkles text-[7px]"></i> Baru 2026
+                                        </span>
+                                    @endif
+                                    @if($book->is_best_seller)
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                                            <i class="fa-solid fa-trophy text-[7px]"></i> Best Seller
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="text-[10px] text-slate-500 flex items-center gap-1">
+                                    <i class="fa-solid fa-images text-emerald-600"></i>
+                                    <span>{{ count($book->photo_urls) }} Foto Terunggah</span>
+                                </div>
                             </td>
 
                             <!-- Actions -->
                             <td class="py-3.5 px-4 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    <button type="button" onclick="openEditBookModal({{ json_encode($book) }})" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition shadow-2xs" title="Edit Buku">
+                                    <button type="button" onclick="openEditBookModal({{ json_encode($book) }})" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition shadow-2xs" title="Edit Buku & Foto">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
-                                    <form method="POST" action="{{ route('admin.books.destroy', $book) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini dari katalog?')" class="inline">
+                                    <form method="POST" action="{{ route('admin.books.destroy', $book) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini beserta seluruh fotonya?')" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center text-xs transition shadow-2xs" title="Hapus Buku">
@@ -224,92 +229,105 @@
         @endif
     </div>
 
-    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (SPACIOUS 2-COLUMN WITH REAL-TIME PREVIEW) -->
+    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (4 PHOTO SLOTS WITH LIVE PREVIEW) -->
     <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl max-w-4xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[92vh] flex flex-col">
+        <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[94vh] flex flex-col">
             
             <!-- Modal Header -->
             <div class="bg-[#032c21] text-white px-6 py-4 flex items-center justify-between border-b border-[#064e3b] shrink-0">
                 <div class="flex items-center gap-2.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                    <span id="modalFormTitle" class="text-sm font-bold uppercase tracking-wider text-emerald-300">Tambah Buku Baru ke Katalog</span>
+                    <span id="modalFormTitle" class="text-sm font-bold uppercase tracking-wider text-emerald-300">Kelola Koleksi Buku &amp; Galeri Foto</span>
                 </div>
                 <button type="button" onclick="closeBookFormModal()" class="w-8 h-8 rounded-lg bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-sm font-bold transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <!-- Modal Form Body (2-Column Grid: Left Preview, Right Form) -->
+            <!-- Modal Form Body (2-Column Grid) -->
             <form id="bookFormElement" method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data" class="p-6 overflow-y-auto">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST" />
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: Interactive Real-time 3D Book Mockup Preview -->
-                    <div class="lg:col-span-4 flex flex-col items-center space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Pratinjau Sampul 3D</span>
-                        
-                        <!-- 3D Vector Cover -->
-                        <div id="modalPreviewCover" class="relative w-36 aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400 border-r-2 border-r-slate-300 shadow-md select-none">
-                            <div class="flex justify-between items-center border-b border-white/20 pb-1">
-                                <span id="prev_cover_cat" class="text-[7.5px] font-extrabold uppercase px-1 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300 truncate">Buku Ajar</span>
-                                <span class="text-[7.5px] text-slate-300 font-mono">PERSIS</span>
-                            </div>
-
-                            <div class="text-center my-auto py-1">
-                                <div class="w-4 h-0.5 bg-amber-400 mx-auto mb-1"></div>
-                                <h5 id="prev_cover_title" class="font-black text-[11px] text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
-                                <div class="w-4 h-0.5 bg-amber-400 mx-auto mt-1"></div>
-                            </div>
-
-                            <div class="pt-1 border-t border-white/20 text-center">
-                                <span id="prev_cover_author" class="text-[8.5px] text-slate-200 block font-medium truncate">Nama Penulis</span>
-                            </div>
+                    <!-- Left: 4 Photo Upload Slots + Live Mockup -->
+                    <div class="lg:col-span-5 space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                                <i class="fa-solid fa-images text-emerald-600 mr-1"></i> Galeri Foto Naskah (2 - 4 Foto)
+                            </span>
+                            <span class="text-[10px] text-slate-400">Maks. 50MB/foto</span>
                         </div>
 
-                        <!-- Price Tag -->
-                        <div class="w-full bg-white border border-slate-200 rounded-lg p-2 text-center shadow-2xs">
-                            <span class="text-[9px] text-slate-400 block font-medium">Harga Resmi:</span>
-                            <span id="prev_cover_price" class="text-sm font-black text-[#006830] font-mono">Rp 75.000</span>
+                        <!-- 4 Image Upload Cards Grid -->
+                        <div class="grid grid-cols-2 gap-3 text-[11px]">
+                            
+                            <!-- Foto 1: Sampul Depan -->
+                            <div class="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1.5 text-center">
+                                <span class="font-bold text-slate-700 block text-[10px]">1. Sampul Depan <span class="text-rose-500">*</span></span>
+                                <div id="previewBoxCover" class="w-full h-24 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                    <span class="text-[9px] text-slate-400">Pilih Foto</span>
+                                </div>
+                                <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxCover')" class="w-full text-[9px] file:mr-1 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[9px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                            </div>
+
+                            <!-- Foto 2: Sampul Belakang -->
+                            <div class="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1.5 text-center">
+                                <span class="font-bold text-slate-700 block text-[10px]">2. Sampul Belakang</span>
+                                <div id="previewBoxBack" class="w-full h-24 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                    <span class="text-[9px] text-slate-400">Pilih Foto</span>
+                                </div>
+                                <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxBack')" class="w-full text-[9px] file:mr-1 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[9px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                            </div>
+
+                            <!-- Foto 3: Halaman Isi / Daftar Isi -->
+                            <div class="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1.5 text-center">
+                                <span class="font-bold text-slate-700 block text-[10px]">3. Pratinjau Isi / Daftar</span>
+                                <div id="previewBoxInside" class="w-full h-24 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                    <span class="text-[9px] text-slate-400">Pilih Foto</span>
+                                </div>
+                                <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxInside')" class="w-full text-[9px] file:mr-1 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[9px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                            </div>
+
+                            <!-- Foto 4: Foto Fisik / Mockup -->
+                            <div class="p-2.5 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1.5 text-center">
+                                <span class="font-bold text-slate-700 block text-[10px]">4. Foto Fisik / Detail</span>
+                                <div id="previewBoxPhysical" class="w-full h-24 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                    <span class="text-[9px] text-slate-400">Pilih Foto</span>
+                                </div>
+                                <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxPhysical')" class="w-full text-[9px] file:mr-1 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[9px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                            </div>
+
                         </div>
 
-                        <!-- Upload File Input (Cover Image) -->
-                        <div class="w-full pt-2 border-t border-slate-200">
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">
-                                <i class="fa-solid fa-image text-emerald-600"></i> Upload Gambar Sampul (Opsional)
+                        <!-- Upload Sample PDF -->
+                        <div class="pt-2 border-t border-slate-200">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                <i class="fa-solid fa-file-pdf text-red-600"></i> Dokumen Sampel PDF (Bab 1 / Daftar Isi)
                             </label>
-                            <input type="file" name="cover_image" id="form_cover_file" accept="image/*" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer" />
-                            <span class="text-[9px] text-slate-400 block mt-0.5">Maks. 50MB (JPG, PNG, WebP)</span>
-                        </div>
-
-                        <!-- Upload File Input (Sample PDF) -->
-                        <div class="w-full">
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">
-                                <i class="fa-solid fa-file-pdf text-red-600"></i> Upload Sampel Bab PDF (Opsional)
-                            </label>
-                            <input type="file" name="sample_pdf" id="form_pdf_file" accept="application/pdf" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer" />
-                            <span class="text-[9px] text-slate-400 block mt-0.5">Maks. 100MB (PDF Bab 1 / Daftar Isi)</span>
+                            <input type="file" name="sample_pdf" id="form_pdf_file" accept="application/pdf" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer" />
+                            <span class="text-[10px] text-slate-400 block mt-1">Batasan upload dokumen: Hingga 100 MB</span>
                         </div>
                     </div>
 
                     <!-- Right: Categorized Form Fields -->
-                    <div class="lg:col-span-8 space-y-4 text-xs">
+                    <div class="lg:col-span-7 space-y-4 text-xs">
                         
                         <!-- 1. Info Utama -->
                         <div>
                             <label class="block font-bold text-slate-700 mb-1">Judul Lengkap Buku <span class="text-rose-500">*</span></label>
-                            <input type="text" name="title" id="form_title" required oninput="updateModalMockup()" placeholder="Contoh: Metodologi Penelitian Studi Islam & Integrasi Sains" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs font-medium" />
+                            <input type="text" name="title" id="form_title" required placeholder="Contoh: Metodologi Penelitian Studi Islam & Integrasi Sains" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs font-medium" />
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Nama Penulis / Dosen <span class="text-rose-500">*</span></label>
-                                <input type="text" name="author" id="form_author" required oninput="updateModalMockup()" placeholder="Dr. H. Ahmad Fauzi, M.Ag." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs" />
+                                <input type="text" name="author" id="form_author" required placeholder="Dr. H. Ahmad Fauzi, M.Ag." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs" />
                             </div>
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Kategori Buku <span class="text-rose-500">*</span></label>
-                                <input type="text" name="category" id="form_category" required oninput="updateModalMockup()" list="catList" placeholder="Buku Ajar / Studi Islam / dll" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs" />
+                                <input type="text" name="category" id="form_category" required list="catList" placeholder="Buku Ajar / Studi Islam / dll" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs" />
                                 <datalist id="catList">
                                     <option value="Buku Ajar">
                                     <option value="Studi Islam">
@@ -330,7 +348,7 @@
                             </div>
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Harga Cetak Resmi <span class="text-rose-500">*</span></label>
-                                <input type="text" name="price" id="form_price" required oninput="updateModalMockup()" placeholder="Rp 75.000" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono font-bold shadow-2xs text-[#006830]" />
+                                <input type="text" name="price" id="form_price" required placeholder="Rp 75.000" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono font-bold shadow-2xs text-[#006830]" />
                             </div>
                         </div>
 
@@ -386,7 +404,7 @@
                         Batal
                     </button>
                     <button type="submit" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl transition shadow-xs flex items-center gap-2">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Buku
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Buku &amp; Foto
                     </button>
                 </div>
             </form>
@@ -396,16 +414,21 @@
 
     <!-- Modal JS -->
     <script>
-        function updateModalMockup() {
-            const title = document.getElementById('form_title').value || 'Judul Buku';
-            const author = document.getElementById('form_author').value || 'Nama Penulis';
-            const category = document.getElementById('form_category').value || 'Buku Ajar';
-            const price = document.getElementById('form_price').value || 'Rp 75.000';
+        function previewSelectedImg(input, targetBoxId) {
+            const box = document.getElementById(targetBoxId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    box.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover rounded" />';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-            document.getElementById('prev_cover_title').innerText = title;
-            document.getElementById('prev_cover_author').innerText = author;
-            document.getElementById('prev_cover_cat').innerText = category;
-            document.getElementById('prev_cover_price').innerText = price;
+        function resetImagePreviews() {
+            ['previewBoxCover', 'previewBoxBack', 'previewBoxInside', 'previewBoxPhysical'].forEach(id => {
+                document.getElementById(id).innerHTML = '<span class="text-[9px] text-slate-400">Pilih Foto</span>';
+            });
         }
 
         function openAddBookModal() {
@@ -426,7 +449,7 @@
             document.getElementById('form_new_release').checked = true;
             document.getElementById('form_best_seller').checked = false;
 
-            updateModalMockup();
+            resetImagePreviews();
 
             const modal = document.getElementById('bookFormModal');
             modal.classList.remove('hidden');
@@ -434,7 +457,7 @@
         }
 
         function openEditBookModal(book) {
-            document.getElementById('modalFormTitle').innerText = 'Edit Data Buku: ' + book.title;
+            document.getElementById('modalFormTitle').innerText = 'Edit Data & Foto Buku: ' + book.title;
             document.getElementById('bookFormElement').action = "/admin/books/" + book.id;
             document.getElementById('formMethod').value = 'PUT';
 
@@ -451,7 +474,20 @@
             document.getElementById('form_new_release').checked = Boolean(book.is_new_release);
             document.getElementById('form_best_seller').checked = Boolean(book.is_best_seller);
 
-            updateModalMockup();
+            resetImagePreviews();
+
+            if (book.cover_image) {
+                document.getElementById('previewBoxCover').innerHTML = '<img src="/storage/' + book.cover_image + '" class="w-full h-full object-cover rounded" />';
+            }
+            if (book.back_cover_image) {
+                document.getElementById('previewBoxBack').innerHTML = '<img src="/storage/' + book.back_cover_image + '" class="w-full h-full object-cover rounded" />';
+            }
+            if (book.inside_preview_image) {
+                document.getElementById('previewBoxInside').innerHTML = '<img src="/storage/' + book.inside_preview_image + '" class="w-full h-full object-cover rounded" />';
+            }
+            if (book.additional_image) {
+                document.getElementById('previewBoxPhysical').innerHTML = '<img src="/storage/' + book.additional_image + '" class="w-full h-full object-cover rounded" />';
+            }
 
             const modal = document.getElementById('bookFormModal');
             modal.classList.remove('hidden');

@@ -49,7 +49,10 @@ class BookController extends Controller
             'format' => 'required|string|max:100',
             'price' => 'required|string|max:50',
             'synopsis' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 1: Depan)
+            'back_cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 2: Belakang)
+            'inside_preview_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 3: Isi)
+            'additional_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB (Foto 4: Fisik)
             'sample_pdf' => 'nullable|file|mimes:pdf|max:102400', // 100MB
             'is_new_release' => 'nullable|boolean',
             'is_best_seller' => 'nullable|boolean',
@@ -60,23 +63,22 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Handle Cover Image Upload
-        if ($request->hasFile('cover_image')) {
-            $file = $request->file('cover_image');
-            $path = $file->store('books/covers', 'public');
-            $validated['cover_image'] = $path;
+        // Handle 4 Dedicated Image Uploads
+        $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
+        foreach ($imageSlots as $slot) {
+            if ($request->hasFile($slot)) {
+                $validated[$slot] = $request->file($slot)->store('books/photos', 'public');
+            }
         }
 
         // Handle Sample PDF Upload
         if ($request->hasFile('sample_pdf')) {
-            $file = $request->file('sample_pdf');
-            $path = $file->store('books/samples', 'public');
-            $validated['sample_pdf'] = $path;
+            $validated['sample_pdf'] = $request->file('sample_pdf')->store('books/samples', 'public');
         }
 
         Book::create($validated);
 
-        return back()->with('success', 'Buku baru "' . $validated['title'] . '" berhasil ditambahkan ke katalog.');
+        return back()->with('success', 'Buku baru "' . $validated['title'] . '" berhasil ditambahkan dengan foto lengkap.');
     }
 
     public function update(Request $request, Book $book)
@@ -91,8 +93,11 @@ class BookController extends Controller
             'format' => 'required|string|max:100',
             'price' => 'required|string|max:50',
             'synopsis' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200', // 50MB
-            'sample_pdf' => 'nullable|file|mimes:pdf|max:102400', // 100MB
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
+            'back_cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
+            'inside_preview_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
+            'additional_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:51200',
+            'sample_pdf' => 'nullable|file|mimes:pdf|max:102400',
             'is_new_release' => 'nullable|boolean',
             'is_best_seller' => 'nullable|boolean',
             'status' => 'required|in:published,draft',
@@ -101,42 +106,41 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Handle Cover Image Upload
-        if ($request->hasFile('cover_image')) {
-            if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
-                Storage::disk('public')->delete($book->cover_image);
+        // Handle 4 Image Upload Updates
+        $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
+        foreach ($imageSlots as $slot) {
+            if ($request->hasFile($slot)) {
+                if ($book->$slot && Storage::disk('public')->exists($book->$slot)) {
+                    Storage::disk('public')->delete($book->$slot);
+                }
+                $validated[$slot] = $request->file($slot)->store('books/photos', 'public');
             }
-            $file = $request->file('cover_image');
-            $path = $file->store('books/covers', 'public');
-            $validated['cover_image'] = $path;
         }
 
-        // Handle Sample PDF Upload
+        // Handle Sample PDF Upload Update
         if ($request->hasFile('sample_pdf')) {
             if ($book->sample_pdf && Storage::disk('public')->exists($book->sample_pdf)) {
                 Storage::disk('public')->delete($book->sample_pdf);
             }
-            $file = $request->file('sample_pdf');
-            $path = $file->store('books/samples', 'public');
-            $validated['sample_pdf'] = $path;
+            $validated['sample_pdf'] = $request->file('sample_pdf')->store('books/samples', 'public');
         }
 
         $book->update($validated);
 
-        return back()->with('success', 'Data buku "' . $book->title . '" berhasil diperbarui.');
+        return back()->with('success', 'Data & foto buku "' . $book->title . '" berhasil diperbarui.');
     }
 
     public function destroy(Book $book)
     {
         $title = $book->title;
-        if ($book->cover_image && Storage::disk('public')->exists($book->cover_image)) {
-            Storage::disk('public')->delete($book->cover_image);
-        }
-        if ($book->sample_pdf && Storage::disk('public')->exists($book->sample_pdf)) {
-            Storage::disk('public')->delete($book->sample_pdf);
+        $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image', 'sample_pdf'];
+        foreach ($imageSlots as $slot) {
+            if ($book->$slot && Storage::disk('public')->exists($book->$slot)) {
+                Storage::disk('public')->delete($book->$slot);
+            }
         }
         $book->delete();
 
-        return back()->with('success', 'Buku "' . $title . '" berhasil dihapus dari katalog.');
+        return back()->with('success', 'Buku "' . $title . '" beserta foto-fotonya berhasil dihapus.');
     }
 }
