@@ -7,12 +7,12 @@
     <section class="bg-brand-950 text-white py-14 sm:py-20 relative overflow-hidden border-b border-brand-900">
         <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
-            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">{{ $about['banner_badge'] }}</span>
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">{{ $about['banner_badge'] ?? '' }}</span>
             <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold font-heading tracking-tight leading-tight max-w-4xl">
-                {{ $about['banner_title'] }}
+                {{ $about['banner_title'] ?? '' }}
             </h1>
             <p class="text-xs sm:text-sm text-slate-300 mt-3 max-w-2xl leading-relaxed">
-                {{ $about['banner_desc'] }}
+                {{ $about['banner_desc'] ?? '' }}
             </p>
         </div>
     </section>
@@ -21,19 +21,19 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['stat_books'] }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['stat_books'] ?? '' }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Judul Buku Terbit</span>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['stat_authors'] }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['stat_authors'] ?? '' }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Penulis & Dosen</span>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['stat_isbn'] }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['stat_isbn'] ?? '' }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Legalitas ISBN Resmi</span>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['stat_copies'] }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['stat_copies'] ?? '' }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Eksemplar Tercetak</span>
             </div>
         </div>
@@ -47,32 +47,32 @@
                 <div class="lg:col-span-7 space-y-5 reveal-card">
                     <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block">Profil & Kilas Sejarah</span>
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight leading-snug">
-                        {{ $about['profile_title'] }}
+                        {{ $about['profile_title'] ?? '' }}
                     </h2>
                     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {{ $about['profile_story_1'] }}
+                        {{ $about['profile_story_1'] ?? '' }}
                     </p>
                     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {{ $about['profile_story_2'] }}
+                        {{ $about['profile_story_2'] ?? '' }}
                     </p>
 
                     <!-- Feature checkmarks -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_1'] }}</span>
+                            <span>{{ $about['about_feature_1'] ?? '' }}</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_2'] }}</span>
+                            <span>{{ $about['about_feature_2'] ?? '' }}</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_3'] }}</span>
+                            <span>{{ $about['about_feature_3'] ?? '' }}</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>{{ $about['about_feature_4'] }}</span>
+                            <span>{{ $about['about_feature_4'] ?? '' }}</span>
                         </div>
                     </div>
                 </div>
@@ -123,7 +123,7 @@
                         </div>
                         <span class="text-xs font-extrabold text-emerald-700 uppercase tracking-widest block mb-2">Visi Kami</span>
                         <h3 class="text-base sm:text-lg font-bold text-slate-900 font-heading leading-relaxed">
-                            "{{ $about['vision'] }}"
+                            "{{ $about['vision'] ?? '' }}"
                         </h3>
                     </div>
                     <div class="pt-6 mt-6 border-t border-slate-100 flex items-center gap-2 text-xs font-bold text-slate-500">
@@ -141,19 +141,19 @@
                     <div class="space-y-4">
                         <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_1'] }}</p>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_1'] ?? '' }}</p>
                         </div>
                         <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_2'] }}</p>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_2'] ?? '' }}</p>
                         </div>
                         <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">3</span>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_3'] }}</p>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_3'] ?? '' }}</p>
                         </div>
                         <div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/60">
                             <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">4</span>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_4'] }}</p>
+                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">{{ $about['mission_4'] ?? '' }}</p>
                         </div>
                     </div>
                 </div>
@@ -224,8 +224,8 @@
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
                         {{ strtoupper(substr($about['director_name'], 0, 1)) }}
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['director_name'] }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['director_title'] }}</span>
+                    <h3 class="text-sm font-bold text-slate-900">{{ $about['director_name'] ?? '' }}</h3>
+                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['director_title'] ?? '' }}</span>
                 </div>
 
                 <!-- Person 2: Editor Chief -->
@@ -233,8 +233,8 @@
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
                         {{ strtoupper(substr($about['editor_chief'], 0, 1)) }}
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['editor_chief'] }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['editor_chief_title'] }}</span>
+                    <h3 class="text-sm font-bold text-slate-900">{{ $about['editor_chief'] ?? '' }}</h3>
+                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['editor_chief_title'] ?? '' }}</span>
                 </div>
 
                 <!-- Person 3: Production Lead -->
@@ -242,8 +242,8 @@
                     <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
                         {{ strtoupper(substr($about['production_lead'], 0, 1)) }}
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['production_lead'] }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['production_lead_title'] }}</span>
+                    <h3 class="text-sm font-bold text-slate-900">{{ $about['production_lead'] ?? '' }}</h3>
+                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['production_lead_title'] ?? '' }}</span>
                 </div>
             </div>
         </div>

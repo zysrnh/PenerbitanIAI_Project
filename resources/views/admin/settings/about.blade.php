@@ -378,32 +378,32 @@
                     <!-- Mockup 1: Dark Header Banner -->
                     <div class="bg-[#032c21] text-white p-6 rounded-2xl shadow-sm">
                         <span id="prev_about_badge" class="text-xs font-extrabold text-emerald-400 uppercase tracking-widest block mb-1.5">
-                            {{ $about['about_banner_badge'] }}
+                            {{ $about['about_banner_badge'] ?? '' }}
                         </span>
                         <h4 id="prev_about_title" class="font-extrabold text-lg sm:text-xl text-white leading-tight">
-                            {{ $about['about_banner_title'] }}
+                            {{ $about['about_banner_title'] ?? '' }}
                         </h4>
                         <p id="prev_about_desc" class="text-xs text-slate-300 mt-2 leading-relaxed">
-                            {{ $about['about_banner_desc'] }}
+                            {{ $about['about_banner_desc'] ?? '' }}
                         </p>
                     </div>
 
                     <!-- Mockup 2: 4 Stats Counters Grid -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center">
                         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                            <span id="prev_stat_books" class="text-base font-extrabold text-emerald-700 block">{{ $about['about_stat_books'] }}</span>
+                            <span id="prev_stat_books" class="text-base font-extrabold text-emerald-700 block">{{ $about['about_stat_books'] ?? '' }}</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mt-0.5">Buku Terbit</span>
                         </div>
                         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                            <span id="prev_stat_authors" class="text-base font-extrabold text-slate-900 block">{{ $about['about_stat_authors'] }}</span>
+                            <span id="prev_stat_authors" class="text-base font-extrabold text-slate-900 block">{{ $about['about_stat_authors'] ?? '' }}</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mt-0.5">Penulis</span>
                         </div>
                         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                            <span id="prev_stat_isbn" class="text-base font-extrabold text-emerald-700 block">{{ $about['about_stat_isbn'] }}</span>
+                            <span id="prev_stat_isbn" class="text-base font-extrabold text-emerald-700 block">{{ $about['about_stat_isbn'] ?? '' }}</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mt-0.5">ISBN Resmi</span>
                         </div>
                         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
-                            <span id="prev_stat_copies" class="text-base font-extrabold text-slate-900 block">{{ $about['about_stat_copies'] }}</span>
+                            <span id="prev_stat_copies" class="text-base font-extrabold text-slate-900 block">{{ $about['about_stat_copies'] ?? '' }}</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block mt-0.5">Eksemplar</span>
                         </div>
                     </div>
@@ -412,20 +412,20 @@
                     <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
                         <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-widest block">Profil Lembaga</span>
                         <h5 id="prev_profile_title" class="font-bold text-xs sm:text-sm text-slate-900 leading-snug">
-                            {{ $about['about_profile_title'] }}
+                            {{ $about['about_profile_title'] ?? '' }}
                         </h5>
                         <p id="prev_profile_story_1" class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">
-                            {{ $about['about_profile_story_1'] }}
+                            {{ $about['about_profile_story_1'] ?? '' }}
                         </p>
                         <p id="prev_profile_story_2" class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">
-                            {{ $about['about_profile_story_2'] }}
+                            {{ $about['about_profile_story_2'] ?? '' }}
                         </p>
                     
                     <div class="grid grid-cols-2 gap-2 text-[10px] font-medium text-slate-700 pt-1 border-t border-slate-200">
-                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_1">{{ $about['about_feature_1'] }}</span></div>
-                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_2">{{ $about['about_feature_2'] }}</span></div>
-                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_3">{{ $about['about_feature_3'] }}</span></div>
-                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_4">{{ $about['about_feature_4'] }}</span></div>
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_1">{{ $about['about_feature_1'] ?? '' }}</span></div>
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_2">{{ $about['about_feature_2'] ?? '' }}</span></div>
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_3">{{ $about['about_feature_3'] ?? '' }}</span></div>
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_4">{{ $about['about_feature_4'] ?? '' }}</span></div>
                     </div>
                 </div>
 
@@ -436,7 +436,7 @@
                             <div>
                                 <span class="text-[9px] font-extrabold text-emerald-400 uppercase tracking-wider block mb-1">Visi Lembaga</span>
                                 <p id="prev_about_vision" class="text-[11px] text-slate-200 leading-relaxed italic">
-                                    "{{ $about['about_vision'] }}"
+                                    "{{ $about['about_vision'] ?? '' }}"
                                 </p>
                             </div>
                             <span class="text-[9px] font-bold text-emerald-400 block mt-2">Target 2030</span>
@@ -446,16 +446,16 @@
                         <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5 text-[10px]">
                             <span class="font-bold text-slate-900 block mb-1 text-[11px]">4 Pilar Misi</span>
                             <div class="flex items-start gap-1.5 text-slate-700">
-                                <span class="font-bold text-emerald-700 shrink-0">1.</span> <span id="prev_mission_1" class="line-clamp-2">{{ $about['about_mission_1'] }}</span>
+                                <span class="font-bold text-emerald-700 shrink-0">1.</span> <span id="prev_mission_1" class="line-clamp-2">{{ $about['about_mission_1'] ?? '' }}</span>
                             </div>
                             <div class="flex items-start gap-1.5 text-slate-700">
-                                <span class="font-bold text-emerald-700 shrink-0">2.</span> <span id="prev_mission_2" class="line-clamp-2">{{ $about['about_mission_2'] }}</span>
+                                <span class="font-bold text-emerald-700 shrink-0">2.</span> <span id="prev_mission_2" class="line-clamp-2">{{ $about['about_mission_2'] ?? '' }}</span>
                             </div>
                             <div class="flex items-start gap-1.5 text-slate-700">
-                                <span class="font-bold text-emerald-700 shrink-0">3.</span> <span id="prev_mission_3" class="line-clamp-2">{{ $about['about_mission_3'] }}</span>
+                                <span class="font-bold text-emerald-700 shrink-0">3.</span> <span id="prev_mission_3" class="line-clamp-2">{{ $about['about_mission_3'] ?? '' }}</span>
                             </div>
                             <div class="flex items-start gap-1.5 text-slate-700">
-                                <span class="font-bold text-emerald-700 shrink-0">4.</span> <span id="prev_mission_4" class="line-clamp-2">{{ $about['about_mission_4'] }}</span>
+                                <span class="font-bold text-emerald-700 shrink-0">4.</span> <span id="prev_mission_4" class="line-clamp-2">{{ $about['about_mission_4'] ?? '' }}</span>
                             </div>
                         </div>
                     </div>
@@ -468,22 +468,22 @@
                                 <div class="w-8 h-8 rounded-full bg-[#032c21] text-emerald-400 font-bold text-xs flex items-center justify-center mx-auto mb-1">
                                     <span id="prev_avatar_dir">A</span>
                                 </div>
-                                <span id="prev_director_name" class="font-bold text-slate-900 block truncate">{{ $about['about_director_name'] }}</span>
-                                <span id="prev_director_title" class="text-[9px] text-emerald-700 block truncate">{{ $about['about_director_title'] }}</span>
+                                <span id="prev_director_name" class="font-bold text-slate-900 block truncate">{{ $about['about_director_name'] ?? '' }}</span>
+                                <span id="prev_director_title" class="text-[9px] text-emerald-700 block truncate">{{ $about['about_director_title'] ?? '' }}</span>
                             </div>
                             <div class="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
                                 <div class="w-8 h-8 rounded-full bg-[#032c21] text-emerald-400 font-bold text-xs flex items-center justify-center mx-auto mb-1">
                                     <span id="prev_avatar_edit">N</span>
                                 </div>
-                                <span id="prev_editor_chief" class="font-bold text-slate-900 block truncate">{{ $about['about_editor_chief'] }}</span>
-                                <span id="prev_editor_chief_title" class="text-[9px] text-blue-700 block truncate">{{ $about['about_editor_chief_title'] }}</span>
+                                <span id="prev_editor_chief" class="font-bold text-slate-900 block truncate">{{ $about['about_editor_chief'] ?? '' }}</span>
+                                <span id="prev_editor_chief_title" class="text-[9px] text-blue-700 block truncate">{{ $about['about_editor_chief_title'] ?? '' }}</span>
                             </div>
                             <div class="p-2 rounded-lg bg-white border border-slate-200 shadow-2xs">
                                 <div class="w-8 h-8 rounded-full bg-[#032c21] text-emerald-400 font-bold text-xs flex items-center justify-center mx-auto mb-1">
                                     <span id="prev_avatar_prod">M</span>
                                 </div>
-                                <span id="prev_production_lead" class="font-bold text-slate-900 block truncate">{{ $about['about_production_lead'] }}</span>
-                                <span id="prev_production_lead_title" class="text-[9px] text-purple-700 block truncate">{{ $about['about_production_lead_title'] }}</span>
+                                <span id="prev_production_lead" class="font-bold text-slate-900 block truncate">{{ $about['about_production_lead'] ?? '' }}</span>
+                                <span id="prev_production_lead_title" class="text-[9px] text-purple-700 block truncate">{{ $about['about_production_lead_title'] ?? '' }}</span>
                             </div>
                         </div>
                     </div>
