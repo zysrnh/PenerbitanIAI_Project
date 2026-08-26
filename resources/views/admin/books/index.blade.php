@@ -169,25 +169,51 @@
         
         <!-- Filter Header -->
         <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <form action="{{ route('admin.books.index') }}" method="GET" class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3">
-                <div class="relative w-full sm:w-72">
+            <form id="adminSearchForm" action="{{ route('admin.books.index') }}" method="GET" class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3 relative z-30" autocomplete="off">
+                <div class="relative w-full sm:w-80">
                     <input 
                         type="text" 
                         name="q" 
+                        id="adminSearchInput"
                         value="{{ request('q') }}" 
                         placeholder="Cari judul, nama penulis, nomor ISBN..." 
-                        class="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                        class="w-full pl-9 pr-8 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 font-medium transition"
+                        oninput="handleAdminLiveSearch(this.value)"
+                        onfocus="handleAdminLiveSearch(this.value)"
                     />
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                    
+                    <!-- Clear Input Button -->
+                    <button 
+                        type="button" 
+                        id="adminClearSearchBtn" 
+                        onclick="clearAdminSearch()" 
+                        class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs"
+                        title="Hapus pencarian"
+                    >
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+
+                    <!-- Instant Suggestion Dropdown -->
+                    <div 
+                        id="adminAutocompleteDropdown" 
+                        class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-50 animate-fade-in divide-y divide-slate-100 max-h-72 overflow-y-auto"
+                    >
+                        <div id="adminAutocompleteList" class="p-1.5 space-y-1"></div>
+                    </div>
                 </div>
 
-                <select name="kategori" onchange="this.form.submit()" class="w-full sm:w-48 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 bg-white">
+                <select name="kategori" id="adminCategorySelect" onchange="handleAdminCategoryFilter(this.value)" class="w-full sm:w-48 px-3.5 py-2.5 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 bg-white font-semibold text-slate-700">
                     <option value="">Semua Kategori</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat }}" {{ request('kategori') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
                     @endforeach
                 </select>
             </form>
+
+            <div id="filterResultCount" class="text-xs text-slate-400 font-mono hidden sm:block">
+                Menampilkan: <strong class="text-emerald-700 font-bold" id="visibleRowCount">{{ $books->count() }}</strong> dari {{ $books->total() }} buku
+            </div>
         </div>
 
         <!-- Table with Large & Spacious Covers (w-20 h-28 with 3D Hover) -->
@@ -206,7 +232,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
                     @forelse($books as $book)
-                        <tr class="hover:bg-slate-50/70 transition">
+                        <tr class="hover:bg-slate-50/70 transition book-table-row" data-title="{{ strtolower($book->title) }}" data-author="{{ strtolower($book->author) }}" data-category="{{ $book->category }}" data-isbn="{{ strtolower($book->isbn) }}" data-json="{{ htmlspecialchars(json_encode($book), ENT_QUOTES, 'UTF-8') }}">
                             
                             <td class="py-3.5 px-5">
                                 <div class="book-stage-3d w-20 h-28 cursor-pointer" onclick="openEditModal({{ json_encode($book) }})" title="Klik untuk Pratinjau 3D & Edit">
@@ -614,6 +640,144 @@
 
         const tabKeys = ['cover', 'back', 'inside1', 'inside2'];
         const tabLabels = { cover: 'Sampul Depan', back: 'Sampul Belakang', inside1: 'Halaman Isi 1', inside2: 'Halaman Isi 2' };
+
+        
+        // =======================================================
+        // ADMIN INSTANT LIVE SEARCH & AUTOCOMPLETE LOGIC
+        // =======================================================
+        function handleAdminLiveSearch(query) {
+            const trimmed = (query || '').trim().toLowerCase();
+            const clearBtn = document.getElementById('adminClearSearchBtn');
+            const dropdown = document.getElementById('adminAutocompleteDropdown');
+            const list = document.getElementById('adminAutocompleteList');
+            const rows = document.querySelectorAll('.book-table-row');
+            const countEl = document.getElementById('visibleRowCount');
+
+            if (clearBtn) {
+                if (trimmed.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+
+            let visibleCount = 0;
+            let matchingBooks = [];
+
+            // 1. Instant Table Row Filter
+            rows.forEach(row => {
+                const title = row.getAttribute('data-title') || '';
+                const author = row.getAttribute('data-author') || '';
+                const isbn = row.getAttribute('data-isbn') || '';
+                const category = row.getAttribute('data-category') || '';
+                
+                const matches = trimmed === '' || title.includes(trimmed) || author.includes(trimmed) || isbn.includes(trimmed) || category.toLowerCase().includes(trimmed);
+
+                if (matches) {
+                    row.style.display = '';
+                    visibleCount++;
+                    const bookJson = row.getAttribute('data-json');
+                    if (bookJson && matchingBooks.length < 5) {
+                        try {
+                            matchingBooks.push(JSON.parse(bookJson));
+                        } catch(e) {}
+                    }
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (countEl) countEl.innerText = visibleCount;
+
+            // 2. Autocomplete Dropdown Preview
+            if (trimmed.length > 0 && matchingBooks.length > 0) {
+                list.innerHTML = '';
+                matchingBooks.forEach(book => {
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center gap-3 p-2 rounded-lg hover:bg-emerald-50 cursor-pointer transition text-left group';
+                    
+                    const coverUrl = book.cover_image ? ('/storage/' + book.cover_image) : null;
+                    const highlightedTitle = highlightAdminKeyword(book.title, trimmed);
+
+                    item.innerHTML = `
+                        <div class="w-8 h-11 bg-slate-900 rounded-xs overflow-hidden shrink-0 border border-slate-200">
+                            ${coverUrl ? '<img src="' + coverUrl + '" class="w-full h-full object-cover" />' : '<div class="w-full h-full bg-[#032c21] p-0.5 text-[6px] text-white font-bold">PERSIS</div>'}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-1 mb-0.5">
+                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 truncate">
+                                    ${book.category}
+                                </span>
+                                <span class="text-[10.5px] font-mono font-bold text-emerald-700">
+                                    ${book.price || ''}
+                                </span>
+                            </div>
+                            <h5 class="text-xs font-bold text-slate-900 truncate group-hover:text-emerald-700 transition">
+                                ${highlightedTitle}
+                            </h5>
+                            <span class="text-[10px] text-slate-400 truncate block mt-0.5">
+                                ${book.author}
+                            </span>
+                        </div>
+                    `;
+
+                    item.onclick = function() {
+                        openEditModal(book);
+                        dropdown.classList.add('hidden');
+                    };
+
+                    list.appendChild(item);
+                });
+                dropdown.classList.remove('hidden');
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        }
+
+        function highlightAdminKeyword(text, keyword) {
+            if (!text || !keyword) return text || '';
+            const regex = new RegExp('(' + keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\function openAdminLightbox()') + ')', 'gi');
+            return text.replace(regex, '<mark class="bg-amber-100 text-amber-900 font-bold px-0.5 rounded-xs">$1</mark>');
+        }
+
+        function clearAdminSearch() {
+            const input = document.getElementById('adminSearchInput');
+            input.value = '';
+            handleAdminLiveSearch('');
+            input.focus();
+        }
+
+        function handleAdminCategoryFilter(selectedCat) {
+            const input = document.getElementById('adminSearchInput');
+            const trimmed = (input.value || '').trim().toLowerCase();
+            const rows = document.querySelectorAll('.book-table-row');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const title = row.getAttribute('data-title') || '';
+                const author = row.getAttribute('data-author') || '';
+                const category = row.getAttribute('data-category') || '';
+                
+                const matchesSearch = trimmed === '' || title.includes(trimmed) || author.includes(trimmed);
+                const matchesCategory = !selectedCat || category === selectedCat;
+
+                if (matchesSearch && matchesCategory) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const countEl = document.getElementById('visibleRowCount');
+            if (countEl) countEl.innerText = visibleCount;
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const form = document.getElementById('adminSearchForm');
+            const dropdown = document.getElementById('adminAutocompleteDropdown');
+            if (form && !form.contains(e.target) && dropdown) {
+                dropdown.classList.add('hidden');
+            }
+        });
 
         function openAdminLightbox() {
             const url = currentPhotoObj[activeTab];
