@@ -1772,8 +1772,7 @@
                         ? (book.cover_image.startsWith('/') || book.cover_image.startsWith('http') ? book.cover_image : '/storage/' + book.cover_image)
                         : null;
 
-                    const titleHL = (book.title || '').replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\</script>
-@endsection') + ')', 'gi'), '<mark class="bg-amber-100 text-amber-900 font-bold">$1</mark>');
+                    const titleHL = book.title || '';
 
                     row.innerHTML =
                         '<div class="w-9 h-12 rounded-xs overflow-hidden shrink-0 border border-slate-200 bg-[#032c21]">' +
