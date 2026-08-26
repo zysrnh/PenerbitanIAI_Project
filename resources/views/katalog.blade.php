@@ -226,7 +226,7 @@
                     
                     <!-- Search Widget -->
                     <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-sm">
-                        <form action="{{ route('katalog') }}" method="GET" class="relative">
+                        <form action="{{ route('katalog') }}#daftar-katalog" method="GET" class="relative">
                             <input 
                                 type="text" 
                                 name="q" 
@@ -248,19 +248,19 @@
                         </div>
 
                         <div class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
-                            <a href="{{ route('katalog') }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ !request('kategori') || request('kategori') === 'all' ? 'cat-active' : '' }}">
+                            <a href="{{ route('katalog') }}#daftar-katalog" class="cat-link flex items-center justify-between px-4 py-2.5 {{ !request('kategori') || request('kategori') === 'all' ? 'cat-active' : '' }}">
                                 <span>Semua Koleksi</span>
                                 <i class="fa-solid fa-angle-right text-[10px] {{ !request('kategori') || request('kategori') === 'all' ? 'text-white' : 'text-slate-400' }}"></i>
                             </a>
 
-                            <a href="{{ route('katalog', ['kategori' => 'Buku Baru']) }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Buku Baru' ? 'cat-active' : '' }}">
+                            <a href="{{ route('katalog', ['kategori' => 'Buku Baru']) }}#daftar-katalog" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Buku Baru' ? 'cat-active' : '' }}">
                                 <span class="flex items-center gap-1.5">
                                     <span class="w-2 h-2 rounded-full {{ request('kategori') === 'Buku Baru' ? 'bg-white' : 'bg-emerald-500' }}"></span> Buku Baru (2026)
                                 </span>
                                 <i class="fa-solid fa-angle-right text-[10px] {{ request('kategori') === 'Buku Baru' ? 'text-white' : 'text-slate-400' }}"></i>
                             </a>
 
-                            <a href="{{ route('katalog', ['kategori' => 'Best Seller']) }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Best Seller' ? 'cat-active' : '' }}">
+                            <a href="{{ route('katalog', ['kategori' => 'Best Seller']) }}#daftar-katalog" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Best Seller' ? 'cat-active' : '' }}">
                                 <span class="flex items-center gap-1.5">
                                     <span class="w-2 h-2 rounded-full {{ request('kategori') === 'Best Seller' ? 'bg-white' : 'bg-amber-500' }}"></span> Best Seller
                                 </span>
@@ -268,7 +268,7 @@
                             </a>
 
                             @foreach($categoriesWithCount as $catItem)
-                                <a href="{{ route('katalog', ['kategori' => $catItem['name']]) }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === $catItem['name'] ? 'cat-active' : '' }}">
+                                <a href="{{ route('katalog', ['kategori' => $catItem['name']]) }}#daftar-katalog" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === $catItem['name'] ? 'cat-active' : '' }}">
                                     <span>{{ $catItem['name'] }}</span>
                                     <span class="text-[10px] font-mono {{ request('kategori') === $catItem['name'] ? 'text-emerald-200' : 'text-slate-400' }}">({{ $catItem['count'] }})</span>
                                 </a>
@@ -304,7 +304,7 @@
                 </div>
 
                 <!-- RIGHT MAIN CONTENT WITH STAGGERED CASCADE ENTRANCE -->
-                <div class="lg:col-span-9 space-y-6">
+                <div id="daftar-katalog" class="lg:col-span-9 space-y-6 scroll-mt-24">
                     
                     @if(!request('kategori') || request('kategori') === 'all')
                         
@@ -812,6 +812,22 @@
 
     <!-- Public Catalog JS -->
     <script>
+        
+        // Auto Smooth Scroll to Catalog Section on Category Filter or Search
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('kategori') || urlParams.has('q') || window.location.hash === '#daftar-katalog') {
+                const target = document.getElementById('daftar-katalog');
+                if (target) {
+                    setTimeout(() => {
+                        const yOffset = -90; // Navbar offset
+                        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }, 60);
+                }
+            }
+        });
+
         let currentModalBook = null;
         let currentModalPhotos = [];
         let currentPhotoIndex = 0;
