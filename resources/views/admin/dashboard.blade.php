@@ -27,7 +27,7 @@
                 <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Terbitan Baru (2026)</span>
                 <h3 class="text-2xl sm:text-3xl font-black text-blue-700 mt-1 font-mono">{{ $newBooksCount ?? 0 }}</h3>
                 <span class="text-[11px] text-blue-600 font-semibold flex items-center gap-1 mt-1">
-                    <i class="fa-solid fa-sparkles text-[9px]"></i> Highlight Etalase
+                    <i class="fa-solid fa-star text-[9px]"></i> Highlight Etalase
                 </span>
             </div>
             <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl shrink-0 shadow-2xs">
