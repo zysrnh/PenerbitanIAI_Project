@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>Notifikasi Pesan Masuk | IAI PERSIS PRESS</title>
+    <title>Notifikasi Pesan Masuk | PERSIS PERS</title>
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif; background-color: #f1f5f9; margin: 0; padding: 24px; color: #1e293b;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -13,7 +13,7 @@
                     <!-- Header -->
                     <tr>
                         <td style="background-color: #032c21; padding: 24px 32px; color: #ffffff; text-align: left;">
-                            <span style="color: #4ade80; font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 4px;">IAI PERSIS PRESS</span>
+                            <span style="color: #4ade80; font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 4px;">PERSIS PERS</span>
                             <h1 style="color: #ffffff; font-size: 20px; font-weight: bold; margin: 0; padding: 0;">Pengajuan Naskah & Pesan Baru Masuk</h1>
                         </td>
                     </tr>
@@ -22,7 +22,7 @@
                     <tr>
                         <td style="padding: 32px;">
                             <p style="font-size: 14px; line-height: 1.6; color: #475569; margin-top: 0;">
-                                Halo Tim Redaksi, ada pesan / pengajuan naskah baru yang masuk melalui formulir kontak website <strong>IAI PERSIS PRESS</strong>:
+                                Halo Tim Redaksi, ada pesan / pengajuan naskah baru yang masuk melalui formulir kontak website <strong>PERSIS PERS</strong>:
                             </p>
 
                             <!-- Information Card -->
@@ -72,7 +72,7 @@
                             </table>
 
                             <p style="font-size: 11px; color: #94a3b8; margin-top: 32px; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 16px;">
-                                Email ini dikirim secara otomatis oleh Sistem Administrasi Website IAI PERSIS PRESS.
+                                Email ini dikirim secara otomatis oleh Sistem Administrasi Website PERSIS PERS.
                             </p>
                         </td>
                     </tr>

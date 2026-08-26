@@ -1,18 +1,18 @@
 @extends('layouts.app')
 
-@section('title', 'Tentang Kami | IAI PERSIS PRESS')
+@section('title', 'Tentang Kami | PERSIS PERS')
 
 @section('content')
     <!-- Hero Banner -->
     <section class="bg-brand-950 text-white py-14 sm:py-20 relative overflow-hidden border-b border-brand-900">
         <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
-            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">{{ $about['banner_badge'] ?? '' }}</span>
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">{{ $about['about_banner_badge'] ?? ($about['banner_badge'] ?? 'Mengenal Lembaga') }}</span>
             <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold font-heading tracking-tight leading-tight max-w-4xl">
-                {{ $about['banner_title'] ?? '' }}
+                {{ $about['about_banner_title'] ?? ($about['banner_title'] ?? 'Pusat Penerbitan, Percetakan, & Hilirisasi Karya Ilmiah') }}
             </h1>
             <p class="text-xs sm:text-sm text-slate-300 mt-3 max-w-2xl leading-relaxed">
-                {{ $about['banner_desc'] ?? '' }}
+                {{ $about['about_banner_desc'] ?? ($about['banner_desc'] ?? '') }}
             </p>
         </div>
     </section>
@@ -21,19 +21,19 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['stat_books'] ?? '' }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['about_stat_books'] ?? ($about['stat_books'] ?? '150+') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Judul Buku Terbit</span>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['stat_authors'] ?? '' }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['about_stat_authors'] ?? ($about['stat_authors'] ?? '80+') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Penulis & Dosen</span>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['stat_isbn'] ?? '' }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-emerald-700 font-heading">{{ $about['about_stat_isbn'] ?? ($about['stat_isbn'] ?? '100%') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Legalitas ISBN Resmi</span>
             </div>
             <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-md reveal-card text-center">
-                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['stat_copies'] ?? '' }}</span>
+                <span class="block text-2xl sm:text-3xl font-extrabold text-brand-950 font-heading">{{ $about['about_stat_copies'] ?? ($about['stat_copies'] ?? '25.000+') }}</span>
                 <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Eksemplar Tercetak</span>
             </div>
         </div>
@@ -47,13 +47,13 @@
                 <div class="lg:col-span-7 space-y-5 reveal-card">
                     <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block">Profil & Kilas Sejarah</span>
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight leading-snug">
-                        {{ $about['profile_title'] ?? '' }}
+                        {{ $about['about_profile_title'] ?? ($about['profile_title'] ?? 'Komitmen Membangun Peradaban Literasi & Riset Akademik') }}
                     </h2>
                     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {{ $about['profile_story_1'] ?? '' }}
+                        {{ $about['about_profile_story_1'] ?? ($about['profile_story_1'] ?? '') }}
                     </p>
                     <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {{ $about['profile_story_2'] ?? '' }}
+                        {{ $about['about_profile_story_2'] ?? ($about['profile_story_2'] ?? '') }}
                     </p>
 
                     <!-- Feature checkmarks -->

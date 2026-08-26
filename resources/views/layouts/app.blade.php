@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'IAI PERSIS PRESS | Penerbitan & Percetakan Kampus')</title>
+    <title>@yield('title', 'PERSIS PERS | Penerbitan & Percetakan Kampus')</title>
 
     <!-- Google Fonts Plus Jakarta Sans & Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,9 +88,9 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5">
-                            <span class="text-[11px] font-extrabold text-brand-700 uppercase tracking-widest leading-none">IAI PERSIS</span>
+                            <span class="text-[11px] font-extrabold text-brand-700 uppercase tracking-widest leading-none">PENERBITAN</span>
                         </div>
-                        <h1 class="font-extrabold text-xl text-brand-950 font-heading leading-none tracking-tight mt-0.5">PRESS</h1>
+                        <h1 class="font-extrabold text-xl text-brand-950 font-heading leading-none tracking-tight mt-0.5">PERSIS PERS</h1>
                         <span class="text-[10px] text-slate-500 font-semibold block mt-0.5">Penerbitan & Percetakan</span>
                     </div>
                 </a>
@@ -160,7 +160,7 @@
         if (str_starts_with($cleanWa, '0')) {
             $cleanWa = '62' . substr($cleanWa, 1);
         }
-        $waQuickUrl = "https://wa.me/{$cleanWa}?text=" . urlencode("Halo Tim Redaksi IAI PERSIS PRESS, saya ingin konsultasi penerbitan/percetakan.");
+        $waQuickUrl = "https://wa.me/{$cleanWa}?text=" . urlencode("Halo Tim Redaksi PERSIS PERS, saya ingin konsultasi penerbitan/percetakan.");
     @endphp
     <div class="fixed bottom-6 right-6 z-50 group flex items-center gap-2">
         <a 
@@ -240,7 +240,7 @@
             </div>
 
             <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-                <p>&copy; {{ date('Y') }} IAI PERSIS PRESS. All Rights Reserved.</p>
+                <p>&copy; {{ date('Y') }} PERSIS PERS. All Rights Reserved.</p>
                 <div class="flex items-center gap-4">
                     <a href="{{ route('admin.login') }}" class="hover:text-emerald-400 transition flex items-center gap-1">
                         <i class="fa-solid fa-lock text-[10px]"></i> Login Admin

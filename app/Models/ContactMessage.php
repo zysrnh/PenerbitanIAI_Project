@@ -27,7 +27,7 @@ class ContactMessage extends Model
         if (str_starts_with($cleanPhone, '0')) {
             $cleanPhone = '62' . substr($cleanPhone, 1);
         }
-        $text = urlencode("Halo Bapak/Ibu {$this->name}, kami dari Tim Redaksi IAI PERSIS PRESS ingin menindaklanjuti pesan/pengajuan naskah Anda regarding: {$this->service_category}.");
+        $text = urlencode("Halo Bapak/Ibu {$this->name}, kami dari Tim Redaksi PERSIS PERS ingin menindaklanjuti pesan/pengajuan naskah Anda regarding: {$this->service_category}.");
         return "https://wa.me/{$cleanPhone}?text={$text}";
     }
 }

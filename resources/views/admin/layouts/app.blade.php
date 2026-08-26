@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'Admin Panel') | IAI PERSIS PRESS</title>
+    <title>@yield('title', 'Admin Panel') | PERSIS PERS</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +50,7 @@
                     <i class="fa-solid fa-book-open-reader text-sm"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-sm text-white leading-none tracking-tight">IAI PERSIS PRESS</h1>
+                    <h1 class="font-bold text-sm text-white leading-none tracking-tight">PERSIS PERS</h1>
                     <span class="text-[11px] text-slate-400 font-medium block mt-0.5">Admin Management</span>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                     <span>Kelola Tentang Kami</span>
                 </a>
 
-                <a href="{{ route('admin.settings.contact') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
+                <a href="{{ route('admin.settings.contact') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.settings.contact*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
                     <i class="fa-solid fa-sliders w-5 text-center text-base"></i>
                     <span>Kelola Kontak & Web</span>
                 </a>
@@ -285,7 +285,7 @@
 
         <!-- Footer -->
         <footer class="py-4 px-8 border-t border-slate-200/80 text-center text-xs text-slate-400 bg-white shrink-0">
-            &copy; {{ date('Y') }} IAI PERSIS PRESS &bull; Sistem Manajemen Penerbitan
+            &copy; {{ date('Y') }} PERSIS PERS &bull; Sistem Manajemen Penerbitan
         </footer>
     </div>
 

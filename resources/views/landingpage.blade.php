@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'IAI PERSIS PRESS | Penerbitan & Percetakan')
+@section('title', 'PERSIS PERS | Penerbitan & Percetakan')
 
 @section('content')
     <!-- Hero Slider Section -->
@@ -35,7 +35,7 @@
                         </h2>
                         
                         <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed mb-7 max-w-md">
-                            IAI Persis Press hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.
+                            Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.
                         </p>
 
                         <div class="flex items-center gap-3 mb-6">
@@ -339,7 +339,7 @@
                 <div id="tentang" class="lg:col-span-4 bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
                     <div>
                         <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block mb-1">TENTANG KAMI</span>
-                        <h4 class="font-extrabold text-base text-slate-900 mb-3">IAI Persis Press</h4>
+                        <h4 class="font-extrabold text-base text-slate-900 mb-3">Persis Pers</h4>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center mb-4">
                             <div class="sm:col-span-7 text-xs text-slate-600 leading-relaxed">
@@ -518,7 +518,7 @@
     <!-- Mini Footer -->
     <footer class="bg-brand-950 border-t border-brand-900/60 py-4 text-center text-slate-400 text-[11px]">
         <div class="max-w-7xl mx-auto px-4">
-            &copy; {{ date('Y') }} IAI PERSIS PRESS - Penerbitan & Percetakan IAI PERSIS Bandung. All rights reserved.
+            &copy; {{ date('Y') }} PERSIS PERS - Penerbitan & Percetakan IAI PERSIS Bandung. All rights reserved.
         </div>
     </footer>
 @endsection

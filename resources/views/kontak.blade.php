@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Hubungi Kami | IAI PERSIS PRESS')
+@section('title', 'Hubungi Kami | PERSIS PERS')
 
 @section('content')
     <!-- Header Banner -->

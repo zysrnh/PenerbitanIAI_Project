@@ -17,7 +17,7 @@ class SettingController extends Controller
             // Banner
             'contact_banner_badge' => SiteSetting::get('contact_banner_badge', 'Layanan & Informasi'),
             'contact_banner_title' => SiteSetting::get('contact_banner_title', 'Hubungi Kami & Layanan Redaksi'),
-            'contact_banner_desc' => SiteSetting::get('contact_banner_desc', 'Konsultasikan naskah buku, kebutuhan cetak, pengurusan ISBN, atau publikasi ilmiah bersama tim IAI Persis Press. Kami siap membantu Anda.'),
+            'contact_banner_desc' => SiteSetting::get('contact_banner_desc', 'Konsultasikan naskah buku, kebutuhan cetak, pengurusan ISBN, atau publikasi ilmiah bersama tim Persis Pers. Kami siap membantu Anda.'),
             
             // 4 Info Cards
             'contact_address' => SiteSetting::get('contact_address', 'Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287'),
@@ -33,7 +33,7 @@ class SettingController extends Controller
             'contact_wa_box_subtitle' => SiteSetting::get('contact_wa_box_subtitle', 'Langsung terhubung dengan Tim Redaksi'),
             'contact_wa_box_desc' => SiteSetting::get('contact_wa_box_desc', 'Ingin konsultasi langsung terkait naskah buku, estimasi biaya cetak, atau panduan ISBN? Klik tombol di bawah untuk memulai chat WhatsApp resmi.'),
             'contact_wa_btn_text' => SiteSetting::get('contact_wa_btn_text', 'CHAT WHATSAPP SEKARANG'),
-            'contact_wa_default_msg' => SiteSetting::get('contact_wa_default_msg', 'Halo Redaksi IAI PERSIS PRESS, saya ingin berkonsultasi mengenai penerbitan naskah buku.'),
+            'contact_wa_default_msg' => SiteSetting::get('contact_wa_default_msg', 'Halo Redaksi PERSIS PERS, saya ingin berkonsultasi mengenai penerbitan naskah buku.'),
 
             // Google Maps
             'contact_maps_title' => SiteSetting::get('contact_maps_title', 'Lokasi Kampus & Percetakan'),
