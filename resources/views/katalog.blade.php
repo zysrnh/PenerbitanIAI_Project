@@ -4,7 +4,30 @@
 
 @section('content')
     <style>
-        /* 1. Signature PERSIS PERS Book Card */
+        /* 1. Staggered Entrance Animations */
+        .animate-cascade-up {
+            animation: cascadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+        @keyframes cascadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* 2. Signature PERSIS PERS Book Card */
         .persis-book-card {
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
@@ -17,11 +40,11 @@
         }
         .persis-book-card:hover {
             border-color: #047857;
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             box-shadow: 0 16px 30px -8px rgba(4, 120, 87, 0.15), 0 2px 6px rgba(0,0,0,0.04);
         }
 
-        /* 2. 3D Perspective Hover Tilt on Grid Cards */
+        /* 3. 3D Perspective Hover Tilt on Grid Cards */
         .book-cover-stage-3d {
             perspective: 800px;
         }
@@ -61,7 +84,7 @@
             z-index: 5;
         }
 
-        /* 3. Modal 3D Perspective Hover Tilt */
+        /* 4. Modal 3D Perspective Hover Tilt */
         .modal-book-stage {
             perspective: 1000px;
         }
@@ -78,22 +101,6 @@
             background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%);
         }
 
-        /* Clean Smooth Transition on Photo Switch */
-        .showcase-fade-slide {
-            animation: cleanFadeSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes cleanFadeSlide {
-            0% {
-                opacity: 0;
-                transform: scale(0.97) translateY(4px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        
         /* Lightbox Directional Slide Animations */
         .lightbox-slide-next {
             animation: slideNext 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -122,34 +129,29 @@
             }
         }
 
-        /* Zoom Lightbox Pop-In */
-        .lightbox-zoom-in {
-            animation: lightboxZoom 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes lightboxZoom {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
         /* Category Nav */
         .cat-link {
-            transition: all 0.15s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            border-left: 3px solid transparent;
         }
         .cat-link:hover {
             background-color: #ecfdf5;
             color: #047857;
             padding-left: 18px;
+            border-left-color: #10b981;
         }
         .cat-active {
             background-color: #047857 !important;
             color: #ffffff !important;
             font-weight: 700;
+            border-left-color: #34d399 !important;
+            padding-left: 18px;
         }
     </style>
 
-    <!-- 1. HEADER BANNER (Synchronized with Admin) -->
-    <section class="bg-brand-950 text-white py-14 sm:py-16 relative overflow-hidden border-b border-brand-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
+    <!-- 1. HEADER BANNER WITH ENTRANCE ANIMATION -->
+    <section class="bg-brand-950 text-white py-14 sm:py-16 relative overflow-hidden border-b border-brand-900 animate-fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-cascade-up">
             <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
                 {{ $settings['catalog_banner_badge'] ?? 'PUBLIKASI RESMI KAMPUS' }}
             </span>
@@ -162,11 +164,11 @@
         </div>
     </section>
 
-    <!-- 2. 4 QUICK STATS CARDS OVERLAP (-mt-7) -->
+    <!-- 2. 4 QUICK STATS CARDS OVERLAP WITH STAGGERED ENTRANCE -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-7 relative z-20">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
-            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5 animate-cascade-up" style="animation-delay: 50ms;">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-book"></i>
                 </div>
@@ -177,7 +179,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5 animate-cascade-up" style="animation-delay: 100ms;">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-user-graduate"></i>
                 </div>
@@ -188,7 +190,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5 animate-cascade-up" style="animation-delay: 150ms;">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-barcode"></i>
                 </div>
@@ -199,7 +201,7 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5">
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex items-start gap-3.5 animate-cascade-up" style="animation-delay: 200ms;">
                 <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
                     <i class="fa-solid fa-award"></i>
                 </div>
@@ -220,7 +222,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
                 <!-- LEFT SIDEBAR -->
-                <div class="lg:col-span-3 space-y-6">
+                <div class="lg:col-span-3 space-y-6 animate-cascade-up" style="animation-delay: 100ms;">
                     
                     <!-- Search Widget -->
                     <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-sm">
@@ -248,27 +250,27 @@
                         <div class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
                             <a href="{{ route('katalog') }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ !request('kategori') || request('kategori') === 'all' ? 'cat-active' : '' }}">
                                 <span>Semua Koleksi</span>
-                                <i class="fa-solid fa-angle-right text-[10px] text-slate-400"></i>
+                                <i class="fa-solid fa-angle-right text-[10px] {{ !request('kategori') || request('kategori') === 'all' ? 'text-white' : 'text-slate-400' }}"></i>
                             </a>
 
                             <a href="{{ route('katalog', ['kategori' => 'Buku Baru']) }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Buku Baru' ? 'cat-active' : '' }}">
                                 <span class="flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Buku Baru (2026)
+                                    <span class="w-2 h-2 rounded-full {{ request('kategori') === 'Buku Baru' ? 'bg-white' : 'bg-emerald-500' }}"></span> Buku Baru (2026)
                                 </span>
-                                <i class="fa-solid fa-angle-right text-[10px] text-slate-400"></i>
+                                <i class="fa-solid fa-angle-right text-[10px] {{ request('kategori') === 'Buku Baru' ? 'text-white' : 'text-slate-400' }}"></i>
                             </a>
 
                             <a href="{{ route('katalog', ['kategori' => 'Best Seller']) }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Best Seller' ? 'cat-active' : '' }}">
                                 <span class="flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span> Best Seller
+                                    <span class="w-2 h-2 rounded-full {{ request('kategori') === 'Best Seller' ? 'bg-white' : 'bg-amber-500' }}"></span> Best Seller
                                 </span>
-                                <i class="fa-solid fa-angle-right text-[10px] text-slate-400"></i>
+                                <i class="fa-solid fa-angle-right text-[10px] {{ request('kategori') === 'Best Seller' ? 'text-white' : 'text-slate-400' }}"></i>
                             </a>
 
                             @foreach($categoriesWithCount as $catItem)
                                 <a href="{{ route('katalog', ['kategori' => $catItem['name']]) }}" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === $catItem['name'] ? 'cat-active' : '' }}">
                                     <span>{{ $catItem['name'] }}</span>
-                                    <span class="text-[10px] text-slate-400 font-mono">({{ $catItem['count'] }})</span>
+                                    <span class="text-[10px] font-mono {{ request('kategori') === $catItem['name'] ? 'text-emerald-200' : 'text-slate-400' }}">({{ $catItem['count'] }})</span>
                                 </a>
                             @endforeach
                         </div>
@@ -301,13 +303,13 @@
 
                 </div>
 
-                <!-- RIGHT MAIN CONTENT (3D HOVER TILT BOOK CARDS) -->
+                <!-- RIGHT MAIN CONTENT WITH STAGGERED CASCADE ENTRANCE -->
                 <div class="lg:col-span-9 space-y-6">
                     
                     @if(!request('kategori') || request('kategori') === 'all')
                         
                         <!-- 1. BUKU BARU SECTION -->
-                        <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm animate-cascade-up" style="animation-delay: 150ms;">
                             <div class="bg-brand-950 text-white px-4 py-2.5 flex items-center justify-between border-b border-brand-900">
                                 <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider flex items-center gap-2">
                                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Koleksi <span class="text-emerald-400">Buku Baru (2026)</span>
@@ -319,7 +321,7 @@
 
                             <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 @foreach($newBooks as $nBook)
-                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($nBook) }})">
+                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 200 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($nBook) }})">
                                         
                                         <div class="book-cover-stage-3d w-full mb-3 py-1">
                                             <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -387,7 +389,7 @@
                         </div>
 
                         <!-- 2. BEST SELLER SECTION -->
-                        <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm">
+                        <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm animate-cascade-up" style="animation-delay: 250ms;">
                             <div class="bg-brand-950 text-white px-4 py-2.5 flex items-center justify-between border-b border-brand-900">
                                 <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider flex items-center gap-2">
                                     <span class="w-2 h-2 rounded-full bg-amber-400"></span> Koleksi <span class="text-amber-300">Best Seller</span>
@@ -399,7 +401,7 @@
 
                             <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 @foreach($bestSellers as $bBook)
-                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($bBook) }})">
+                                    <div class="persis-book-card p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 300 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($bBook) }})">
                                         
                                         <div class="book-cover-stage-3d w-full mb-3 py-1">
                                             <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -468,26 +470,40 @@
 
                     @endif
 
-                    <!-- 3. MAIN ALL BOOKS / FILTERED BOOKS GRID -->
-                    <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm">
+                    <!-- 3. MAIN ALL BOOKS / FILTERED BOOKS GRID WITH CASCADE ANIMATION -->
+                    <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm animate-cascade-up" style="animation-delay: 200ms;">
                         <div class="bg-brand-950 text-white px-4 py-2.5 flex items-center justify-between border-b border-brand-900">
-                            <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider">
+                            <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider flex items-center gap-2">
                                 @if(request('kategori') && request('kategori') !== 'all')
-                                    Kategori: <span class="text-emerald-400">{{ request('kategori') }}</span>
+                                    <i class="fa-solid fa-layer-group text-emerald-400"></i> Kategori: <span class="text-emerald-300 font-black">{{ request('kategori') }}</span>
                                 @elseif(request('q'))
-                                    Hasil Pencarian: "<span class="text-emerald-400">{{ request('q') }}</span>"
+                                    <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> Hasil Pencarian: "<span class="text-emerald-300">{{ request('q') }}</span>"
                                 @else
-                                    Semua Koleksi Terdaftar
+                                    <i class="fa-solid fa-book-bookmark text-emerald-400"></i> Semua Koleksi Terdaftar
                                 @endif
                             </h3>
-                            <span class="text-xs text-slate-300 font-mono">
+                            <span class="text-xs text-slate-300 font-mono bg-white/10 px-2 py-0.5 rounded-xs">
                                 Total: {{ $books->total() }} Judul
                             </span>
                         </div>
 
+                        <!-- If filtered, show breadcrumb & reset filter quick button -->
+                        @if(request('kategori') || request('q'))
+                            <div class="bg-slate-100/70 px-4 py-2 border-b border-slate-200/80 flex items-center justify-between text-xs">
+                                <span class="text-slate-600 flex items-center gap-1.5">
+                                    <span>Menampilkan koleksi</span>
+                                    <strong class="text-emerald-800 font-bold">"{{ request('kategori') ?: request('q') }}"</strong>
+                                </span>
+                                <a href="{{ route('katalog') }}" class="text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1 text-[11px] bg-white px-2.5 py-1 rounded-sm border border-slate-200 shadow-2xs transition">
+                                    <i class="fa-solid fa-rotate-left text-[9px]"></i>
+                                    <span>Tampilkan Semua</span>
+                                </a>
+                            </div>
+                        @endif
+
                         <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                             @forelse($books as $book)
-                                <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($book) }})">
+                                <div class="persis-book-card p-3 rounded-sm cursor-pointer group animate-cascade-up" style="animation-delay: {{ 100 + ($loop->index * 60) }}ms;" onclick="openBookModal({{ json_encode($book) }})">
                                     
                                     <div class="book-cover-stage-3d w-full mb-3 py-1">
                                         <div class="book-cover-3d relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden select-none border border-slate-200">
@@ -557,9 +573,12 @@
 
                                 </div>
                             @empty
-                                <div class="col-span-full py-12 text-center text-slate-400">
+                                <div class="col-span-full py-12 text-center text-slate-400 animate-cascade-up">
                                     <i class="fa-solid fa-book-open text-3xl mb-2 text-slate-300"></i>
-                                    <p class="text-xs font-bold text-slate-600">Tidak ada buku dalam kategori ini</p>
+                                    <p class="text-xs font-bold text-slate-600">Tidak ada buku dalam kategori ini.</p>
+                                    <a href="{{ route('katalog') }}" class="inline-block mt-3 px-3 py-1.5 rounded-sm bg-emerald-700 text-white font-bold text-xs transition">
+                                        Kembali ke Semua Koleksi
+                                    </a>
                                 </div>
                             @endforelse
                         </div>
@@ -581,7 +600,7 @@
     <!-- 4. CTA PUBLISH YOUR BOOK BOX -->
     <section class="py-12 bg-white border-t border-slate-200">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-brand-950 rounded-sm p-6 sm:p-8 text-white border border-brand-900 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden">
+            <div class="bg-brand-950 rounded-sm p-6 sm:p-8 text-white border border-brand-900 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden animate-cascade-up">
                 <div class="relative z-10 text-center sm:text-left">
                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-brand-900 px-3 py-1 rounded-sm border border-emerald-500/20 inline-block mb-2">
                         LAYANAN PENERBITAN KAMPUS
@@ -603,10 +622,10 @@
     </section>
 
     <!-- ========================================================================= -->
-    <!-- MODAL DETAIL BUKU PUBLIK (WITH CLEAN 3D PREVIEW & EXPAND BUTTON) -->
+    <!-- MODAL DETAIL BUKU PUBLIK -->
     <!-- ========================================================================= -->
     <div id="publicBookModal" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
-        <div class="bg-white rounded-sm max-w-4xl w-full shadow-2xl border border-slate-300 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-fade-in-up">
+        <div class="bg-white rounded-sm max-w-4xl w-full shadow-2xl border border-slate-300 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-cascade-up">
             
             <!-- Modal Header -->
             <div class="bg-brand-950 text-white px-5 py-3.5 flex items-center justify-between border-b border-brand-900 shrink-0">
@@ -626,7 +645,7 @@
                     <!-- Left: 3D Interactive Showcase Visualizer -->
                     <div class="md:col-span-5 flex flex-col items-center bg-slate-50 p-4 rounded-sm border border-slate-200 space-y-4">
                         
-                        <!-- 3D Perspective Stage (Clean & Elegant with click to enlarge) -->
+                        <!-- 3D Perspective Stage -->
                         <div id="modalStage" class="modal-book-stage w-44 sm:w-52 aspect-[3/4.15] flex items-center justify-center py-2 cursor-pointer group relative" onclick="openLightboxFromDetail()" title="Klik untuk Pratinjau Layar Penuh">
                             
                             <div id="modalBookVisualizer" class="modal-book-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 select-none border border-slate-300">
@@ -635,15 +654,12 @@
                                 <div class="book-paper-edge"></div>
                                 <div class="modal-shine-layer absolute inset-0 pointer-events-none z-10"></div>
 
-                                <!-- Subtle Expand Icon Button Top-Right -->
-                                <div class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center text-xs backdrop-blur-xs opacity-0 group-hover:opacity-100 transition z-20 pointer-events-none shadow-xs">
+                                <div class="absolute top-2 right-2 w-7 h-7 rounded-sm bg-black/40 hover:bg-black/70 text-white flex items-center justify-center text-xs backdrop-blur-xs opacity-0 group-hover:opacity-100 transition z-20 pointer-events-none shadow-xs">
                                     <i class="fa-solid fa-expand"></i>
                                 </div>
 
-                                <!-- Photo Image Container -->
                                 <img id="modalMainImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden showcase-fade-slide" />
 
-                                <!-- Default Vector Front Cover -->
                                 <div id="modalVectorFront" class="w-full h-full bg-brand-950 text-white p-3.5 pl-4 flex flex-col justify-between border-l-4 border-emerald-400">
                                     <div class="flex justify-between items-center border-b border-white/20 pb-1">
                                         <span id="modalVectorCat" class="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-brand-900 text-emerald-300">Buku Ajar</span>
@@ -659,7 +675,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Default Vector Inside Page -->
                                 <div id="modalVectorInside" class="w-full h-full bg-[#fdfbf7] text-slate-800 p-3.5 pl-4 flex flex-col justify-between hidden border-l-2 border-slate-300 showcase-fade-slide">
                                     <div class="border-b border-slate-300 pb-1 flex justify-between items-center text-[7.5px] font-bold text-slate-500">
                                         <span id="modalInsideLabel">BAGIAN ISI NASKAH</span>
@@ -756,7 +771,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 5. FULLSCREEN HIGH DEFINITION LIGHTBOX (CRISP & SMOOTH SLIDE ANIMATION) -->
+    <!-- 5. FULLSCREEN HIGH DEFINITION LIGHTBOX -->
     <!-- ========================================================================= -->
     <div id="bookLightboxModal" class="fixed inset-0 z-[100] bg-black/95 hidden items-center justify-center p-4 backdrop-blur-md" onclick="handleLightboxBackdropClick(event)">
         
@@ -792,8 +807,6 @@
                 </h4>
             </div>
         </div>
-
-    </div>
 
     </div>
 
@@ -935,9 +948,6 @@
             modal.classList.remove('flex');
         }
 
-        // =======================================================
-        // CLEAN FULLSCREEN LIGHTBOX (CLEAN LAYER HIDING DETAIL)
-        // =======================================================
         function openLightboxFromDetail() {
             const photo = currentModalPhotos[currentPhotoIndex];
             if (!photo || !photo.url) return;
@@ -946,12 +956,10 @@
             document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
             document.getElementById('lightboxTitle').innerText = currentModalBook ? currentModalBook.title : 'Pratinjau Naskah';
 
-            // Hide detail modal to avoid overlapping
             const detailModal = document.getElementById('publicBookModal');
             detailModal.classList.add('hidden');
             detailModal.classList.remove('flex');
 
-            // Open clean lightbox
             const lightbox = document.getElementById('bookLightboxModal');
             lightbox.classList.remove('hidden');
             lightbox.classList.add('flex');
@@ -962,7 +970,6 @@
             lightbox.classList.add('hidden');
             lightbox.classList.remove('flex');
 
-            // Restore detail modal cleanly
             if (currentModalBook) {
                 const detailModal = document.getElementById('publicBookModal');
                 detailModal.classList.remove('hidden');
@@ -977,6 +984,11 @@
             
             const photo = currentModalPhotos[currentPhotoIndex];
             if (photo && photo.url) {
+                const container = document.getElementById('lightboxImgContainer');
+                container.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
+                void container.offsetWidth;
+                container.classList.add('lightbox-slide-prev');
+
                 document.getElementById('lightboxImage').src = photo.url;
                 document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
             }
@@ -989,6 +1001,11 @@
 
             const photo = currentModalPhotos[currentPhotoIndex];
             if (photo && photo.url) {
+                const container = document.getElementById('lightboxImgContainer');
+                container.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
+                void container.offsetWidth;
+                container.classList.add('lightbox-slide-next');
+
                 document.getElementById('lightboxImage').src = photo.url;
                 document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
             }
