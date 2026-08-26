@@ -44,16 +44,14 @@
     <!-- Sidebar (Fixed Width w-64) -->
     <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#0f172a] text-slate-300 flex flex-col justify-between transition-transform duration-300 transform -translate-x-full lg:translate-x-0 border-r border-slate-800 shrink-0">
         <div>
-            <!-- Brand Header -->
-            <div class="h-16 flex items-center px-5 border-b border-slate-800/80 gap-3">
-                <div class="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-                    <i class="fa-solid fa-book-open-reader text-sm"></i>
+            <!-- Brand Header with Official Logo -->
+            <a href="{{ route('admin.dashboard') }}" class="h-16 flex items-center px-4 border-b border-slate-800/80 gap-3 group select-none">
+                <img src="{{ asset('images/logo/logo_persis_pers_icon_transparent.png') }}" alt="PERSIS PERS" class="w-8 h-8 object-contain shrink-0 transition-transform group-hover:scale-105" />
+                <div class="flex flex-col justify-center min-w-0">
+                    <span class="font-black text-xs text-white uppercase tracking-wider leading-none truncate">PERSIS PERS</span>
+                    <span class="text-[10px] text-emerald-400 font-semibold block mt-1 leading-none truncate">Admin Management</span>
                 </div>
-                <div>
-                    <h1 class="font-bold text-sm text-white leading-none tracking-tight">PERSIS PERS</h1>
-                    <span class="text-[11px] text-slate-400 font-medium block mt-0.5">Admin Management</span>
-                </div>
-            </div>
+            </a>
 
             <!-- Nav Links -->
             <nav class="p-3.5 space-y-1 text-sm">

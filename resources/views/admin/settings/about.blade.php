@@ -1,59 +1,57 @@
 @extends('admin.layouts.app')
 
 @section('title', 'Kelola Halaman Tentang Kami')
-@section('header_title', 'Kelola Konten Halaman Tentang Kami')
+@section('header_title', 'Kelola Konten & Pratinjau Halaman Tentang Kami')
 
 @section('content')
-    <form method="POST" action="{{ route('admin.settings.about.update') }}" id="aboutSettingsForm">
-        @csrf
-        @method('PUT')
-
-        <!-- Top Header & Action Bar -->
-        <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-                <div class="flex items-center gap-2.5">
-                    <h3 class="text-lg font-extrabold text-slate-900">Pengaturan Konten Halaman Tentang Kami</h3>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Pratinjau Visual Live
-                    </span>
-                </div>
-                <p class="text-xs sm:text-sm text-slate-500 mt-1">Ubah teks formulir di sebelah kiri dan perhatikan hasil visualisasinya di sebelah kanan secara real-time.</p>
+    <!-- Top Header -->
+    <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2.5">
+                <h3 class="text-lg font-extrabold text-slate-900">Pengaturan Konten Halaman Tentang Kami</h3>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Pratinjau Visual Live
+                </span>
             </div>
-
-            <!-- Top Action Buttons -->
-            <div class="flex items-center gap-2.5 shrink-0">
-                <a href="{{ route('tentang') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
-                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Halaman
-                </a>
-                <button type="submit" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center">
-                    <i class="fa-solid fa-floppy-disk text-base"></i>
-                </button>
-            </div>
+            <p class="text-sm text-slate-500 mt-1">Ubah teks formulir di sebelah kiri dan perhatikan hasil visualisasinya di sebelah kanan secara real-time.</p>
         </div>
 
-        @if(session('success'))
-            <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-medium flex items-center justify-between shadow-xs">
-                <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
-                    <span>{{ session('success') }}</span>
-                </div>
-                <button type="button" onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-900"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-        @endif
+        <div class="flex items-center gap-2.5 shrink-0">
+            <a href="{{ route('tentang') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Halaman
+            </a>
+            <button type="submit" form="aboutSettingsForm" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center">
+                <i class="fa-solid fa-floppy-disk text-base"></i>
+            </button>
+        </div>
+    </div>
 
-        @if($errors->any())
-            <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-medium space-y-1">
-                @foreach($errors->all() as $error)
-                    <div>&bull; {{ $error }}</div>
-                @endforeach
+    @if(session('success'))
+        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-medium flex items-center justify-between shadow-xs">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
+                <span>{{ session('success') }}</span>
             </div>
-        @endif
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-900"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    @endif
 
-        <!-- Main 2-Column Grid -->
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
-            
-            <!-- LEFT COLUMN: FORM INPUTS (6 COLS) -->
-            <div class="xl:col-span-6 space-y-6">
+    @if($errors->any())
+        <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-medium space-y-1">
+            @foreach($errors->all() as $error)
+                <div>&bull; {{ $error }}</div>
+            @endforeach
+        </div>
+    @endif
+
+    <!-- Main Grid: Form Left (6 cols), Visual Preview Right (6 cols) -->
+    <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+        
+        <!-- LEFT COLUMN: FORM INPUTS -->
+        <div class="xl:col-span-6 space-y-6">
+            <form method="POST" action="{{ route('admin.settings.about.update') }}" class="space-y-6" id="aboutSettingsForm">
+                @csrf
+                @method('PUT')
 
                 <!-- 1. Header Banner -->
                 <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6">
@@ -63,22 +61,22 @@
                         </div>
                         <div>
                             <h4 class="text-base font-bold text-slate-900">1. Header &amp; Banner Halaman</h4>
-                            <span class="text-xs text-slate-400">Judul utama dan pengantar paling atas</span>
+                            <span class="text-xs text-slate-400">Judul utama dan deskripsi pengantar paling atas</span>
                         </div>
                     </div>
 
                     <div class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Badge Teks <span class="text-rose-500">*</span></label>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Badge Teks Atas <span class="text-rose-500">*</span></label>
                                 <input 
                                     type="text" 
                                     name="about_banner_badge" 
                                     id="in_about_badge"
-                                    value="{{ old('about_banner_badge', $about['about_banner_badge'] ?? ($about['banner_badge'] ?? 'TENTANG KAMI')) }}" 
+                                    value="{{ old('about_banner_badge', $about['about_banner_badge'] ?? ($about['banner_badge'] ?? 'TENTANG PERSIS PERS')) }}" 
                                     required 
                                     oninput="updateAboutPreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div class="sm:col-span-2">
@@ -90,7 +88,7 @@
                                     value="{{ old('about_banner_title', $about['about_banner_title'] ?? ($about['banner_title'] ?? 'Pusat Penerbitan dan Publikasi Ilmiah')) }}" 
                                     required 
                                     oninput="updateAboutPreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -103,7 +101,7 @@
                                 rows="3" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                             >{{ old('about_banner_desc', $about['about_banner_desc'] ?? ($about['banner_desc'] ?? 'PERSIS PERS merupakan unit penerbitan resmi...')) }}</textarea>
                         </div>
                     </div>
@@ -117,7 +115,7 @@
                         </div>
                         <div>
                             <h4 class="text-base font-bold text-slate-900">2. 4 Kartu Statistik Angka</h4>
-                            <span class="text-xs text-slate-400">Pencapaian buku, penulis, ISBN, dan cetakan</span>
+                            <span class="text-xs text-slate-400">Pencapaian buku, penulis, ISBN, dan eksemplar cetak</span>
                         </div>
                     </div>
 
@@ -131,7 +129,7 @@
                                 value="{{ old('about_stat_books', $about['about_stat_books'] ?? ($about['stat_books'] ?? '150+')) }}" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             />
                         </div>
                         <div>
@@ -143,7 +141,7 @@
                                 value="{{ old('about_stat_authors', $about['about_stat_authors'] ?? ($about['stat_authors'] ?? '80+')) }}" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             />
                         </div>
                         <div>
@@ -155,7 +153,7 @@
                                 value="{{ old('about_stat_isbn', $about['about_stat_isbn'] ?? ($about['stat_isbn'] ?? '100%')) }}" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             />
                         </div>
                         <div>
@@ -167,7 +165,7 @@
                                 value="{{ old('about_stat_copies', $about['about_stat_copies'] ?? ($about['stat_copies'] ?? '25.000+')) }}" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             />
                         </div>
                     </div>
@@ -195,7 +193,7 @@
                                 value="{{ old('about_profile_title', $about['about_profile_title'] ?? ($about['profile_title'] ?? 'Komitmen Membangun Peradaban Literasi & Riset Akademik')) }}" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             />
                         </div>
 
@@ -207,7 +205,7 @@
                                 rows="4" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             >{{ old('about_profile_story_1', $about['about_profile_story_1'] ?? ($about['profile_story_1'] ?? 'PERSIS PERS didirikan dengan visi besar...')) }}</textarea>
                         </div>
 
@@ -219,7 +217,7 @@
                                 rows="4" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             >{{ old('about_profile_story_2', $about['about_profile_story_2'] ?? ($about['profile_story_2'] ?? 'Didukung oleh mesin percetakan modern...')) }}</textarea>
                         </div>
                     </div>
@@ -233,7 +231,7 @@
                         </div>
                         <div>
                             <h4 class="text-base font-bold text-slate-900">4. Visi &amp; Misi Lembaga</h4>
-                            <span class="text-xs text-slate-400">Pernyataan visi dan 4 butir misi</span>
+                            <span class="text-xs text-slate-400">Pernyataan visi dan 4 butir pilar misi</span>
                         </div>
                     </div>
 
@@ -246,26 +244,26 @@
                                 rows="3" 
                                 required 
                                 oninput="updateAboutPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             >{{ old('about_vision', $about['about_vision'] ?? ($about['vision'] ?? 'Menjadi pusat penerbitan dan percetakan terkemuka...')) }}</textarea>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Misi 1 <span class="text-rose-500">*</span></label>
-                                <textarea name="about_mission_1" id="in_mission_1" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600">{{ old('about_mission_1', $about['about_mission_1'] ?? ($about['mission_1'] ?? '')) }}</textarea>
+                                <textarea name="about_mission_1" id="in_mission_1" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600">{{ old('about_mission_1', $about['about_mission_1'] ?? ($about['mission_1'] ?? '')) }}</textarea>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Misi 2 <span class="text-rose-500">*</span></label>
-                                <textarea name="about_mission_2" id="in_mission_2" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600">{{ old('about_mission_2', $about['about_mission_2'] ?? ($about['mission_2'] ?? '')) }}</textarea>
+                                <textarea name="about_mission_2" id="in_mission_2" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600">{{ old('about_mission_2', $about['about_mission_2'] ?? ($about['mission_2'] ?? '')) }}</textarea>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Misi 3 <span class="text-rose-500">*</span></label>
-                                <textarea name="about_mission_3" id="in_mission_3" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600">{{ old('about_mission_3', $about['about_mission_3'] ?? ($about['mission_3'] ?? '')) }}</textarea>
+                                <textarea name="about_mission_3" id="in_mission_3" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600">{{ old('about_mission_3', $about['about_mission_3'] ?? ($about['mission_3'] ?? '')) }}</textarea>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Misi 4 <span class="text-rose-500">*</span></label>
-                                <textarea name="about_mission_4" id="in_mission_4" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600">{{ old('about_mission_4', $about['about_mission_4'] ?? ($about['mission_4'] ?? '')) }}</textarea>
+                                <textarea name="about_mission_4" id="in_mission_4" rows="2" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600">{{ old('about_mission_4', $about['about_mission_4'] ?? ($about['mission_4'] ?? '')) }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -290,11 +288,11 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nama Lengkap &amp; Gelar</label>
-                                    <input type="text" name="about_director_name" id="in_director_name" value="{{ old('about_director_name', $about['about_director_name'] ?? ($about['director_name'] ?? '')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                    <input type="text" name="about_director_name" id="in_director_name" value="{{ old('about_director_name', $about['about_director_name'] ?? ($about['director_name'] ?? '')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-semibold text-slate-500 mb-1">Jabatan</label>
-                                    <input type="text" name="about_director_title" id="in_director_title" value="{{ old('about_director_title', $about['about_director_title'] ?? ($about['director_title'] ?? 'Direktur Penerbitan')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                    <input type="text" name="about_director_title" id="in_director_title" value="{{ old('about_director_title', $about['about_director_title'] ?? ($about['director_title'] ?? 'Direktur Penerbitan')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
                                 </div>
                             </div>
                         </div>
@@ -305,11 +303,11 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nama Lengkap &amp; Gelar</label>
-                                    <input type="text" name="about_editor_chief" id="in_editor_chief" value="{{ old('about_editor_chief', $about['about_editor_chief'] ?? ($about['editor_chief'] ?? '')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                    <input type="text" name="about_editor_chief" id="in_editor_chief" value="{{ old('about_editor_chief', $about['about_editor_chief'] ?? ($about['editor_chief'] ?? '')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-semibold text-slate-500 mb-1">Jabatan</label>
-                                    <input type="text" name="about_editor_chief_title" id="in_editor_chief_title" value="{{ old('about_editor_chief_title', $about['about_editor_chief_title'] ?? ($about['editor_chief_title'] ?? 'Pemimpin Redaksi')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                    <input type="text" name="about_editor_chief_title" id="in_editor_chief_title" value="{{ old('about_editor_chief_title', $about['about_editor_chief_title'] ?? ($about['editor_chief_title'] ?? 'Pemimpin Redaksi')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
                                 </div>
                             </div>
                         </div>
@@ -320,124 +318,122 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-[11px] font-semibold text-slate-500 mb-1">Nama Lengkap &amp; Gelar</label>
-                                    <input type="text" name="about_production_lead" id="in_production_lead" value="{{ old('about_production_lead', $about['about_production_lead'] ?? ($about['production_lead'] ?? '')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                    <input type="text" name="about_production_lead" id="in_production_lead" value="{{ old('about_production_lead', $about['about_production_lead'] ?? ($about['production_lead'] ?? '')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
                                 </div>
                                 <div>
                                     <label class="block text-[11px] font-semibold text-slate-500 mb-1">Jabatan</label>
-                                    <input type="text" name="about_production_lead_title" id="in_production_lead_title" value="{{ old('about_production_lead_title', $about['about_production_lead_title'] ?? ($about['production_lead_title'] ?? 'Manajer Percetakan')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                    <input type="text" name="about_production_lead_title" id="in_production_lead_title" value="{{ old('about_production_lead_title', $about['about_production_lead_title'] ?? ($about['production_lead_title'] ?? 'Manajer Percetakan')) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bottom Floating Save Bar -->
-                <div class="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-between">
-                    <span class="text-xs text-slate-500 font-medium">Perubahan langsung aktif di website publik setelah disimpan.</span>
-                    <button type="submit" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl transition shadow-xs flex items-center gap-2">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan
-                    </button>
-                </div>
-
-            </div>
-
-            <!-- RIGHT COLUMN: LIVE VISUAL PREVIEW (6 COLS, STICKY) -->
-            <div class="xl:col-span-6 sticky top-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                        <i class="fa-solid fa-display text-emerald-600"></i> Pratinjau Tampilan Publik
-                    </span>
-                    <span class="text-[11px] text-slate-400">Ukuran Miniatur Skala 1:1</span>
-                </div>
-
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden divide-y divide-slate-100 text-xs">
-                    
-                    <!-- Preview 1: Header Banner -->
-                    <div class="bg-brand-950 text-white p-5">
-                        <span id="prev_badge" class="text-[9px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">
-                            {{ $about['about_banner_badge'] ?? ($about['banner_badge'] ?? 'TENTANG KAMI') }}
-                        </span>
-                        <h4 id="prev_title" class="text-base font-extrabold font-heading text-white">
-                            {{ $about['about_banner_title'] ?? ($about['banner_title'] ?? 'Pusat Penerbitan dan Publikasi Ilmiah') }}
-                        </h4>
-                        <p id="prev_desc" class="text-[11px] text-slate-300 mt-1.5 leading-relaxed">
-                            {{ $about['about_banner_desc'] ?? ($about['banner_desc'] ?? 'PERSIS PERS merupakan unit penerbitan resmi...') }}
-                        </p>
-                    </div>
-
-                    <!-- Preview 2: 4 Stats -->
-                    <div class="bg-slate-50 p-4 grid grid-cols-4 gap-2 text-center">
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span id="prev_stat_books" class="font-extrabold text-sm text-emerald-700 block">{{ $about['about_stat_books'] ?? '150+' }}</span>
-                            <span class="text-[9px] text-slate-400">Buku</span>
-                        </div>
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span id="prev_stat_authors" class="font-extrabold text-sm text-emerald-700 block">{{ $about['about_stat_authors'] ?? '80+' }}</span>
-                            <span class="text-[9px] text-slate-400">Penulis</span>
-                        </div>
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span id="prev_stat_isbn" class="font-extrabold text-sm text-emerald-700 block">{{ $about['about_stat_isbn'] ?? '100%' }}</span>
-                            <span class="text-[9px] text-slate-400">ISBN</span>
-                        </div>
-                        <div class="p-2 bg-white rounded-lg border border-slate-200">
-                            <span id="prev_stat_copies" class="font-extrabold text-sm text-emerald-700 block">{{ $about['about_stat_copies'] ?? '25.000+' }}</span>
-                            <span class="text-[9px] text-slate-400">Cetak</span>
-                        </div>
-                    </div>
-
-                    <!-- Preview 3: Profil Narasi -->
-                    <div class="p-5 space-y-2">
-                        <span class="text-[9px] font-bold text-emerald-700 uppercase tracking-widest block">Profil &amp; Kilas Sejarah</span>
-                        <h5 id="prev_profile_title" class="font-bold text-xs text-slate-900 leading-snug">
-                            {{ $about['about_profile_title'] ?? 'Komitmen Membangun Peradaban Literasi & Riset Akademik' }}
-                        </h5>
-                        <p id="prev_profile_story_1" class="text-[11px] text-slate-600 leading-relaxed text-justify line-clamp-3">
-                            {{ $about['about_profile_story_1'] ?? '' }}
-                        </p>
-                        <p id="prev_profile_story_2" class="text-[11px] text-slate-600 leading-relaxed text-justify line-clamp-2">
-                            {{ $about['about_profile_story_2'] ?? '' }}
-                        </p>
-                    </div>
-
-                    <!-- Preview 4: Visi & Misi -->
-                    <div class="p-5 space-y-2.5 bg-slate-50/50">
-                        <div>
-                            <span class="text-[9px] font-bold text-emerald-700 uppercase tracking-wider block">Visi Lembaga:</span>
-                            <p id="prev_vision" class="text-[11px] italic font-medium text-slate-800 mt-0.5">
-                                "{{ $about['about_vision'] ?? ($about['vision'] ?? '') }}"
-                            </p>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-600 pt-1">
-                            <div class="p-2 bg-white rounded border border-slate-200">
-                                <strong>Misi 1:</strong> <span id="prev_mission_1">{{ $about['about_mission_1'] ?? '' }}</span>
-                            </div>
-                            <div class="p-2 bg-white rounded border border-slate-200">
-                                <strong>Misi 2:</strong> <span id="prev_mission_2">{{ $about['about_mission_2'] ?? '' }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Preview 5: Dewan Redaksi -->
-                    <div class="p-4 grid grid-cols-3 gap-2 text-center text-[10px]">
-                        <div class="p-2 bg-white rounded border border-slate-200">
-                            <span id="prev_director_name" class="font-bold text-slate-900 block truncate">{{ $about['about_director_name'] ?? '' }}</span>
-                            <span id="prev_director_title" class="text-[9px] text-emerald-700 block truncate">{{ $about['about_director_title'] ?? 'Direktur' }}</span>
-                        </div>
-                        <div class="p-2 bg-white rounded border border-slate-200">
-                            <span id="prev_editor_chief" class="font-bold text-slate-900 block truncate">{{ $about['about_editor_chief'] ?? '' }}</span>
-                            <span id="prev_editor_chief_title" class="text-[9px] text-emerald-700 block truncate">{{ $about['about_editor_chief_title'] ?? 'Pimred' }}</span>
-                        </div>
-                        <div class="p-2 bg-white rounded border border-slate-200">
-                            <span id="prev_production_lead" class="font-bold text-slate-900 block truncate">{{ $about['about_production_lead'] ?? '' }}</span>
-                            <span id="prev_production_lead_title" class="text-[9px] text-emerald-700 block truncate">{{ $about['about_production_lead_title'] ?? 'Produksi' }}</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
+            </form>
         </div>
-    </form>
+
+        <!-- RIGHT COLUMN: LIVE VISUAL PREVIEW (6 COLS, STICKY, MATCHING CONTACT MOCKUP HEADER) -->
+        <div class="xl:col-span-6 sticky top-6 space-y-4">
+            
+            <!-- Window Mockup Frame Header (🔴 🟡 🟢) -->
+            <div class="bg-[#0f172a] text-white px-4 py-3 rounded-t-2xl flex items-center justify-between border-b border-slate-800 shadow-sm">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span class="text-xs font-bold text-slate-200 ml-2">Pratinjau Visual Halaman Tentang Kami</span>
+                </div>
+                <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">Real-time Mockup</span>
+            </div>
+
+            <!-- Preview Body Container -->
+            <div class="bg-white rounded-b-2xl border-x border-b border-slate-200 shadow-md overflow-hidden divide-y divide-slate-100 text-xs">
+                
+                <!-- Preview 1: Header Banner -->
+                <div class="bg-[#032c21] text-white p-5">
+                    <span id="prev_badge" class="text-[9px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">
+                        {{ $about['about_banner_badge'] ?? ($about['banner_badge'] ?? 'TENTANG PERSIS PERS') }}
+                    </span>
+                    <h4 id="prev_title" class="text-base font-extrabold font-heading text-white">
+                        {{ $about['about_banner_title'] ?? ($about['banner_title'] ?? 'Pusat Penerbitan dan Publikasi Ilmiah') }}
+                    </h4>
+                    <p id="prev_desc" class="text-[11px] text-slate-300 mt-1.5 leading-relaxed">
+                        {{ $about['about_banner_desc'] ?? ($about['banner_desc'] ?? 'PERSIS PERS merupakan unit penerbitan resmi...') }}
+                    </p>
+                </div>
+
+                <!-- Preview 2: 4 Stats -->
+                <div class="bg-slate-50 p-4 grid grid-cols-4 gap-2 text-center">
+                    <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs">
+                        <span id="prev_stat_books" class="font-extrabold text-sm text-[#006830] block">{{ $about['about_stat_books'] ?? '150+' }}</span>
+                        <span class="text-[9px] text-slate-500 font-medium">Buku</span>
+                    </div>
+                    <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs">
+                        <span id="prev_stat_authors" class="font-extrabold text-sm text-[#006830] block">{{ $about['about_stat_authors'] ?? '80+' }}</span>
+                        <span class="text-[9px] text-slate-500 font-medium">Penulis</span>
+                    </div>
+                    <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs">
+                        <span id="prev_stat_isbn" class="font-extrabold text-sm text-[#006830] block">{{ $about['about_stat_isbn'] ?? '100%' }}</span>
+                        <span class="text-[9px] text-slate-500 font-medium">ISBN</span>
+                    </div>
+                    <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs">
+                        <span id="prev_stat_copies" class="font-extrabold text-sm text-[#006830] block">{{ $about['about_stat_copies'] ?? '25.000+' }}</span>
+                        <span class="text-[9px] text-slate-500 font-medium">Cetak</span>
+                    </div>
+                </div>
+
+                <!-- Preview 3: Profil Narasi -->
+                <div class="p-5 space-y-2">
+                    <span class="text-[9px] font-bold text-[#006830] uppercase tracking-widest block">Profil &amp; Kilas Sejarah</span>
+                    <h5 id="prev_profile_title" class="font-bold text-xs text-slate-900 leading-snug">
+                        {{ $about['about_profile_title'] ?? 'Komitmen Membangun Peradaban Literasi & Riset Akademik' }}
+                    </h5>
+                    <p id="prev_profile_story_1" class="text-[11px] text-slate-600 leading-relaxed text-justify line-clamp-3">
+                        {{ $about['about_profile_story_1'] ?? '' }}
+                    </p>
+                    <p id="prev_profile_story_2" class="text-[11px] text-slate-600 leading-relaxed text-justify line-clamp-2">
+                        {{ $about['about_profile_story_2'] ?? '' }}
+                    </p>
+                </div>
+
+                <!-- Preview 4: Visi & Misi -->
+                <div class="p-5 space-y-2.5 bg-slate-50/50">
+                    <div>
+                        <span class="text-[9px] font-bold text-[#006830] uppercase tracking-wider block">Visi Lembaga:</span>
+                        <p id="prev_vision" class="text-[11px] italic font-medium text-slate-800 mt-0.5">
+                            "{{ $about['about_vision'] ?? ($about['vision'] ?? '') }}"
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-600 pt-1">
+                        <div class="p-2 bg-white rounded border border-slate-200">
+                            <strong class="text-slate-800">Misi 1:</strong> <span id="prev_mission_1">{{ $about['about_mission_1'] ?? '' }}</span>
+                        </div>
+                        <div class="p-2 bg-white rounded border border-slate-200">
+                            <strong class="text-slate-800">Misi 2:</strong> <span id="prev_mission_2">{{ $about['about_mission_2'] ?? '' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview 5: Dewan Redaksi -->
+                <div class="p-4 grid grid-cols-3 gap-2 text-center text-[10px]">
+                    <div class="p-2 bg-white rounded border border-slate-200">
+                        <span id="prev_director_name" class="font-bold text-slate-900 block truncate">{{ $about['about_director_name'] ?? '' }}</span>
+                        <span id="prev_director_title" class="text-[9px] text-[#006830] font-semibold block truncate">{{ $about['about_director_title'] ?? 'Direktur' }}</span>
+                    </div>
+                    <div class="p-2 bg-white rounded border border-slate-200">
+                        <span id="prev_editor_chief" class="font-bold text-slate-900 block truncate">{{ $about['about_editor_chief'] ?? '' }}</span>
+                        <span id="prev_editor_chief_title" class="text-[9px] text-[#006830] font-semibold block truncate">{{ $about['about_editor_chief_title'] ?? 'Pimred' }}</span>
+                    </div>
+                    <div class="p-2 bg-white rounded border border-slate-200">
+                        <span id="prev_production_lead" class="font-bold text-slate-900 block truncate">{{ $about['about_production_lead'] ?? '' }}</span>
+                        <span id="prev_production_lead_title" class="text-[9px] text-[#006830] font-semibold block truncate">{{ $about['about_production_lead_title'] ?? 'Produksi' }}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 
     <!-- JavaScript for Live Preview -->
     <script>
