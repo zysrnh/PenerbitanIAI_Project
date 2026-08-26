@@ -1,10 +1,12 @@
 <?php
 
-namespace AppHttpControllers;
+namespace App\Http\Controllers;
 
-use AppModelsBook;
-use AppModelsSiteSetting;
-use IlluminateHttpRequest;
+use App\Http\Controllers\Controller;
+use App\Models\Book;
+use App\Models\SiteSetting;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CatalogController extends Controller
 {
@@ -37,7 +39,7 @@ class CatalogController extends Controller
         foreach ($rawCategories as $catName) {
             $categories[] = [
                 'name' => $catName,
-                'slug' => IlluminateSupportStr::slug($catName),
+                'slug' => Str::slug($catName),
                 'count' => Book::published()->where('category', $catName)->count(),
             ];
         }
