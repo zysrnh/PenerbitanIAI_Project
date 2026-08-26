@@ -124,6 +124,10 @@
 
                     <form method="POST" action="{{ route('kontak.store') }}" class="space-y-4">
                         @csrf
+                        <!-- Anti-bot honeypot field -->
+                        <div class="hidden" style="display:none !important;" aria-hidden="true">
+                            <input type="text" name="website_hp_check" value="" tabindex="-1" autocomplete="off" />
+                        </div>
 
                         <!-- Nama -->
                         <div>

@@ -11,8 +11,16 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    private function authorizeSuperAdmin()
+    {
+        if (Auth::user()->role !== 'super_admin') {
+            abort(403, 'Akses Ditolak: Hanya Super Admin yang berhak mengelola admin.');
+        }
+    }
+
     public function index(Request $request)
     {
+        $this->authorizeSuperAdmin();
         $query = User::query();
 
         if ($request->filled('search')) {
@@ -40,11 +48,13 @@ class UserController extends Controller
 
     public function create()
     {
+        $this->authorizeSuperAdmin();
         return view('admin.users.create');
     }
 
     public function store(Request $request)
     {
+        $this->authorizeSuperAdmin();
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -63,11 +73,13 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $this->authorizeSuperAdmin();
         return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
     {
+        $this->authorizeSuperAdmin();
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -95,6 +107,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorizeSuperAdmin();
         if ($user->id === Auth::id()) {
             return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }

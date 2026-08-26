@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INVOICE - PERSIS PERS (IAI PERSIS BANDUNG)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm 15mm;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .page-break {
+                page-break-inside: avoid;
+            }
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            .invoice-card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen py-10 px-4 sm:px-6 text-slate-800 antialiased">
+
+    <!-- Action Bar (Hidden on Print) -->
+    <div class="max-w-4xl mx-auto mb-6 flex items-center justify-between no-print">
+        <div class="flex items-center gap-2 text-sm text-slate-600">
+            <i class="fa-solid fa-file-invoice text-emerald-600 text-lg"></i>
+            <span class="font-semibold">Invoice Resmi Pembuatan Website</span>
+        </div>
+        <button onclick="window.print()" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition flex items-center gap-2">
+            <i class="fa-solid fa-print"></i> Cetak / Simpan ke PDF
+        </button>
+    </div>
+
+    <!-- Invoice Sheet (A4 Proportion) -->
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl border border-slate-200/90 shadow-xl p-8 sm:p-12 invoice-card relative overflow-hidden">
+        
+        <!-- Top Decorative Accent -->
+        <div class="h-2.5 bg-gradient-to-r from-emerald-800 via-emerald-600 to-teal-500 absolute top-0 left-0 right-0"></div>
+
+        <!-- Header: Logo & Meta Info -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-slate-100">
+            <!-- Brand Info -->
+            <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-[#032c21] text-emerald-400 flex items-center justify-center text-2xl shadow-sm shrink-0">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+                <div>
+                    <span class="text-[11px] font-extrabold text-emerald-800 uppercase tracking-widest block leading-none">PENERBITAN & PERCETAKAN</span>
+                    <h1 class="font-extrabold text-2xl text-slate-900 tracking-tight leading-none mt-1">PERSIS PERS</h1>
+                    <span class="text-xs text-slate-500 font-medium block mt-1">Institut Agama Islam Persatuan Islam Bandung</span>
+                </div>
+            </div>
+
+            <!-- Invoice Badge & Number -->
+            <div class="sm:text-right">
+                <span class="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    INVOICE TAGIHAN
+                </span>
+                <h2 class="text-lg font-black text-slate-900 mt-2">#INV/2026/PRS-PERS/001</h2>
+                <div class="text-xs text-slate-500 space-y-0.5 mt-1 font-medium">
+                    <div>Tanggal: <span class="font-semibold text-slate-700">26 Agustus 2026</span></div>
+                    <div>Status: <span class="font-bold text-amber-600">Menunggu Pembayaran</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client & Project Details -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 py-6 border-b border-slate-100 text-xs">
+            <div>
+                <span class="font-extrabold text-slate-400 uppercase tracking-wider block mb-1.5 text-[10px]">DITUJUKAN KEPADA:</span>
+                <h3 class="font-bold text-sm text-slate-900">Institut Agama Islam (IAI) Persatuan Islam Bandung</h3>
+                <p class="text-slate-600 mt-1 leading-relaxed">
+                    Unit Layanan Penerbitan & Percetakan (Persis Pers)<br>
+                    Jl. Ciganitri No.2, Bojongsoang, Kab. Bandung, Jawa Barat 40287
+                </p>
+            </div>
+            <div class="sm:text-right">
+                <span class="font-extrabold text-slate-400 uppercase tracking-wider block mb-1.5 text-[10px]">RINCIAN PROYEK:</span>
+                <h3 class="font-bold text-sm text-slate-900">Sistem Web Penerbitan & Admin Dashboard</h3>
+                <p class="text-slate-600 mt-1 leading-relaxed">
+                    Domain Resmi: <span class="font-bold text-emerald-700">https://persispers.com</span><br>
+                    Teknologi: Laravel Modern Engine, Responsive Tailwind UI
+                </p>
+            </div>
+        </div>
+
+        <!-- Itemized Table -->
+        <div class="py-6 border-b border-slate-100">
+            <table class="w-full text-left text-xs">
+                <thead>
+                    <tr class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider border-b border-slate-200 pb-3">
+                        <th class="pb-3 w-10 text-center">No</th>
+                        <th class="pb-3">Deskripsi Pekerjaan / Layanan</th>
+                        <th class="pb-3 w-28 text-center">Qty / Satuan</th>
+                        <th class="pb-3 w-36 text-right">Biaya (IDR)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    
+                    <!-- Item 1 -->
+                    <tr>
+                        <td class="py-3.5 text-center font-bold text-slate-400">1</td>
+                        <td class="py-3.5 pr-4">
+                            <span class="font-bold text-slate-900 block text-xs">Pengembangan UI/UX & Frontend Beranda Utama (Landing Page)</span>
+                            <span class="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
+                                Header dinamis, Hero Slider interaktif, 4 Pilar Mutu, 6 Layanan Penerbitan, 6 Langkah Alur Produksi, dan Floating WhatsApp Button.
+                            </span>
+                        </td>
+                        <td class="py-3.5 text-center font-medium text-slate-600">1 Modul</td>
+                        <td class="py-3.5 text-right font-bold text-slate-900">Rp 650.000</td>
+                    </tr>
+
+                    <!-- Item 2 -->
+                    <tr>
+                        <td class="py-3.5 text-center font-bold text-slate-400">2</td>
+                        <td class="py-3.5 pr-4">
+                            <span class="font-bold text-slate-900 block text-xs">Pengembangan Halaman Profil Kelembagaan ("Tentang Kami")</span>
+                            <span class="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
+                                Profil lembaga, visi misi 2030, 4 Nilai Utama (*Core Values*), 4 Angka Statistik Pencapaian, 4 Poin Ceklis Mutu, dan Struktur Dewan Redaksi.
+                            </span>
+                        </td>
+                        <td class="py-3.5 text-center font-medium text-slate-600">1 Modul</td>
+                        <td class="py-3.5 text-right font-bold text-slate-900">Rp 450.000</td>
+                    </tr>
+
+                    <!-- Item 3 -->
+                    <tr>
+                        <td class="py-3.5 text-center font-bold text-slate-400">3</td>
+                        <td class="py-3.5 pr-4">
+                            <span class="font-bold text-slate-900 block text-xs">Sistem Kontak & Formulir Pengajuan Naskah Ber-ISBN</span>
+                            <span class="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
+                                Form pengajuan naskah online terhubung database, kontak resmi, konsultasi WhatsApp instan, dan embed Google Maps interaktif.
+                            </span>
+                        </td>
+                        <td class="py-3.5 text-center font-medium text-slate-600">1 Modul</td>
+                        <td class="py-3.5 text-right font-bold text-slate-900">Rp 350.000</td>
+                    </tr>
+
+                    <!-- Item 4 -->
+                    <tr>
+                        <td class="py-3.5 text-center font-bold text-slate-400">4</td>
+                        <td class="py-3.5 pr-4">
+                            <span class="font-bold text-slate-900 block text-xs">Integrasi Sistem Notifikasi Email Otomatis (Gmail SMTP Dispatch)</span>
+                            <span class="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
+                                Pengiriman notifikasi otomatis pesan naskah ke email redaksi (<em>hbudiman953@gmail.com</em>) dengan template HTML resmi.
+                            </span>
+                        </td>
+                        <td class="py-3.5 text-center font-medium text-slate-600">1 Layanan</td>
+                        <td class="py-3.5 text-right font-bold text-slate-900">Rp 250.000</td>
+                    </tr>
+
+                    <!-- Item 5 -->
+                    <tr>
+                        <td class="py-3.5 text-center font-bold text-slate-400">5</td>
+                        <td class="py-3.5 pr-4">
+                            <span class="font-bold text-slate-900 block text-xs">Dashboard Panel Admin & Pengelola Konten Mandiri (CMS)</span>
+                            <span class="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
+                                Multi-role Admin, Notification Bell Counter, Kotak Masuk Pesan & Update Status Naskah, Pengelola Kontak & Tentang Kami dengan <em>Live Mockup Canvas</em>.
+                            </span>
+                        </td>
+                        <td class="py-3.5 text-center font-medium text-slate-600">1 Sistem</td>
+                        <td class="py-3.5 text-right font-bold text-slate-900">Rp 500.000</td>
+                    </tr>
+
+                    <!-- Item 6 -->
+                    <tr>
+                        <td class="py-3.5 text-center font-bold text-slate-400">6</td>
+                        <td class="py-3.5 pr-4">
+                            <span class="font-bold text-slate-900 block text-xs">Deployment Server Production, Database MySQL, & Keamanan</span>
+                            <span class="text-[11px] text-slate-500 block mt-0.5 leading-relaxed">
+                                Setup hosting cPanel (<em>persispers.com</em>), konfigurasi PHP 8.3, Symlink Storage, SSL HTTPS, dan optimasi performa cache.
+                            </span>
+                        </td>
+                        <td class="py-3.5 text-center font-medium text-slate-600">1 Layanan</td>
+                        <td class="py-3.5 text-right font-bold text-slate-900">Rp 300.000</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Total Calculation & Payment Method -->
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-8 py-6 border-b border-slate-100 items-start">
+            
+            <!-- Payment Bank Account -->
+            <div class="sm:col-span-6 space-y-3">
+                <span class="font-extrabold text-slate-400 uppercase tracking-wider block text-[10px]">INFORMASI PEMBAYARAN TRANSFER:</span>
+                <div class="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 space-y-2">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                            <i class="fa-solid fa-building-columns"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-extrabold text-emerald-950 block">Bank SeaBank</span>
+                            <span class="text-[11px] text-emerald-800 font-semibold block">PT Bank Seabank Indonesia</span>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-emerald-200/60 flex items-center justify-between text-xs">
+                        <span class="text-slate-600 font-medium">Nomor Rekening:</span>
+                        <span class="font-mono font-black text-sm text-slate-900 tracking-wider">901005496052</span>
+                    </div>
+                </div>
+                <p class="text-[11px] text-slate-500 italic">
+                    *Harap sertakan bukti transfer setelah pembayaran dilakukan untuk konfirmasi verifikasi.
+                </p>
+            </div>
+
+            <!-- Price Summary -->
+            <div class="sm:col-span-6 space-y-2.5 sm:text-right text-xs">
+                <div class="flex justify-between sm:justify-end gap-6 text-slate-600">
+                    <span>Subtotal Biaya Pengembangan:</span>
+                    <span class="font-semibold text-slate-900">Rp 2.500.000</span>
+                </div>
+                <div class="flex justify-between sm:justify-end gap-6 text-emerald-700">
+                    <span>Diskon Khusus Mitra Kampus:</span>
+                    <span class="font-semibold">- Rp 500.000</span>
+                </div>
+                <div class="pt-3 border-t border-slate-200 flex justify-between sm:justify-end gap-6 items-baseline">
+                    <span class="font-bold text-sm text-slate-900">TOTAL PEMBAYARAN:</span>
+                    <span class="font-extrabold text-xl text-emerald-700 font-heading">Rp 2.000.000</span>
+                </div>
+                <span class="text-[10px] text-slate-400 block font-medium">Terbilang: <em>Dua Juta Rupiah</em></span>
+            </div>
+
+        </div>
+
+        <!-- Footer Signatures -->
+        <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-center sm:text-left">
+            <div>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Catatan Layanan:</span>
+                <p class="text-[11px] text-slate-500 mt-1 max-w-sm">
+                    Garansi pemeliharaan & perbaikan sistem (Bug Fixes) selama 30 hari kalender terhitung sejak tanggal serah terima website.
+                </p>
+            </div>
+            <div class="text-center sm:text-right">
+                <span class="text-[11px] text-slate-500 block mb-1">Bandung, 26 Agustus 2026</span>
+                <span class="text-[11px] font-bold text-slate-700 block mb-12">Hormat Kami, Developer</span>
+                <span class="font-extrabold text-xs text-slate-900 block border-t border-slate-300 pt-1">Tim Pengembang Sistem</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -40,18 +40,34 @@ class ContactController extends Controller
         return view('kontak', compact('settings'));
     }
 
-    public function store(Request $request)
+        public function store(Request $request)
     {
+        // 1. Anti-Spambot Honeypot
+        if ($request->filled('website_hp_check')) {
+            return back()->with('success', 'Pesan Anda telah diterima.');
+        }
+
+        // 2. Strict Input Validation
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:30'],
+            'name' => ['required', 'string', 'max:150'],
+            'email' => ['required', 'email:rfc,dns', 'max:150'],
+            'phone' => ['required', 'string', 'max:25'],
             'service_category' => ['required', 'string', 'max:100'],
-            'subject' => ['nullable', 'string', 'max:255'],
-            'message' => ['required', 'string'],
+            'subject' => ['nullable', 'string', 'max:200'],
+            'message' => ['required', 'string', 'max:3000'],
         ]);
 
-        $contactMessage = ContactMessage::create($validated);
+        // 3. Sanitization: Strip dangerous HTML/Script tags
+        $sanitized = [
+            'name' => strip_tags(trim($validated['name'])),
+            'email' => filter_var(trim($validated['email']), FILTER_SANITIZE_EMAIL),
+            'phone' => preg_replace('/[^0-9+() -]/', '', $validated['phone']),
+            'service_category' => strip_tags(trim($validated['service_category'])),
+            'subject' => !empty($validated['subject']) ? strip_tags(trim($validated['subject'])) : null,
+            'message' => strip_tags(trim($validated['message'])),
+        ];
+
+        $contactMessage = ContactMessage::create($sanitized);
 
         // Send Email Notification to Recipient
         try {
@@ -69,10 +85,10 @@ class ContactController extends Controller
         }
 
         $waText = urlencode("Halo Redaksi PERSIS PERS,
-Saya *{$validated['name']}*
-Layanan: *{$validated['service_category']}*
-Subjek: {$validated['subject']}
-Pesan: {$validated['message']}");
+Saya *{$sanitized['name']}*
+Layanan: *{$sanitized['service_category']}*
+Subjek: {$sanitized['subject']}
+Pesan: {$sanitized['message']}");
         $waRedirectUrl = "https://wa.me/{$waNumber}?text={$waText}";
 
         return back()->with('success', 'Pesan dan pengajuan Anda berhasil dikirim ke Redaksi!')
