@@ -82,13 +82,8 @@
             <div class="flex items-center justify-between h-20">
                 
                 <!-- Brand Logo -->
-                <a href="{{ url('/') }}" class="flex items-center gap-2.5 sm:gap-3 group py-1">
-                    <img src="{{ asset('images/logo/logo_persis_pers_icon_transparent.png') }}" alt="Logo IAI PERSIS PRESS" class="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 transition-transform duration-300 group-hover:scale-105" />
-                    <div class="flex flex-col justify-center">
-                        <span class="text-[11px] sm:text-xs font-black text-slate-900 uppercase tracking-wider leading-none">IAI PERSIS</span>
-                        <span class="text-lg sm:text-xl font-black text-[#006830] leading-none tracking-tight mt-1 font-heading">PRESS</span>
-                        <span class="text-[9px] sm:text-[10px] text-slate-500 font-semibold block mt-0.5 leading-none">Penerbitan &amp; Percetakan</span>
-                    </div>
+                <a href="{{ url('/') }}" class="flex items-center py-1 group">
+                    <img src="{{ asset('images/logo/logo_iai_persis_press_full.svg') }}" alt="IAI PERSIS PRESS" class="h-10 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
                 </a>
 
                 <!-- Desktop Nav Menu -->
