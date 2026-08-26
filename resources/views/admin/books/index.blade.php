@@ -39,12 +39,15 @@
                 transform: scale(1) translateY(0);
             }
         }
-        .photo-card-hover {
+
+        /* Clickable Upload Dropzones */
+        .upload-dropzone {
             transition: all 0.2s ease;
         }
-        .photo-card-hover:hover {
-            transform: translateY(-2px);
+        .upload-dropzone:hover {
             border-color: #006830;
+            background-color: #f0fdf4;
+            transform: translateY(-1px);
         }
     </style>
 
@@ -273,7 +276,7 @@
         @endif
     </div>
 
-    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (3D PERSPECTIVE HOVER + 4 PHOTO SLOTS) -->
+    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (ONE-CLICK UPLOAD BOXES + 3D HOVER) -->
     <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
         <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[95vh] flex flex-col">
             
@@ -288,14 +291,14 @@
                 </button>
             </div>
 
-            <!-- Modal Form Body (2-Column Grid: Left 3D Showcase & 4 Slots, Right Form) -->
+            <!-- Modal Form Body (2-Column Grid: Left 3D Showcase & 4 Clickable Slots, Right Form) -->
             <form id="bookFormElement" method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data" class="p-6 overflow-y-auto">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST" />
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: 3D Perspective Hover Showcase + 4 Photo Slots -->
+                    <!-- Left: 3D Perspective Hover Showcase + 4 Direct Clickable Upload Slots -->
                     <div class="lg:col-span-5 space-y-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
                         
                         <!-- Top: 3D Perspective Hover Box -->
@@ -317,7 +320,7 @@
                                 </button>
                             </div>
 
-                            <!-- 3D Perspective Container (Hover 3D Tilt is BACK!) -->
+                            <!-- 3D Perspective Container -->
                             <div class="book-stage-3d py-1 flex items-center justify-center w-full">
                                 <div id="mainBookWrapper" class="book-hover-3d relative w-36 aspect-[3/4.2] rounded-xs overflow-hidden select-none cursor-pointer border border-slate-200 bg-[#032c21]">
                                     
@@ -389,11 +392,11 @@
                             </div>
                         </div>
 
-                        <!-- 4 Clean Image Upload Cards Grid -->
+                        <!-- 4 DIRECT CLICKABLE UPLOAD CARDS (CLICK ANYWHERE TO CHOOSE FILE!) -->
                         <div class="space-y-2">
                             <div class="flex items-center justify-between">
                                 <span class="text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-                                    <i class="fa-solid fa-images text-emerald-600 mr-1"></i> Upload Foto Naskah (Maks. 4)
+                                    <i class="fa-solid fa-images text-emerald-600 mr-1"></i> Upload Foto Naskah (Klik Kotak)
                                 </span>
                                 <span class="text-[9px] text-slate-400 font-medium">Maks. 50MB/foto</span>
                             </div>
@@ -401,64 +404,76 @@
                             <div class="grid grid-cols-2 gap-2.5 text-[10.5px]">
                                 
                                 <!-- Foto 1: Sampul Depan -->
-                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">1. Sampul Depan <span class="text-rose-500">*</span></span>
-                                        <span id="badgeCover" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                        <span id="badgeCover" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
-                                    <div id="previewBoxCover" onclick="switchShowcaseAngle('cover')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
-                                        <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
+                                    <div id="previewBoxCover" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxCover', 'badgeCover', 'cover')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
-                                </div>
+                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxCover', 'badgeCover', 'cover')" class="hidden" />
+                                </label>
 
                                 <!-- Foto 2: Sampul Belakang -->
-                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">2. Sampul Belakang</span>
-                                        <span id="badgeBack" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                        <span id="badgeBack" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
-                                    <div id="previewBoxBack" onclick="switchShowcaseAngle('back')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
-                                        <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
+                                    <div id="previewBoxBack" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxBack', 'badgeBack', 'back')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
-                                </div>
+                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxBack', 'badgeBack', 'back')" class="hidden" />
+                                </label>
 
                                 <!-- Foto 3: Halaman Isi 1 -->
-                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">3. Halaman Isi 1</span>
-                                        <span id="badgeInside" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                        <span id="badgeInside" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
-                                    <div id="previewBoxInside" onclick="switchShowcaseAngle('inside')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
-                                        <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
+                                    <div id="previewBoxInside" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside', 'badgeInside', 'inside')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
-                                </div>
+                                    <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside', 'badgeInside', 'inside')" class="hidden" />
+                                </label>
 
                                 <!-- Foto 4: Halaman Isi 2 -->
-                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">4. Halaman Isi 2</span>
-                                        <span id="badgeInside2" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                        <span id="badgeInside2" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
                                     </div>
-                                    <div id="previewBoxInside2" onclick="switchShowcaseAngle('inside2')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
-                                        <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
+                                    <div id="previewBoxInside2" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
+                                        <span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside2', 'badgeInside2', 'inside2')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
-                                </div>
+                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside2', 'badgeInside2', 'inside2')" class="hidden" />
+                                </label>
 
                             </div>
                         </div>
 
-                        <!-- Upload Sample PDF -->
-                        <div class="pt-2 border-t border-slate-200">
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">
-                                <i class="fa-solid fa-file-pdf text-red-600"></i> Dokumen Sampel PDF (Bab 1 / Daftar Isi)
-                            </label>
-                            <input type="file" name="sample_pdf" id="form_pdf_file" accept="application/pdf" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer" />
-                            <span class="text-[9px] text-slate-400 block mt-0.5">Batasan upload dokumen: Hingga 100 MB</span>
-                        </div>
+                        <!-- Direct Clickable Upload Sample PDF Box -->
+                        <label class="upload-dropzone p-3 bg-white rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-3 cursor-pointer group block">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-bold text-slate-800 block leading-tight" id="pdfLabel">Dokumen Sampel Naskah (PDF)</span>
+                                    <span class="text-[9.5px] text-slate-400 block mt-0.5">Klik untuk upload (Maks. 100 MB)</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 group-hover:bg-red-50 group-hover:text-red-700 text-slate-600 transition">
+                                Pilih PDF
+                            </span>
+                            <input type="file" name="sample_pdf" id="form_pdf_file" accept="application/pdf" onchange="handlePdfSelected(this)" class="hidden" />
+                        </label>
                     </div>
 
                     <!-- Right: Categorized Form Fields -->
@@ -640,13 +655,23 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     slotImages[slot] = e.target.result;
-                    box.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover rounded" />';
-                    if (badge) badge.classList.remove('hidden');
+                    box.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover rounded-lg" />';
+                    if (badge) {
+                        badge.innerText = 'Terunggah';
+                        badge.classList.remove('hidden');
+                    }
                     
-                    // Switch to the newly selected photo smoothly
+                    // Switch to the newly selected photo smoothly in 3D mockup
                     switchShowcaseAngle(slot);
                 }
                 reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function handlePdfSelected(input) {
+            if (input.files && input.files[0]) {
+                const fileName = input.files[0].name;
+                document.getElementById('pdfLabel').innerText = fileName;
             }
         }
 
@@ -669,12 +694,13 @@
         function resetAllPreviews() {
             slotImages = { cover: null, back: null, inside: null, inside2: null };
             ['previewBoxCover', 'previewBoxBack', 'previewBoxInside', 'previewBoxInside2'].forEach(id => {
-                document.getElementById(id).innerHTML = '<span class="text-[8.5px] text-slate-400">Pilih Foto</span>';
+                document.getElementById(id).innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i><span class="text-[8.5px] text-slate-500 font-medium">Klik Pilih Foto</span>';
             });
             ['badgeCover', 'badgeBack', 'badgeInside', 'badgeInside2'].forEach(id => {
                 const badge = document.getElementById(id);
                 if (badge) badge.classList.add('hidden');
             });
+            document.getElementById('pdfLabel').innerText = 'Dokumen Sampel Naskah (PDF)';
             switchShowcaseAngle('cover');
         }
 
@@ -727,23 +753,26 @@
 
             if (book.cover_image) {
                 slotImages.cover = '/storage/' + book.cover_image;
-                document.getElementById('previewBoxCover').innerHTML = '<img src="/storage/' + book.cover_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('previewBoxCover').innerHTML = '<img src="/storage/' + book.cover_image + '" class="w-full h-full object-cover rounded-lg" />';
                 document.getElementById('badgeCover').classList.remove('hidden');
             }
             if (book.back_cover_image) {
                 slotImages.back = '/storage/' + book.back_cover_image;
-                document.getElementById('previewBoxBack').innerHTML = '<img src="/storage/' + book.back_cover_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('previewBoxBack').innerHTML = '<img src="/storage/' + book.back_cover_image + '" class="w-full h-full object-cover rounded-lg" />';
                 document.getElementById('badgeBack').classList.remove('hidden');
             }
             if (book.inside_preview_image) {
                 slotImages.inside = '/storage/' + book.inside_preview_image;
-                document.getElementById('previewBoxInside').innerHTML = '<img src="/storage/' + book.inside_preview_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('previewBoxInside').innerHTML = '<img src="/storage/' + book.inside_preview_image + '" class="w-full h-full object-cover rounded-lg" />';
                 document.getElementById('badgeInside').classList.remove('hidden');
             }
             if (book.additional_image) {
                 slotImages.inside2 = '/storage/' + book.additional_image;
-                document.getElementById('previewBoxInside2').innerHTML = '<img src="/storage/' + book.additional_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('previewBoxInside2').innerHTML = '<img src="/storage/' + book.additional_image + '" class="w-full h-full object-cover rounded-lg" />';
                 document.getElementById('badgeInside2').classList.remove('hidden');
+            }
+            if (book.sample_pdf) {
+                document.getElementById('pdfLabel').innerText = 'PDF Terunggah (Tersimpan)';
             }
 
             switchShowcaseAngle('cover');
