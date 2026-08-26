@@ -5,10 +5,27 @@
 
 @section('content')
     <style>
-        /* Smooth Normal Crossfade & Subtle Slide Transition */
-        .showcase-frame {
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        /* 3D Realistic Perspective Hover Tilt */
+        .book-stage-3d {
+            perspective: 1000px;
         }
+        .book-hover-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            box-shadow: 10px 14px 24px -4px rgba(0, 0, 0, 0.3), 2px 2px 5px rgba(0,0,0,0.12);
+        }
+        .book-stage-3d:hover .book-hover-3d {
+            transform: rotateY(-18deg) rotateX(6deg) translateY(-4px) scale(1.03);
+            box-shadow: 16px 22px 32px -4px rgba(0, 0, 0, 0.42), 3px 3px 8px rgba(0,0,0,0.2);
+        }
+        .book-shine-layer {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
+        }
+        .spine-strip {
+            box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Clean Smooth Tab Transition */
         .showcase-transition {
             animation: cleanFadeSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -22,8 +39,12 @@
                 transform: scale(1) translateY(0);
             }
         }
-        .spine-strip {
-            box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.15);
+        .photo-card-hover {
+            transition: all 0.2s ease;
+        }
+        .photo-card-hover:hover {
+            transform: translateY(-2px);
+            border-color: #006830;
         }
     </style>
 
@@ -160,7 +181,7 @@
                             <!-- Cover Mini -->
                             <td class="py-3.5 px-4">
                                 @if($book->cover_image && Storage::disk('public')->exists($book->cover_image))
-                                    <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-11 aspect-[3/4.2] object-cover rounded-xs shadow-xs border border-slate-200" />
+                                    <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-11 aspect-[3/4.2] object-cover rounded-xs shadow-xs border border-slate-200 hover:scale-110 transition cursor-pointer" onclick="openEditBookModal({{ json_encode($book) }})" />
                                 @else
                                     <div class="w-10 aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-1 flex flex-col justify-between border-l-2 border-emerald-400 shadow-2xs text-[6px]">
                                         <span class="font-extrabold truncate text-emerald-300">{{ $book->category }}</span>
@@ -252,14 +273,14 @@
         @endif
     </div>
 
-    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (CLEAN NATURAL PREVIEW + 4 PHOTO SLOTS) -->
-    <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (3D PERSPECTIVE HOVER + 4 PHOTO SLOTS) -->
+    <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
         <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[95vh] flex flex-col">
             
             <!-- Modal Header -->
             <div class="bg-[#032c21] text-white px-6 py-4 flex items-center justify-between border-b border-[#064e3b] shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span id="modalFormTitle" class="text-sm font-bold uppercase tracking-wider text-emerald-300">Kelola Koleksi Buku &amp; Galeri Foto</span>
                 </div>
                 <button type="button" onclick="closeBookFormModal()" class="w-8 h-8 rounded-lg bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-sm font-bold transition">
@@ -267,21 +288,21 @@
                 </button>
             </div>
 
-            <!-- Modal Form Body (2-Column Grid: Left Clean Showcase & 4 Slots, Right Form) -->
+            <!-- Modal Form Body (2-Column Grid: Left 3D Showcase & 4 Slots, Right Form) -->
             <form id="bookFormElement" method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data" class="p-6 overflow-y-auto">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST" />
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: Clean Showcase Box + 4 Photo Slots -->
-                    <div class="lg:col-span-5 space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <!-- Left: 3D Perspective Hover Showcase + 4 Photo Slots -->
+                    <div class="lg:col-span-5 space-y-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
                         
-                        <!-- Top: Clean Normal Preview Box -->
+                        <!-- Top: 3D Perspective Hover Box -->
                         <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex flex-col items-center">
                             
                             <!-- Angle Switcher Pills with Clear Labels -->
-                            <div class="flex items-center justify-center gap-1.5 mb-3 w-full border-b border-slate-100 pb-2.5">
+                            <div class="flex items-center justify-center gap-1.5 mb-3.5 w-full border-b border-slate-100 pb-2.5">
                                 <button type="button" onclick="switchShowcaseAngle('cover')" id="btnAngleCover" class="px-3 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs">
                                     Depan
                                 </button>
@@ -296,15 +317,16 @@
                                 </button>
                             </div>
 
-                            <!-- Showcase Viewport Frame (Smooth Normal Fade & Scale) -->
-                            <div class="py-1 flex items-center justify-center w-full">
-                                <div id="mainBookWrapper" class="showcase-frame relative w-36 aspect-[3/4.2] rounded-xs overflow-hidden select-none shadow-md border border-slate-200 bg-[#032c21]">
+                            <!-- 3D Perspective Container (Hover 3D Tilt is BACK!) -->
+                            <div class="book-stage-3d py-1 flex items-center justify-center w-full">
+                                <div id="mainBookWrapper" class="book-hover-3d relative w-36 aspect-[3/4.2] rounded-xs overflow-hidden select-none cursor-pointer border border-slate-200 bg-[#032c21]">
                                     
                                     <!-- A. Real Uploaded Image Display -->
                                     <img id="mainBookImage" src="" alt="Book Showcase" class="w-full h-full object-cover hidden" />
 
-                                    <!-- B. Spine Crease -->
+                                    <!-- B. Spine Crease & Shine -->
                                     <div id="spineCrease" class="absolute inset-0 pointer-events-none spine-strip"></div>
+                                    <div class="absolute inset-0 pointer-events-none book-shine-layer"></div>
 
                                     <!-- C. Fallback: Vector Front Cover -->
                                     <div id="mainVectorCover" class="w-full h-full bg-[#032c21] text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400">
@@ -358,9 +380,11 @@
                                 </div>
                             </div>
 
-                            <!-- Live Price Tag -->
-                            <div class="mt-2.5 flex items-center justify-between w-full pt-2 border-t border-slate-100 text-xs">
-                                <span class="text-[10px] text-slate-400 font-medium">Harga Cetak Resmi</span>
+                            <!-- Live Price Tag & 3D Hint -->
+                            <div class="mt-3 flex items-center justify-between w-full pt-2 border-t border-slate-100 text-xs">
+                                <span class="text-[10px] text-slate-400 font-medium">
+                                    <i class="fa-solid fa-hand-pointer text-emerald-600"></i> Sorot kursor utk efek 3D
+                                </span>
                                 <span id="prev_cover_price" class="font-black text-[#006830] font-mono text-sm">Rp 75.000</span>
                             </div>
                         </div>
@@ -377,7 +401,7 @@
                             <div class="grid grid-cols-2 gap-2.5 text-[10.5px]">
                                 
                                 <!-- Foto 1: Sampul Depan -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">1. Sampul Depan <span class="text-rose-500">*</span></span>
                                         <span id="badgeCover" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
@@ -389,7 +413,7 @@
                                 </div>
 
                                 <!-- Foto 2: Sampul Belakang -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">2. Sampul Belakang</span>
                                         <span id="badgeBack" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
@@ -401,7 +425,7 @@
                                 </div>
 
                                 <!-- Foto 3: Halaman Isi 1 -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">3. Halaman Isi 1</span>
                                         <span id="badgeInside" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
@@ -413,7 +437,7 @@
                                 </div>
 
                                 <!-- Foto 4: Halaman Isi 2 -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
                                     <div class="flex items-center justify-between">
                                         <span class="font-bold text-slate-700 text-[9.5px]">4. Halaman Isi 2</span>
                                         <span id="badgeInside2" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
