@@ -58,9 +58,14 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Safe Image Upload (Without requiring php_fileinfo extension)
+        // Safe Direct File Move (100% Zero finfo dependency)
         $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
+
+        $photoDir = public_path('storage/books/photos');
+        if (!file_exists($photoDir)) {
+            @mkdir($photoDir, 0755, true);
+        }
 
         foreach ($imageSlots as $slot) {
             if ($request->hasFile($slot)) {
@@ -72,12 +77,12 @@ class BookController extends Controller
                 }
 
                 $filename = Str::random(30) . '.' . $ext;
-                $path = $file->storeAs('books/photos', $filename, 'public');
-                $validated[$slot] = $path;
+                $file->move($photoDir, $filename);
+                $validated[$slot] = 'books/photos/' . $filename;
             }
         }
 
-        // Safe PDF Upload
+        // Safe PDF Upload via move
         if ($request->hasFile('sample_pdf')) {
             $pdfFile = $request->file('sample_pdf');
             $pdfExt = strtolower($pdfFile->getClientOriginalExtension() ?: 'pdf');
@@ -86,8 +91,14 @@ class BookController extends Controller
                 return back()->withErrors(['sample_pdf' => 'File dokumen sampel harus berformat PDF.'])->withInput();
             }
 
+            $sampleDir = public_path('storage/books/samples');
+            if (!file_exists($sampleDir)) {
+                @mkdir($sampleDir, 0755, true);
+            }
+
             $pdfName = Str::random(30) . '.pdf';
-            $validated['sample_pdf'] = $pdfFile->storeAs('books/samples', $pdfName, 'public');
+            $pdfFile->move($sampleDir, $pdfName);
+            $validated['sample_pdf'] = 'books/samples/' . $pdfName;
         }
 
         Book::create($validated);
@@ -115,9 +126,14 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Safe Image Upload Updates
+        // Safe Direct File Move for Updates
         $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
+
+        $photoDir = public_path('storage/books/photos');
+        if (!file_exists($photoDir)) {
+            @mkdir($photoDir, 0755, true);
+        }
 
         foreach ($imageSlots as $slot) {
             if ($request->hasFile($slot)) {
@@ -128,13 +144,13 @@ class BookController extends Controller
                     return back()->withErrors([$slot => 'File foto harus berekstensi JPG, PNG, atau WebP.'])->withInput();
                 }
 
-                if ($book->$slot && Storage::disk('public')->exists($book->$slot)) {
-                    Storage::disk('public')->delete($book->$slot);
+                if ($book->$slot && file_exists(public_path('storage/' . $book->$slot))) {
+                    @unlink(public_path('storage/' . $book->$slot));
                 }
 
                 $filename = Str::random(30) . '.' . $ext;
-                $path = $file->storeAs('books/photos', $filename, 'public');
-                $validated[$slot] = $path;
+                $file->move($photoDir, $filename);
+                $validated[$slot] = 'books/photos/' . $filename;
             }
         }
 
@@ -147,12 +163,18 @@ class BookController extends Controller
                 return back()->withErrors(['sample_pdf' => 'File dokumen sampel harus berformat PDF.'])->withInput();
             }
 
-            if ($book->sample_pdf && Storage::disk('public')->exists($book->sample_pdf)) {
-                Storage::disk('public')->delete($book->sample_pdf);
+            $sampleDir = public_path('storage/books/samples');
+            if (!file_exists($sampleDir)) {
+                @mkdir($sampleDir, 0755, true);
+            }
+
+            if ($book->sample_pdf && file_exists(public_path('storage/' . $book->sample_pdf))) {
+                @unlink(public_path('storage/' . $book->sample_pdf));
             }
 
             $pdfName = Str::random(30) . '.pdf';
-            $validated['sample_pdf'] = $pdfFile->storeAs('books/samples', $pdfName, 'public');
+            $pdfFile->move($sampleDir, $pdfName);
+            $validated['sample_pdf'] = 'books/samples/' . $pdfName;
         }
 
         $book->update($validated);
@@ -165,8 +187,8 @@ class BookController extends Controller
         $title = $book->title;
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image', 'sample_pdf'];
         foreach ($imageSlots as $slot) {
-            if ($book->$slot && Storage::disk('public')->exists($book->$slot)) {
-                Storage::disk('public')->delete($book->$slot);
+            if ($book->$slot && file_exists(public_path('storage/' . $book->$slot))) {
+                @unlink(public_path('storage/' . $book->$slot));
             }
         }
         $book->delete();
