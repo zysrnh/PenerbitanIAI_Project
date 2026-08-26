@@ -4,12 +4,12 @@
 
 @section('content')
     <style>
-        /* Signature PERSIS PERS Book Card Design */
+        /* 1. Signature PERSIS PERS Book Card */
         .persis-book-card {
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 3px;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -18,17 +18,17 @@
         .persis-book-card:hover {
             border-color: #047857;
             transform: translateY(-4px);
-            box-shadow: 0 14px 28px -6px rgba(4, 120, 87, 0.12), 0 2px 6px rgba(0,0,0,0.04);
+            box-shadow: 0 16px 30px -8px rgba(4, 120, 87, 0.15), 0 2px 6px rgba(0,0,0,0.04);
         }
 
-        /* 3D Book Cover Presentation */
+        /* 3D Realistic Card Cover Effects */
         .book-spine-strip {
             position: absolute;
             top: 0;
             bottom: 0;
             left: 0;
             width: 7px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0.08) 60%, rgba(0,0,0,0.25) 100%);
+            background: linear-gradient(90deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3) 100%);
             border-right: 1px solid rgba(0,0,0,0.12);
             z-index: 10;
         }
@@ -37,13 +37,46 @@
             right: 0;
             top: 4px;
             bottom: 4px;
-            width: 3px;
-            background: repeating-linear-gradient(180deg, #f8fafc, #f8fafc 1px, #cbd5e1 1px, #cbd5e1 2px);
+            width: 3.5px;
+            background: repeating-linear-gradient(180deg, #f8fafc, #f8fafc 1.5px, #cbd5e1 1.5px, #cbd5e1 3px);
             border-left: 1px solid #94a3b8;
             border-radius: 0 2px 2px 0;
+            z-index: 5;
         }
-        
-        /* Category Navigation */
+
+        /* 2. 3D Perspective Hover Tilt on Modal Showcase */
+        .modal-book-stage {
+            perspective: 1000px;
+        }
+        .modal-book-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            box-shadow: 12px 16px 28px -6px rgba(0, 0, 0, 0.35), 2px 2px 6px rgba(0,0,0,0.12);
+        }
+        .modal-book-stage:hover .modal-book-3d {
+            transform: rotateY(-18deg) rotateX(6deg) translateY(-4px) scale(1.03);
+            box-shadow: 18px 24px 36px -6px rgba(0, 0, 0, 0.45), 4px 4px 10px rgba(0,0,0,0.2);
+        }
+        .modal-shine-layer {
+            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%);
+        }
+
+        /* Clean Smooth Transition on Photo Switch */
+        .showcase-fade-slide {
+            animation: cleanFadeSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes cleanFadeSlide {
+            0% {
+                opacity: 0;
+                transform: scale(0.97) translateY(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Category Nav */
         .cat-link {
             transition: all 0.15s ease;
         }
@@ -59,7 +92,7 @@
         }
     </style>
 
-    <!-- 1. HEADER BANNER (Identical to Kontak & Tentang) -->
+    <!-- 1. HEADER BANNER (Synchronized with Admin) -->
     <section class="bg-brand-950 text-white py-14 sm:py-16 relative overflow-hidden border-b border-brand-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
             <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
@@ -125,7 +158,7 @@
         </div>
     </section>
 
-    <!-- 3. MAIN BOOKSTORE CONTENT (SIDEBAR + SIGNATURE PERSIS PERS BOOK CARDS) -->
+    <!-- 3. MAIN BOOKSTORE CONTENT (SIDEBAR + CLEAN SIGNATURE BOOK CARDS) -->
     <section class="py-10 bg-slate-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
@@ -216,7 +249,7 @@
                 </div>
 
                 <!-- ============================================== -->
-                <!-- RIGHT MAIN CONTENT (DISTINCT SIGNATURE PERSIS PERS CARDS) -->
+                <!-- RIGHT MAIN CONTENT (POLISHED SIGNATURE BOOK CARDS) -->
                 <!-- ============================================== -->
                 <div class="lg:col-span-9 space-y-6">
                     
@@ -233,15 +266,12 @@
                                 </a>
                             </div>
 
-                            <!-- Signature PERSIS PERS Book Cards Grid -->
                             <div class="p-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
                                 @foreach($newBooks as $nBook)
                                     <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($nBook) }})">
                                         
-                                        <!-- Realistic 3D UNESCO Book Mockup Container -->
-                                        <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-sm border border-slate-300 select-none">
-                                            
-                                            <!-- Spine & Paper Edge Simulation -->
+                                        <!-- Cover Mockup Container -->
+                                        <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-xs border border-slate-200 select-none">
                                             <div class="book-spine-strip"></div>
                                             <div class="book-paper-edge"></div>
 
@@ -262,40 +292,44 @@
                                                 </div>
                                             @endif
 
-                                            <!-- Overlay Badge on Image -->
                                             <span class="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-xs text-[8px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-xs z-20">
                                                 Baru
                                             </span>
                                         </div>
 
-                                        <!-- Content Block -->
+                                        <!-- Meta Info Block (Clean & Well-Spaced) -->
                                         <div class="flex flex-col flex-1 justify-between text-left">
                                             <div>
-                                                <!-- Category Badge -->
-                                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200/80 inline-block mb-1">
-                                                    {{ $nBook->category }}
-                                                </span>
+                                                <!-- Category Badge & Year Row -->
+                                                <div class="flex items-center justify-between gap-1 mb-1.5">
+                                                    <span class="text-[9.5px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-xs border border-emerald-200/80 truncate">
+                                                        {{ $nBook->category }}
+                                                    </span>
+                                                    <span class="text-[10px] text-slate-400 font-mono font-semibold">{{ $nBook->year ?? '2026' }}</span>
+                                                </div>
 
                                                 <!-- Book Title -->
-                                                <h4 class="font-extrabold text-slate-900 text-xs leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                                <h4 class="font-extrabold text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
                                                     {{ $nBook->title }}
                                                 </h4>
 
-                                                <!-- Author -->
-                                                <p class="text-[10.5px] text-slate-500 truncate mb-2">
-                                                    <i class="fa-solid fa-pen-nib text-[8.5px] text-emerald-600 mr-1"></i>{{ $nBook->author }}
-                                                </p>
+                                                <!-- Author with aligned pen nib -->
+                                                <div class="flex items-center gap-1.5 text-slate-500 text-[11px] font-medium mb-2.5">
+                                                    <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600 shrink-0"></i>
+                                                    <span class="truncate">{{ $nBook->author }}</span>
+                                                </div>
                                             </div>
 
                                             <!-- Bottom Price & Action Footer -->
                                             <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
                                                 <div>
-                                                    <span class="text-[8.5px] text-slate-400 block leading-none">Harga Cetak</span>
-                                                    <span class="text-xs font-black text-emerald-700 font-mono mt-0.5 block">{{ $nBook->price }}</span>
+                                                    <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
+                                                    <span class="text-xs sm:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $nBook->price }}</span>
                                                 </div>
-                                                <span class="w-6 h-6 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 flex items-center justify-center text-[10px] transition">
-                                                    <i class="fa-solid fa-angle-right"></i>
-                                                </span>
+                                                <button type="button" class="px-2 py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[10px] transition flex items-center gap-1">
+                                                    <span>Detail</span>
+                                                    <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                                                </button>
                                             </div>
                                         </div>
 
@@ -319,7 +353,7 @@
                                 @foreach($bestSellers as $bBook)
                                     <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($bBook) }})">
                                         
-                                        <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-sm border border-slate-300 select-none">
+                                        <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-xs border border-slate-200 select-none">
                                             <div class="book-spine-strip"></div>
                                             <div class="book-paper-edge"></div>
 
@@ -347,27 +381,32 @@
 
                                         <div class="flex flex-col flex-1 justify-between text-left">
                                             <div>
-                                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200/80 inline-block mb-1">
-                                                    {{ $bBook->category }}
-                                                </span>
+                                                <div class="flex items-center justify-between gap-1 mb-1.5">
+                                                    <span class="text-[9.5px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-xs border border-emerald-200/80 truncate">
+                                                        {{ $bBook->category }}
+                                                    </span>
+                                                    <span class="text-[10px] text-slate-400 font-mono font-semibold">{{ $bBook->year ?? '2026' }}</span>
+                                                </div>
 
-                                                <h4 class="font-extrabold text-slate-900 text-xs leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                                <h4 class="font-extrabold text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
                                                     {{ $bBook->title }}
                                                 </h4>
 
-                                                <p class="text-[10.5px] text-slate-500 truncate mb-2">
-                                                    <i class="fa-solid fa-pen-nib text-[8.5px] text-emerald-600 mr-1"></i>{{ $bBook->author }}
-                                                </p>
+                                                <div class="flex items-center gap-1.5 text-slate-500 text-[11px] font-medium mb-2.5">
+                                                    <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600 shrink-0"></i>
+                                                    <span class="truncate">{{ $bBook->author }}</span>
+                                                </div>
                                             </div>
 
                                             <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
                                                 <div>
-                                                    <span class="text-[8.5px] text-slate-400 block leading-none">Harga Cetak</span>
-                                                    <span class="text-xs font-black text-emerald-700 font-mono mt-0.5 block">{{ $bBook->price }}</span>
+                                                    <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
+                                                    <span class="text-xs sm:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $bBook->price }}</span>
                                                 </div>
-                                                <span class="w-6 h-6 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 flex items-center justify-center text-[10px] transition">
-                                                    <i class="fa-solid fa-angle-right"></i>
-                                                </span>
+                                                <button type="button" class="px-2 py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[10px] transition flex items-center gap-1">
+                                                    <span>Detail</span>
+                                                    <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                                                </button>
                                             </div>
                                         </div>
 
@@ -399,7 +438,7 @@
                             @forelse($books as $book)
                                 <div class="persis-book-card p-3 rounded-sm cursor-pointer group" onclick="openBookModal({{ json_encode($book) }})">
                                     
-                                    <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-sm border border-slate-300 select-none">
+                                    <div class="relative w-full aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden mb-3 shadow-xs border border-slate-200 select-none">
                                         <div class="book-spine-strip"></div>
                                         <div class="book-paper-edge"></div>
 
@@ -433,27 +472,32 @@
 
                                     <div class="flex flex-col flex-1 justify-between text-left">
                                         <div>
-                                            <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200/80 inline-block mb-1">
-                                                {{ $book->category }}
-                                            </span>
+                                            <div class="flex items-center justify-between gap-1 mb-1.5">
+                                                <span class="text-[9.5px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-xs border border-emerald-200/80 truncate">
+                                                    {{ $book->category }}
+                                                </span>
+                                                <span class="text-[10px] text-slate-400 font-mono font-semibold">{{ $book->year ?? '2026' }}</span>
+                                            </div>
 
-                                            <h4 class="font-extrabold text-slate-900 text-xs leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
+                                            <h4 class="font-extrabold text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 mb-1 group-hover:text-emerald-700 transition">
                                                 {{ $book->title }}
                                             </h4>
 
-                                            <p class="text-[10.5px] text-slate-500 truncate mb-2">
-                                                <i class="fa-solid fa-pen-nib text-[8.5px] text-emerald-600 mr-1"></i>{{ $book->author }}
-                                            </p>
+                                            <div class="flex items-center gap-1.5 text-slate-500 text-[11px] font-medium mb-2.5">
+                                                <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600 shrink-0"></i>
+                                                <span class="truncate">{{ $book->author }}</span>
+                                            </div>
                                         </div>
 
                                         <div class="pt-2 border-t border-slate-100 flex items-center justify-between mt-auto">
                                             <div>
-                                                <span class="text-[8.5px] text-slate-400 block leading-none">Harga Cetak</span>
-                                                <span class="text-xs font-black text-emerald-700 font-mono mt-0.5 block">{{ $book->price }}</span>
+                                                <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
+                                                <span class="text-xs sm:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $book->price }}</span>
                                             </div>
-                                            <span class="w-6 h-6 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 flex items-center justify-center text-[10px] transition">
-                                                <i class="fa-solid fa-angle-right"></i>
-                                            </span>
+                                            <button type="button" class="px-2 py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[10px] transition flex items-center gap-1">
+                                                <span>Detail</span>
+                                                <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                                            </button>
                                         </div>
                                     </div>
 
@@ -505,8 +549,8 @@
         </div>
     </section>
 
-    <!-- MODAL DETAIL BUKU PUBLIK (4-PHOTO SWITCHER) -->
-    <div id="publicBookModal" class="fixed inset-0 z-50 bg-black/70 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
+    <!-- MODAL DETAIL BUKU PUBLIK (WITH 3D PERSPECTIVE HOVER TILT & SMOOTH MULTI-PHOTO ANIMATION) -->
+    <div id="publicBookModal" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
         <div class="bg-white rounded-sm max-w-4xl w-full shadow-2xl border border-slate-300 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-fade-in-up">
             
             <!-- Modal Header -->
@@ -524,42 +568,50 @@
             <div class="p-5 sm:p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: Multi-Photo Showcase -->
-                    <div class="md:col-span-5 flex flex-col items-center bg-slate-50 p-4 rounded-sm border border-slate-200 space-y-3">
+                    <!-- Left: 3D Interactive Showcase Visualizer -->
+                    <div class="md:col-span-5 flex flex-col items-center bg-slate-50 p-4 rounded-sm border border-slate-200 space-y-4">
                         
-                        <div class="w-44 sm:w-48 aspect-[3/4.1] flex items-center justify-center">
-                            <div class="relative w-full h-full rounded-xs overflow-hidden shadow-md border border-slate-200 bg-brand-950 select-none">
+                        <!-- 3D Perspective Stage -->
+                        <div id="modalStage" class="modal-book-stage w-44 sm:w-52 aspect-[3/4.15] flex items-center justify-center py-2">
+                            <div id="modalBookVisualizer" class="modal-book-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 select-none border border-slate-300">
                                 
-                                <img id="modalMainImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden" />
-                                <div id="modalSpineCrease" class="absolute inset-0 pointer-events-none spine-crease"></div>
+                                <!-- Realistic Book Spine & Paper Edge Simulation -->
+                                <div class="book-spine-strip"></div>
+                                <div class="book-paper-edge"></div>
+                                <div class="modal-shine-layer absolute inset-0 pointer-events-none z-10"></div>
 
-                                <div id="modalVectorFront" class="w-full h-full bg-brand-950 text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400">
+                                <!-- Photo Image Container -->
+                                <img id="modalMainImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden showcase-fade-slide" />
+
+                                <!-- Default Vector Front Cover -->
+                                <div id="modalVectorFront" class="w-full h-full bg-brand-950 text-white p-3.5 pl-4 flex flex-col justify-between border-l-4 border-emerald-400">
                                     <div class="flex justify-between items-center border-b border-white/20 pb-1">
-                                        <span id="modalVectorCat" class="text-[7.5px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-brand-900 text-emerald-300">Buku Ajar</span>
-                                        <span class="text-[7.5px] text-slate-300 font-mono">PERSIS</span>
+                                        <span id="modalVectorCat" class="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-brand-900 text-emerald-300">Buku Ajar</span>
+                                        <span class="text-[7.5px] text-slate-300 font-mono">PERSIS PERS</span>
                                     </div>
-                                    <div class="text-center my-auto py-1">
-                                        <div class="w-4 h-0.5 bg-amber-400 mx-auto mb-1"></div>
-                                        <h5 id="modalVectorTitle" class="font-black text-[11px] text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
-                                        <div class="w-4 h-0.5 bg-amber-400 mx-auto mt-1"></div>
+                                    <div class="text-center my-auto py-1.5">
+                                        <div class="w-5 h-0.5 bg-amber-400 mx-auto mb-1.5"></div>
+                                        <h5 id="modalVectorTitle" class="font-black text-xs text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
+                                        <div class="w-5 h-0.5 bg-amber-400 mx-auto mt-1.5"></div>
                                     </div>
                                     <div class="pt-1 border-t border-white/20 text-center">
-                                        <span id="modalVectorAuthor" class="text-[8.5px] text-slate-200 block font-medium truncate">Nama Penulis</span>
+                                        <span id="modalVectorAuthor" class="text-[9px] text-slate-200 block font-medium truncate">Nama Penulis</span>
                                     </div>
                                 </div>
 
-                                <div id="modalVectorInside" class="w-full h-full bg-[#fdfbf7] text-slate-800 p-3 flex flex-col justify-between hidden border-l-2 border-slate-300">
-                                    <div class="border-b border-slate-300 pb-1 flex justify-between items-center text-[7px] font-bold text-slate-500">
+                                <!-- Default Vector Inside Page -->
+                                <div id="modalVectorInside" class="w-full h-full bg-[#fdfbf7] text-slate-800 p-3.5 pl-4 flex flex-col justify-between hidden border-l-2 border-slate-300 showcase-fade-slide">
+                                    <div class="border-b border-slate-300 pb-1 flex justify-between items-center text-[7.5px] font-bold text-slate-500">
                                         <span id="modalInsideLabel">BAGIAN ISI NASKAH</span>
                                         <span>hlm. 1</span>
                                     </div>
-                                    <div class="text-[7px] text-slate-600 leading-relaxed my-auto space-y-1 font-serif">
-                                        <p class="font-bold text-slate-800 text-[8px]" id="modalInsideTitle">Pratinjau Isi Halaman</p>
+                                    <div class="text-[7.5px] text-slate-600 leading-relaxed my-auto space-y-1 font-serif">
+                                        <p class="font-bold text-slate-800 text-[8.5px]" id="modalInsideTitle">Pratinjau Isi Halaman</p>
                                         <p>Kajian akademik dan riset ilmiah kurikulum perguruan tinggi...</p>
-                                        <div class="w-full h-0.5 bg-slate-200 my-0.5"></div>
+                                        <div class="w-full h-0.5 bg-slate-200 my-1"></div>
                                         <p>Standar UNESCO B5 Bookpaper.</p>
                                     </div>
-                                    <div class="pt-1 border-t border-slate-200 text-center text-[6.5px] text-slate-400 font-mono">
+                                    <div class="pt-1 border-t border-slate-200 text-center text-[7px] text-slate-400 font-mono">
                                         <span>PERSIS PERS</span>
                                     </div>
                                 </div>
@@ -567,20 +619,20 @@
                             </div>
                         </div>
 
-                        <!-- 4 Multi-Photo Switcher Buttons -->
-                        <div id="modalPhotoSwitcherContainer" class="w-full flex flex-wrap items-center justify-center gap-1.5 pt-1"></div>
+                        <!-- 4 Multi-Photo Switcher Tabs -->
+                        <div id="modalPhotoSwitcherContainer" class="w-full flex flex-wrap items-center justify-center gap-1.5 pt-1 border-t border-slate-200"></div>
 
                     </div>
 
-                    <!-- Right: Specs, Synopsis, Order Button -->
+                    <!-- Right: Specs, Synopsis, WhatsApp Order -->
                     <div class="md:col-span-7 space-y-4">
                         
                         <div>
                             <div class="flex items-center gap-2 mb-1.5">
-                                <span id="modalCategory" class="px-2 py-0.5 rounded-sm text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                <span id="modalCategory" class="px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     Kategori
                                 </span>
-                                <span id="modalBadgeStatus" class="hidden px-2 py-0.5 rounded-sm text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                <span id="modalBadgeStatus" class="hidden px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                                     Baru 2026
                                 </span>
                             </div>
@@ -588,7 +640,8 @@
                             <h2 id="modalTitle" class="text-base sm:text-lg md:text-xl font-extrabold text-slate-900 leading-snug">
                                 Judul Lengkap Buku
                             </h2>
-                            <p class="text-xs text-slate-500 mt-1">
+                            <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-pen-nib text-emerald-600 text-[10px]"></i>
                                 Penulis: <strong id="modalAuthor" class="text-slate-800 font-bold">Nama Penulis</strong>
                             </p>
                         </div>
@@ -656,7 +709,7 @@
             document.getElementById('modalCategory').innerText = book.category;
             document.getElementById('modalIsbn').innerText = book.isbn || 'Dalam Proses';
             document.getElementById('modalFormat').innerText = book.format || 'UNESCO B5';
-            document.getElementById('modalPages').innerText = book.pages || '-';
+            document.getElementById('modalPages').innerText = book.pages ? (book.pages + ' hlm') : '-';
             document.getElementById('modalYear').innerText = book.year || '2026';
             document.getElementById('modalPrice').innerText = book.price || 'Hubungi Admin';
             document.getElementById('modalSynopsis').innerText = book.synopsis || 'Belum ada sinopsis untuk buku ini.';
@@ -668,11 +721,11 @@
             const badge = document.getElementById('modalBadgeStatus');
             if (book.is_new_release) {
                 badge.innerText = 'Baru 2026';
-                badge.className = 'px-2 py-0.5 rounded-sm text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+                badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
                 badge.classList.remove('hidden');
             } else if (book.is_best_seller) {
                 badge.innerText = 'Best Seller';
-                badge.className = 'px-2 py-0.5 rounded-sm text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
+                badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
                 badge.classList.remove('hidden');
             } else {
                 badge.classList.add('hidden');
@@ -739,21 +792,28 @@
             const imgEl = document.getElementById('modalMainImage');
             const frontVec = document.getElementById('modalVectorFront');
             const insideVec = document.getElementById('modalVectorInside');
-            const spine = document.getElementById('modalSpineCrease');
 
             imgEl.classList.add('hidden');
             frontVec.classList.add('hidden');
             insideVec.classList.add('hidden');
-            spine.classList.remove('hidden');
 
             if (photo.url) {
                 imgEl.src = photo.url;
                 imgEl.classList.remove('hidden');
+                imgEl.classList.remove('showcase-fade-slide');
+                void imgEl.offsetWidth; // trigger reflow
+                imgEl.classList.add('showcase-fade-slide');
             } else {
                 if (photo.type === 'cover' || photo.type === 'back') {
                     frontVec.classList.remove('hidden');
+                    frontVec.classList.remove('showcase-fade-slide');
+                    void frontVec.offsetWidth;
+                    frontVec.classList.add('showcase-fade-slide');
                 } else {
                     insideVec.classList.remove('hidden');
+                    insideVec.classList.remove('showcase-fade-slide');
+                    void insideVec.offsetWidth;
+                    insideVec.classList.add('showcase-fade-slide');
                 }
             }
         }
