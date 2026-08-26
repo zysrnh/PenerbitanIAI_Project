@@ -79,9 +79,9 @@
 
                 <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-widest px-3 block pt-4 pb-1.5">Penerbitan</span>
 
-                <a href="#" onclick="alert('Modul ini akan disiapkan selanjutnya!')" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition">
-                    <i class="fa-solid fa-book-bookmark w-5 text-center text-base"></i>
-                    <span>Katalog Buku & ISBN</span>
+                <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-500/10 text-emerald-400 font-bold' : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-200' }}">
+                    <i class="fa-solid fa-book-bookmark w-5 text-center text-base {{ request()->routeIs('admin.books.*') ? 'text-emerald-400' : 'text-slate-400' }}"></i>
+                    <span>Katalog Buku &amp; ISBN</span>
                 </a>
 
                 <a href="#" onclick="alert('Modul ini akan disiapkan selanjutnya!')" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 transition">
