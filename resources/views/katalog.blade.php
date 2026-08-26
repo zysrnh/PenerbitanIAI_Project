@@ -345,83 +345,159 @@
         </div>
     </section>
 
-    <!-- Modal Quick-View Sinopsis & Detail Buku -->
-    <div id="bookModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs hidden items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-slate-200 relative animate-fade-in-up">
+    <!-- Modal Quick-View Detail Buku (Prestigious Academic Edition) -->
+    <div id="bookModal" class="fixed inset-0 z-50 bg-brand-950/75 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-8">
             
-            <!-- Close Button -->
-            <button onclick="closeBookModal()" class="absolute right-4 top-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-start">
-                
-                <!-- Left Book Cover in Modal -->
-                <div class="sm:col-span-5">
-                    <div class="h-60 rounded-xl bg-brand-950 text-white p-4 flex flex-col justify-between border-l-4 border-emerald-500 shadow-md">
-                        <span id="modalCategoryBadge" class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-brand-900 text-emerald-300 w-max"></span>
-                        <div class="text-center my-auto">
-                            <h4 id="modalCoverTitle" class="font-bold text-xs text-white leading-snug font-heading"></h4>
-                        </div>
-                        <div class="text-center pt-2 border-t border-brand-900">
-                            <span id="modalCoverAuthor" class="text-[10px] text-slate-300 block font-medium"></span>
-                        </div>
-                    </div>
+            <!-- Modal Top Header Bar -->
+            <div class="bg-brand-950 text-white px-6 py-4 flex items-center justify-between border-b border-brand-900">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Spesifikasi &amp; Detail Terbitan Resmi</span>
                 </div>
+                <button onclick="closeBookModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs font-bold transition">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
 
-                <!-- Right Detail Info -->
-                <div class="sm:col-span-7 space-y-3">
-                    <div>
-                        <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-widest block">SPESIFIKASI NASKAH BUKU</span>
-                        <h3 id="modalTitle" class="text-sm sm:text-base font-extrabold text-slate-900 font-heading leading-tight mt-0.5"></h3>
-                        <p id="modalAuthor" class="text-xs font-medium text-slate-500 mt-0.5"></p>
+            <div class="p-6 sm:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Left: 3D Realistic Book Cover Showcase -->
+                    <div class="md:col-span-5 flex flex-col items-center">
+                        <div class="relative w-48 sm:w-52 h-72 rounded-xl bg-brand-950 text-white p-5 flex flex-col justify-between border-l-4 border-emerald-500 shadow-2xl overflow-hidden group">
+                            <!-- 3D Spine Lighting & Texture -->
+                            <div class="absolute left-0 top-0 bottom-0 w-3 bg-white/15 pointer-events-none"></div>
+                            <div class="absolute right-0 top-0 bottom-0 w-full bg-gradient-to-l from-black/30 via-transparent to-transparent pointer-events-none"></div>
+                            
+                            <!-- Category Badge -->
+                            <div class="relative z-10">
+                                <span id="modalCategoryBadge" class="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30"></span>
+                            </div>
+
+                            <!-- Center Title -->
+                            <div class="relative z-10 my-auto text-center py-2">
+                                <i class="fa-solid fa-book-open-reader text-2xl text-emerald-400/40 block mb-2"></i>
+                                <h4 id="modalCoverTitle" class="font-extrabold text-xs text-white leading-snug font-heading drop-shadow-xs"></h4>
+                            </div>
+
+                            <!-- Footer Author -->
+                            <div class="relative z-10 pt-2.5 border-t border-white/15 text-center">
+                                <span id="modalCoverAuthor" class="text-[10px] text-slate-200 block font-medium"></span>
+                                <span class="text-[8.5px] text-emerald-400 font-mono block mt-0.5">PERSIS PERS</span>
+                            </div>
+                        </div>
+
+                        <!-- Price Tag Under Cover -->
+                        <div class="mt-4 w-full bg-emerald-50 border border-emerald-200/80 rounded-xl p-3 text-center">
+                            <span class="text-[10px] text-slate-500 font-medium block">Harga Cetak Resmi:</span>
+                            <span id="modalPrice" class="text-lg font-black text-brand-900 font-heading"></span>
+                        </div>
                     </div>
 
-                    <!-- Specs Table -->
-                    <div class="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                    <!-- Right: Metadata, Tabs & Specifications -->
+                    <div class="md:col-span-7 space-y-4">
                         <div>
-                            <span class="text-slate-400 block font-medium">Legalitas ISBN:</span>
-                            <span id="modalIsbn" class="font-mono font-bold text-slate-800"></span>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check text-[9px]"></i> ISBN Terverifikasi
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-medium">Katalog Dalam Terbitan (KDT)</span>
+                            </div>
+                            <h3 id="modalTitle" class="text-base sm:text-lg font-extrabold text-slate-950 font-heading leading-tight"></h3>
+                            <p id="modalAuthor" class="text-xs font-semibold text-emerald-800 mt-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-pen text-[11px] text-slate-400"></i> <span id="modalAuthorText"></span>
+                            </p>
                         </div>
+
+                        <!-- Technical Specs Grid -->
+                        <div class="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <div>
+                                <span class="text-slate-400 block font-medium">Nomor ISBN:</span>
+                                <span id="modalIsbn" class="font-mono font-bold text-slate-900"></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block font-medium">Tahun Terbit:</span>
+                                <span id="modalYear" class="font-bold text-slate-900"></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block font-medium">Jumlah Halaman:</span>
+                                <span id="modalPages" class="font-bold text-slate-900"></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 block font-medium">Format &amp; Jilid:</span>
+                                <span class="font-bold text-slate-900">UNESCO B5 (Bookpaper)</span>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Tabs (Sinopsis, Daftar Isi, Profil) -->
                         <div>
-                            <span class="text-slate-400 block font-medium">Tahun Terbit:</span>
-                            <span id="modalYear" class="font-bold text-slate-800"></span>
+                            <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
+                                <button type="button" onclick="switchModalTab('synopsis')" id="tabBtnSynopsis" class="text-xs font-bold text-brand-900 border-b-2 border-brand-900 pb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-align-left text-[10px]"></i> Sinopsis
+                                </button>
+                                <button type="button" onclick="switchModalTab('specs')" id="tabBtnSpecs" class="text-xs font-semibold text-slate-500 hover:text-slate-800 pb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-info text-[10px]"></i> Spesifikasi Cetak
+                                </button>
+                                <button type="button" onclick="switchModalTab('citation')" id="tabBtnCitation" class="text-xs font-semibold text-slate-500 hover:text-slate-800 pb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-quote-left text-[10px]"></i> Sitasi APA
+                                </button>
+                            </div>
+
+                            <!-- Tab 1: Synopsis -->
+                            <div id="tabContentSynopsis" class="pt-2.5">
+                                <p id="modalSynopsis" class="text-xs text-slate-600 leading-relaxed max-h-32 overflow-y-auto pr-1"></p>
+                            </div>
+
+                            <!-- Tab 2: Specs -->
+                            <div id="tabContentSpecs" class="hidden pt-2.5 space-y-1.5 text-xs text-slate-600">
+                                <div class="flex justify-between py-1 border-b border-slate-100">
+                                    <span class="text-slate-400">Penerbit:</span>
+                                    <span class="font-semibold text-slate-800">PERSIS PERS (IAI Persis Bandung)</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b border-slate-100">
+                                    <span class="text-slate-400">Jenis Kertas Isi:</span>
+                                    <span class="font-semibold text-slate-800">Bookpaper Premium 72 GSM</span>
+                                </div>
+                                <div class="flex justify-between py-1">
+                                    <span class="text-slate-400">Finishing Sampul:</span>
+                                    <span class="font-semibold text-slate-800">Art Carton 260gr, Doff + Spot UV</span>
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: Citation -->
+                            <div id="tabContentCitation" class="hidden pt-2.5">
+                                <div class="bg-slate-100 p-2.5 rounded-lg text-[11px] text-slate-700 font-mono relative">
+                                    <span id="modalCitationText"></span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 mt-1 block">Format rujukan baku APA 7th Edition untuk skripsi/tesis/jurnal.</span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="text-slate-400 block font-medium">Jumlah Halaman:</span>
-                            <span id="modalPages" class="font-bold text-slate-800"></span>
+
+                        <!-- Action Buttons Row -->
+                        <div class="pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <a id="modalWaBtn" href="#" target="_blank" class="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Pesan Buku via WA
+                            </a>
+                            <button type="button" onclick="alert('Sampel bab 1 & daftar isi PDF naskah siap diunduh!')" class="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-file-pdf text-red-600"></i> Unduh Sampel PDF
+                            </button>
                         </div>
-                        <div>
-                            <span class="text-slate-400 block font-medium">Harga Eksemplar:</span>
-                            <span id="modalPrice" class="font-black text-brand-900"></span>
-                        </div>
+
                     </div>
 
-                    <!-- Synopsis -->
-                    <div>
-                        <span class="text-[11px] font-bold text-slate-900 block mb-1">Sinopsis Ringkas:</span>
-                        <p id="modalSynopsis" class="text-xs text-slate-600 leading-relaxed max-h-28 overflow-y-auto"></p>
-                    </div>
-
-                    <!-- Order Action -->
-                    <div class="pt-1">
-                        <a id="modalWaBtn" href="#" target="_blank" class="w-full py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs">
-                            <i class="fa-brands fa-whatsapp"></i> Pesan Buku via WhatsApp
-                        </a>
-                    </div>
                 </div>
-
             </div>
 
         </div>
     </div>
 
-    <!-- Script for Modal Handling -->
+    <!-- Script for Modal Handling & Tab Switching -->
     <script>
         function openBookModal(book) {
             document.getElementById('modalTitle').innerText = book.title;
             document.getElementById('modalCoverTitle').innerText = book.title;
-            document.getElementById('modalAuthor').innerText = 'Penulis: ' + book.author;
+            document.getElementById('modalAuthorText').innerText = book.author;
             document.getElementById('modalCoverAuthor').innerText = book.author;
             document.getElementById('modalCategoryBadge').innerText = book.category;
             document.getElementById('modalIsbn').innerText = book.isbn;
@@ -430,18 +506,59 @@
             document.getElementById('modalPrice').innerText = book.price;
             document.getElementById('modalSynopsis').innerText = book.synopsis;
 
-            const waMsg = encodeURIComponent('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' + book.title + ' (' + book.isbn + ')');
+            // Generate APA Citation
+            const citation = book.author + '. (' + book.year + '). ' + book.title + '. Bandung: PERSIS PERS. ISBN: ' + book.isbn + '.';
+            document.getElementById('modalCitationText').innerText = citation;
+
+            const waMsg = encodeURIComponent('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' + book.title + ' (ISBN: ' + book.isbn + ')');
             document.getElementById('modalWaBtn').href = 'https://wa.me/6282116116133?text=' + waMsg;
+
+            switchModalTab('synopsis');
 
             const modal = document.getElementById('bookModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeBookModal() {
             const modal = document.getElementById('bookModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchModalTab(tab) {
+            const synopsisContent = document.getElementById('tabContentSynopsis');
+            const specsContent = document.getElementById('tabContentSpecs');
+            const citationContent = document.getElementById('tabContentCitation');
+
+            const synopsisBtn = document.getElementById('tabBtnSynopsis');
+            const specsBtn = document.getElementById('tabBtnSpecs');
+            const citationBtn = document.getElementById('tabBtnCitation');
+
+            const activeBtnClasses = ['text-brand-900', 'border-b-2', 'border-brand-900', 'font-bold'];
+            const inactiveBtnClasses = ['text-slate-500', 'font-semibold'];
+
+            [synopsisContent, specsContent, citationContent].forEach(c => c.classList.add('hidden'));
+            [synopsisBtn, specsBtn, citationBtn].forEach(b => {
+                b.classList.remove(...activeBtnClasses);
+                b.classList.add(...inactiveBtnClasses);
+            });
+
+            if (tab === 'synopsis') {
+                synopsisContent.classList.remove('hidden');
+                synopsisBtn.classList.add(...activeBtnClasses);
+                synopsisBtn.classList.remove(...inactiveBtnClasses);
+            } else if (tab === 'specs') {
+                specsContent.classList.remove('hidden');
+                specsBtn.classList.add(...activeBtnClasses);
+                specsBtn.classList.remove(...inactiveBtnClasses);
+            } else if (tab === 'citation') {
+                citationContent.classList.remove('hidden');
+                citationBtn.classList.add(...activeBtnClasses);
+                citationBtn.classList.remove(...inactiveBtnClasses);
+            }
         }
 
         document.getElementById('bookModal').addEventListener('click', function(e) {
