@@ -327,7 +327,7 @@
                             </div>
 
                             <!-- 3D Perspective Stage -->
-                            <div class="book-stage-3d w-44 sm:w-48 aspect-[3/4.15] mx-auto py-2">
+                            <div class="book-stage-3d w-44 sm:w-48 aspect-[3/4.15] mx-auto py-2 cursor-zoom-in group relative" onclick="openAdminLightbox()" title="Klik untuk Memperbesar Foto">
                                 <div id="modalBookMockup" class="book-hover-3d relative w-full h-full rounded-xs overflow-hidden shadow-md border border-slate-300 bg-slate-900 select-none">
                                     <div class="book-spine-strip"></div>
                                     <div class="book-paper-edge"></div>
@@ -557,6 +557,33 @@
         </div>
     </div>
 
+    
+    <!-- ULTRA-HIGH DEFINITION FULLSCREEN LIGHTBOX / ZOOM MODAL FOR ADMIN -->
+    <div id="adminLightboxModal" class="fixed inset-0 z-70 bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md" onclick="if(event.target.id==='adminLightboxModal') closeAdminLightbox()">
+        <button type="button" onclick="closeAdminLightbox()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-lg transition z-50">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <button type="button" onclick="prevAdminLightbox()" class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button type="button" onclick="nextAdminLightbox()" class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center select-none animate-fade-in-up">
+            <div class="relative rounded-sm overflow-hidden shadow-2xl border border-white/20 bg-slate-900 max-h-[75vh] aspect-[3/4.15]">
+                <img id="adminLightboxImage" src="" alt="Zoomed Cover" class="w-full h-full object-contain" />
+            </div>
+            <div class="mt-4 text-center">
+                <span id="adminLightboxLabel" class="inline-block px-3 py-1 rounded-full bg-white/15 text-emerald-300 text-xs font-bold font-mono tracking-wider mb-1">
+                    SAMPUL BUKU
+                </span>
+                <h4 id="adminLightboxTitle" class="text-white text-sm font-bold truncate max-w-xl">
+                    Pratinjau Foto Naskah
+                </h4>
+            </div>
+        </div>
+    </div>
+    
     <!-- JS Logic -->
     <script>
         let currentPhotoObj = { cover: null, back: null, inside1: null, inside2: null };
@@ -564,6 +591,41 @@
         let cropper = null;
         let activeCropKey = null;
 
+        
+        const tabKeys = ['cover', 'back', 'inside1', 'inside2'];
+        const tabLabels = { cover: 'Sampul Depan', back: 'Sampul Belakang', inside1: 'Halaman Isi 1', inside2: 'Halaman Isi 2' };
+
+        function openAdminLightbox() {
+            const url = currentPhotoObj[activeTab];
+            if (!url) return;
+            document.getElementById('adminLightboxImage').src = url;
+            document.getElementById('adminLightboxLabel').innerText = tabLabels[activeTab].toUpperCase();
+            document.getElementById('adminLightboxTitle').innerText = document.getElementById('in_title').value || 'Pratinjau Naskah';
+            const modal = document.getElementById('adminLightboxModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeAdminLightbox() {
+            const modal = document.getElementById('adminLightboxModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function prevAdminLightbox() {
+            let idx = tabKeys.indexOf(activeTab);
+            idx = (idx - 1 + tabKeys.length) % tabKeys.length;
+            switchVisualizerTab(tabKeys[idx]);
+            openAdminLightbox();
+        }
+
+        function nextAdminLightbox() {
+            let idx = tabKeys.indexOf(activeTab);
+            idx = (idx + 1) % tabKeys.length;
+            switchVisualizerTab(tabKeys[idx]);
+            openAdminLightbox();
+        }
+    
         function openCreateModal() {
             document.getElementById('bookForm').action = "{{ route('admin.books.store') }}";
             document.getElementById('formMethod').value = 'POST';

@@ -21,7 +21,7 @@
             box-shadow: 0 16px 30px -8px rgba(4, 120, 87, 0.15), 0 2px 6px rgba(0,0,0,0.04);
         }
 
-        /* 2. 3D Perspective Hover Tilt on Grid Cards (Identical to Modal Animation) */
+        /* 2. 3D Perspective Hover Tilt on Grid Cards */
         .book-cover-stage-3d {
             perspective: 800px;
         }
@@ -91,6 +91,15 @@
                 opacity: 1;
                 transform: scale(1) translateY(0);
             }
+        }
+
+        /* Zoom Lightbox Pop-In */
+        .lightbox-zoom-in {
+            animation: lightboxZoom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes lightboxZoom {
+            0% { opacity: 0; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         /* Category Nav */
@@ -571,7 +580,7 @@
         </div>
     </section>
 
-    <!-- MODAL DETAIL BUKU PUBLIK (WITH 3D PERSPECTIVE HOVER TILT & SMOOTH MULTI-PHOTO ANIMATION) -->
+    <!-- MODAL DETAIL BUKU PUBLIK (WITH CLICK-TO-ZOOM / FULLSCREEN LIGHTBOX) -->
     <div id="publicBookModal" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
         <div class="bg-white rounded-sm max-w-4xl w-full shadow-2xl border border-slate-300 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-fade-in-up">
             
@@ -590,17 +599,23 @@
             <div class="p-5 sm:p-6 overflow-y-auto">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: 3D Interactive Showcase Visualizer -->
+                    <!-- Left: 3D Interactive Showcase Visualizer (Click to Zoom Lightbox) -->
                     <div class="md:col-span-5 flex flex-col items-center bg-slate-50 p-4 rounded-sm border border-slate-200 space-y-4">
                         
-                        <!-- 3D Perspective Stage -->
-                        <div id="modalStage" class="modal-book-stage w-44 sm:w-52 aspect-[3/4.15] flex items-center justify-center py-2">
+                        <!-- 3D Perspective Stage with Click to Zoom Banner -->
+                        <div id="modalStage" class="modal-book-stage w-44 sm:w-52 aspect-[3/4.15] flex items-center justify-center py-2 cursor-zoom-in group relative" onclick="openLightboxModal()" title="Klik untuk Memperbesar / Fullscreen">
+                            
                             <div id="modalBookVisualizer" class="modal-book-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 select-none border border-slate-300">
                                 
-                                <!-- Realistic Book Spine & Paper Edge Simulation -->
                                 <div class="book-spine-strip"></div>
                                 <div class="book-paper-edge"></div>
                                 <div class="modal-shine-layer absolute inset-0 pointer-events-none z-10"></div>
+
+                                <!-- Zoom Hint Overlay -->
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-200 z-20 flex flex-col items-center justify-center text-white p-2 text-center pointer-events-none">
+                                    <i class="fa-solid fa-magnifying-glass-plus text-2xl mb-1 text-emerald-300 animate-bounce"></i>
+                                    <span class="text-[10px] font-bold tracking-wide uppercase bg-black/60 px-2 py-0.5 rounded-sm">Klik Perbesar</span>
+                                </div>
 
                                 <!-- Photo Image Container -->
                                 <img id="modalMainImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden showcase-fade-slide" />
@@ -717,14 +732,53 @@
         </div>
     </div>
 
+    <!-- 5. ULTRA-HIGH DEFINITION FULLSCREEN LIGHTBOX / ZOOM MODAL -->
+    <div id="bookLightboxModal" class="fixed inset-0 z-60 bg-black/90 hidden items-center justify-center p-4 backdrop-blur-md" onclick="handleLightboxBackdropClick(event)">
+        
+        <!-- Close Button -->
+        <button type="button" onclick="closeLightboxModal()" class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-lg transition z-50">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <!-- Previous Arrow -->
+        <button type="button" onclick="prevLightboxPhoto()" class="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Next Arrow -->
+        <button type="button" onclick="nextLightboxPhoto()" class="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center text-xl transition z-50">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- Lightbox Zoom Image Stage -->
+        <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center select-none lightbox-zoom-in">
+            <div class="relative rounded-sm overflow-hidden shadow-2xl border border-white/20 bg-slate-900 max-h-[75vh] aspect-[3/4.15]">
+                <img id="lightboxImage" src="" alt="Zoomed Book" class="w-full h-full object-contain" />
+            </div>
+            
+            <!-- Caption Bottom -->
+            <div class="mt-4 text-center">
+                <span id="lightboxLabel" class="inline-block px-3 py-1 rounded-full bg-white/15 text-emerald-300 text-xs font-bold font-mono tracking-wider mb-1">
+                    SAMPUL DEPAN
+                </span>
+                <h4 id="lightboxTitle" class="text-white text-sm font-bold truncate max-w-xl">
+                    Judul Buku
+                </h4>
+            </div>
+        </div>
+
+    </div>
+
     <!-- Public Catalog JS -->
     <script>
         let currentModalBook = null;
         let currentModalPhotos = [];
+        let currentPhotoIndex = 0;
 
         function openBookModal(book) {
             currentModalBook = book;
             currentModalPhotos = [];
+            currentPhotoIndex = 0;
 
             document.getElementById('modalTitle').innerText = book.title;
             document.getElementById('modalAuthor').innerText = book.author;
@@ -765,10 +819,10 @@
                 pdfBtn.classList.add('hidden');
             }
 
-            if (book.cover_image) currentModalPhotos.push({ label: 'Depan', url: '/storage/' + book.cover_image, type: 'cover' });
-            if (book.back_cover_image) currentModalPhotos.push({ label: 'Belakang', url: '/storage/' + book.back_cover_image, type: 'back' });
-            if (book.inside_preview_image) currentModalPhotos.push({ label: 'Isi 1', url: '/storage/' + book.inside_preview_image, type: 'inside' });
-            if (book.additional_image) currentModalPhotos.push({ label: 'Isi 2', url: '/storage/' + book.additional_image, type: 'inside2' });
+            if (book.cover_image) currentModalPhotos.push({ label: 'Depan', url: resolveBookImgUrl(book.cover_image), type: 'cover' });
+            if (book.back_cover_image) currentModalPhotos.push({ label: 'Belakang', url: resolveBookImgUrl(book.back_cover_image), type: 'back' });
+            if (book.inside_preview_image) currentModalPhotos.push({ label: 'Isi 1', url: resolveBookImgUrl(book.inside_preview_image), type: 'inside' });
+            if (book.additional_image) currentModalPhotos.push({ label: 'Isi 2', url: resolveBookImgUrl(book.additional_image), type: 'inside2' });
 
             if (currentModalPhotos.length === 0) {
                 currentModalPhotos = [
@@ -800,7 +854,14 @@
             modal.classList.add('flex');
         }
 
+        function resolveBookImgUrl(path) {
+            if (!path) return null;
+            if (path.startsWith('http') || path.startsWith('/')) return path;
+            return '/storage/' + path;
+        }
+
         function switchModalPhoto(index) {
+            currentPhotoIndex = index;
             const photo = currentModalPhotos[index];
             if (!photo) return;
 
@@ -823,7 +884,7 @@
                 imgEl.src = photo.url;
                 imgEl.classList.remove('hidden');
                 imgEl.classList.remove('showcase-fade-slide');
-                void imgEl.offsetWidth; // trigger reflow
+                void imgEl.offsetWidth; // reflow
                 imgEl.classList.add('showcase-fade-slide');
             } else {
                 if (photo.type === 'cover' || photo.type === 'back') {
@@ -845,6 +906,61 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
+
+        // ==========================================
+        // LIGHTBOX / FULLSCREEN ZOOM FUNCTIONALITY
+        // ==========================================
+        function openLightboxModal() {
+            const photo = currentModalPhotos[currentPhotoIndex];
+            if (!photo || !photo.url) return;
+
+            document.getElementById('lightboxImage').src = photo.url;
+            document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
+            document.getElementById('lightboxTitle').innerText = currentModalBook ? currentModalBook.title : 'Pratinjau Naskah';
+
+            const lightbox = document.getElementById('bookLightboxModal');
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+        }
+
+        function closeLightboxModal() {
+            const lightbox = document.getElementById('bookLightboxModal');
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+        }
+
+        function prevLightboxPhoto() {
+            if (currentModalPhotos.length <= 1) return;
+            currentPhotoIndex = (currentPhotoIndex - 1 + currentModalPhotos.length) % currentModalPhotos.length;
+            switchModalPhoto(currentPhotoIndex);
+            openLightboxModal();
+        }
+
+        function nextLightboxPhoto() {
+            if (currentModalPhotos.length <= 1) return;
+            currentPhotoIndex = (currentPhotoIndex + 1) % currentModalPhotos.length;
+            switchModalPhoto(currentPhotoIndex);
+            openLightboxModal();
+        }
+
+        function handleLightboxBackdropClick(e) {
+            if (e.target.id === 'bookLightboxModal') {
+                closeLightboxModal();
+            }
+        }
+
+        // Escape Key Listener for Lightbox & Modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightboxModal();
+            } else if (e.key === 'ArrowLeft') {
+                const lightbox = document.getElementById('bookLightboxModal');
+                if (!lightbox.classList.contains('hidden')) prevLightboxPhoto();
+            } else if (e.key === 'ArrowRight') {
+                const lightbox = document.getElementById('bookLightboxModal');
+                if (!lightbox.classList.contains('hidden')) nextLightboxPhoto();
+            }
+        });
 
         document.getElementById('publicBookModal').addEventListener('click', function(e) {
             if (e.target === this) {
