@@ -4,13 +4,13 @@
 
 @section('content')
     <!-- Flat Header Banner -->
-    <section class="bg-[#032c21] text-white py-8 sm:py-10 border-b border-[#064e3b]">
+    <section class="bg-[#032c21] text-white py-7 sm:py-10 border-b border-[#064e3b]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
                 <div>
-                    <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">PUBLIKASI RESMI KAMPUS</span>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight">Katalog Buku &amp; Karya Ilmiah</h1>
-                    <p class="text-xs sm:text-sm text-slate-300 mt-1.5 max-w-2xl leading-relaxed">
+                    <span class="text-[10px] sm:text-[11px] font-bold text-emerald-400 uppercase tracking-widest block mb-1">PUBLIKASI RESMI KAMPUS</span>
+                    <h1 class="text-xl sm:text-3xl font-extrabold font-heading tracking-tight">Katalog Buku &amp; Karya Ilmiah</h1>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
                         Koleksi buku ajar perguruan tinggi, monograf riset dosen, dan literatur keislaman ber-ISBN resmi terbitan PERSIS PERS.
                     </p>
                 </div>
@@ -25,54 +25,54 @@
         </div>
     </section>
 
-    <!-- 4 Flat Quick Highlight Cards -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <!-- 4 Flat Quick Highlight Cards (1-Col on Mobile, 2-Col on Tablet, 4-Col on Desktop) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-5 sm:-mt-6 relative z-20">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             <!-- Card 1 -->
-            <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-3">
-                <div class="w-8 h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-book-bookmark text-xs"></i>
+            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
+                    <i class="fa-solid fa-book-bookmark text-[10px] sm:text-xs"></i>
                 </div>
-                <div>
-                    <span class="text-[11px] font-bold text-slate-900 uppercase tracking-wider block">150+ Judul Buku</span>
-                    <span class="text-[11px] text-slate-500 block">Terbitan Resmi Kampus</span>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">150+ Judul</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Terbitan Resmi</span>
                 </div>
             </div>
             <!-- Card 2 -->
-            <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-3">
-                <div class="w-8 h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-graduation-cap text-xs"></i>
+            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
+                    <i class="fa-solid fa-graduation-cap text-[10px] sm:text-xs"></i>
                 </div>
-                <div>
-                    <span class="text-[11px] font-bold text-slate-900 uppercase tracking-wider block">Karya Dosen &amp; Peneliti</span>
-                    <span class="text-[11px] text-slate-500 block">Buku Ajar &amp; Monograf</span>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">Karya Dosen</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Buku Ajar &amp; Riset</span>
                 </div>
             </div>
             <!-- Card 3 -->
-            <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-3">
-                <div class="w-8 h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-barcode text-xs"></i>
+            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
+                    <i class="fa-solid fa-barcode text-[10px] sm:text-xs"></i>
                 </div>
-                <div>
-                    <span class="text-[11px] font-bold text-slate-900 uppercase tracking-wider block">ISBN Perpusnas</span>
-                    <span class="text-[11px] text-slate-500 block">Legalitas Nasional Resmi</span>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">ISBN Perpusnas</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Legalitas Resmi</span>
                 </div>
             </div>
             <!-- Card 4 -->
-            <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-3">
-                <div class="w-8 h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-sm shrink-0 border border-emerald-100">
-                    <i class="fa-solid fa-print text-xs"></i>
+            <div class="bg-white p-2.5 sm:p-3.5 rounded-sm border border-slate-200 shadow-xs flex items-center gap-2.5 sm:gap-3">
+                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xs sm:text-sm shrink-0 border border-emerald-100">
+                    <i class="fa-solid fa-print text-[10px] sm:text-xs"></i>
                 </div>
-                <div>
-                    <span class="text-[11px] font-bold text-slate-900 uppercase tracking-wider block">Cetak Berkualitas</span>
-                    <span class="text-[11px] text-slate-500 block">Standar UNESCO</span>
+                <div class="min-w-0">
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 uppercase tracking-wider block truncate">Mutu Prima</span>
+                    <span class="text-[9px] sm:text-[11px] text-slate-500 block truncate">Standar UNESCO</span>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Main Catalog Body -->
-    <section class="py-8 bg-slate-50 min-h-screen">
+    <section class="py-6 sm:py-8 bg-slate-50 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                 
@@ -90,11 +90,11 @@
                         <div class="p-1 divide-y divide-slate-100 text-xs">
                             @foreach($categories as $cat)
                                 <button type="button" class="w-full flex items-center justify-between px-3 py-2 rounded-xs font-medium text-slate-700 hover:bg-slate-100 hover:text-[#006830] transition text-left group {{ $cat['slug'] === 'all' ? 'bg-emerald-50 text-[#006830] font-bold' : '' }}">
-                                    <span class="flex items-center gap-1.5">
-                                        <i class="fa-solid fa-angle-right text-[9px] text-slate-400 group-hover:text-[#006830]"></i>
-                                        {{ $cat['name'] }}
+                                    <span class="flex items-center gap-1.5 truncate">
+                                        <i class="fa-solid fa-angle-right text-[9px] text-slate-400 group-hover:text-[#006830] shrink-0"></i>
+                                        <span class="truncate">{{ $cat['name'] }}</span>
                                     </span>
-                                    <span class="text-[10px] font-bold text-slate-400 group-hover:text-[#006830] bg-slate-100 px-1.5 py-0.5 rounded-xs">
+                                    <span class="text-[10px] font-bold text-slate-400 group-hover:text-[#006830] bg-slate-100 px-1.5 py-0.5 rounded-xs shrink-0 ml-1">
                                         {{ $cat['count'] }}
                                     </span>
                                 </button>
@@ -173,58 +173,58 @@
                     <div class="space-y-3">
                         <!-- Solid Header Bar -->
                         <div class="bg-[#006830] px-4 py-2 rounded-sm text-white flex items-center justify-between shadow-xs">
-                            <h2 class="font-extrabold text-sm font-heading tracking-wide uppercase flex items-center gap-2">
+                            <h2 class="font-extrabold text-xs sm:text-sm font-heading tracking-wide uppercase flex items-center gap-2">
                                 <i class="fa-solid fa-book-bookmark text-xs text-emerald-300"></i> Buku Terbitan Baru
                             </h2>
-                            <span class="text-[11px] text-emerald-100 font-semibold cursor-pointer hover:text-white transition flex items-center gap-1">
+                            <span class="text-[10px] sm:text-[11px] text-emerald-100 font-semibold cursor-pointer hover:text-white transition flex items-center gap-1">
                                 Koleksi 2026 <i class="fa-solid fa-angle-right text-[10px]"></i>
                             </span>
                         </div>
 
-                        <!-- Grid 4 Kolom Buku Baru (Real Academic Book Cover Style) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+                        <!-- Grid 2-Kolom di HP, 4-Kolom di Desktop -->
+                        <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-3.5">
                             @foreach($newBooks as $book)
-                                <div class="bg-white rounded-sm border border-slate-200 shadow-xs hover:border-[#006830] transition flex flex-col justify-between p-3">
+                                <div class="bg-white rounded-sm border border-slate-200 shadow-xs hover:border-[#006830] transition flex flex-col justify-between p-2.5 sm:p-3">
                                     
                                     <div>
-                                        <!-- Realistic Academic Book Cover (Standard 3:4 Aspect Ratio, White Page Edges, Embossed Spine) -->
-                                        <div class="relative aspect-[3/4.1] rounded-xs bg-[#064e3b] text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400 border-r-2 border-r-slate-200 shadow-sm overflow-hidden select-none">
-                                            <!-- Top Header on Cover -->
-                                            <div class="flex items-center justify-between border-b border-white/20 pb-1.5">
-                                                <span class="text-[8px] font-extrabold uppercase bg-black/40 text-emerald-300 px-1 py-0.5 rounded-xs">
+                                        <!-- Realistic Academic Book Cover -->
+                                        <div class="relative aspect-[3/4.1] rounded-xs bg-[#064e3b] text-white p-2.5 sm:p-3 flex flex-col justify-between border-l-4 border-emerald-400 border-r-2 border-r-slate-200 shadow-sm overflow-hidden select-none">
+                                            <!-- Top Header -->
+                                            <div class="flex items-center justify-between border-b border-white/20 pb-1">
+                                                <span class="text-[7.5px] sm:text-[8px] font-extrabold uppercase bg-black/40 text-emerald-300 px-1 py-0.5 rounded-xs">
                                                     {{ $book['category'] }}
                                                 </span>
-                                                <span class="text-[8px] text-slate-300 font-mono">
+                                                <span class="text-[7.5px] sm:text-[8px] text-slate-300 font-mono">
                                                     {{ $book['year'] }}
                                                 </span>
                                             </div>
 
-                                            <!-- Center Title on Cover -->
-                                            <div class="my-auto py-2 text-center">
-                                                <div class="w-6 h-0.5 bg-amber-400 mx-auto mb-2"></div>
-                                                <h3 class="font-black text-xs sm:text-[13px] text-white leading-tight font-heading line-clamp-3">
+                                            <!-- Center Title -->
+                                            <div class="my-auto py-1 sm:py-2 text-center">
+                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mb-1 sm:mb-2"></div>
+                                                <h3 class="font-black text-[11px] sm:text-[13px] text-white leading-tight font-heading line-clamp-3">
                                                     {{ $book['title'] }}
                                                 </h3>
-                                                <div class="w-6 h-0.5 bg-amber-400 mx-auto mt-2"></div>
+                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mt-1 sm:mt-2"></div>
                                             </div>
 
-                                            <!-- Bottom Author & Publisher on Cover -->
-                                            <div class="pt-1.5 border-t border-white/20 text-center">
-                                                <span class="text-[9.5px] font-bold text-slate-100 line-clamp-1 block">
+                                            <!-- Footer Author -->
+                                            <div class="pt-1 border-t border-white/20 text-center">
+                                                <span class="text-[8.5px] sm:text-[9.5px] font-bold text-slate-100 line-clamp-1 block">
                                                     {{ $book['author'] }}
                                                 </span>
-                                                <span class="text-[7.5px] font-mono text-emerald-300 block mt-0.5 uppercase tracking-wider">
-                                                    PERSIS PERS • ISBN {{ $book['isbn'] }}
+                                                <span class="text-[7px] sm:text-[7.5px] font-mono text-emerald-300 block mt-0.5 uppercase tracking-wider truncate">
+                                                    ISBN {{ $book['isbn'] }}
                                                 </span>
                                             </div>
                                         </div>
 
                                         <!-- Meta Info Below Cover -->
-                                        <div class="mt-2.5 space-y-0.5">
-                                            <h4 class="font-bold text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2.25rem] flex items-center">
+                                        <div class="mt-2 space-y-0.5">
+                                            <h4 class="font-bold text-[11px] sm:text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2rem] sm:min-h-[2.25rem] flex items-center">
                                                 {{ $book['title'] }}
                                             </h4>
-                                            <p class="text-[11px] text-slate-500 line-clamp-1">
+                                            <p class="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
                                                 {{ $book['author'] }}
                                             </p>
                                         </div>
@@ -232,16 +232,16 @@
 
                                     <!-- Price & Actions Bar -->
                                     <div>
-                                        <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex items-baseline justify-between">
-                                            <span class="text-[10px] text-slate-500 font-medium">Harga Cetak:</span>
-                                            <span class="text-xs font-black text-slate-900 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
+                                        <div class="mt-2 pt-2 border-t border-slate-100 flex items-baseline justify-between">
+                                            <span class="text-[9px] sm:text-[10px] text-slate-500 font-medium">Harga Cetak:</span>
+                                            <span class="text-[11px] sm:text-xs font-black text-slate-900 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
                                         </div>
 
-                                        <div class="mt-2 grid grid-cols-2 gap-1.5">
-                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1.5 px-2 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold text-center transition flex items-center justify-center gap-1">
-                                                <i class="fa-solid fa-eye text-[10px] text-slate-500"></i> Detail
+                                        <div class="mt-1.5 grid grid-cols-2 gap-1">
+                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1">
+                                                <i class="fa-solid fa-eye text-[9px] text-slate-500"></i> Detail
                                             </button>
-                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1.5 px-2 rounded-sm bg-[#006830] hover:bg-[#005226] text-white text-[11px] font-bold text-center transition flex items-center justify-center gap-1 shadow-xs">
+                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-[#006830] hover:bg-[#005226] text-white text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1 shadow-xs">
                                                 <i class="fa-brands fa-whatsapp text-xs"></i> Pesan
                                             </a>
                                         </div>
@@ -256,58 +256,58 @@
                     <div class="space-y-3 pt-2">
                         <!-- Solid Header Bar -->
                         <div class="bg-[#b45309] px-4 py-2 rounded-sm text-white flex items-center justify-between shadow-xs">
-                            <h2 class="font-extrabold text-sm font-heading tracking-wide uppercase flex items-center gap-2">
+                            <h2 class="font-extrabold text-xs sm:text-sm font-heading tracking-wide uppercase flex items-center gap-2">
                                 <i class="fa-solid fa-trophy text-xs text-amber-200"></i> Koleksi Best Seller
                             </h2>
-                            <span class="text-[11px] text-amber-100 font-semibold cursor-pointer hover:text-white transition flex items-center gap-1">
+                            <span class="text-[10px] sm:text-[11px] text-amber-100 font-semibold cursor-pointer hover:text-white transition flex items-center gap-1">
                                 Paling Banyak Dirujuk <i class="fa-solid fa-angle-right text-[10px]"></i>
                             </span>
                         </div>
 
-                        <!-- Grid 4 Kolom Best Seller (Prestigious Heritage Book Cover) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+                        <!-- Grid 2-Kolom di HP, 4-Kolom di Desktop -->
+                        <div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-3.5">
                             @foreach($bestSellers as $book)
-                                <div class="bg-white rounded-sm border border-slate-200 shadow-xs hover:border-amber-600 transition flex flex-col justify-between p-3">
+                                <div class="bg-white rounded-sm border border-slate-200 shadow-xs hover:border-amber-600 transition flex flex-col justify-between p-2.5 sm:p-3">
                                     
                                     <div>
                                         <!-- Realistic Heritage Academic Cover -->
-                                        <div class="relative aspect-[3/4.1] rounded-xs bg-[#032c21] text-white p-3 flex flex-col justify-between border-l-4 border-amber-500 border-r-2 border-r-slate-200 shadow-sm overflow-hidden select-none">
-                                            <!-- Top Category Tag -->
-                                            <div class="flex items-center justify-between border-b border-amber-500/30 pb-1.5">
-                                                <span class="text-[8px] font-extrabold uppercase bg-black/40 text-amber-300 px-1 py-0.5 rounded-xs">
+                                        <div class="relative aspect-[3/4.1] rounded-xs bg-[#032c21] text-white p-2.5 sm:p-3 flex flex-col justify-between border-l-4 border-amber-500 border-r-2 border-r-slate-200 shadow-sm overflow-hidden select-none">
+                                            <!-- Top Header -->
+                                            <div class="flex items-center justify-between border-b border-amber-500/30 pb-1">
+                                                <span class="text-[7.5px] sm:text-[8px] font-extrabold uppercase bg-black/40 text-amber-300 px-1 py-0.5 rounded-xs">
                                                     {{ $book['category'] }}
                                                 </span>
-                                                <span class="text-[8px] text-amber-300 font-bold flex items-center gap-0.5">
+                                                <span class="text-[7.5px] sm:text-[8px] text-amber-300 font-bold flex items-center gap-0.5">
                                                     <i class="fa-solid fa-star text-[7px]"></i> Top
                                                 </span>
                                             </div>
 
                                             <!-- Center Title -->
-                                            <div class="my-auto py-2 text-center">
-                                                <div class="w-6 h-0.5 bg-amber-400 mx-auto mb-2"></div>
-                                                <h3 class="font-black text-xs sm:text-[13px] text-white leading-tight font-heading line-clamp-3">
+                                            <div class="my-auto py-1 sm:py-2 text-center">
+                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mb-1 sm:mb-2"></div>
+                                                <h3 class="font-black text-[11px] sm:text-[13px] text-white leading-tight font-heading line-clamp-3">
                                                     {{ $book['title'] }}
                                                 </h3>
-                                                <div class="w-6 h-0.5 bg-amber-400 mx-auto mt-2"></div>
+                                                <div class="w-4 sm:w-6 h-0.5 bg-amber-400 mx-auto mt-1 sm:mt-2"></div>
                                             </div>
 
-                                            <!-- Footer Author & Publisher -->
-                                            <div class="pt-1.5 border-t border-amber-500/30 text-center">
-                                                <span class="text-[9.5px] font-bold text-slate-100 line-clamp-1 block">
+                                            <!-- Footer Author -->
+                                            <div class="pt-1 border-t border-amber-500/30 text-center">
+                                                <span class="text-[8.5px] sm:text-[9.5px] font-bold text-slate-100 line-clamp-1 block">
                                                     {{ $book['author'] }}
                                                 </span>
-                                                <span class="text-[7.5px] font-mono text-amber-300 block mt-0.5 uppercase tracking-wider">
-                                                    PERSIS PERS • ISBN {{ $book['isbn'] }}
+                                                <span class="text-[7px] sm:text-[7.5px] font-mono text-amber-300 block mt-0.5 uppercase tracking-wider truncate">
+                                                    ISBN {{ $book['isbn'] }}
                                                 </span>
                                             </div>
                                         </div>
 
                                         <!-- Meta Info Below Cover -->
-                                        <div class="mt-2.5 space-y-0.5">
-                                            <h4 class="font-bold text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2.25rem] flex items-center">
+                                        <div class="mt-2 space-y-0.5">
+                                            <h4 class="font-bold text-[11px] sm:text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2rem] sm:min-h-[2.25rem] flex items-center">
                                                 {{ $book['title'] }}
                                             </h4>
-                                            <p class="text-[11px] text-slate-500 line-clamp-1">
+                                            <p class="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1">
                                                 {{ $book['author'] }}
                                             </p>
                                         </div>
@@ -315,16 +315,16 @@
 
                                     <!-- Price & Actions Bar -->
                                     <div>
-                                        <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex items-baseline justify-between">
-                                            <span class="text-[10px] text-slate-500 font-medium">Harga Cetak:</span>
-                                            <span class="text-xs font-black text-amber-900 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
+                                        <div class="mt-2 pt-2 border-t border-slate-100 flex items-baseline justify-between">
+                                            <span class="text-[9px] sm:text-[10px] text-slate-500 font-medium">Harga Cetak:</span>
+                                            <span class="text-[11px] sm:text-xs font-black text-amber-900 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
                                         </div>
 
-                                        <div class="mt-2 grid grid-cols-2 gap-1.5">
-                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1.5 px-2 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold text-center transition flex items-center justify-center gap-1">
-                                                <i class="fa-solid fa-eye text-[10px] text-slate-500"></i> Detail
+                                        <div class="mt-1.5 grid grid-cols-2 gap-1">
+                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1">
+                                                <i class="fa-solid fa-eye text-[9px] text-slate-500"></i> Detail
                                             </button>
-                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1.5 px-2 rounded-sm bg-[#006830] hover:bg-[#005226] text-white text-[11px] font-bold text-center transition flex items-center justify-center gap-1 shadow-xs">
+                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1 sm:py-1.5 px-1 rounded-sm bg-[#006830] hover:bg-[#005226] text-white text-[10px] sm:text-[11px] font-bold text-center transition flex items-center justify-center gap-1 shadow-xs">
                                                 <i class="fa-brands fa-whatsapp text-xs"></i> Pesan
                                             </a>
                                         </div>
@@ -351,12 +351,12 @@
         </div>
     </section>
 
-    <!-- Modal Quick-View Detail Buku (Sharp Rectangles, Standard Book Showcase) -->
+    <!-- Modal Quick-View Detail Buku (Zero Layout Shift, 100% Mobile Responsive) -->
     <div id="bookModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-sm max-w-2xl w-full shadow-2xl border border-slate-300 overflow-hidden relative animate-fade-in-up my-6">
+        <div class="bg-white rounded-sm max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-300 overflow-hidden relative animate-fade-in-up my-auto">
             
-            <!-- Modal Header -->
-            <div class="bg-[#032c21] text-white px-5 py-3 flex items-center justify-between border-b border-[#064e3b]">
+            <!-- Modal Header (Fixed at top) -->
+            <div class="bg-[#032c21] text-white px-4 sm:px-5 py-3 flex items-center justify-between border-b border-[#064e3b] shrink-0">
                 <div class="flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Spesifikasi &amp; Detail Terbitan Resmi</span>
@@ -366,32 +366,33 @@
                 </button>
             </div>
 
-            <div class="p-5 sm:p-6">
-                <div class="grid grid-cols-1 sm:grid-cols-12 gap-5 items-start">
+            <!-- Modal Scrollable Content -->
+            <div class="p-4 sm:p-6 overflow-y-auto">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-5 items-start">
                     
                     <!-- Left: Standard Book Cover -->
                     <div class="sm:col-span-5 flex flex-col items-center">
-                        <div class="relative w-full aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-3.5 flex flex-col justify-between border-l-4 border-[#006830] border-r-2 border-r-slate-300 shadow-md">
+                        <div class="relative w-36 sm:w-full aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-3 sm:p-3.5 flex flex-col justify-between border-l-4 border-[#006830] border-r-2 border-r-slate-300 shadow-md">
                             <div class="flex justify-between items-center border-b border-white/20 pb-1">
-                                <span id="modalCategoryBadge" class="text-[8.5px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300"></span>
-                                <span class="text-[8.5px] text-slate-300 font-mono">PERSIS PERS</span>
+                                <span id="modalCategoryBadge" class="text-[8px] sm:text-[8.5px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300"></span>
+                                <span class="text-[8px] sm:text-[8.5px] text-slate-300 font-mono">PERSIS PERS</span>
                             </div>
 
                             <div class="text-center my-auto py-2">
-                                <div class="w-5 h-0.5 bg-amber-400 mx-auto mb-1.5"></div>
-                                <h4 id="modalCoverTitle" class="font-black text-xs text-white leading-snug font-heading"></h4>
-                                <div class="w-5 h-0.5 bg-amber-400 mx-auto mt-1.5"></div>
+                                <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mb-1.5"></div>
+                                <h4 id="modalCoverTitle" class="font-black text-[11px] sm:text-xs text-white leading-snug font-heading"></h4>
+                                <div class="w-4 sm:w-5 h-0.5 bg-amber-400 mx-auto mt-1.5"></div>
                             </div>
 
-                            <div class="pt-1.5 border-t border-white/20 text-center">
-                                <span id="modalCoverAuthor" class="text-[9.5px] text-slate-200 block font-medium"></span>
+                            <div class="pt-1 border-t border-white/20 text-center">
+                                <span id="modalCoverAuthor" class="text-[8.5px] sm:text-[9.5px] text-slate-200 block font-medium"></span>
                             </div>
                         </div>
 
                         <!-- Price Box -->
-                        <div class="mt-3 w-full bg-slate-50 border border-slate-200 rounded-sm p-2 text-center">
+                        <div class="mt-2.5 sm:mt-3 w-36 sm:w-full bg-slate-50 border border-slate-200 rounded-sm p-2 text-center">
                             <span class="text-[9px] text-slate-500 font-medium block">Harga Cetak Resmi:</span>
-                            <span id="modalPrice" class="text-base font-black text-[#006830] font-heading"></span>
+                            <span id="modalPrice" class="text-sm sm:text-base font-black text-[#006830] font-heading"></span>
                         </div>
                     </div>
 
@@ -399,10 +400,10 @@
                     <div class="sm:col-span-7 space-y-3">
                         <div>
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-xs">
+                                <span class="text-[8.5px] sm:text-[9px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-xs">
                                     <i class="fa-solid fa-circle-check text-[8px]"></i> ISBN Terverifikasi
                                 </span>
-                                <span class="text-[9px] text-slate-400">Katalog Dalam Terbitan (KDT)</span>
+                                <span class="text-[8.5px] sm:text-[9px] text-slate-400">Katalog Dalam Terbitan (KDT)</span>
                             </div>
                             <h3 id="modalTitle" class="text-sm sm:text-base font-extrabold text-slate-900 font-heading leading-tight"></h3>
                             <p id="modalAuthor" class="text-xs font-semibold text-[#006830] mt-0.5 flex items-center gap-1">
@@ -411,28 +412,28 @@
                         </div>
 
                         <!-- Technical Specs Grid -->
-                        <div class="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 p-2.5 rounded-sm border border-slate-200">
+                        <div class="grid grid-cols-2 gap-2 text-[10.5px] sm:text-[11px] bg-slate-50 p-2.5 rounded-sm border border-slate-200">
                             <div>
-                                <span class="text-slate-400 block text-[10px]">Nomor ISBN:</span>
+                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Nomor ISBN:</span>
                                 <span id="modalIsbn" class="font-mono font-bold text-slate-900"></span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block text-[10px]">Tahun Terbit:</span>
+                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Tahun Terbit:</span>
                                 <span id="modalYear" class="font-bold text-slate-900"></span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block text-[10px]">Jumlah Halaman:</span>
+                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Jumlah Halaman:</span>
                                 <span id="modalPages" class="font-bold text-slate-900"></span>
                             </div>
                             <div>
-                                <span class="text-slate-400 block text-[10px]">Format Cetak:</span>
+                                <span class="text-slate-400 block text-[9.5px] sm:text-[10px]">Format Cetak:</span>
                                 <span class="font-bold text-slate-900">UNESCO B5 (Bookpaper)</span>
                             </div>
                         </div>
 
                         <!-- Tabs -->
                         <div>
-                            <div class="flex items-center gap-3 border-b border-slate-200 pb-1.5 text-xs">
+                            <div class="flex items-center gap-3 border-b border-slate-200 pb-1 text-xs">
                                 <button type="button" onclick="switchModalTab('synopsis')" id="tabBtnSynopsis" class="font-bold text-[#006830] border-b-2 border-[#006830] pb-1">
                                     Sinopsis
                                 </button>
@@ -446,7 +447,7 @@
 
                             <!-- Tab 1: Synopsis -->
                             <div id="tabContentSynopsis" class="pt-2">
-                                <p id="modalSynopsis" class="text-xs text-slate-600 leading-relaxed max-h-28 overflow-y-auto pr-1"></p>
+                                <p id="modalSynopsis" class="text-xs text-slate-600 leading-relaxed max-h-24 sm:max-h-28 overflow-y-auto pr-1"></p>
                             </div>
 
                             <!-- Tab 2: Specs -->
@@ -467,7 +468,7 @@
 
                             <!-- Tab 3: Citation -->
                             <div id="tabContentCitation" class="hidden pt-2">
-                                <div class="bg-slate-100 p-2 rounded-xs text-[10.5px] text-slate-700 font-mono border border-slate-200">
+                                <div class="bg-slate-100 p-2 rounded-xs text-[10px] sm:text-[10.5px] text-slate-700 font-mono border border-slate-200">
                                     <span id="modalCitationText"></span>
                                 </div>
                             </div>
@@ -476,7 +477,7 @@
                         <!-- Action Buttons -->
                         <div class="pt-2.5 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-2">
                             <a id="modalWaBtn" href="#" target="_blank" class="w-full py-2 px-3 rounded-sm bg-[#006830] hover:bg-[#005226] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition">
-                                <i class="fa-brands fa-whatsapp"></i> Pesan via WhatsApp
+                                <i class="fa-brands fa-whatsapp text-sm"></i> Pesan via WhatsApp
                             </a>
                             <button type="button" onclick="alert('Sampel Bab 1 & Daftar Isi PDF siap diunduh!')" class="w-full py-2 px-3 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition border border-slate-200">
                                 <i class="fa-solid fa-file-pdf text-red-600"></i> Unduh Sampel PDF
@@ -491,7 +492,7 @@
         </div>
     </div>
 
-    <!-- Script for Modal Handling & Tab Switching -->
+    <!-- Script for Modal Handling & Tab Switching (Zero Layout Shift) -->
     <script>
         function openBookModal(book) {
             document.getElementById('modalTitle').innerText = book.title;
@@ -516,14 +517,13 @@
             const modal = document.getElementById('bookModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            // Do NOT touch document.body.style.overflow to prevent scrollbar shifting/jumping!
         }
 
         function closeBookModal() {
             const modal = document.getElementById('bookModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            document.body.style.overflow = 'auto';
         }
 
         function switchModalTab(tab) {
