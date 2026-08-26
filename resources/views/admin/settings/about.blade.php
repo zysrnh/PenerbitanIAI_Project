@@ -222,6 +222,28 @@
                                 class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600"
                             >{{ old('about_profile_story_2', $about['about_profile_story_2']) }}</textarea>
                         </div>
+                    
+                        <div class="pt-3 border-t border-slate-100">
+                            <label class="block text-xs font-bold text-slate-700 mb-2">4 Poin Ceklis Keunggulan Mutu</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 1 <span class="text-rose-500">*</span></label>
+                                    <input type="text" name="about_feature_1" id="in_feature_1" value="{{ old('about_feature_1', $about['about_feature_1']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 2 <span class="text-rose-500">*</span></label>
+                                    <input type="text" name="about_feature_2" id="in_feature_2" value="{{ old('about_feature_2', $about['about_feature_2']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 3 <span class="text-rose-500">*</span></label>
+                                    <input type="text" name="about_feature_3" id="in_feature_3" value="{{ old('about_feature_3', $about['about_feature_3']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Poin 4 <span class="text-rose-500">*</span></label>
+                                    <input type="text" name="about_feature_4" id="in_feature_4" value="{{ old('about_feature_4', $about['about_feature_4']) }}" required oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -398,9 +420,16 @@
                         <p id="prev_profile_story_2" class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">
                             {{ $about['about_profile_story_2'] }}
                         </p>
+                    
+                    <div class="grid grid-cols-2 gap-2 text-[10px] font-medium text-slate-700 pt-1 border-t border-slate-200">
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_1">{{ $about['about_feature_1'] }}</span></div>
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_2">{{ $about['about_feature_2'] }}</span></div>
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_3">{{ $about['about_feature_3'] }}</span></div>
+                        <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i> <span id="prev_feature_4">{{ $about['about_feature_4'] }}</span></div>
                     </div>
+                </div>
 
-                    <!-- Mockup 4: Visi & Misi Box -->
+                <!-- Mockup 4: Visi & Misi Box -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                         <!-- Visi -->
                         <div class="p-4 rounded-xl bg-[#032c21] text-white border border-emerald-950 flex flex-col justify-between">
@@ -483,6 +512,12 @@
             document.getElementById('prev_profile_title').textContent = document.getElementById('in_profile_title').value || 'Profil Lembaga';
             document.getElementById('prev_profile_story_1').textContent = document.getElementById('in_profile_story_1').value || 'Paragraf 1...';
             document.getElementById('prev_profile_story_2').textContent = document.getElementById('in_profile_story_2').value || 'Paragraf 2...';
+
+            // 4 Ceklis Keunggulan
+            document.getElementById('prev_feature_1').textContent = document.getElementById('in_feature_1').value || 'Poin 1';
+            document.getElementById('prev_feature_2').textContent = document.getElementById('in_feature_2').value || 'Poin 2';
+            document.getElementById('prev_feature_3').textContent = document.getElementById('in_feature_3').value || 'Poin 3';
+            document.getElementById('prev_feature_4').textContent = document.getElementById('in_feature_4').value || 'Poin 4';
 
             // Visi & Misi
             document.getElementById('prev_about_vision').textContent = '"' + (document.getElementById('in_about_vision').value || 'Visi') + '"';

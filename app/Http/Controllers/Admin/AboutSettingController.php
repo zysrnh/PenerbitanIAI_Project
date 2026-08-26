@@ -18,6 +18,10 @@ class AboutSettingController extends Controller
             'about_profile_title' => SiteSetting::get('about_profile_title', 'Komitmen Membangun Peradaban Literasi & Riset Akademik'),
             'about_profile_story_1' => SiteSetting::get('about_profile_story_1', 'IAI PERSIS PRESS didirikan sebagai wujud nyata komitmen Institut Agama Islam Persatuan Islam (IAI PERSIS) Bandung dalam menjembatani hasil riset, gagasan akademik para dosen, peneliti, dan sivitas akademika agar dapat bertransformasi menjadi karya buku bermutu tinggi yang ber-ISBN dan tersebar luas ke masyarakat umum.'),
             'about_profile_story_2' => SiteSetting::get('about_profile_story_2', 'Kami melayani penerbitan buku ajar perguruan tinggi, monograf, buku referensi, konversi karya tulis ilmiah (skripsi, tesis, disertasi), hingga jurnal ilmiah. Dilengkapi divisi percetakan mandiri dengan mesin offset dan digital printing modern, kami menjamin kualitas cetak, kerapian tata letak (layout), dan desain sampul yang estetik serta presisi.'),
+            'about_feature_1' => SiteSetting::get('about_feature_1', 'Proses Peer-Review Berstandar Ilmiah'),
+            'about_feature_2' => SiteSetting::get('about_feature_2', 'Pengurusan ISBN & KDT Resmi Perpusnas'),
+            'about_feature_3' => SiteSetting::get('about_feature_3', 'Mesin Cetak Offset & Digital Mandiri'),
+            'about_feature_4' => SiteSetting::get('about_feature_4', 'Pendampingan Naskah Sampai Terbit'), 'Kami melayani penerbitan buku ajar perguruan tinggi, monograf, buku referensi, konversi karya tulis ilmiah (skripsi, tesis, disertasi), hingga jurnal ilmiah. Dilengkapi divisi percetakan mandiri dengan mesin offset dan digital printing modern, kami menjamin kualitas cetak, kerapian tata letak (layout), dan desain sampul yang estetik serta presisi.'),
 
             'about_vision' => SiteSetting::get('about_vision', 'Menjadi lembaga penerbitan dan percetakan perguruan tinggi Islam yang unggul, profesional, dan bereputasi nasional dalam pengembangan literasi Islam serta hilirisasi karya ilmiah terintegrasi pada tahun 2030.'),
             'about_mission_1' => SiteSetting::get('about_mission_1', 'Menerbitkan buku-buku ilmiah, buku ajar, dan referensi berstandar nasional dengan proses peer-review yang objektif dan ketat.'),
@@ -51,6 +55,10 @@ class AboutSettingController extends Controller
             'about_profile_title' => ['required', 'string', 'max:255'],
             'about_profile_story_1' => ['required', 'string'],
             'about_profile_story_2' => ['required', 'string'],
+            'about_feature_1' => ['required', 'string', 'max:255'],
+            'about_feature_2' => ['required', 'string', 'max:255'],
+            'about_feature_3' => ['required', 'string', 'max:255'],
+            'about_feature_4' => ['required', 'string', 'max:255'],
 
             'about_vision' => ['required', 'string'],
             'about_mission_1' => ['required', 'string'],

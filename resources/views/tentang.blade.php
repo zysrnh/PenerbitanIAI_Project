@@ -60,19 +60,19 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>Proses Peer-Review Berstandar Ilmiah</span>
+                            <span>{{ $about['about_feature_1'] }}</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>Pengurusan ISBN & KDT Resmi Perpusnas</span>
+                            <span>{{ $about['about_feature_2'] }}</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>Mesin Cetak Offset & Digital Mandiri</span>
+                            <span>{{ $about['about_feature_3'] }}</span>
                         </div>
                         <div class="flex items-center gap-2.5 text-xs text-slate-800 font-semibold">
                             <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
-                            <span>Pendampingan Naskah Sampai Terbit</span>
+                            <span>{{ $about['about_feature_4'] }}</span>
                         </div>
                     </div>
                 </div>
