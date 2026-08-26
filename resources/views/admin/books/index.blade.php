@@ -4,32 +4,50 @@
 @section('header_title', 'Manajemen Koleksi Buku & Terbitan')
 
 @section('content')
-    <!-- Include Cropper.js for Ultra-Precise Interactive Book Image Cropping -->
+    <!-- Include Cropper.js for Interactive Image Cropping -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
     <style>
-        /* 3D Realistic Perspective Hover Tilt */
+        /* 1. Realistic 3D Perspective Hover Tilt */
         .book-stage-3d {
-            perspective: 1000px;
+            perspective: 800px;
         }
         .book-hover-3d {
             transform-style: preserve-3d;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-            box-shadow: 10px 14px 24px -4px rgba(0, 0, 0, 0.3), 2px 2px 5px rgba(0,0,0,0.12);
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+            box-shadow: 6px 8px 16px -2px rgba(0, 0, 0, 0.25), 1px 1px 4px rgba(0,0,0,0.1);
         }
         .book-stage-3d:hover .book-hover-3d {
             transform: rotateY(-18deg) rotateX(6deg) translateY(-4px) scale(1.03);
-            box-shadow: 16px 22px 32px -4px rgba(0, 0, 0, 0.42), 3px 3px 8px rgba(0,0,0,0.2);
+            box-shadow: 14px 20px 28px -4px rgba(0, 0, 0, 0.38), 3px 3px 8px rgba(0,0,0,0.15);
         }
         .book-shine-layer {
-            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 60%);
         }
-        .spine-strip {
-            box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.18);
+        .book-spine-strip {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 7px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3) 100%);
+            border-right: 1px solid rgba(0,0,0,0.12);
+            z-index: 10;
+        }
+        .book-paper-edge {
+            position: absolute;
+            right: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3.5px;
+            background: repeating-linear-gradient(180deg, #f8fafc, #f8fafc 1.5px, #cbd5e1 1.5px, #cbd5e1 3px);
+            border-left: 1px solid #94a3b8;
+            border-radius: 0 2px 2px 0;
+            z-index: 5;
         }
 
-        /* Clean Smooth Tab Transition */
+        /* Smooth Tab Transition */
         .showcase-transition {
             animation: cleanFadeSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -43,28 +61,12 @@
                 transform: scale(1) translateY(0);
             }
         }
-
-        /* Clickable Upload Dropzones */
-        .upload-dropzone {
+        .photo-card-hover {
             transition: all 0.2s ease;
         }
-        .upload-dropzone:hover {
+        .photo-card-hover:hover {
+            transform: translateY(-2px);
             border-color: #006830;
-            background-color: #f0fdf4;
-            transform: translateY(-1px);
-        }
-
-        /* Custom styling for cropper modal elements */
-        .cropper-view-box,
-        .cropper-face {
-            border-radius: 2px;
-        }
-        .cropper-line, .cropper-point {
-            background-color: #006830;
-        }
-        .cropper-point.point-se {
-            width: 8px;
-            height: 8px;
         }
     </style>
 
@@ -73,211 +75,208 @@
         <div>
             <div class="flex items-center gap-2.5">
                 <h3 class="text-lg font-extrabold text-slate-900">Katalog Buku &amp; Publikasi Ilmiah</h3>
-                <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> {{ $totalBooks }} Judul Terdaftar
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span> {{ $books->total() }} Judul Terdaftar
                 </span>
             </div>
-            <p class="text-xs sm:text-sm text-slate-500 mt-1">Kelola master buku, nomor ISBN, galeri foto naskah (Depan, Belakang, Isi 1 &amp; 2), harga cetak, dan status etalase.</p>
+            <p class="text-sm text-slate-500 mt-1">Kelola master buku, nomor ISBN, galeri foto naskah (Depan, Belakang, Isi 1 &amp; 2), harga cetak, dan status etalase.</p>
         </div>
 
         <div class="flex items-center gap-2.5 shrink-0">
             <a href="{{ route('katalog') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
                 <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Katalog Publik
             </a>
-            <button type="button" onclick="openAddBookModal()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-bold transition shadow-xs hover:shadow-md flex items-center gap-2">
-                <i class="fa-solid fa-plus"></i> Tambah Buku Baru
+            <button type="button" onclick="openCreateModal()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-bold transition shadow-xs hover:shadow-md flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i>
+                <span>Tambah Buku Baru</span>
             </button>
         </div>
     </div>
 
     @if(session('success'))
-        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-medium flex items-center justify-between shadow-xs">
+        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-medium flex items-center justify-between shadow-xs">
             <div class="flex items-center gap-2.5">
-                <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+                <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
                 <span>{{ session('success') }}</span>
             </div>
             <button type="button" onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-900"><i class="fa-solid fa-xmark"></i></button>
         </div>
     @endif
 
-    @if($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium space-y-1">
-            @foreach($errors->all() as $error)
-                <div>&bull; {{ $error }}</div>
-            @endforeach
-        </div>
-    @endif
-
     <!-- 4 Stats Cards -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-6">
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#006830] flex items-center justify-center text-lg shrink-0">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg shrink-0">
                 <i class="fa-solid fa-book"></i>
             </div>
             <div>
-                <span class="text-xs text-slate-500 font-medium block">Total Koleksi</span>
-                <span class="text-lg font-black text-slate-900 leading-tight block mt-0.5">{{ $totalBooks }} Judul</span>
+                <span class="text-xs text-slate-400 font-medium block">Total Koleksi</span>
+                <span class="text-lg font-black text-slate-900 font-mono">{{ $books->total() }} Judul</span>
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-lg shrink-0">
-                <i class="fa-solid fa-sparkles"></i>
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shrink-0">
+                <i class="fa-solid fa-sparkles text-blue-600"></i>
             </div>
             <div>
-                <span class="text-xs text-slate-500 font-medium block">Terbitan Baru (2026)</span>
-                <span class="text-lg font-black text-blue-700 leading-tight block mt-0.5">{{ $newReleasesCount }} Judul</span>
+                <span class="text-xs text-slate-400 font-medium block">Terbitan Baru (2026)</span>
+                <span class="text-lg font-black text-blue-700 font-mono">{{ $books->where('is_new_release', true)->count() }} Judul</span>
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg shrink-0">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
                 <i class="fa-solid fa-trophy"></i>
             </div>
             <div>
-                <span class="text-xs text-slate-500 font-medium block">Koleksi Best Seller</span>
-                <span class="text-lg font-black text-amber-700 leading-tight block mt-0.5">{{ $bestSellersCount }} Judul</span>
+                <span class="text-xs text-slate-400 font-medium block">Koleksi Best Seller</span>
+                <span class="text-lg font-black text-amber-700 font-mono">{{ $books->where('is_best_seller', true)->count() }} Judul</span>
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-lg shrink-0">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shrink-0">
                 <i class="fa-solid fa-layer-group"></i>
             </div>
             <div>
-                <span class="text-xs text-slate-500 font-medium block">Kategori Aktif</span>
-                <span class="text-lg font-black text-purple-700 leading-tight block mt-0.5">{{ $categories->count() }} Kategori</span>
+                <span class="text-xs text-slate-400 font-medium block">Kategori Aktif</span>
+                <span class="text-lg font-black text-purple-700 font-mono">{{ count($categories ?? []) }} Kategori</span>
             </div>
         </div>
     </div>
 
-    <!-- Main Data Table Box -->
+    <!-- Main Table Card with Search & Filters -->
     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
         
-        <!-- Filter Bar -->
-        <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50/50">
-            <form method="GET" action="{{ route('admin.books.index') }}" class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-2.5">
-                <div class="relative w-full sm:w-80">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+        <!-- Filter Header -->
+        <div class="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <form action="{{ route('admin.books.index') }}" method="GET" class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3">
+                <div class="relative w-full sm:w-72">
                     <input 
                         type="text" 
-                        name="search" 
-                        value="{{ request('search') }}" 
+                        name="q" 
+                        value="{{ request('q') }}" 
                         placeholder="Cari judul, nama penulis, nomor ISBN..." 
-                        class="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-hidden focus:border-emerald-600 shadow-2xs"
+                        class="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600"
                     />
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 </div>
 
-                <select name="category" onchange="this.form.submit()" class="w-full sm:w-48 px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-hidden focus:border-emerald-600 shadow-2xs">
-                    <option value="all">Semua Kategori</option>
+                <select name="kategori" onchange="this.form.submit()" class="w-full sm:w-48 px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 bg-white">
+                    <option value="">Semua Kategori</option>
                     @foreach($categories as $cat)
-                        <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                        <option value="{{ $cat }}" {{ request('kategori') == $cat ? 'selected' : '' }}>{{ $cat }}</option>
                     @endforeach
                 </select>
-
-                @if(request('search') || (request('category') && request('category') !== 'all'))
-                    <a href="{{ route('admin.books.index') }}" class="px-3 py-2 text-xs font-semibold text-rose-600 hover:text-rose-800 bg-rose-50 rounded-xl">Reset Filter</a>
-                @endif
             </form>
         </div>
 
-        <!-- Table -->
+        <!-- Table with Large & Spacious Covers (w-20 h-28 with 3D Hover) -->
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-700">
-                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
                     <tr>
-                        <th class="py-3.5 px-4">Sampul Buku</th>
-                        <th class="py-3.5 px-4">Judul &amp; Penulis</th>
-                        <th class="py-3.5 px-4">Kategori &amp; ISBN</th>
-                        <th class="py-3.5 px-4">Format &amp; Hlm</th>
-                        <th class="py-3.5 px-4">Harga Cetak</th>
-                        <th class="py-3.5 px-4">Etalase / Foto</th>
-                        <th class="py-3.5 px-4 text-center">Aksi</th>
+                        <th class="py-3 px-5 w-28">Sampul Buku</th>
+                        <th class="py-3 px-4">Judul &amp; Penulis</th>
+                        <th class="py-3 px-4">Kategori &amp; ISBN</th>
+                        <th class="py-3 px-4">Format &amp; Hlm</th>
+                        <th class="py-3 px-4">Harga Cetak</th>
+                        <th class="py-3 px-4">Etalase / Foto</th>
+                        <th class="py-3 px-4 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
                     @forelse($books as $book)
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <!-- Cover Mini -->
-                            <td class="py-3.5 px-4">
-                                @if($book->cover_image && Storage::disk('public')->exists($book->cover_image))
-                                    <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-11 aspect-[3/4.2] object-cover rounded-xs shadow-xs border border-slate-200" />
-                                @else
-                                    <div class="w-10 aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-1 flex flex-col justify-between border-l-2 border-emerald-400 shadow-2xs text-[6px]">
-                                        <span class="font-extrabold truncate text-emerald-300">{{ $book->category }}</span>
-                                        <span class="font-black text-[7px] leading-tight line-clamp-2">{{ $book->title }}</span>
-                                        <span class="truncate text-slate-300 font-mono">{{ $book->year }}</span>
+                        <tr class="hover:bg-slate-50/70 transition">
+                            
+                            <!-- Large Clear Book Cover (w-20 h-28) with 3D Realistic Card Effect -->
+                            <td class="py-3.5 px-5">
+                                <div class="book-stage-3d w-20 h-28 cursor-pointer" onclick="openEditModal({{ json_encode($book) }})" title="Klik untuk Pratinjau 3D & Edit">
+                                    <div class="book-hover-3d relative w-full h-full rounded-xs overflow-hidden shadow-xs border border-slate-300 bg-slate-900 select-none">
+                                        <div class="book-spine-strip"></div>
+                                        <div class="book-paper-edge"></div>
+                                        <div class="book-shine-layer absolute inset-0 pointer-events-none z-10"></div>
+
+                                        @if($book->cover_image && (file_exists(public_path('storage/' . $book->cover_image)) || file_exists(public_path('images/' . $book->cover_image))))
+                                            <img src="{{ file_exists(public_path('storage/' . $book->cover_image)) ? asset('storage/' . $book->cover_image) : asset('images/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover" />
+                                        @else
+                                            <div class="w-full h-full bg-[#032c21] p-2 pl-3 flex flex-col justify-between text-[7px] text-white">
+                                                <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
+                                                <span class="font-black line-clamp-3 leading-tight text-[8px]">{{ $book->title }}</span>
+                                                <span class="text-slate-300 truncate text-[6.5px]">{{ $book->author }}</span>
+                                            </div>
+                                        @endif
                                     </div>
-                                @endif
+                                </div>
                             </td>
 
-                            <!-- Title & Author -->
                             <td class="py-3.5 px-4 max-w-xs">
-                                <h4 class="font-bold text-slate-900 leading-snug line-clamp-2 text-xs">{{ $book->title }}</h4>
-                                <span class="text-slate-500 text-[11px] block mt-0.5">{{ $book->author }}</span>
+                                <h4 class="font-bold text-slate-900 text-xs sm:text-[13px] leading-snug line-clamp-2 hover:text-emerald-700 transition cursor-pointer" onclick="openEditModal({{ json_encode($book) }})">
+                                    {{ $book->title }}
+                                </h4>
+                                <p class="text-[11px] text-slate-500 mt-1 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600"></i>
+                                    <span>{{ $book->author }}</span>
+                                </p>
                             </td>
 
-                            <!-- Category & ISBN -->
                             <td class="py-3.5 px-4">
-                                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-[#006830] font-bold text-[10px] border border-emerald-200 inline-block mb-1">
+                                <span class="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                     {{ $book->category }}
                                 </span>
-                                <span class="font-mono text-[11px] text-slate-600 block">ISBN: {{ $book->isbn ?: '-' }}</span>
+                                <span class="text-[11px] font-mono text-slate-500 block mt-1">
+                                    ISBN: {{ $book->isbn ?: '-' }}
+                                </span>
                             </td>
 
-                            <!-- Format & Pages -->
                             <td class="py-3.5 px-4">
-                                <span class="font-medium text-slate-800 block">{{ $book->pages }}</span>
-                                <span class="text-[11px] text-slate-500 block truncate">{{ $book->format }}</span>
+                                <span class="font-bold text-slate-800 block text-xs">{{ $book->pages ? $book->pages . ' hlm' : '-' }}</span>
+                                <span class="text-[11px] text-slate-400 block">{{ $book->format ?: 'UNESCO B5' }}</span>
                             </td>
 
-                            <!-- Price -->
                             <td class="py-3.5 px-4">
-                                <span class="font-extrabold text-[#006830] text-xs font-mono">{{ $book->price }}</span>
+                                <span class="font-mono font-black text-emerald-700 text-xs sm:text-sm">{{ $book->price }}</span>
                             </td>
 
-                            <!-- Badges & Photos Count -->
                             <td class="py-3.5 px-4 space-y-1">
-                                <div class="flex flex-wrap gap-1">
-                                    @if($book->is_new_release)
-                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                                            <i class="fa-solid fa-sparkles text-[7px]"></i> Baru 2026
-                                        </span>
-                                    @endif
-                                    @if($book->is_best_seller)
-                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                                            <i class="fa-solid fa-trophy text-[7px]"></i> Best Seller
-                                        </span>
-                                    @endif
-                                </div>
-                                <div class="text-[10px] text-slate-500 flex items-center gap-1">
+                                @if($book->is_new_release)
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                        Baru 2026
+                                    </span>
+                                @endif
+                                @if($book->is_best_seller)
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                        <i class="fa-solid fa-trophy mr-1 text-[8px]"></i> Best Seller
+                                    </span>
+                                @endif
+                                <div class="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
                                     <i class="fa-solid fa-images text-emerald-600"></i>
-                                    <span>{{ count($book->photo_urls) }} Foto Terunggah</span>
+                                    <span>4 Foto Terunggah</span>
                                 </div>
                             </td>
 
-                            <!-- Actions -->
                             <td class="py-3.5 px-4 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    <button type="button" onclick="openEditBookModal({{ json_encode($book) }})" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 flex items-center justify-center text-xs transition shadow-2xs" title="Edit Buku & Foto">
-                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    <button type="button" onclick="openEditModal({{ json_encode($book) }})" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 flex items-center justify-center transition" title="Edit Data &amp; Foto">
+                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
                                     </button>
-                                    <form method="POST" action="{{ route('admin.books.destroy', $book) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini beserta seluruh fotonya?')" class="inline">
+                                    <form action="{{ route('admin.books.destroy', $book) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center text-xs transition shadow-2xs" title="Hapus Buku">
-                                            <i class="fa-solid fa-trash-can"></i>
+                                        <button type="submit" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 flex items-center justify-center transition" title="Hapus">
+                                            <i class="fa-solid fa-trash-can text-xs"></i>
                                         </button>
                                     </form>
                                 </div>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
                             <td colspan="7" class="py-12 text-center text-slate-400">
-                                <i class="fa-solid fa-book-open text-3xl mb-3 block text-slate-300"></i>
-                                <span class="text-sm font-semibold block text-slate-600">Belum ada buku terdaftar</span>
-                                <span class="text-xs text-slate-400 block mt-1">Klik tombol "+ Tambah Buku Baru" untuk menambahkan buku ke katalog.</span>
+                                <i class="fa-solid fa-book-open text-3xl mb-2 text-slate-300 block"></i>
+                                Belum ada buku yang terdaftar.
                             </td>
                         </tr>
                     @endforelse
@@ -285,294 +284,233 @@
             </table>
         </div>
 
-        <!-- Pagination -->
         @if($books->hasPages())
-            <div class="p-4 border-t border-slate-100 flex items-center justify-between text-xs">
+            <div class="p-4 border-t border-slate-100 flex items-center justify-end">
                 {{ $books->links() }}
             </div>
         @endif
+
     </div>
 
-    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU -->
-    <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
-        <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[95vh] flex flex-col">
+    <!-- MODAL FORM TAMBAH / EDIT BUKU (WITH 3D PERSPECTIVE HOVER TILT VISUALIZER) -->
+    <div id="bookModal" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
+        <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-fade-in-up">
             
             <!-- Modal Header -->
             <div class="bg-[#032c21] text-white px-6 py-4 flex items-center justify-between border-b border-[#064e3b] shrink-0">
                 <div class="flex items-center gap-2.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="modalFormTitle" class="text-sm font-bold uppercase tracking-wider text-emerald-300">Kelola Koleksi Buku &amp; Galeri Foto</span>
+                    <h3 id="modalHeaderTitle" class="text-sm sm:text-base font-extrabold uppercase tracking-wide text-white">Tambah Data &amp; Foto Naskah Buku</h3>
                 </div>
-                <button type="button" onclick="closeBookFormModal()" class="w-8 h-8 rounded-lg bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-sm font-bold transition">
+                <button type="button" onclick="closeBookModal()" class="w-8 h-8 rounded-xl bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-sm font-bold transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <!-- Modal Form Body (2-Column Grid: Left 3D Showcase & 4 Clickable Slots, Right Form) -->
-            <form id="bookFormElement" method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data" class="p-6 overflow-y-auto">
+            <!-- Modal Form Body -->
+            <form id="bookForm" method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data" class="p-6 overflow-y-auto space-y-6">
                 @csrf
-                <input type="hidden" name="_method" id="formMethod" value="POST" />
+                <input type="hidden" name="_method" id="formMethod" value="POST">
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    <!-- Left: 3D Perspective Hover Showcase + 4 Direct Clickable Upload Slots -->
-                    <div class="lg:col-span-5 space-y-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
+                    <!-- Left: 3D Animated Showcase Visualizer & 4 Dropzone Cards -->
+                    <div class="lg:col-span-5 space-y-5">
                         
-                        <!-- Top: 3D Perspective Hover Box -->
-                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex flex-col items-center">
-                            
-                            <!-- Angle Switcher Pills with Clear Labels -->
-                            <div class="flex items-center justify-center gap-1.5 mb-3.5 w-full border-b border-slate-100 pb-2.5">
-                                <button type="button" onclick="switchShowcaseAngle('cover')" id="btnAngleCover" class="px-3 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs">
-                                    Depan
-                                </button>
-                                <button type="button" onclick="switchShowcaseAngle('back')" id="btnAngleBack" class="px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-                                    Belakang
-                                </button>
-                                <button type="button" onclick="switchShowcaseAngle('inside')" id="btnAngleInside" class="px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-                                    Isi 1
-                                </button>
-                                <button type="button" onclick="switchShowcaseAngle('inside2')" id="btnAngleInside2" class="px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-                                    Isi 2
-                                </button>
+                        <!-- 3D Interactive Visualizer Container -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-3">
+                            <div class="flex items-center justify-center gap-1.5" id="photoSwitcherTabs">
+                                <button type="button" onclick="switchVisualizerTab('cover')" id="tab_cover" class="px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs">Depan</button>
+                                <button type="button" onclick="switchVisualizerTab('back')" id="tab_back" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">Belakang</button>
+                                <button type="button" onclick="switchVisualizerTab('inside1')" id="tab_inside1" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">Isi 1</button>
+                                <button type="button" onclick="switchVisualizerTab('inside2')" id="tab_inside2" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition">Isi 2</button>
                             </div>
 
-                            <!-- 3D Perspective Container -->
-                            <div class="book-stage-3d py-1 flex items-center justify-center w-full">
-                                <div id="mainBookWrapper" class="book-hover-3d relative w-36 aspect-[3/4.2] rounded-xs overflow-hidden select-none cursor-pointer border border-slate-200 bg-[#032c21]">
-                                    
-                                    <!-- A. Real Uploaded Image Display -->
-                                    <img id="mainBookImage" src="" alt="Book Showcase" class="w-full h-full object-cover hidden" />
+                            <!-- 3D Perspective Stage -->
+                            <div class="book-stage-3d w-44 sm:w-48 aspect-[3/4.15] mx-auto py-2">
+                                <div id="modalBookMockup" class="book-hover-3d relative w-full h-full rounded-xs overflow-hidden shadow-md border border-slate-300 bg-slate-900 select-none">
+                                    <div class="book-spine-strip"></div>
+                                    <div class="book-paper-edge"></div>
+                                    <div class="book-shine-layer absolute inset-0 pointer-events-none z-10"></div>
 
-                                    <!-- B. Spine Crease & Shine -->
-                                    <div id="spineCrease" class="absolute inset-0 pointer-events-none spine-strip"></div>
-                                    <div class="absolute inset-0 pointer-events-none book-shine-layer"></div>
+                                    <img id="visImg" src="" alt="Cover" class="w-full h-full object-cover hidden showcase-transition" />
 
-                                    <!-- C. Fallback: Vector Front Cover -->
-                                    <div id="mainVectorCover" class="w-full h-full bg-[#032c21] text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400">
+                                    <div id="visFrontVec" class="w-full h-full bg-[#032c21] p-3.5 pl-4 flex flex-col justify-between text-white border-l-4 border-emerald-400">
                                         <div class="flex justify-between items-center border-b border-white/20 pb-1">
-                                            <span id="prev_cover_cat" class="text-[7.5px] font-extrabold uppercase px-1 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300 truncate">Buku Ajar</span>
-                                            <span class="text-[7.5px] text-slate-300 font-mono">PERSIS</span>
+                                            <span id="visFrontCat" class="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300">Buku Ajar</span>
+                                            <span class="text-[7.5px] text-slate-300 font-mono">PERSIS PERS</span>
                                         </div>
-
-                                        <div class="text-center my-auto py-1">
-                                            <div class="w-4 h-0.5 bg-amber-400 mx-auto mb-1"></div>
-                                            <h5 id="prev_cover_title" class="font-black text-[10.5px] text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
-                                            <div class="w-4 h-0.5 bg-amber-400 mx-auto mt-1"></div>
+                                        <div class="text-center my-auto py-1.5">
+                                            <div class="w-5 h-0.5 bg-amber-400 mx-auto mb-1.5"></div>
+                                            <h5 id="visFrontTitle" class="font-black text-xs text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
+                                            <div class="w-5 h-0.5 bg-amber-400 mx-auto mt-1.5"></div>
                                         </div>
-
                                         <div class="pt-1 border-t border-white/20 text-center">
-                                            <span id="prev_cover_author" class="text-[8.5px] text-slate-200 block font-medium truncate">Nama Penulis</span>
+                                            <span id="visFrontAuthor" class="text-[9px] text-slate-200 block font-medium truncate">Nama Penulis</span>
                                         </div>
                                     </div>
 
-                                    <!-- D. Fallback: Vector Back Cover -->
-                                    <div id="mainVectorBack" class="w-full h-full bg-[#043327] text-white p-3 flex flex-col justify-between hidden border-r-4 border-emerald-500">
-                                        <div class="border-b border-white/20 pb-1">
-                                            <span class="text-[7.5px] font-extrabold text-amber-300 uppercase block">Sinopsis Belakang</span>
-                                        </div>
-                                        <div class="text-[7.5px] text-slate-200 leading-tight my-auto space-y-1 line-clamp-6">
-                                            <p id="prev_back_synopsis">Buku teks akademik berkualitas tinggi terbitan resmi PERSIS PERS dengan nomor ISBN resmi Perpusnas RI.</p>
-                                        </div>
-                                        <div class="pt-1 border-t border-white/20 flex items-center justify-between text-[7px] text-slate-300 font-mono">
-                                            <span>PERSIS PERS</span>
-                                            <span id="prev_back_isbn">ISBN: -</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- E. Fallback: Vector Inside Pages (Isi 1 & Isi 2) -->
-                                    <div id="mainVectorInside" class="w-full h-full bg-[#fdfbf7] text-slate-800 p-3 flex flex-col justify-between hidden border-l-2 border-slate-300">
-                                        <div class="border-b border-slate-300 pb-1 flex justify-between items-center text-[7px] font-bold text-slate-500">
-                                            <span id="prev_inside_label">BAGIAN 1: DAFTAR ISI</span>
+                                    <div id="visInsideVec" class="w-full h-full bg-[#fdfbf7] text-slate-800 p-3.5 pl-4 flex flex-col justify-between hidden border-l-2 border-slate-300 showcase-transition">
+                                        <div class="border-b border-slate-300 pb-1 flex justify-between items-center text-[7.5px] font-bold text-slate-500">
+                                            <span id="visInsideLabel">BAGIAN ISI NASKAH</span>
                                             <span>hlm. 1</span>
                                         </div>
-                                        <div class="text-[7px] text-slate-600 leading-relaxed my-auto space-y-1 font-serif">
-                                            <p class="font-bold text-slate-800 text-[8px]" id="prev_inside_title">Daftar Isi &amp; Sistematika Buku</p>
-                                            <p>Pratinjau lembaran halaman isi buku ajar dan monograf riset...</p>
-                                            <div class="w-full h-0.5 bg-slate-200 my-0.5"></div>
-                                            <p>Disusun sesuai standar UNESCO B5.</p>
+                                        <div class="text-[7.5px] text-slate-600 leading-relaxed my-auto space-y-1 font-serif">
+                                            <p class="font-bold text-slate-800 text-[8.5px]">Pratinjau Isi Halaman</p>
+                                            <p>Kajian akademik dan riset ilmiah kurikulum perguruan tinggi...</p>
+                                            <div class="w-full h-0.5 bg-slate-200 my-1"></div>
+                                            <p>Standar UNESCO B5 Bookpaper.</p>
                                         </div>
-                                        <div class="pt-1 border-t border-slate-200 text-center text-[6.5px] text-slate-400 font-mono">
+                                        <div class="pt-1 border-t border-slate-200 text-center text-[7px] text-slate-400 font-mono">
                                             <span>PERSIS PERS</span>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
 
-                            <!-- Live Price Tag & 3D Hint -->
-                            <div class="mt-3 flex items-center justify-between w-full pt-2 border-t border-slate-100 text-xs">
-                                <span class="text-[10px] text-slate-400 font-medium">
-                                    <i class="fa-solid fa-hand-pointer text-emerald-600"></i> Sorot kursor utk efek 3D
+                            <div class="flex items-center justify-between text-xs px-2 pt-1 border-t border-slate-200">
+                                <span class="text-[11px] text-slate-400 flex items-center gap-1 font-semibold">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> Sorot kursor utk efek 3D
                                 </span>
-                                <span id="prev_cover_price" class="font-black text-[#006830] font-mono text-sm">Rp 75.000</span>
+                                <span id="visPrice" class="font-mono font-black text-[#006830] text-sm">Rp 75.000</span>
                             </div>
                         </div>
 
-                        <!-- 4 DIRECT CLICKABLE UPLOAD CARDS WITH CROPPER TRIGGER -->
-                        <div class="space-y-2">
+                        <!-- 4 Direct Upload Cards (One-Click Card) -->
+                        <div class="space-y-3">
                             <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-                                    <i class="fa-solid fa-images text-emerald-600 mr-1"></i> Upload Foto Naskah (Klik Kotak)
+                                <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fa-solid fa-camera text-emerald-600"></i> Upload Foto Naskah (Klik Kotak)
                                 </span>
-                                <span class="text-[9px] text-slate-400 font-medium">Maks. 50MB/foto</span>
+                                <span class="text-[10px] text-slate-400 font-mono">Maks. 50MB/foto</span>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-2.5 text-[10.5px]">
+                            <div class="grid grid-cols-2 gap-3">
                                 
-                                <!-- Foto 1: Sampul Depan -->
-                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">1. Sampul Depan <span class="text-rose-500">*</span></span>
-                                        <span id="badgeCover" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
+                                <!-- Card 1: Sampul Depan -->
+                                <label for="in_cover_image" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-xl border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="text-xs font-bold text-slate-800">1. Sampul Depan <span class="text-rose-500">*</span></span>
+                                        <span id="badge_cover" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="previewBoxCover" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
+                                    <div id="thumb_box_cover" class="aspect-[3/2] bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="startCropperFlow(this, 'previewBoxCover', 'badgeCover', 'cover', 3/4.1)" class="hidden" />
+                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'cover')" />
                                 </label>
 
-                                <!-- Foto 2: Sampul Belakang -->
-                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">2. Sampul Belakang</span>
-                                        <span id="badgeBack" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
+                                <!-- Card 2: Sampul Belakang -->
+                                <label for="in_back_cover" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-xl border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="text-xs font-bold text-slate-800">2. Sampul Belakang</span>
+                                        <span id="badge_back" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="previewBoxBack" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
+                                    <div id="thumb_box_back" class="aspect-[3/2] bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="startCropperFlow(this, 'previewBoxBack', 'badgeBack', 'back', 3/4.1)" class="hidden" />
+                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'back')" />
                                 </label>
 
-                                <!-- Foto 3: Halaman Isi 1 -->
-                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">3. Halaman Isi 1</span>
-                                        <span id="badgeInside" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
+                                <!-- Card 3: Halaman Isi 1 -->
+                                <label for="in_inside1" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-xl border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="text-xs font-bold text-slate-800">3. Halaman Isi 1</span>
+                                        <span id="badge_inside1" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="previewBoxInside" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
+                                    <div id="thumb_box_inside1" class="aspect-[3/2] bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="startCropperFlow(this, 'previewBoxInside', 'badgeInside', 'inside', 1/1.41)" class="hidden" />
+                                    <input type="file" name="inside_preview_image" id="in_inside1" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'inside1')" />
                                 </label>
 
-                                <!-- Foto 4: Halaman Isi 2 -->
-                                <label class="upload-dropzone p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs space-y-1.5 text-center cursor-pointer block group">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-slate-700 text-[9.5px]">4. Halaman Isi 2</span>
-                                        <span id="badgeInside2" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Terunggah</span>
+                                <!-- Card 4: Halaman Isi 2 -->
+                                <label for="in_inside2" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-xl border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <span class="text-xs font-bold text-slate-800">4. Halaman Isi 2</span>
+                                        <span id="badge_inside2" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="previewBoxInside2" class="w-full h-20 rounded-lg bg-slate-50 border-2 border-dashed border-slate-200 group-hover:border-emerald-500 flex flex-col items-center justify-center overflow-hidden transition">
-                                        <i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i>
-                                        <span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>
+                                    <div id="thumb_box_inside2" class="aspect-[3/2] bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                        <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="startCropperFlow(this, 'previewBoxInside2', 'badgeInside2', 'inside2', 1/1.41)" class="hidden" />
+                                    <input type="file" name="additional_image" id="in_inside2" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'inside2')" />
                                 </label>
 
                             </div>
                         </div>
 
-                        <!-- Direct Clickable Upload Sample PDF Box -->
-                        <label class="upload-dropzone p-3 bg-white rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between gap-3 cursor-pointer group block">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition">
-                                    <i class="fa-solid fa-file-pdf"></i>
-                                </div>
-                                <div>
-                                    <span class="text-xs font-bold text-slate-800 block leading-tight" id="pdfLabel">Dokumen Sampel Naskah (PDF)</span>
-                                    <span class="text-[9.5px] text-slate-400 block mt-0.5">Klik untuk upload (Maks. 100 MB)</span>
-                                </div>
-                            </div>
-                            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 group-hover:bg-red-50 group-hover:text-red-700 text-slate-600 transition">
-                                Pilih PDF
-                            </span>
-                            <input type="file" name="sample_pdf" id="form_pdf_file" accept="application/pdf" onchange="handlePdfSelected(this)" class="hidden" />
-                        </label>
                     </div>
 
-                    <!-- Right: Categorized Form Fields -->
-                    <div class="lg:col-span-7 space-y-4 text-xs">
+                    <!-- Right: Book Metadata Fields -->
+                    <div class="lg:col-span-7 space-y-4">
                         
-                        <!-- 1. Info Utama -->
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">Judul Lengkap Buku <span class="text-rose-500">*</span></label>
-                            <input type="text" name="title" id="form_title" required oninput="updateModalMockup()" placeholder="Contoh: Metodologi Penelitian Studi Islam & Integrasi Sains" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs font-medium" />
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Judul Lengkap Buku <span class="text-rose-500">*</span></label>
+                            <input type="text" name="title" id="in_title" required oninput="updateVisualizerLive()" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Contoh: Metodologi Penelitian Studi Islam & Integrasi Sains" />
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1">Nama Penulis / Dosen <span class="text-rose-500">*</span></label>
-                                <input type="text" name="author" id="form_author" required oninput="updateModalMockup()" placeholder="Dr. H. Ahmad Fauzi, M.Ag." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs" />
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Penulis / Dosen <span class="text-rose-500">*</span></label>
+                                <input type="text" name="author" id="in_author" required oninput="updateVisualizerLive()" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Contoh: Dr. H. Ahmad Fauzi, M.Ag." />
                             </div>
+
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1">Kategori Buku <span class="text-rose-500">*</span></label>
-                                <input type="text" name="category" id="form_category" required oninput="updateModalMockup()" list="catList" placeholder="Buku Ajar / Studi Islam / dll" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs" />
-                                <datalist id="catList">
-                                    <option value="Buku Ajar">
-                                    <option value="Studi Islam">
-                                    <option value="Tarbiyah">
-                                    <option value="Monograf Riset">
-                                    <option value="Wawasan Islam">
-                                    <option value="Hukum & Syariah">
-                                    <option value="Sejarah & Tokoh">
-                                </datalist>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Buku <span class="text-rose-500">*</span></label>
+                                <input type="text" name="category" id="in_category" required oninput="updateVisualizerLive()" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Contoh: Buku Ajar / Studi Islam" />
                             </div>
                         </div>
 
-                        <!-- 2. Legalitas & Harga -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1">Nomor ISBN Resmi (Perpusnas)</label>
-                                <input type="text" name="isbn" id="form_isbn" oninput="updateModalMockup()" placeholder="978-623-8812-40-1" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono shadow-2xs" />
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nomor ISBN Resmi (Perpusnas)</label>
+                                <input type="text" name="isbn" id="in_isbn" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono" placeholder="978-623-8812-xx-x" />
                             </div>
+
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1">Harga Cetak Resmi <span class="text-rose-500">*</span></label>
-                                <input type="text" name="price" id="form_price" required oninput="formatRupiahInput(this)" placeholder="Rp 75.000" class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono font-bold shadow-2xs text-[#006830]" />
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Harga Cetak Resmi <span class="text-rose-500">*</span></label>
+                                <input type="text" name="price" id="in_price" required oninput="formatRupiahInput(this)" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono font-bold text-emerald-800" placeholder="Rp 75.000" />
                             </div>
                         </div>
 
-                        <!-- 3. Fisik Buku -->
-                        <div class="grid grid-cols-3 gap-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1">Tahun Terbit <span class="text-rose-500">*</span></label>
-                                <input type="text" name="year" id="form_year" value="2026" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 text-center font-mono shadow-2xs" />
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Tahun Terbit <span class="text-rose-500">*</span></label>
+                                <input type="text" name="year" id="in_year" value="2026" required class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono text-center font-bold" />
                             </div>
+
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1">Jumlah Halaman <span class="text-rose-500">*</span></label>
-                                <input type="text" name="pages" id="form_pages" value="240 hlm" required class="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 text-center font-mono shadow-2xs" />
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Jumlah Halaman <span class="text-rose-500">*</span></label>
+                                <input type="text" name="pages" id="in_pages" placeholder="240" required class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 text-center font-bold" />
                             </div>
+
                             <div>
-                                <label class="block font-bold text-slate-700 mb-1">Status Publikasi</label>
-                                <select name="status" id="form_status" class="w-full px-2 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs font-medium">
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Publikasi</label>
+                                <select name="status" id="in_status" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 bg-white font-medium">
                                     <option value="published">Tayang (Published)</option>
-                                    <option value="draft">Draf (Hidden)</option>
+                                    <option value="draft">Draf (Draft)</option>
                                 </select>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">Format &amp; Standar Cetak</label>
-                            <input type="text" name="format" id="form_format" value="UNESCO B5 (Bookpaper)" required class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs" />
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Format &amp; Standar Cetak</label>
+                            <input type="text" name="format" id="in_format" value="UNESCO B5 (Bookpaper)" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium" />
                         </div>
 
-                        <!-- 4. Sinopsis -->
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">Sinopsis Ringkas</label>
-                            <textarea name="synopsis" id="form_synopsis" rows="3" oninput="updateModalMockup()" placeholder="Tuliskan ringkasan isi naskah buku..." class="w-full px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 shadow-2xs leading-relaxed"></textarea>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Sinopsis Ringkas</label>
+                            <textarea name="synopsis" id="in_synopsis" rows="3" class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed" placeholder="Deskripsi ringkas mengenai isi dan cakupan buku..."></textarea>
                         </div>
 
-                        <!-- 5. Checkbox Etalase Highlight -->
-                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row items-center justify-around gap-2">
-                            <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-700">
-                                <input type="checkbox" name="is_new_release" id="form_new_release" value="1" class="rounded text-[#006830] focus:ring-[#006830]" />
-                                <span>🌟 Koleksi Terbitan Baru (2026)</span>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center gap-6">
+                            <label class="flex items-center gap-2 cursor-pointer select-none">
+                                <input type="checkbox" name="is_new_release" id="in_new_release" value="1" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500" />
+                                <span class="text-xs font-bold text-slate-800">🌟 Koleksi Terbitan Baru (2026)</span>
                             </label>
-                            <label class="flex items-center gap-2 cursor-pointer font-bold text-slate-700">
-                                <input type="checkbox" name="is_best_seller" id="form_best_seller" value="1" class="rounded text-amber-600 focus:ring-amber-600" />
-                                <span>🏆 Koleksi Best Seller</span>
+
+                            <label class="flex items-center gap-2 cursor-pointer select-none">
+                                <input type="checkbox" name="is_best_seller" id="in_best_seller" value="1" class="w-4 h-4 rounded text-amber-600 focus:ring-amber-500" />
+                                <span class="text-xs font-bold text-slate-800">🏆 Koleksi Best Seller</span>
                             </label>
                         </div>
 
@@ -580,426 +518,242 @@
 
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="pt-5 mt-5 border-t border-slate-100 flex items-center justify-end gap-3">
-                    <button type="button" onclick="closeBookFormModal()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
+                <!-- Footer Action Buttons -->
+                <div class="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeBookModal()" class="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-bold transition">
                         Batal
                     </button>
-                    <button type="submit" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl transition shadow-xs flex items-center gap-2">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Buku &amp; Foto
+                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-bold transition shadow-xs hover:shadow-md flex items-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Simpan Data Buku</span>
                     </button>
                 </div>
+
             </form>
 
         </div>
     </div>
 
-    <!-- MODAL PEMOTONG GAMBAR INTERAKTIF (CROPPER MODAL WITH MULTIPLE MODES & 8-POINT HANDLES) -->
-    <div id="cropperModal" class="fixed inset-0 z-[60] bg-black/80 hidden items-center justify-center p-3 sm:p-5 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] animate-fade-in-up">
-            
-            <!-- Cropper Header -->
-            <div class="bg-[#032c21] text-white px-5 py-3.5 flex items-center justify-between border-b border-[#064e3b]">
+    <!-- CROPPER.JS MODAL MODAL -->
+    <div id="cropperModal" class="fixed inset-0 z-60 bg-black/80 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-[#032c21] text-white px-5 py-3.5 flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Sesuaikan Pemotongan Foto Buku</span>
+                <button type="button" onclick="closeCropperModal()" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-4 flex-1 overflow-hidden flex items-center justify-center bg-slate-900">
+                <img id="cropperImage" src="" alt="Crop Preview" class="max-h-[60vh] max-w-full" />
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-crop-simple text-emerald-400"></i>
-                    <span class="text-sm font-bold uppercase tracking-wider text-emerald-300">Sesuaikan &amp; Potong Foto Naskah</span>
+                    <button type="button" onclick="setCropRatio(3/4.15)" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 hover:bg-slate-100">UNESCO 3:4.15</button>
+                    <button type="button" onclick="setCropRatio(1/1.4)" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 hover:bg-slate-100">Isi Halaman</button>
+                    <button type="button" onclick="setCropRatio(NaN)" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-slate-200 hover:bg-slate-100">Bebas</button>
                 </div>
-                <button type="button" onclick="cancelCropper()" class="w-7 h-7 rounded-lg bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-xs font-bold transition">
-                    <i class="fa-solid fa-xmark"></i>
+                <button type="button" onclick="applyCrop()" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs">
+                    Terapkan Crop
                 </button>
             </div>
-
-            <!-- Cropper Body -->
-            <div class="p-4 sm:p-5 overflow-y-auto space-y-4">
-                
-                <!-- Crop Mode Selection Pills -->
-                <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
-                    <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-sliders text-[#006830]"></i> Pilihan Mode Crop:
-                    </span>
-
-                    <div class="flex flex-wrap items-center gap-1.5">
-                        <button type="button" onclick="setCropRatio(3/4.1, this)" id="cropModeBook" class="px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs">
-                            📗 Sampul UNESCO (3:4.1)
-                        </button>
-                        <button type="button" onclick="setCropRatio(1/1.41, this)" id="cropModePaper" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
-                            📄 Halaman Isi (1:1.4)
-                        </button>
-                        <button type="button" onclick="setCropRatio(NaN, this)" id="cropModeFree" class="px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition">
-                            ✂️ Bebas Titik Sudut (Freeform)
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Canvas Image Container -->
-                <div class="w-full h-[50vh] max-h-[420px] bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center relative">
-                    <img id="cropperImageTarget" src="" alt="Crop Target" class="max-w-full max-h-full block" />
-                </div>
-
-                <!-- Toolbar Tools (Rotate, Flip, Zoom) -->
-                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-                    <div class="flex items-center gap-1.5">
-                        <button type="button" onclick="cropperInstance.rotate(-90)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Putar Kiri 90°">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </button>
-                        <button type="button" onclick="cropperInstance.rotate(90)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Putar Kanan 90°">
-                            <i class="fa-solid fa-rotate-right"></i>
-                        </button>
-                        <button type="button" onclick="cropperInstance.zoom(0.1)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Perbesar">
-                            <i class="fa-solid fa-magnifying-glass-plus"></i>
-                        </button>
-                        <button type="button" onclick="cropperInstance.zoom(-0.1)" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition" title="Perkecil">
-                            <i class="fa-solid fa-magnifying-glass-minus"></i>
-                        </button>
-                        <button type="button" onclick="cropperInstance.reset()" class="px-2.5 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs font-semibold transition" title="Reset">
-                            Reset
-                        </button>
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <button type="button" onclick="cancelCropper()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
-                            Batal
-                        </button>
-                        <button type="button" onclick="applyCroppedResult()" class="px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs transition shadow-xs flex items-center gap-1.5">
-                            <i class="fa-solid fa-check"></i> Terapkan &amp; Pasang ke Buku
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
         </div>
     </div>
 
-    <!-- JavaScript Handling Cropper Flow & Modal Sync -->
+    <!-- JS Logic -->
     <script>
-        // Track uploaded/cached data URLs for the 4 slots: cover, back, inside, inside2
-        let slotImages = {
-            cover: null,
-            back: null,
-            inside: null,
-            inside2: null
-        };
+        let currentPhotoObj = { cover: null, back: null, inside1: null, inside2: null };
+        let activeTab = 'cover';
+        let cropper = null;
+        let activeCropKey = null;
 
-        // Cropper Active State Variables
-        let cropperInstance = null;
-        let activeCropSlot = null;
-        let activeCropInput = null;
-        let activeCropBoxId = null;
-        let activeCropBadgeId = null;
+        function openCreateModal() {
+            document.getElementById('bookForm').action = "{{ route('admin.books.store') }}";
+            document.getElementById('formMethod').value = 'POST';
+            document.getElementById('modalHeaderTitle').innerText = 'Tambah Master Buku & Foto Naskah';
+            document.getElementById('bookForm').reset();
+            currentPhotoObj = { cover: null, back: null, inside1: null, inside2: null };
+            resetThumbnails();
+            switchVisualizerTab('cover');
+            updateVisualizerLive();
 
-        function startCropperFlow(input, boxId, badgeId, slot, defaultRatio) {
-            if (input.files && input.files[0]) {
-                activeCropSlot = slot;
-                activeCropInput = input;
-                activeCropBoxId = boxId;
-                activeCropBadgeId = badgeId;
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgTarget = document.getElementById('cropperImageTarget');
-                    imgTarget.src = e.target.result;
-
-                    // Open Cropper Modal
-                    const modal = document.getElementById('cropperModal');
-                    modal.classList.remove('hidden');
-                    modal.classList.add('flex');
-
-                    // Reset buttons
-                    updateCropButtonStyles(defaultRatio);
-
-                    // Destroy old instance if exists
-                    if (cropperInstance) {
-                        cropperInstance.destroy();
-                    }
-
-                    // Initialize Cropper.js with 8-point handles and free/constrained modes
-                    cropperInstance = new Cropper(imgTarget, {
-                        aspectRatio: defaultRatio,
-                        viewMode: 1,
-                        dragMode: 'move',
-                        autoCropArea: 0.92,
-                        restore: false,
-                        guides: true,
-                        center: true,
-                        highlight: false,
-                        cropBoxMovable: true,
-                        cropBoxResizable: true,
-                        toggleDragModeOnDblclick: false,
-                    });
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
+            const modal = document.getElementById('bookModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        function setCropRatio(ratio, buttonElement) {
-            if (cropperInstance) {
-                cropperInstance.setAspectRatio(ratio);
-            }
-            updateCropButtonStyles(ratio);
+        function openEditModal(book) {
+            document.getElementById('bookForm').action = "/admin/books/" + book.id;
+            document.getElementById('formMethod').value = 'PUT';
+            document.getElementById('modalHeaderTitle').innerText = 'Edit Data & Foto Buku: ' + book.title;
+
+            document.getElementById('in_title').value = book.title || '';
+            document.getElementById('in_author').value = book.author || '';
+            document.getElementById('in_category').value = book.category || '';
+            document.getElementById('in_isbn').value = book.isbn || '';
+            document.getElementById('in_price').value = book.price || '';
+            document.getElementById('in_year').value = book.year || '2026';
+            document.getElementById('in_pages').value = book.pages || '';
+            document.getElementById('in_status').value = book.status || 'published';
+            document.getElementById('in_format').value = book.format || 'UNESCO B5 (Bookpaper)';
+            document.getElementById('in_synopsis').value = book.synopsis || '';
+            document.getElementById('in_new_release').checked = Boolean(book.is_new_release);
+            document.getElementById('in_best_seller').checked = Boolean(book.is_best_seller);
+
+            currentPhotoObj = {
+                cover: book.cover_image ? ('/storage/' + book.cover_image) : null,
+                back: book.back_cover_image ? ('/storage/' + book.back_cover_image) : null,
+                inside1: book.inside_preview_image ? ('/storage/' + book.inside_preview_image) : null,
+                inside2: book.additional_image ? ('/storage/' + book.additional_image) : null,
+            };
+
+            setThumbPreview('cover', currentPhotoObj.cover);
+            setThumbPreview('back', currentPhotoObj.back);
+            setThumbPreview('inside1', currentPhotoObj.inside1);
+            setThumbPreview('inside2', currentPhotoObj.inside2);
+
+            switchVisualizerTab('cover');
+            updateVisualizerLive();
+
+            const modal = document.getElementById('bookModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
-        function updateCropButtonStyles(ratio) {
-            ['cropModeBook', 'cropModePaper', 'cropModeFree'].forEach(id => {
-                const b = document.getElementById(id);
-                if (b) {
-                    b.className = 'px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition';
-                }
-            });
-
-            if (isNaN(ratio)) {
-                document.getElementById('cropModeFree').className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs';
-            } else if (Math.abs(ratio - (3/4.1)) < 0.05) {
-                document.getElementById('cropModeBook').className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs';
-            } else {
-                document.getElementById('cropModePaper').className = 'px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs';
-            }
-        }
-
-        function applyCroppedResult() {
-            if (!cropperInstance) return;
-
-            const canvas = cropperInstance.getCroppedCanvas({
-                maxWidth: 2400,
-                maxHeight: 3200,
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: 'high',
-            });
-
-            const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-            slotImages[activeCropSlot] = croppedDataUrl;
-
-            // Update Thumbnail Box
-            const box = document.getElementById(activeCropBoxId);
-            box.innerHTML = '<img src="' + croppedDataUrl + '" class="w-full h-full object-cover rounded-lg" />';
-
-            // Update Badge
-            const badge = document.getElementById(activeCropBadgeId);
-            if (badge) {
-                badge.innerText = 'Terpotong';
-                badge.classList.remove('hidden');
-            }
-
-            // Sync with 3D Preview Frame
-            switchShowcaseAngle(activeCropSlot);
-
-            // Convert canvas to real File and assign to input.files via DataTransfer
-            canvas.toBlob(function(blob) {
-                const file = new File([blob], activeCropSlot + '_cropped.jpg', { type: 'image/jpeg' });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                activeCropInput.files = dataTransfer.files;
-            }, 'image/jpeg', 0.92);
-
-            cancelCropper();
-        }
-
-        function cancelCropper() {
-            const modal = document.getElementById('cropperModal');
+        function closeBookModal() {
+            const modal = document.getElementById('bookModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            if (cropperInstance) {
-                cropperInstance.destroy();
-                cropperInstance = null;
-            }
         }
 
-        function switchShowcaseAngle(slot) {
-            // Update active pill button style
-            ['btnAngleCover', 'btnAngleBack', 'btnAngleInside', 'btnAngleInside2'].forEach(id => {
-                const btn = document.getElementById(id);
+        function switchVisualizerTab(tab) {
+            activeTab = tab;
+            ['cover', 'back', 'inside1', 'inside2'].forEach(t => {
+                const btn = document.getElementById('tab_' + t);
                 if (btn) {
-                    btn.className = 'px-3 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+                    btn.className = t === tab 
+                        ? 'px-3 py-1 rounded-lg text-xs font-bold bg-[#006830] text-white transition shadow-2xs'
+                        : 'px-3 py-1 rounded-lg text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
                 }
             });
 
-            const activeBtnMap = {
-                cover: 'btnAngleCover',
-                back: 'btnAngleBack',
-                inside: 'btnAngleInside',
-                inside2: 'btnAngleInside2'
-            };
-            const activeBtn = document.getElementById(activeBtnMap[slot]);
-            if (activeBtn) {
-                activeBtn.className = 'px-3 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs';
-            }
+            const imgEl = document.getElementById('visImg');
+            const frontVec = document.getElementById('visFrontVec');
+            const insideVec = document.getElementById('visInsideVec');
 
-            const imgElement = document.getElementById('mainBookImage');
-            const vectorCover = document.getElementById('mainVectorCover');
-            const vectorBack = document.getElementById('mainVectorBack');
-            const vectorInside = document.getElementById('mainVectorInside');
-            const wrapper = document.getElementById('mainBookWrapper');
-            const spine = document.getElementById('spineCrease');
+            imgEl.classList.add('hidden');
+            frontVec.classList.add('hidden');
+            insideVec.classList.add('hidden');
 
-            // Smooth clean transition
-            wrapper.classList.remove('showcase-transition');
-            void wrapper.offsetWidth; // trigger reflow
-            wrapper.classList.add('showcase-transition');
-
-            // Reset visibility
-            imgElement.classList.add('hidden');
-            vectorCover.classList.add('hidden');
-            vectorBack.classList.add('hidden');
-            vectorInside.classList.add('hidden');
-            spine.classList.remove('hidden');
-
-            if (slotImages[slot]) {
-                imgElement.src = slotImages[slot];
-                imgElement.classList.remove('hidden');
+            const url = currentPhotoObj[tab];
+            if (url) {
+                imgEl.src = url;
+                imgEl.classList.remove('hidden');
             } else {
-                if (slot === 'cover') {
-                    vectorCover.classList.remove('hidden');
-                } else if (slot === 'back') {
-                    vectorBack.classList.remove('hidden');
-                    spine.classList.add('hidden');
-                } else if (slot === 'inside') {
-                    document.getElementById('prev_inside_label').innerText = 'BAGIAN 1: DAFTAR ISI';
-                    document.getElementById('prev_inside_title').innerText = 'Daftar Isi & Sistematika Buku';
-                    vectorInside.classList.remove('hidden');
-                } else if (slot === 'inside2') {
-                    document.getElementById('prev_inside_label').innerText = 'BAGIAN 2: PRATINJAU MATERI';
-                    document.getElementById('prev_inside_title').innerText = 'Pratinjau Materi & Pembahasan';
-                    vectorInside.classList.remove('hidden');
+                if (tab === 'cover' || tab === 'back') {
+                    frontVec.classList.remove('hidden');
+                } else {
+                    insideVec.classList.remove('hidden');
                 }
             }
         }
 
-        function handlePdfSelected(input) {
-            if (input.files && input.files[0]) {
-                const fileName = input.files[0].name;
-                document.getElementById('pdfLabel').innerText = fileName;
-            }
+        function updateVisualizerLive() {
+            const title = document.getElementById('in_title').value || 'Judul Buku';
+            const author = document.getElementById('in_author').value || 'Nama Penulis';
+            const category = document.getElementById('in_category').value || 'Buku Ajar';
+            const price = document.getElementById('in_price').value || 'Rp 75.000';
+
+            document.getElementById('visFrontTitle').innerText = title;
+            document.getElementById('visFrontAuthor').innerText = author;
+            document.getElementById('visFrontCat').innerText = category;
+            document.getElementById('visPrice').innerText = price;
         }
 
         function formatRupiahInput(input) {
             let val = input.value.replace(/[^0-9]/g, '');
-            if (!val) {
-                input.value = '';
-                updateModalMockup();
-                return;
+            if (val) {
+                input.value = 'Rp ' + new Intl.NumberFormat('id-ID').format(val);
             }
-            let formatted = new Intl.NumberFormat('id-ID').format(val);
-            input.value = 'Rp ' + formatted;
-            updateModalMockup();
+            updateVisualizerLive();
         }
 
-        function updateModalMockup() {
-            const title = document.getElementById('form_title').value || 'Judul Buku';
-            const author = document.getElementById('form_author').value || 'Nama Penulis';
-            const category = document.getElementById('form_category').value || 'Buku Ajar';
-            const price = document.getElementById('form_price').value || 'Rp 75.000';
-            const isbn = document.getElementById('form_isbn').value || '-';
-            const synopsis = document.getElementById('form_synopsis').value || 'Buku teks akademik berkualitas tinggi terbitan resmi PERSIS PERS dengan nomor ISBN resmi Perpusnas RI.';
-
-            document.getElementById('prev_cover_title').innerText = title;
-            document.getElementById('prev_cover_author').innerText = author;
-            document.getElementById('prev_cover_cat').innerText = category;
-            document.getElementById('prev_cover_price').innerText = price;
-            document.getElementById('prev_back_isbn').innerText = 'ISBN: ' + isbn;
-            document.getElementById('prev_back_synopsis').innerText = synopsis;
+        function setThumbPreview(key, url) {
+            const box = document.getElementById('thumb_box_' + key);
+            const badge = document.getElementById('badge_' + key);
+            if (url) {
+                box.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover" />';
+                badge.innerText = 'Terunggah';
+                badge.className = 'text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800';
+            } else {
+                box.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-xl"></i>';
+                badge.innerText = 'Pilih';
+                badge.className = 'text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600';
+            }
         }
 
-        function resetAllPreviews() {
-            slotImages = { cover: null, back: null, inside: null, inside2: null };
-            ['previewBoxCover', 'previewBoxBack', 'previewBoxInside', 'previewBoxInside2'].forEach(id => {
-                document.getElementById(id).innerHTML = '<i class="fa-solid fa-crop-simple text-slate-400 group-hover:text-emerald-600 text-sm mb-1"></i><span class="text-[8.5px] text-slate-500 font-medium">Pilih &amp; Potong Foto</span>';
-            });
-            ['badgeCover', 'badgeBack', 'badgeInside', 'badgeInside2'].forEach(id => {
-                const badge = document.getElementById(id);
-                if (badge) badge.classList.add('hidden');
-            });
-            document.getElementById('pdfLabel').innerText = 'Dokumen Sampel Naskah (PDF)';
-            switchShowcaseAngle('cover');
+        function resetThumbnails() {
+            ['cover', 'back', 'inside1', 'inside2'].forEach(k => setThumbPreview(k, null));
         }
 
-        function openAddBookModal() {
-            document.getElementById('modalFormTitle').innerText = 'Tambah Buku Baru ke Katalog';
-            document.getElementById('bookFormElement').action = "{{ route('admin.books.store') }}";
-            document.getElementById('formMethod').value = 'POST';
+        function handleImageSelection(input, key) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    activeCropKey = key;
+                    openCropper(e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
 
-            document.getElementById('form_title').value = '';
-            document.getElementById('form_author').value = '';
-            document.getElementById('form_category').value = 'Buku Ajar';
-            document.getElementById('form_isbn').value = '';
-            document.getElementById('form_price').value = 'Rp 75.000';
-            document.getElementById('form_year').value = '2026';
-            document.getElementById('form_pages').value = '240 hlm';
-            document.getElementById('form_format').value = 'UNESCO B5 (Bookpaper)';
-            document.getElementById('form_synopsis').value = '';
-            document.getElementById('form_status').value = 'published';
-            document.getElementById('form_new_release').checked = true;
-            document.getElementById('form_best_seller').checked = false;
-
-            resetAllPreviews();
-            updateModalMockup();
-
-            const modal = document.getElementById('bookFormModal');
+        function openCropper(imageSrc) {
+            const modal = document.getElementById('cropperModal');
+            const img = document.getElementById('cropperImage');
+            img.src = imageSrc;
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(img, {
+                aspectRatio: activeCropKey === 'cover' || activeCropKey === 'back' ? (3 / 4.15) : (1 / 1.4),
+                viewMode: 1,
+                autoCropArea: 1,
+            });
         }
 
-        function openEditBookModal(book) {
-            document.getElementById('modalFormTitle').innerText = 'Edit Data & Foto Buku: ' + book.title;
-            document.getElementById('bookFormElement').action = "/admin/books/" + book.id;
-            document.getElementById('formMethod').value = 'PUT';
-
-            document.getElementById('form_title').value = book.title;
-            document.getElementById('form_author').value = book.author;
-            document.getElementById('form_category').value = book.category;
-            document.getElementById('form_isbn').value = book.isbn || '';
-            document.getElementById('form_price').value = book.price;
-            document.getElementById('form_year').value = book.year;
-            document.getElementById('form_pages').value = book.pages;
-            document.getElementById('form_format').value = book.format || 'UNESCO B5 (Bookpaper)';
-            document.getElementById('form_synopsis').value = book.synopsis || '';
-            document.getElementById('form_status').value = book.status;
-            document.getElementById('form_new_release').checked = Boolean(book.is_new_release);
-            document.getElementById('form_best_seller').checked = Boolean(book.is_best_seller);
-
-            resetAllPreviews();
-            updateModalMockup();
-
-            if (book.cover_image) {
-                slotImages.cover = '/storage/' + book.cover_image;
-                document.getElementById('previewBoxCover').innerHTML = '<img src="/storage/' + book.cover_image + '" class="w-full h-full object-cover rounded-lg" />';
-                document.getElementById('badgeCover').classList.remove('hidden');
-            }
-            if (book.back_cover_image) {
-                slotImages.back = '/storage/' + book.back_cover_image;
-                document.getElementById('previewBoxBack').innerHTML = '<img src="/storage/' + book.back_cover_image + '" class="w-full h-full object-cover rounded-lg" />';
-                document.getElementById('badgeBack').classList.remove('hidden');
-            }
-            if (book.inside_preview_image) {
-                slotImages.inside = '/storage/' + book.inside_preview_image;
-                document.getElementById('previewBoxInside').innerHTML = '<img src="/storage/' + book.inside_preview_image + '" class="w-full h-full object-cover rounded-lg" />';
-                document.getElementById('badgeInside').classList.remove('hidden');
-            }
-            if (book.additional_image) {
-                slotImages.inside2 = '/storage/' + book.additional_image;
-                document.getElementById('previewBoxInside2').innerHTML = '<img src="/storage/' + book.additional_image + '" class="w-full h-full object-cover rounded-lg" />';
-                document.getElementById('badgeInside2').classList.remove('hidden');
-            }
-            if (book.sample_pdf) {
-                document.getElementById('pdfLabel').innerText = 'PDF Terunggah (Tersimpan)';
-            }
-
-            switchShowcaseAngle('cover');
-
-            const modal = document.getElementById('bookFormModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        function setCropRatio(ratio) {
+            if (cropper) cropper.setAspectRatio(ratio);
         }
 
-        function closeBookFormModal() {
-            const modal = document.getElementById('bookFormModal');
+        function closeCropperModal() {
+            const modal = document.getElementById('cropperModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
         }
 
-        document.getElementById('bookFormModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeBookFormModal();
-            }
-        });
+        function applyCrop() {
+            if (!cropper || !activeCropKey) return;
+            const canvas = cropper.getCroppedCanvas({ width: 800, height: 1100 });
+            canvas.toBlob(blob => {
+                const file = new File([blob], 'cropped_' + activeCropKey + '.jpg', { type: 'image/jpeg' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+
+                const inputId = activeCropKey === 'cover' ? 'in_cover_image'
+                              : activeCropKey === 'back' ? 'in_back_cover'
+                              : activeCropKey === 'inside1' ? 'in_inside1'
+                              : 'in_inside2';
+                document.getElementById(inputId).files = dataTransfer.files;
+
+                const url = URL.createObjectURL(blob);
+                currentPhotoObj[activeCropKey] = url;
+                setThumbPreview(activeCropKey, url);
+                switchVisualizerTab(activeCropKey);
+                closeCropperModal();
+            }, 'image/jpeg', 0.92);
+        }
     </script>
 @endsection
