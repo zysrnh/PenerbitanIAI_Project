@@ -341,7 +341,7 @@
         </div>
 
         <!-- RIGHT COLUMN: LARGE & SPACIOUS LIVE PREVIEW MOCKUP (STICKY TOP-20) -->
-        <div class="xl:col-span-6 sticky top-20 space-y-4">
+        <div class="xl:col-span-6 sticky top-20 self-start space-y-4">
             
             <!-- Window Mockup Frame Header (🔴 🟡 🟢) -->
             <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-lg flex items-center justify-between text-white">

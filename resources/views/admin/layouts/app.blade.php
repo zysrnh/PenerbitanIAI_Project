@@ -141,7 +141,7 @@
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-40 hidden lg:hidden backdrop-blur-xs"></div>
 
     <!-- Main Content Container with Strict Boundaries -->
-    <div class="flex-1 min-w-0 lg:pl-64 flex flex-col min-h-screen overflow-x-hidden">
+    <div class="flex-1 min-w-0 lg:pl-64 flex flex-col min-h-screen">
         
         <!-- Top Navbar -->
         <header class="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shrink-0">
