@@ -85,11 +85,11 @@ class CatalogController extends Controller
                 'year' => '2025',
                 'pages' => '420 hlm (Hardcover)',
                 'cover_color' => 'from-amber-900 to-brand-950',
-                'synopsis' => 'Karya monumental yang merekam jejak perjuangan, ide pembaruan, dan biografi para ulama perintis Persatuan Islam dari masa ke masa dalam menegakkan Al-Qur'an dan Sunnah.',
+                'synopsis' => 'Karya monumental yang merekam jejak perjuangan, ide pembaruan, dan biografi para ulama perintis Persatuan Islam dari masa ke masa dalam menegakkan Al-Quran dan As-Sunnah.',
             ],
             [
                 'id' => 6,
-                'title' => 'Panduan Praktis Tadabbur Al-Qur'an Tematik',
+                'title' => 'Panduan Praktis Tadabbur Al-Quran Tematik',
                 'author' => 'Dr. KH. Abdullah Syakir, MA',
                 'isbn' => '978-602-7491-11-2',
                 'price' => 'Rp 65.000',
@@ -97,7 +97,7 @@ class CatalogController extends Controller
                 'year' => '2025',
                 'pages' => '210 hlm',
                 'cover_color' => 'from-emerald-950 to-emerald-800',
-                'synopsis' => 'Metode sistematis menyelami pesan moral dan petunjuk hidup dalam Al-Qur'an melalui pembagian tema kehidupan, keluarga, ibadah, dan sosial kemasyarakatan.',
+                'synopsis' => 'Metode sistematis menyelami pesan moral dan petunjuk hidup dalam Al-Quran melalui pembagian tema kehidupan, keluarga, ibadah, dan sosial kemasyarakatan.',
             ],
             [
                 'id' => 7,
@@ -109,7 +109,7 @@ class CatalogController extends Controller
                 'year' => '2025',
                 'pages' => '260 hlm',
                 'cover_color' => 'from-slate-900 to-emerald-900',
-                'synopsis' => 'Diktat rujukan mahasiswa perguruan tinggi Islam dalam memahami kaidah bahasa (ushuliyah) dan kaidah hukum (fiqhiyyah) untuk menggali hukum syar'i.',
+                'synopsis' => 'Diktat rujukan mahasiswa perguruan tinggi Islam dalam memahami kaidah bahasa (ushuliyah) dan kaidah hukum (fiqhiyyah) untuk menggali hukum syari.',
             ],
             [
                 'id' => 8,
