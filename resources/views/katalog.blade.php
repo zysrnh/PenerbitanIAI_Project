@@ -218,8 +218,8 @@
                                         </div>
 
                                         <!-- Meta Info Below Cover -->
-                                        <div class="mt-3 space-y-0.5">
-                                            <h4 class="font-bold text-xs text-slate-900 line-clamp-2 leading-snug">
+                                        <div class="mt-3 space-y-1">
+                                            <h4 class="font-bold text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2.25rem] flex items-center">
                                                 {{ $book['title'] }}
                                             </h4>
                                             <p class="text-[11px] text-slate-500 line-clamp-1">
@@ -229,21 +229,21 @@
                                     </div>
 
                                     <!-- Price & Actions -->
-                                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
-                                        <div>
-                                            <span class="text-[9px] text-slate-400 block font-medium">Harga Cetak:</span>
-                                            <span class="text-xs font-black text-brand-900">{{ $book['price'] }}</span>
-                                        </div>
-                                        <div class="flex items-center gap-1.5">
-                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold transition" title="Lihat Sinopsis">
-                                                Detail
-                                            </button>
-                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-[10px] flex items-center gap-1 transition shadow-xs">
-                                                <i class="fa-brands fa-whatsapp"></i> Pesan
-                                            </a>
-                                        </div>
+                                    <!-- Price & Meta Bar -->
+                                    <div class="mt-3 pt-3 border-t border-slate-100 flex items-baseline justify-between">
+                                        <span class="text-[11px] text-slate-500 font-medium">Harga Cetak</span>
+                                        <span class="text-sm font-black text-brand-950 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
                                     </div>
 
+                                    <!-- Clean 2-Column Action Buttons -->
+                                    <div class="mt-2.5 grid grid-cols-2 gap-2">
+                                        <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold text-center transition flex items-center justify-center gap-1.5">
+                                            <i class="fa-solid fa-eye text-[11px] text-slate-500"></i> Detail
+                                        </button>
+                                        <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold text-center transition flex items-center justify-center gap-1.5 shadow-xs">
+                                            <i class="fa-brands fa-whatsapp text-sm"></i> Pesan
+                                        </a>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -298,8 +298,8 @@
                                         </div>
 
                                         <!-- Meta Info Below Cover -->
-                                        <div class="mt-3 space-y-0.5">
-                                            <h4 class="font-bold text-xs text-slate-900 line-clamp-2 leading-snug">
+                                        <div class="mt-3 space-y-1">
+                                            <h4 class="font-bold text-xs text-slate-900 line-clamp-2 leading-snug min-h-[2.25rem] flex items-center">
                                                 {{ $book['title'] }}
                                             </h4>
                                             <p class="text-[11px] text-slate-500 line-clamp-1">
@@ -309,21 +309,21 @@
                                     </div>
 
                                     <!-- Price & Actions -->
-                                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
-                                        <div>
-                                            <span class="text-[9px] text-slate-400 block font-medium">Harga Cetak:</span>
-                                            <span class="text-xs font-black text-amber-800">{{ $book['price'] }}</span>
-                                        </div>
-                                        <div class="flex items-center gap-1.5">
-                                            <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-bold transition" title="Lihat Sinopsis">
-                                                Detail
-                                            </button>
-                                            <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="px-2.5 py-1.5 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-[10px] flex items-center gap-1 transition shadow-xs">
-                                                <i class="fa-brands fa-whatsapp"></i> Pesan
-                                            </a>
-                                        </div>
+                                    <!-- Price & Meta Bar -->
+                                    <div class="mt-3 pt-3 border-t border-slate-100 flex items-baseline justify-between">
+                                        <span class="text-[11px] text-slate-500 font-medium">Harga Cetak</span>
+                                        <span class="text-sm font-black text-amber-900 font-heading leading-none whitespace-nowrap">{{ $book['price'] }}</span>
                                     </div>
 
+                                    <!-- Clean 2-Column Action Buttons -->
+                                    <div class="mt-2.5 grid grid-cols-2 gap-2">
+                                        <button type="button" onclick="openBookModal({{ json_encode($book) }})" class="w-full py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold text-center transition flex items-center justify-center gap-1.5">
+                                            <i class="fa-solid fa-eye text-[11px] text-slate-500"></i> Detail
+                                        </button>
+                                        <a href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin memesan buku: ' . $book['title']) }}" target="_blank" class="w-full py-1.5 px-2 rounded-lg bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs font-bold text-center transition flex items-center justify-center gap-1.5 shadow-xs">
+                                            <i class="fa-brands fa-whatsapp text-sm"></i> Pesan
+                                        </a>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
