@@ -4,6 +4,42 @@
 @section('header_title', 'Manajemen Koleksi Buku & Terbitan')
 
 @section('content')
+    <style>
+        /* 3D Realistic Book Styling & Micro-Animations */
+        .book-container-3d {
+            perspective: 1000px;
+        }
+        .book-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            box-shadow: 12px 16px 28px -6px rgba(0, 0, 0, 0.35), 2px 2px 6px rgba(0,0,0,0.15);
+        }
+        .book-container-3d:hover .book-3d {
+            transform: rotateY(-18deg) rotateX(6deg) translateY(-4px) scale(1.03);
+            box-shadow: 18px 24px 36px -6px rgba(0, 0, 0, 0.45), 4px 4px 10px rgba(0,0,0,0.2);
+        }
+        .book-spine-effect {
+            background: linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 15%, rgba(0,0,0,0.25) 85%, rgba(0,0,0,0.4) 100%);
+        }
+        .book-shine {
+            background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%);
+        }
+        .photo-card-hover {
+            transition: all 0.25s ease;
+        }
+        .photo-card-hover:hover {
+            transform: translateY(-2px);
+            border-color: #006830;
+        }
+        .animate-flip-3d {
+            animation: flipIn 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        @keyframes flipIn {
+            0% { transform: scale(0.92) rotateY(35deg); opacity: 0.7; }
+            100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+        }
+    </style>
+
     <!-- Top Header -->
     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
@@ -20,14 +56,14 @@
             <a href="{{ route('katalog') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
                 <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Katalog Publik
             </a>
-            <button type="button" onclick="openAddBookModal()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-bold transition shadow-xs hover:shadow-md flex items-center gap-2">
-                <i class="fa-solid fa-plus"></i> Tambah Buku Baru
+            <button type="button" onclick="openAddBookModal()" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-bold transition shadow-xs hover:shadow-md flex items-center gap-2 group">
+                <i class="fa-solid fa-plus transition-transform group-hover:rotate-90 duration-300"></i> Tambah Buku Baru
             </button>
         </div>
     </div>
 
     @if(session('success'))
-        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-medium flex items-center justify-between shadow-xs">
+        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm font-medium flex items-center justify-between shadow-xs animate-fade-in-up">
             <div class="flex items-center gap-2.5">
                 <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
                 <span>{{ session('success') }}</span>
@@ -46,7 +82,7 @@
 
     <!-- 4 Stats Cards -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-6">
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 hover:shadow-md transition">
             <div class="w-10 h-10 rounded-xl bg-emerald-50 text-[#006830] flex items-center justify-center text-lg shrink-0">
                 <i class="fa-solid fa-book"></i>
             </div>
@@ -56,7 +92,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 hover:shadow-md transition">
             <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-lg shrink-0">
                 <i class="fa-solid fa-sparkles"></i>
             </div>
@@ -66,7 +102,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 hover:shadow-md transition">
             <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg shrink-0">
                 <i class="fa-solid fa-trophy"></i>
             </div>
@@ -76,7 +112,7 @@
             </div>
         </div>
 
-        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5 hover:shadow-md transition">
             <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-lg shrink-0">
                 <i class="fa-solid fa-layer-group"></i>
             </div>
@@ -137,7 +173,7 @@
                             <!-- Cover Mini -->
                             <td class="py-3.5 px-4">
                                 @if($book->cover_image && Storage::disk('public')->exists($book->cover_image))
-                                    <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-11 aspect-[3/4.2] object-cover rounded-xs shadow-xs border border-slate-200" />
+                                    <img src="{{ asset('storage/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-11 aspect-[3/4.2] object-cover rounded-xs shadow-xs border border-slate-200 hover:scale-110 transition cursor-pointer" onclick="openEditBookModal({{ json_encode($book) }})" />
                                 @else
                                     <div class="w-10 aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-1 flex flex-col justify-between border-l-2 border-emerald-400 shadow-2xs text-[6px]">
                                         <span class="font-extrabold truncate text-emerald-300">{{ $book->category }}</span>
@@ -195,7 +231,7 @@
                             <!-- Actions -->
                             <td class="py-3.5 px-4 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    <button type="button" onclick="openEditBookModal({{ json_encode($book) }})" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition shadow-2xs" title="Edit Buku & Foto">
+                                    <button type="button" onclick="openEditBookModal({{ json_encode($book) }})" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 flex items-center justify-center text-xs transition shadow-2xs" title="Edit Buku & Foto">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
                                     <form method="POST" action="{{ route('admin.books.destroy', $book) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini beserta seluruh fotonya?')" class="inline">
@@ -229,14 +265,14 @@
         @endif
     </div>
 
-    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (3D LIVE MOCKUP + 4 PHOTO SLOTS) -->
-    <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[94vh] flex flex-col">
+    <!-- MODAL INTERAKTIF TAMBAH & EDIT BUKU (ANIMATED 3D VISUALIZER + 4 PHOTO SLOTS) -->
+    <div id="bookFormModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs">
+        <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl border border-slate-200 overflow-hidden relative animate-fade-in-up my-auto max-h-[95vh] flex flex-col">
             
             <!-- Modal Header -->
             <div class="bg-[#032c21] text-white px-6 py-4 flex items-center justify-between border-b border-[#064e3b] shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
                     <span id="modalFormTitle" class="text-sm font-bold uppercase tracking-wider text-emerald-300">Kelola Koleksi Buku &amp; Galeri Foto</span>
                 </div>
                 <button type="button" onclick="closeBookFormModal()" class="w-8 h-8 rounded-lg bg-[#064e3b] hover:bg-[#08634c] text-slate-200 hover:text-white flex items-center justify-center text-sm font-bold transition">
@@ -244,41 +280,72 @@
                 </button>
             </div>
 
-            <!-- Modal Form Body (2-Column Grid: Left Visual Mockup & 4 Slots, Right Form) -->
+            <!-- Modal Form Body (2-Column Grid: Left Visual 3D Showcase & 4 Slots, Right Form) -->
             <form id="bookFormElement" method="POST" action="{{ route('admin.books.store') }}" enctype="multipart/form-data" class="p-6 overflow-y-auto">
                 @csrf
                 <input type="hidden" name="_method" id="formMethod" value="POST" />
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     
-                    <!-- Left: Interactive 3D Mockup Cover + 4 Photo Slots -->
-                    <div class="lg:col-span-5 space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <!-- Left: Interactive Animated 3D Showcase + 4 Photo Slots -->
+                    <div class="lg:col-span-5 space-y-4 bg-slate-50/80 p-4 rounded-xl border border-slate-200">
                         
-                        <!-- Top: Real-Time 3D Book Cover Mockup Preview -->
-                        <div class="flex flex-col items-center bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-2xs">
-                            <span class="text-[9.5px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Pratinjau Visual Sampul 3D Real-Time</span>
+                        <!-- Top: Animated 3D Book Showcase Box -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col items-center">
                             
-                            <!-- 3D Vector Cover Mockup -->
-                            <div id="modalPreviewCover" class="relative w-32 aspect-[3/4.2] rounded-xs bg-[#032c21] text-white p-2.5 flex flex-col justify-between border-l-4 border-emerald-400 border-r-2 border-r-slate-300 shadow-md select-none">
-                                <div class="flex justify-between items-center border-b border-white/20 pb-0.5">
-                                    <span id="prev_cover_cat" class="text-[7px] font-extrabold uppercase px-1 py-0.2 rounded-xs bg-[#064e3b] text-emerald-300 truncate">Buku Ajar</span>
-                                    <span class="text-[7px] text-slate-300 font-mono">PERSIS</span>
-                                </div>
+                            <!-- Angle Switcher Pills -->
+                            <div class="flex items-center justify-center gap-1.5 mb-3 w-full border-b border-slate-100 pb-2.5">
+                                <button type="button" onclick="switchShowcaseAngle('cover')" id="btnAngleCover" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs">
+                                    Depan
+                                </button>
+                                <button type="button" onclick="switchShowcaseAngle('back')" id="btnAngleBack" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                                    Belakang
+                                </button>
+                                <button type="button" onclick="switchShowcaseAngle('inside')" id="btnAngleInside" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                                    Isi
+                                </button>
+                                <button type="button" onclick="switchShowcaseAngle('physical')" id="btnAnglePhysical" class="px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+                                    Fisik
+                                </button>
+                            </div>
 
-                                <div class="text-center my-auto py-1">
-                                    <div class="w-3 h-0.5 bg-amber-400 mx-auto mb-1"></div>
-                                    <h5 id="prev_cover_title" class="font-black text-[9.5px] text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
-                                    <div class="w-3 h-0.5 bg-amber-400 mx-auto mt-1"></div>
-                                </div>
+                            <!-- 3D Perspective Book Wrapper -->
+                            <div class="book-container-3d py-1 flex items-center justify-center">
+                                <div id="main3dBookWrapper" class="book-3d relative w-36 aspect-[3/4.2] rounded-xs overflow-hidden select-none cursor-pointer">
+                                    
+                                    <!-- Dynamic Image Display (Active when photo selected) -->
+                                    <img id="main3dBookImage" src="" alt="Book Cover" class="w-full h-full object-cover hidden" />
 
-                                <div class="pt-0.5 border-t border-white/20 text-center">
-                                    <span id="prev_cover_author" class="text-[8px] text-slate-200 block font-medium truncate">Nama Penulis</span>
+                                    <!-- Realistic Spine Crease Bar & Edge Highlight -->
+                                    <div id="spineCrease" class="absolute inset-0 pointer-events-none book-spine-effect"></div>
+                                    <div class="absolute inset-0 pointer-events-none book-shine"></div>
+
+                                    <!-- Vector Cover (Active by default or when no image) -->
+                                    <div id="main3dVectorCover" class="w-full h-full bg-[#032c21] text-white p-3 flex flex-col justify-between border-l-4 border-emerald-400">
+                                        <div class="flex justify-between items-center border-b border-white/20 pb-1">
+                                            <span id="prev_cover_cat" class="text-[7.5px] font-extrabold uppercase px-1 py-0.5 rounded-xs bg-[#064e3b] text-emerald-300 truncate">Buku Ajar</span>
+                                            <span class="text-[7.5px] text-slate-300 font-mono">PERSIS</span>
+                                        </div>
+
+                                        <div class="text-center my-auto py-1">
+                                            <div class="w-4 h-0.5 bg-amber-400 mx-auto mb-1"></div>
+                                            <h5 id="prev_cover_title" class="font-black text-[10.5px] text-white leading-tight font-heading line-clamp-3">Judul Buku</h5>
+                                            <div class="w-4 h-0.5 bg-amber-400 mx-auto mt-1"></div>
+                                        </div>
+
+                                        <div class="pt-1 border-t border-white/20 text-center">
+                                            <span id="prev_cover_author" class="text-[8.5px] text-slate-200 block font-medium truncate">Nama Penulis</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Live Price Tag -->
-                            <div class="mt-2 text-center">
-                                <span id="prev_cover_price" class="text-xs font-black text-[#006830] font-mono">Rp 75.000</span>
+                            <!-- Live Price Tag & Hint -->
+                            <div class="mt-3 flex items-center justify-between w-full pt-2 border-t border-slate-100 text-xs">
+                                <span class="text-[10px] text-slate-400 font-medium">
+                                    <i class="fa-solid fa-hand-pointer text-emerald-600"></i> Sorot kursor utk efek 3D
+                                </span>
+                                <span id="prev_cover_price" class="font-black text-[#006830] font-mono text-sm">Rp 75.000</span>
                             </div>
                         </div>
 
@@ -288,45 +355,57 @@
                                 <span class="text-[11px] font-bold text-slate-800 uppercase tracking-wider">
                                     <i class="fa-solid fa-images text-emerald-600 mr-1"></i> Galeri Naskah (2 - 4 Foto)
                                 </span>
-                                <span class="text-[9px] text-slate-400">Maks. 50MB/foto</span>
+                                <span class="text-[9px] text-slate-400 font-medium">Maks. 50MB/foto</span>
                             </div>
 
                             <div class="grid grid-cols-2 gap-2.5 text-[10.5px]">
                                 
                                 <!-- Foto 1: Sampul Depan -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
-                                    <span class="font-bold text-slate-700 block text-[9.5px]">1. Sampul Depan <span class="text-rose-500">*</span></span>
-                                    <div id="previewBoxCover" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-700 text-[9.5px]">1. Depan <span class="text-rose-500">*</span></span>
+                                        <span id="badgeCover" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                    </div>
+                                    <div id="previewBoxCover" onclick="switchShowcaseAngle('cover')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
                                         <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxCover')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxCover', 'badgeCover', 'cover')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
                                 </div>
 
                                 <!-- Foto 2: Sampul Belakang -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
-                                    <span class="font-bold text-slate-700 block text-[9.5px]">2. Sampul Belakang</span>
-                                    <div id="previewBoxBack" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-700 text-[9.5px]">2. Belakang</span>
+                                        <span id="badgeBack" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                    </div>
+                                    <div id="previewBoxBack" onclick="switchShowcaseAngle('back')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
                                         <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxBack')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxBack', 'badgeBack', 'back')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
                                 </div>
 
                                 <!-- Foto 3: Halaman Isi / Daftar Isi -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
-                                    <span class="font-bold text-slate-700 block text-[9.5px]">3. Pratinjau Isi / Daftar</span>
-                                    <div id="previewBoxInside" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-700 text-[9.5px]">3. Isi / Daftar</span>
+                                        <span id="badgeInside" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                    </div>
+                                    <div id="previewBoxInside" onclick="switchShowcaseAngle('inside')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
                                         <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxInside')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                                    <input type="file" name="inside_preview_image" id="in_inside_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxInside', 'badgeInside', 'inside')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
                                 </div>
 
                                 <!-- Foto 4: Foto Fisik / Mockup -->
-                                <div class="p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
-                                    <span class="font-bold text-slate-700 block text-[9.5px]">4. Foto Fisik / Detail</span>
-                                    <div id="previewBoxPhysical" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden">
+                                <div class="photo-card-hover p-2 bg-white rounded-lg border border-slate-200 shadow-2xs space-y-1 text-center">
+                                    <div class="flex items-center justify-between">
+                                        <span class="font-bold text-slate-700 text-[9.5px]">4. Fisik / Detail</span>
+                                        <span id="badgePhysical" class="hidden text-[8px] font-bold text-emerald-700 bg-emerald-50 px-1 rounded">Ada</span>
+                                    </div>
+                                    <div id="previewBoxPhysical" onclick="switchShowcaseAngle('physical')" class="w-full h-16 rounded bg-slate-100 border border-dashed border-slate-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-emerald-500 transition">
                                         <span class="text-[8.5px] text-slate-400">Pilih Foto</span>
                                     </div>
-                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="previewSelectedImg(this, 'previewBoxPhysical')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
+                                    <input type="file" name="additional_image" id="in_additional_img" accept="image/*" onchange="handleImageSlotChange(this, 'previewBoxPhysical', 'badgePhysical', 'physical')" class="w-full text-[8.5px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[8.5px] file:bg-emerald-50 file:text-emerald-700 cursor-pointer" />
                                 </div>
 
                             </div>
@@ -445,6 +524,74 @@
 
     <!-- Modal JS -->
     <script>
+        // Track uploaded/cached data URLs for the 4 slots
+        let slotImages = {
+            cover: null,
+            back: null,
+            inside: null,
+            physical: null
+        };
+
+        function switchShowcaseAngle(slot) {
+            // Update active pill button style
+            ['btnAngleCover', 'btnAngleBack', 'btnAngleInside', 'btnAnglePhysical'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+                }
+            });
+
+            const activeBtnMap = {
+                cover: 'btnAngleCover',
+                back: 'btnAngleBack',
+                inside: 'btnAngleInside',
+                physical: 'btnAnglePhysical'
+            };
+            const activeBtn = document.getElementById(activeBtnMap[slot]);
+            if (activeBtn) {
+                activeBtn.className = 'px-2.5 py-1 rounded-md text-[10px] font-bold bg-[#006830] text-white transition shadow-2xs';
+            }
+
+            const imgElement = document.getElementById('main3dBookImage');
+            const vectorCover = document.getElementById('main3dVectorCover');
+            const wrapper = document.getElementById('main3dBookWrapper');
+
+            // Add smooth flip micro-animation
+            wrapper.classList.remove('animate-flip-3d');
+            void wrapper.offsetWidth; // trigger reflow
+            wrapper.classList.add('animate-flip-3d');
+
+            if (slotImages[slot]) {
+                imgElement.src = slotImages[slot];
+                imgElement.classList.remove('hidden');
+                vectorCover.classList.add('hidden');
+            } else if (slot === 'cover') {
+                imgElement.classList.add('hidden');
+                vectorCover.classList.remove('hidden');
+            } else {
+                imgElement.classList.add('hidden');
+                vectorCover.classList.remove('hidden');
+            }
+        }
+
+        function handleImageSlotChange(input, boxId, badgeId, slot) {
+            const box = document.getElementById(boxId);
+            const badge = document.getElementById(badgeId);
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    slotImages[slot] = e.target.result;
+                    box.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover rounded" />';
+                    if (badge) badge.classList.remove('hidden');
+                    
+                    // Switch 3D preview to the newly selected photo immediately
+                    switchShowcaseAngle(slot);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function updateModalMockup() {
             const title = document.getElementById('form_title').value || 'Judul Buku';
             const author = document.getElementById('form_author').value || 'Nama Penulis';
@@ -457,21 +604,16 @@
             document.getElementById('prev_cover_price').innerText = price;
         }
 
-        function previewSelectedImg(input, targetBoxId) {
-            const box = document.getElementById(targetBoxId);
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    box.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover rounded" />';
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function resetImagePreviews() {
+        function resetAllPreviews() {
+            slotImages = { cover: null, back: null, inside: null, physical: null };
             ['previewBoxCover', 'previewBoxBack', 'previewBoxInside', 'previewBoxPhysical'].forEach(id => {
                 document.getElementById(id).innerHTML = '<span class="text-[8.5px] text-slate-400">Pilih Foto</span>';
             });
+            ['badgeCover', 'badgeBack', 'badgeInside', 'badgePhysical'].forEach(id => {
+                const badge = document.getElementById(id);
+                if (badge) badge.classList.add('hidden');
+            });
+            switchShowcaseAngle('cover');
         }
 
         function openAddBookModal() {
@@ -492,7 +634,7 @@
             document.getElementById('form_new_release').checked = true;
             document.getElementById('form_best_seller').checked = false;
 
-            resetImagePreviews();
+            resetAllPreviews();
             updateModalMockup();
 
             const modal = document.getElementById('bookFormModal');
@@ -518,21 +660,31 @@
             document.getElementById('form_new_release').checked = Boolean(book.is_new_release);
             document.getElementById('form_best_seller').checked = Boolean(book.is_best_seller);
 
-            resetImagePreviews();
+            resetAllPreviews();
             updateModalMockup();
 
             if (book.cover_image) {
+                slotImages.cover = '/storage/' + book.cover_image;
                 document.getElementById('previewBoxCover').innerHTML = '<img src="/storage/' + book.cover_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('badgeCover').classList.remove('hidden');
             }
             if (book.back_cover_image) {
+                slotImages.back = '/storage/' + book.back_cover_image;
                 document.getElementById('previewBoxBack').innerHTML = '<img src="/storage/' + book.back_cover_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('badgeBack').classList.remove('hidden');
             }
             if (book.inside_preview_image) {
+                slotImages.inside = '/storage/' + book.inside_preview_image;
                 document.getElementById('previewBoxInside').innerHTML = '<img src="/storage/' + book.inside_preview_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('badgeInside').classList.remove('hidden');
             }
             if (book.additional_image) {
+                slotImages.physical = '/storage/' + book.additional_image;
                 document.getElementById('previewBoxPhysical').innerHTML = '<img src="/storage/' + book.additional_image + '" class="w-full h-full object-cover rounded" />';
+                document.getElementById('badgePhysical').classList.remove('hidden');
             }
+
+            switchShowcaseAngle('cover');
 
             const modal = document.getElementById('bookFormModal');
             modal.classList.remove('hidden');
