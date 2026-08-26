@@ -4,7 +4,6 @@
 
 @section('content')
     <style>
-        /* Consistent Bookstore Hover & Spine Depth */
         .book-card-item {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -30,7 +29,7 @@
         }
     </style>
 
-    <!-- 1. HEADER BANNER (Identical to Kontak & Tentang pages) -->
+    <!-- 1. HEADER BANNER (Managed from Admin /admin/settings/catalog) -->
     <section class="bg-brand-950 text-white py-14 sm:py-16 relative overflow-hidden border-b border-brand-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
             <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
@@ -45,7 +44,7 @@
         </div>
     </section>
 
-    <!-- 2. 4 QUICK STATS CARDS (Overlap style matching Kontak & Tentang) -->
+    <!-- 2. 4 QUICK STATS CARDS OVERLAP (-mt-7) -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-7 relative z-20">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             
@@ -163,7 +162,7 @@
                         </div>
                     </div>
 
-                    <!-- INFO & PROMO WIDGET -->
+                    <!-- INFO & PROMO WIDGET (Managed from Admin) -->
                     <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm">
                         <div class="bg-brand-950 text-white px-4 py-3 font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 border-b border-brand-900">
                             <i class="fa-solid fa-bullhorn text-emerald-400"></i> Info &amp; Promo
@@ -343,6 +342,30 @@
 
             </div>
 
+        </div>
+    </section>
+
+    <!-- 4. CTA PUBLISH YOUR BOOK BOX (Managed from Admin /admin/settings/catalog) -->
+    <section class="py-12 bg-white border-t border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-brand-950 rounded-sm p-6 sm:p-8 text-white border border-brand-900 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden">
+                <div class="relative z-10 text-center sm:text-left">
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-brand-900 px-3 py-1 rounded-sm border border-emerald-500/20 inline-block mb-2">
+                        LAYANAN PENERBITAN KAMPUS
+                    </span>
+                    <h3 class="text-xl sm:text-2xl font-black text-white mb-2">
+                        {{ $settings['catalog_publish_box_title'] ?? 'Punya Naskah Buku Sendiri?' }}
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
+                        {{ $settings['catalog_publish_box_desc'] ?? 'Terbitkan karya ilmiah Anda bersama PERSIS PERS dengan jaminan ISBN resmi dan mutu cetak prima.' }}
+                    </p>
+                </div>
+
+                <a href="{{ route('kontak') }}" class="relative z-10 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-sm text-xs sm:text-sm transition shadow-sm shrink-0 flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Konsultasi Terbit</span>
+                </a>
+            </div>
         </div>
     </section>
 
