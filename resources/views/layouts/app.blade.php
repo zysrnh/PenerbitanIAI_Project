@@ -202,54 +202,12 @@
                             </a>
                         @endif
                     @else
-                        {{-- Guest: Icon-Only Member Trigger with Seamless Zero-Flicker Dropdown --}}
-                        <div class="relative group" id="guestUserDropdownContainer">
-                            <button type="button" 
-                                    id="guestUserDropdownBtn"
-                                    onclick="window.toggleGuestDropdown(event)"
-                                    aria-label="Akun Member"
-                                    class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition">
-                                <i class="fa-solid fa-user text-sm transition-transform duration-300"></i>
-                                
-                                <!-- Animated subtle green pulse ring -->
-                                <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3 pointer-events-none">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
-                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-600 border-2 border-white"></span>
-                                </span>
-                            </button>
-
-                            <!-- Animated Dropdown Panel on Hover & Click (with seamless hover bridge) -->
-                            <div id="guestUserDropdownMenu" class="absolute right-0 top-full pt-1.5 hidden group-hover:block w-56 z-[100] before:absolute before:-top-3 before:left-0 before:right-0 before:h-4 before:content-['']">
-                                <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl shadow-2xl p-3 animate-fade-in-up">
-                                    <div class="flex items-center gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
-                                        <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold shrink-0">
-                                            <i class="fa-solid fa-user"></i>
-                                        </div>
-                                        <div class="min-w-0">
-                                            <h6 class="text-xs font-extrabold text-slate-900 truncate">Area Member</h6>
-                                            <p class="text-[10px] text-slate-400 truncate">Penerbitan & Katalog</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-1.5">
-                                        <a href="{{ route('member.login') }}" 
-                                            class="w-full py-2 px-3 bg-[#006830] hover:bg-[#032c21] text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs hover:shadow-sm">
-                                            <i class="fa-solid fa-right-to-bracket text-[10px]"></i> Masuk Akun
-                                        </a>
-                                        <a href="{{ route('member.register') }}" 
-                                            class="w-full py-2 px-3 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-300 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5">
-                                            <i class="fa-solid fa-user-plus text-[10px] text-emerald-600"></i> Buat Akun Baru
-                                        </a>
-                                    </div>
-
-                                    <div class="mt-2.5 pt-2 border-t border-slate-100 text-center">
-                                        <a href="{{ url('/kontak') }}" class="text-[10px] font-medium text-slate-400 hover:text-emerald-700 transition flex items-center justify-center gap-1">
-                                            <i class="fa-solid fa-circle-question text-[9px]"></i> Butuh bantuan?
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {{-- Guest: Direct Clean "Masuk" Button --}}
+                        <a href="{{ route('member.login') }}" 
+                           class="px-3.5 sm:px-4 py-1.5 sm:py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer select-none">
+                            <i class="fa-solid fa-right-to-bracket text-xs text-emerald-300 pointer-events-none"></i>
+                            <span class="pointer-events-none">Masuk</span>
+                        </a>
                     @endauth
 
                     <!-- Mobile Menu Button (Hamburger) -->
