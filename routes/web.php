@@ -73,3 +73,29 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/settings/about', [AboutSettingController::class, 'index'])->name('settings.about');
     Route::put('/settings/about', [AboutSettingController::class, 'update'])->name('settings.about.update');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Member (Public User) Auth & Dashboard Routes
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\MemberAuthController;
+use App\Http\Controllers\MemberDashboardController;
+
+// Guest-only member routes
+Route::middleware('guest')->prefix('member')->name('member.')->group(function () {
+    Route::get('/login',        [MemberAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login',       [MemberAuthController::class, 'login'])->name('login.submit')->middleware('throttle:5,1');
+    Route::get('/register',     [MemberAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register',    [MemberAuthController::class, 'register'])->name('register.submit')->middleware('throttle:3,1');
+});
+
+// Authenticated member routes
+Route::post('/member/logout', [MemberAuthController::class, 'logout'])->name('member.logout')->middleware('auth');
+
+Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(function () {
+    Route::get('/dashboard',        [MemberDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profil',           [MemberDashboardController::class, 'profile'])->name('profile');
+    Route::put('/profil',           [MemberDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profil/password',  [MemberDashboardController::class, 'updatePassword'])->name('profile.password');
+});

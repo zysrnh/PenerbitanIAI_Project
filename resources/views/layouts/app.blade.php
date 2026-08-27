@@ -108,11 +108,54 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header CTA Button -->
-                <div class="hidden sm:flex items-center gap-3">
-                    <a href="{{ url('/kontak') }}" class="px-5 py-2.5 bg-brand-900 hover:bg-brand-950 text-white rounded-lg font-bold text-xs tracking-wider uppercase transition flex items-center gap-2 shadow-xs hover:shadow-md hover:scale-102 transform duration-200">
-                        <i class="fa-solid fa-cart-shopping text-emerald-400"></i> ORDER ONLINE
-                    </a>
+                <!-- Header CTA Button + Auth -->
+                <div class="hidden sm:flex items-center gap-2.5">
+                    @auth
+                        @if(Auth::user()->role === 'member')
+                            {{-- Member Dropdown --}}
+                            <div class="relative group">
+                                <button class="flex items-center gap-2 px-3.5 py-2 rounded-lg border border-slate-200 hover:border-emerald-500 text-xs font-bold text-slate-700 hover:text-emerald-800 transition bg-white hover:bg-emerald-50">
+                                    <div class="w-5 h-5 rounded-full bg-emerald-700 flex items-center justify-center text-white text-[9px] font-black shrink-0">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    </div>
+                                    <span class="max-w-[100px] truncate">{{ Auth::user()->name }}</span>
+                                    <i class="fa-solid fa-chevron-down text-[9px] opacity-60 group-hover:rotate-180 transition-transform duration-200"></i>
+                                </button>
+                                <div class="absolute right-0 top-full hidden group-hover:block w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 mt-1">
+                                    <div class="px-4 py-2 border-b border-slate-100 mb-1">
+                                        <p class="text-xs font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                                        <p class="text-[10px] text-slate-400 truncate">{{ Auth::user()->email }}</p>
+                                    </div>
+                                    <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition">
+                                        <i class="fa-solid fa-gauge-high text-[10px] text-emerald-600 w-3.5"></i> Dashboard
+                                    </a>
+                                    <a href="{{ route('member.profile') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition">
+                                        <i class="fa-solid fa-user text-[10px] text-slate-500 w-3.5"></i> Profil Saya
+                                    </a>
+                                    <div class="border-t border-slate-100 mt-1 pt-1">
+                                        <form method="POST" action="{{ route('member.logout') }}">
+                                            @csrf
+                                            <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition">
+                                                <i class="fa-solid fa-right-from-bracket text-[10px] w-3.5"></i> Keluar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
+                            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-bold text-xs tracking-wider uppercase transition flex items-center gap-2">
+                                <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> Admin Panel
+                            </a>
+                        @endif
+                    @else
+                        {{-- Guest: Login + Register buttons --}}
+                        <a href="{{ route('member.login') }}" class="px-4 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-400 rounded-lg transition flex items-center gap-1.5 hover:bg-emerald-50">
+                            <i class="fa-solid fa-right-to-bracket text-[10px]"></i> Masuk
+                        </a>
+                        <a href="{{ route('member.register') }}" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-lg font-bold text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
+                            <i class="fa-solid fa-user-plus text-[10px]"></i> Daftar
+                        </a>
+                    @endauth
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -131,10 +174,40 @@
             <a href="{{ url('/#layanan') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Layanan Penerbitan</a>
             <a href="{{ url('/#katalog') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Katalog Buku</a>
             <a href="{{ url('/kontak') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider {{ request()->routeIs('kontak') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">Kontak Redaksi</a>
-            <div class="pt-3 border-t border-slate-100">
-                <a href="{{ url('/kontak') }}" class="w-full py-3 bg-brand-900 text-white rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-cart-shopping text-emerald-400"></i> ORDER ONLINE
-                </a>
+            <div class="pt-3 border-t border-slate-100 space-y-2">
+                @auth
+                    @if(Auth::user()->role === 'member')
+                        <div class="px-1 py-2 bg-emerald-50 rounded-lg flex items-center gap-2 mb-2">
+                            <div class="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <div>
+                                <p class="text-[11px] font-bold text-emerald-900">{{ Auth::user()->name }}</p>
+                                <p class="text-[10px] text-slate-500">Member Aktif</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('member.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Saya
+                        </a>
+                        <form method="POST" action="{{ route('member.logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50">
+                                <i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> Admin Panel
+                        </a>
+                    @endif
+                @else
+                    <a href="{{ route('member.login') }}" class="w-full py-2.5 border border-slate-200 text-slate-700 rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-slate-50">
+                        <i class="fa-solid fa-right-to-bracket text-[10px]"></i> Masuk
+                    </a>
+                    <a href="{{ route('member.register') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-user-plus text-[10px]"></i> Daftar Member
+                    </a>
+                @endauth
             </div>
         </div>
     </header>
