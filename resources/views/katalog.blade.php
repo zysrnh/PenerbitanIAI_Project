@@ -849,318 +849,142 @@
 
     <!-- Public Catalog JS -->
     <script>
-        // =======================================================
-        // ROBUST SMART AUTOCOMPLETE LIVE SEARCH LOGIC
-        // =======================================================
-        let searchableBooksData = @json($allSearchableBooks ?? []);
-        
-        // Fallback: If empty, collect all books directly from page DOM
-        if (!searchableBooksData || searchableBooksData.length === 0) {
-            searchableBooksData = [];
-            document.querySelectorAll('.persis-book-card').forEach(card => {
-                const titleEl = card.querySelector('h4');
-                const authorEl = card.querySelector('.fa-pen-nib')?.nextElementSibling;
-                const catEl = card.querySelector('span');
-                const priceEl = card.querySelector('.font-mono');
-                const imgEl = card.querySelector('img');
-                
-                if (titleEl) {
-                    searchableBooksData.push({
-                        title: titleEl.innerText.trim(),
-                        author: authorEl ? authorEl.innerText.trim() : '',
-                        category: catEl ? catEl.innerText.trim() : 'Buku',
-                        price: priceEl ? priceEl.innerText.trim() : '',
-                        cover_image: imgEl ? imgEl.getAttribute('src') : null
+        // ============================================================
+        // PERSIS PERS KATALOG — COMPLETE SCRIPT (Single Clean Version)
+        // ============================================================
+
+        // ---------- AUTOCOMPLETE LIVE SEARCH ----------
+        const searchableBooksData = @json($allSearchableBooks ?? []);
+        let acSelectedIdx = -1;
+        let acSuggestions = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const acInput = document.getElementById('catalogSearchInput');
+            const acDropdown = document.getElementById('autocompleteDropdown');
+            const acList = document.getElementById('autocompleteResultsList');
+
+            function showDropdown() {
+                if (!acDropdown) return;
+                acDropdown.classList.remove('hidden');
+                acDropdown.style.display = 'block';
+            }
+            function hideDropdown() {
+                if (!acDropdown) return;
+                acDropdown.classList.add('hidden');
+                acDropdown.style.display = 'none';
+            }
+
+            function runAC(query) {
+                const q = (query || '').trim().toLowerCase();
+                const clearBtn = document.getElementById('clearSearchBtn');
+                if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+                if (!acDropdown || !acList) return;
+                if (!q) { hideDropdown(); return; }
+
+                acSuggestions = searchableBooksData.filter(function(b) {
+                    return (b.title||'').toLowerCase().includes(q)
+                        || (b.author||'').toLowerCase().includes(q)
+                        || (b.category||'').toLowerCase().includes(q)
+                        || (b.isbn||'').toLowerCase().includes(q);
+                }).slice(0, 6);
+
+                acList.innerHTML = '';
+                acSelectedIdx = -1;
+
+                if (acSuggestions.length === 0) {
+                    acList.innerHTML = '<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-magnifying-glass text-slate-300 text-lg block mb-1"></i>Tidak ada buku untuk "' + q + '"</div>';
+                } else {
+                    acSuggestions.forEach(function(book) {
+                        const row = document.createElement('div');
+                        row.className = 'flex items-center gap-2.5 px-3 py-2.5 cursor-pointer hover:bg-emerald-50 transition border-b border-slate-100 last:border-0';
+
+                        let coverSrc = null;
+                        if (book.cover_image) {
+                            coverSrc = (book.cover_image.startsWith('/') || book.cover_image.startsWith('http'))
+                                ? book.cover_image : '/storage/' + book.cover_image;
+                        }
+
+                        // Simple highlight
+                        const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        const titleHL = (book.title||'').replace(new RegExp('(' + esc + ')', 'gi'),
+                            '<mark class="bg-amber-100 text-amber-900 font-bold rounded-xs px-0.5">$1</mark>');
+
+                        row.innerHTML =
+                            '<div class="w-9 h-12 rounded-xs overflow-hidden shrink-0 border border-slate-200 bg-[#032c21]">' +
+                                (coverSrc ? '<img src="' + coverSrc + '" class="w-full h-full object-cover"/>' :
+                                    '<div class="w-full h-full flex items-center justify-center text-emerald-400 text-[7px] font-bold p-1 text-center">PERSIS</div>') +
+                            '</div>' +
+                            '<div class="flex-1 min-w-0">' +
+                                '<span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 rounded-xs">' + (book.category||'') + '</span>' +
+                                '<h5 class="text-xs font-bold text-slate-900 truncate mt-0.5">' + titleHL + '</h5>' +
+                                '<p class="text-[10px] text-slate-400 truncate">' + (book.author||'') + '</p>' +
+                            '</div>' +
+                            '<span class="text-xs font-mono font-bold text-emerald-700 shrink-0">' + (book.price||'') + '</span>';
+
+                        row.addEventListener('click', function() {
+                            openBookModal(book);
+                            hideDropdown();
+                        });
+                        acList.appendChild(row);
                     });
                 }
-            });
-        }
 
-        let selectedAutocompleteIndex = -1;
-        let currentFilteredSuggestions = [];
+                const label = document.getElementById('autocompleteSubmitLabel');
+                if (label) label.innerText = acSuggestions.length > 0
+                    ? 'Lihat Semua ' + acSuggestions.length + ' Hasil'
+                    : 'Cari "' + q + '" di Semua Koleksi';
 
-        function handleSearchAutocomplete(query) {
-            const trimmed = (query || '').trim().toLowerCase();
-            const dropdown = document.getElementById('autocompleteDropdown');
-            const list = document.getElementById('autocompleteResultsList');
-            const clearBtn = document.getElementById('clearSearchBtn');
-            const submitLabel = document.getElementById('autocompleteSubmitLabel');
-
-            if (clearBtn) {
-                if (trimmed.length > 0) clearBtn.classList.remove('hidden');
-                else clearBtn.classList.add('hidden');
+                showDropdown();
             }
 
-            if (trimmed.length === 0) {
-                if (dropdown) dropdown.classList.add('hidden');
-                selectedAutocompleteIndex = -1;
-                currentFilteredSuggestions = [];
-                return;
-            }
-
-            // Filter books matching title, author, category, or ISBN
-            currentFilteredSuggestions = searchableBooksData.filter(b => {
-                const titleMatch = (b.title || '').toLowerCase().includes(trimmed);
-                const authorMatch = (b.author || '').toLowerCase().includes(trimmed);
-                const categoryMatch = (b.category || '').toLowerCase().includes(trimmed);
-                const isbnMatch = (b.isbn || '').toLowerCase().includes(trimmed);
-                return titleMatch || authorMatch || categoryMatch || isbnMatch;
-            }).slice(0, 6);
-
-            list.innerHTML = '';
-            selectedAutocompleteIndex = -1;
-
-            if (currentFilteredSuggestions.length === 0) {
-                list.innerHTML = '<div class="p-3.5 text-center text-xs text-slate-400"><i class="fa-solid fa-book-open text-base mb-1 block text-slate-300"></i>Tidak ada buku yang cocok dengan "' + escapeHtml(trimmed) + '"</div>';
-                if (submitLabel) submitLabel.innerText = 'Cari "' + escapeHtml(trimmed) + '" di Seluruh Koleksi';
-            } else {
-                currentFilteredSuggestions.forEach((book, idx) => {
-                    const item = document.createElement('div');
-                    item.id = 'auto_item_' + idx;
-                    item.className = 'autocomplete-item flex items-center gap-2.5 p-2 rounded-xs hover:bg-emerald-50 cursor-pointer transition text-left group';
-                    
-                    const coverUrl = book.cover_image ? ('/storage/' + book.cover_image) : null;
-                    const highlightedTitle = highlightKeyword(book.title, trimmed);
-                    const highlightedAuthor = highlightKeyword(book.author, trimmed);
-
-                    item.innerHTML = `
-                        <div class="w-8 h-11 bg-slate-900 rounded-xs overflow-hidden shrink-0 border border-slate-200 shadow-2xs">
-                            ${coverUrl ? '<img src="' + coverUrl + '" class="w-full h-full object-cover" />' : '<div class="w-full h-full bg-[#032c21] text-[6px] text-white p-0.5 flex flex-col justify-between"><span class="text-emerald-300 font-bold">PERSIS</span><span class="truncate">${book.category}</span></div>'}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between gap-1 mb-0.5">
-                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded-xs border border-emerald-200/80 truncate">
-                                    ${book.category}
-                                </span>
-                                <span class="text-[10.5px] font-mono font-bold text-emerald-700 shrink-0">
-                                    ${book.price || ''}
-                                </span>
-                            </div>
-                            <h5 class="text-xs font-bold text-slate-900 truncate group-hover:text-emerald-700 transition">
-                                ${highlightedTitle}
-                            </h5>
-                            <p class="text-[10px] text-slate-500 truncate flex items-center gap-1">
-                                <i class="fa-solid fa-pen-nib text-[8px] text-emerald-600"></i>
-                                <span>${highlightedAuthor}</span>
-                            </p>
-                        </div>
-                    `;
-
-                    item.onclick = function() {
-                        openBookModal(book);
-                        if (dropdown) dropdown.classList.add('hidden');
-                    };
-
-                    list.appendChild(item);
+            if (acInput) {
+                acInput.addEventListener('input', function() { runAC(this.value); });
+                acInput.addEventListener('focus', function() { runAC(this.value); });
+                acInput.addEventListener('keydown', function(e) {
+                    if (!acDropdown || acDropdown.classList.contains('hidden')) return;
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        acSelectedIdx = Math.min(acSelectedIdx + 1, acSuggestions.length - 1);
+                        Array.from(acList.children).forEach(function(el, i) { el.style.background = i === acSelectedIdx ? '#f0fdf4' : ''; });
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        acSelectedIdx = Math.max(acSelectedIdx - 1, 0);
+                        Array.from(acList.children).forEach(function(el, i) { el.style.background = i === acSelectedIdx ? '#f0fdf4' : ''; });
+                    } else if (e.key === 'Enter' && acSelectedIdx >= 0) {
+                        e.preventDefault();
+                        openBookModal(acSuggestions[acSelectedIdx]);
+                        hideDropdown();
+                    } else if (e.key === 'Escape') {
+                        hideDropdown();
+                    }
                 });
-
-                if (submitLabel) submitLabel.innerText = 'Lihat Semua Hasil Pencarian (' + currentFilteredSuggestions.length + ' buku)';
             }
 
-            if (dropdown) dropdown.classList.remove('hidden');
-        }
+            document.addEventListener('click', function(e) {
+                const form = document.getElementById('catalogSearchForm');
+                if (form && !form.contains(e.target)) hideDropdown();
+            });
 
-        function highlightKeyword(text, keyword) {
-            if (!text || !keyword) return text || '';
-            const cleanKeyword = keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\<script>
-        
-        // Auto Smooth Scroll to Catalog Section on Category Filter or Search
-        document.addEventListener('DOMContentLoaded', function() {
+            // ---------- AUTO SMOOTH SCROLL ON FILTER/SEARCH ----------
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('kategori') || urlParams.has('q') || window.location.hash === '#daftar-katalog') {
                 const target = document.getElementById('daftar-katalog');
                 if (target) {
-                    setTimeout(() => {
-                        const yOffset = -90; // Navbar offset
-                        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    setTimeout(function() {
+                        const y = target.getBoundingClientRect().top + window.pageYOffset - 90;
                         window.scrollTo({ top: y, behavior: 'smooth' });
                     }, 60);
                 }
             }
-        });
+        }); // END DOMContentLoaded
 
-        
-        // =======================================================
-        // SMART AUTOCOMPLETE LIVE SEARCH LOGIC
-        // =======================================================
-        const searchableBooksData = @json($allSearchableBooks ?? []);
-        let selectedAutocompleteIndex = -1;
-        let currentFilteredSuggestions = [];
-
-        function handleSearchAutocomplete(query) {
-            const trimmed = (query || '').trim().toLowerCase();
-            const dropdown = document.getElementById('autocompleteDropdown');
-            const list = document.getElementById('autocompleteResultsList');
-            const clearBtn = document.getElementById('clearSearchBtn');
-            const submitLabel = document.getElementById('autocompleteSubmitLabel');
-
-            if (clearBtn) {
-                if (trimmed.length > 0) clearBtn.classList.remove('hidden');
-                else clearBtn.classList.add('hidden');
-            }
-
-            if (trimmed.length === 0) {
-                dropdown.classList.add('hidden');
-                selectedAutocompleteIndex = -1;
-                currentFilteredSuggestions = [];
-                return;
-            }
-
-            // Filter books matching title, author, category, or ISBN
-            currentFilteredSuggestions = searchableBooksData.filter(b => {
-                const titleMatch = (b.title || '').toLowerCase().includes(trimmed);
-                const authorMatch = (b.author || '').toLowerCase().includes(trimmed);
-                const categoryMatch = (b.category || '').toLowerCase().includes(trimmed);
-                const isbnMatch = (b.isbn || '').toLowerCase().includes(trimmed);
-                return titleMatch || authorMatch || categoryMatch || isbnMatch;
-            }).slice(0, 6); // Take top 6 results
-
-            list.innerHTML = '';
-            selectedAutocompleteIndex = -1;
-
-            if (currentFilteredSuggestions.length === 0) {
-                list.innerHTML = '<div class="p-4 text-center text-xs text-slate-400"><i class="fa-solid fa-book-open text-lg mb-1 block text-slate-300"></i>Tidak ada buku yang cocok dengan "' + escapeHtml(trimmed) + '"</div>';
-                submitLabel.innerText = 'Cari "' + escapeHtml(trimmed) + '" di Seluruh Koleksi';
-            } else {
-                currentFilteredSuggestions.forEach((book, idx) => {
-                    const item = document.createElement('div');
-                    item.id = 'auto_item_' + idx;
-                    item.className = 'autocomplete-item flex items-center gap-2.5 p-2 rounded-xs hover:bg-emerald-50/80 cursor-pointer transition text-left group';
-                    
-                    const coverUrl = book.cover_image ? ('/storage/' + book.cover_image) : null;
-                    const highlightedTitle = highlightKeyword(book.title, trimmed);
-                    const highlightedAuthor = highlightKeyword(book.author, trimmed);
-
-                    item.innerHTML = `
-                        <div class="w-8 h-11 bg-slate-900 rounded-xs overflow-hidden shrink-0 border border-slate-200 shadow-2xs">
-                            ${coverUrl ? '<img src="' + coverUrl + '" class="w-full h-full object-cover" />' : '<div class="w-full h-full bg-[#032c21] text-[6px] text-white p-0.5 flex flex-col justify-between"><span class="text-emerald-300 font-bold">PERSIS</span><span class="truncate">${book.category}</span></div>'}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between gap-1 mb-0.5">
-                                <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded-xs border border-emerald-200/80 truncate">
-                                    ${book.category}
-                                </span>
-                                <span class="text-[10.5px] font-mono font-bold text-emerald-700 shrink-0">
-                                    ${book.price || ''}
-                                </span>
-                            </div>
-                            <h5 class="text-xs font-bold text-slate-900 truncate group-hover:text-emerald-700 transition">
-                                ${highlightedTitle}
-                            </h5>
-                            <p class="text-[10px] text-slate-500 truncate flex items-center gap-1">
-                                <i class="fa-solid fa-pen-nib text-[8px] text-emerald-600"></i>
-                                <span>${highlightedAuthor}</span>
-                            </p>
-                        </div>
-                    `;
-
-                    item.onclick = function() {
-                        openBookModal(book);
-                        dropdown.classList.add('hidden');
-                    };
-
-                    list.appendChild(item);
-                });
-
-                submitLabel.innerText = 'Lihat Semua Hasil Pencarian (' + currentFilteredSuggestions.length + ' buku)';
-            }
-
-            dropdown.classList.remove('hidden');
-        }
-
-        function highlightKeyword(text, keyword) {
-            if (!text || !keyword) return text || '';
-            const regex = new RegExp('(' + keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\
-        // Mobile Touch Swipe Navigation for Lightbox
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        const lightboxEl = document.getElementById('bookLightboxModal');
-        if (lightboxEl) {
-            lightboxEl.addEventListener('touchstart', function(e) {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            lightboxEl.addEventListener('touchend', function(e) {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipeGesture();
-            }, { passive: true });
-        }
-
-        function handleSwipeGesture() {
-            const swipeThreshold = 40;
-            if (touchEndX < touchStartX - swipeThreshold) {
-                // Swiped Left -> Go Next
-                nextLightboxPhoto();
-            }
-            if (touchEndX > touchStartX + swipeThreshold) {
-                // Swiped Right -> Go Prev
-                prevLightboxPhoto();
-            }
-        }
-
-        let currentModalBook = null;') + ')', 'gi');
-            return text.replace(regex, '<mark class="bg-amber-100 text-amber-900 font-bold px-0.5 rounded-xs">$1</mark>');
-        }
-
-        function escapeHtml(str) {
-            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
+        // Global compat alias (for old inline handlers if any remain)
         function clearSearchInput() {
-            const input = document.getElementById('catalogSearchInput');
-            input.value = '';
-            handleSearchAutocomplete('');
-            input.focus();
+            const inp = document.getElementById('catalogSearchInput');
+            if (inp) { inp.value = ''; inp.dispatchEvent(new Event('input')); inp.focus(); }
         }
 
-        function handleSearchKeydown(e) {
-            const dropdown = document.getElementById('autocompleteDropdown');
-            if (dropdown.classList.contains('hidden')) return;
-
-            const items = currentFilteredSuggestions;
-            if (!items || items.length === 0) return;
-
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                selectedAutocompleteIndex = (selectedAutocompleteIndex + 1) % items.length;
-                updateAutocompleteSelection();
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                selectedAutocompleteIndex = (selectedAutocompleteIndex - 1 + items.length) % items.length;
-                updateAutocompleteSelection();
-            } else if (e.key === 'Enter') {
-                if (selectedAutocompleteIndex >= 0 && selectedAutocompleteIndex < items.length) {
-                    e.preventDefault();
-                    openBookModal(items[selectedAutocompleteIndex]);
-                    dropdown.classList.add('hidden');
-                }
-            } else if (e.key === 'Escape') {
-                dropdown.classList.add('hidden');
-            }
-        }
-
-        function updateAutocompleteSelection() {
-            const list = document.getElementById('autocompleteResultsList');
-            Array.from(list.children).forEach((child, idx) => {
-                if (idx === selectedAutocompleteIndex) {
-                    child.classList.add('bg-emerald-100/80', 'border-emerald-300');
-                    child.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                } else {
-                    child.classList.remove('bg-emerald-100/80', 'border-emerald-300');
-                }
-            });
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            const form = document.getElementById('catalogSearchForm');
-            const dropdown = document.getElementById('autocompleteDropdown');
-            if (form && !form.contains(e.target) && dropdown) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
+        // ---------- BOOK MODAL ----------
         let currentModalBook = null;
         let currentModalPhotos = [];
         let currentPhotoIndex = 0;
@@ -1170,50 +994,58 @@
             currentModalPhotos = [];
             currentPhotoIndex = 0;
 
-            document.getElementById('modalTitle').innerText = book.title;
-            document.getElementById('modalAuthor').innerText = book.author;
-            document.getElementById('modalCategory').innerText = book.category;
+            document.getElementById('modalTitle').innerText = book.title || '';
+            document.getElementById('modalAuthor').innerText = book.author || '';
+            document.getElementById('modalCategory').innerText = book.category || '';
             document.getElementById('modalIsbn').innerText = book.isbn || 'Dalam Proses';
             document.getElementById('modalFormat').innerText = book.format || 'UNESCO B5';
             document.getElementById('modalPages').innerText = book.pages ? (book.pages + ' hlm') : '-';
             document.getElementById('modalYear').innerText = book.year || '2026';
             document.getElementById('modalPrice').innerText = book.price || 'Hubungi Admin';
-            document.getElementById('modalSynopsis').innerText = book.synopsis || 'Belum ada sinopsis untuk buku ini.';
+            document.getElementById('modalSynopsis').innerText = book.synopsis || 'Belum ada sinopsis.';
 
-            document.getElementById('modalVectorTitle').innerText = book.title;
-            document.getElementById('modalVectorAuthor').innerText = book.author;
-            document.getElementById('modalVectorCat').innerText = book.category;
+            const vTitle = document.getElementById('modalVectorTitle');
+            const vAuthor = document.getElementById('modalVectorAuthor');
+            const vCat = document.getElementById('modalVectorCat');
+            if (vTitle) vTitle.innerText = book.title || '';
+            if (vAuthor) vAuthor.innerText = book.author || '';
+            if (vCat) vCat.innerText = book.category || '';
 
             const badge = document.getElementById('modalBadgeStatus');
-            if (book.is_new_release) {
-                badge.innerText = 'Baru 2026';
-                badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
-                badge.classList.remove('hidden');
-            } else if (book.is_best_seller) {
-                badge.innerText = 'Best Seller';
-                badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
+            if (badge) {
+                if (book.is_new_release) {
+                    badge.innerText = 'Baru 2026';
+                    badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+                    badge.classList.remove('hidden');
+                } else if (book.is_best_seller) {
+                    badge.innerText = 'Best Seller';
+                    badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
             }
 
             const waNumber = '6281220000000';
-            const waText = encodeURIComponent('Halo PERSIS PERS, saya ingin memesan buku "' + book.title + '" (ISBN: ' + (book.isbn || '-') + ') dengan harga ' + book.price + '.');
-            document.getElementById('modalWaOrderBtn').href = 'https://wa.me/' + waNumber + '?text=' + waText;
+            const waText = encodeURIComponent('Halo PERSIS PERS, saya ingin memesan buku "' + (book.title||'') + '" (ISBN: ' + (book.isbn||'-') + ') dengan harga ' + (book.price||'') + '.');
+            const waBtn = document.getElementById('modalWaOrderBtn');
+            if (waBtn) waBtn.href = 'https://wa.me/' + waNumber + '?text=' + waText;
 
             const pdfBtn = document.getElementById('modalSamplePdfBtn');
-            if (book.sample_pdf) {
-                pdfBtn.href = '/storage/' + book.sample_pdf;
-                pdfBtn.classList.remove('hidden');
-            } else {
-                pdfBtn.classList.add('hidden');
+            if (pdfBtn) {
+                if (book.sample_pdf) { pdfBtn.href = '/storage/' + book.sample_pdf; pdfBtn.classList.remove('hidden'); }
+                else pdfBtn.classList.add('hidden');
             }
 
-            if (book.cover_image) currentModalPhotos.push({ label: 'Depan', url: resolveBookImgUrl(book.cover_image), type: 'cover' });
-            if (book.back_cover_image) currentModalPhotos.push({ label: 'Belakang', url: resolveBookImgUrl(book.back_cover_image), type: 'back' });
-            if (book.inside_preview_image) currentModalPhotos.push({ label: 'Isi 1', url: resolveBookImgUrl(book.inside_preview_image), type: 'inside' });
-            if (book.additional_image) currentModalPhotos.push({ label: 'Isi 2', url: resolveBookImgUrl(book.additional_image), type: 'inside2' });
+            function resolveUrl(p) {
+                if (!p) return null;
+                return (p.startsWith('/') || p.startsWith('http')) ? p : '/storage/' + p;
+            }
 
+            if (book.cover_image) currentModalPhotos.push({ label: 'Depan', url: resolveUrl(book.cover_image), type: 'cover' });
+            if (book.back_cover_image) currentModalPhotos.push({ label: 'Belakang', url: resolveUrl(book.back_cover_image), type: 'back' });
+            if (book.inside_preview_image) currentModalPhotos.push({ label: 'Isi 1', url: resolveUrl(book.inside_preview_image), type: 'inside' });
+            if (book.additional_image) currentModalPhotos.push({ label: 'Isi 2', url: resolveUrl(book.additional_image), type: 'inside2' });
             if (currentModalPhotos.length === 0) {
                 currentModalPhotos = [
                     { label: 'Depan', url: null, type: 'cover' },
@@ -1224,30 +1056,24 @@
             }
 
             const container = document.getElementById('modalPhotoSwitcherContainer');
-            container.innerHTML = '';
-
-            currentModalPhotos.forEach((photo, idx) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = idx === 0 
-                    ? 'px-3 py-1 rounded-sm text-[10px] font-bold bg-emerald-700 text-white transition shadow-2xs'
-                    : 'px-3 py-1 rounded-sm text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
-                btn.innerText = photo.label;
-                btn.onclick = () => switchModalPhoto(idx);
-                container.appendChild(btn);
-            });
+            if (container) {
+                container.innerHTML = '';
+                currentModalPhotos.forEach(function(photo, idx) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = idx === 0
+                        ? 'px-3 py-1 rounded-sm text-[10px] font-bold bg-emerald-700 text-white transition shadow-2xs'
+                        : 'px-3 py-1 rounded-sm text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
+                    btn.innerText = photo.label;
+                    btn.onclick = function() { switchModalPhoto(idx); };
+                    container.appendChild(btn);
+                });
+            }
 
             switchModalPhoto(0);
 
             const modal = document.getElementById('publicBookModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function resolveBookImgUrl(path) {
-            if (!path) return null;
-            if (path.startsWith('http') || path.startsWith('/')) return path;
-            return '/storage/' + path;
+            if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
         }
 
         function switchModalPhoto(index) {
@@ -1256,73 +1082,63 @@
             if (!photo) return;
 
             const container = document.getElementById('modalPhotoSwitcherContainer');
-            Array.from(container.children).forEach((btn, idx) => {
-                btn.className = idx === index
-                    ? 'px-3 py-1 rounded-sm text-[10px] font-bold bg-emerald-700 text-white transition shadow-2xs'
-                    : 'px-3 py-1 rounded-sm text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
-            });
+            if (container) {
+                Array.from(container.children).forEach(function(btn, idx) {
+                    btn.className = idx === index
+                        ? 'px-3 py-1 rounded-sm text-[10px] font-bold bg-emerald-700 text-white transition shadow-2xs'
+                        : 'px-3 py-1 rounded-sm text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
+                });
+            }
 
             const imgEl = document.getElementById('modalMainImage');
             const frontVec = document.getElementById('modalVectorFront');
             const insideVec = document.getElementById('modalVectorInside');
 
-            imgEl.classList.add('hidden');
-            frontVec.classList.add('hidden');
-            insideVec.classList.add('hidden');
+            if (imgEl) imgEl.classList.add('hidden');
+            if (frontVec) frontVec.classList.add('hidden');
+            if (insideVec) insideVec.classList.add('hidden');
 
             if (photo.url) {
-                imgEl.src = photo.url;
-                imgEl.classList.remove('hidden');
-                imgEl.classList.remove('showcase-fade-slide');
-                void imgEl.offsetWidth;
-                imgEl.classList.add('showcase-fade-slide');
+                if (imgEl) { imgEl.src = photo.url; imgEl.classList.remove('hidden'); }
             } else {
                 if (photo.type === 'cover' || photo.type === 'back') {
-                    frontVec.classList.remove('hidden');
-                    frontVec.classList.remove('showcase-fade-slide');
-                    void frontVec.offsetWidth;
-                    frontVec.classList.add('showcase-fade-slide');
+                    if (frontVec) frontVec.classList.remove('hidden');
                 } else {
-                    insideVec.classList.remove('hidden');
-                    insideVec.classList.remove('showcase-fade-slide');
-                    void insideVec.offsetWidth;
-                    insideVec.classList.add('showcase-fade-slide');
+                    if (insideVec) insideVec.classList.remove('hidden');
                 }
             }
         }
 
         function closeBookModal() {
             const modal = document.getElementById('publicBookModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
         }
 
+        // ---------- LIGHTBOX ----------
         function openLightboxFromDetail() {
             const photo = currentModalPhotos[currentPhotoIndex];
             if (!photo || !photo.url) return;
 
-            document.getElementById('lightboxImage').src = photo.url;
-            document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
-            document.getElementById('lightboxTitle').innerText = currentModalBook ? currentModalBook.title : 'Pratinjau Naskah';
+            const imgEl = document.getElementById('lightboxImage');
+            const labelEl = document.getElementById('lightboxLabel');
+            const titleEl = document.getElementById('lightboxTitle');
+            if (imgEl) imgEl.src = photo.url;
+            if (labelEl) labelEl.innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' \u2022 ' + photo.label.toUpperCase();
+            if (titleEl) titleEl.innerText = currentModalBook ? currentModalBook.title : 'Pratinjau';
 
             const detailModal = document.getElementById('publicBookModal');
-            detailModal.classList.add('hidden');
-            detailModal.classList.remove('flex');
+            if (detailModal) { detailModal.classList.add('hidden'); detailModal.classList.remove('flex'); }
 
             const lightbox = document.getElementById('bookLightboxModal');
-            lightbox.classList.remove('hidden');
-            lightbox.classList.add('flex');
+            if (lightbox) { lightbox.classList.remove('hidden'); lightbox.classList.add('flex'); }
         }
 
         function closeLightboxModal() {
             const lightbox = document.getElementById('bookLightboxModal');
-            lightbox.classList.add('hidden');
-            lightbox.classList.remove('flex');
-
+            if (lightbox) { lightbox.classList.add('hidden'); lightbox.classList.remove('flex'); }
             if (currentModalBook) {
-                const detailModal = document.getElementById('publicBookModal');
-                detailModal.classList.remove('hidden');
-                detailModal.classList.add('flex');
+                const modal = document.getElementById('publicBookModal');
+                if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
             }
         }
 
@@ -1330,16 +1146,12 @@
             if (currentModalPhotos.length <= 1) return;
             currentPhotoIndex = (currentPhotoIndex - 1 + currentModalPhotos.length) % currentModalPhotos.length;
             switchModalPhoto(currentPhotoIndex);
-            
             const photo = currentModalPhotos[currentPhotoIndex];
             if (photo && photo.url) {
-                const container = document.getElementById('lightboxImgContainer');
-                container.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
-                void container.offsetWidth;
-                container.classList.add('lightbox-slide-prev');
-
-                document.getElementById('lightboxImage').src = photo.url;
-                document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
+                const imgEl = document.getElementById('lightboxImage');
+                const labelEl = document.getElementById('lightboxLabel');
+                if (imgEl) imgEl.src = photo.url;
+                if (labelEl) labelEl.innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' \u2022 ' + photo.label.toUpperCase();
             }
         }
 
@@ -1347,355 +1159,37 @@
             if (currentModalPhotos.length <= 1) return;
             currentPhotoIndex = (currentPhotoIndex + 1) % currentModalPhotos.length;
             switchModalPhoto(currentPhotoIndex);
-
             const photo = currentModalPhotos[currentPhotoIndex];
             if (photo && photo.url) {
-                const container = document.getElementById('lightboxImgContainer');
-                container.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
-                void container.offsetWidth;
-                container.classList.add('lightbox-slide-next');
-
-                document.getElementById('lightboxImage').src = photo.url;
-                document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
+                const imgEl = document.getElementById('lightboxImage');
+                const labelEl = document.getElementById('lightboxLabel');
+                if (imgEl) imgEl.src = photo.url;
+                if (labelEl) labelEl.innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' \u2022 ' + photo.label.toUpperCase();
             }
         }
 
         function handleLightboxBackdropClick(e) {
-            if (e.target.id === 'bookLightboxModal') {
-                closeLightboxModal();
-            }
+            if (e.target.id === 'bookLightboxModal') closeLightboxModal();
         }
 
-        document.addEventListener('keydown', function(e) {
-            const lightbox = document.getElementById('bookLightboxModal');
-            if (lightbox && !lightbox.classList.contains('hidden')) {
-                if (e.key === 'Escape') {
-                    closeLightboxModal();
-                } else if (e.key === 'ArrowLeft') {
-                    prevLightboxPhoto();
-                } else if (e.key === 'ArrowRight') {
-                    nextLightboxPhoto();
-                }
-            } else if (e.key === 'Escape') {
-                closeBookModal();
-            }
-        });
-
-        document.getElementById('publicBookModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeBookModal();
-            }
-        });
-    </script>');
-            const regex = new RegExp('(' + cleanKeyword + ')', 'gi');
-            return text.replace(regex, '<mark class="bg-amber-100 text-amber-900 font-bold px-0.5 rounded-xs">$1</mark>');
-        }
-
-        function escapeHtml(str) {
-            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
-        function clearSearchInput() {
-            const input = document.getElementById('catalogSearchInput');
-            if (input) {
-                input.value = '';
-                handleSearchAutocomplete('');
-                input.focus();
-            }
-        }
-
-        function handleSearchKeydown(e) {
-            const dropdown = document.getElementById('autocompleteDropdown');
-            if (!dropdown || dropdown.classList.contains('hidden')) return;
-
-            const items = currentFilteredSuggestions;
-            if (!items || items.length === 0) return;
-
-            if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                selectedAutocompleteIndex = (selectedAutocompleteIndex + 1) % items.length;
-                updateAutocompleteSelection();
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                selectedAutocompleteIndex = (selectedAutocompleteIndex - 1 + items.length) % items.length;
-                updateAutocompleteSelection();
-            } else if (e.key === 'Enter') {
-                if (selectedAutocompleteIndex >= 0 && selectedAutocompleteIndex < items.length) {
-                    e.preventDefault();
-                    openBookModal(items[selectedAutocompleteIndex]);
-                    dropdown.classList.add('hidden');
-                }
-            } else if (e.key === 'Escape') {
-                dropdown.classList.add('hidden');
-            }
-        }
-
-        function updateAutocompleteSelection() {
-            const list = document.getElementById('autocompleteResultsList');
-            if (!list) return;
-            Array.from(list.children).forEach((child, idx) => {
-                if (idx === selectedAutocompleteIndex) {
-                    child.classList.add('bg-emerald-100/80', 'border-emerald-300');
-                    child.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-                } else {
-                    child.classList.remove('bg-emerald-100/80', 'border-emerald-300');
-                }
-            });
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            const form = document.getElementById('catalogSearchForm');
-            const dropdown = document.getElementById('autocompleteDropdown');
-            if (form && !form.contains(e.target) && dropdown) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        // =======================================================
-        // AUTO SMOOTH SCROLL ON CATEGORY FILTER OR SEARCH
-        // =======================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('kategori') || urlParams.has('q') || window.location.hash === '#daftar-katalog') {
-                const target = document.getElementById('daftar-katalog');
-                if (target) {
-                    setTimeout(() => {
-                        const yOffset = -90;
-                        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                        window.scrollTo({ top: y, behavior: 'smooth' });
-                    }, 60);
-                }
-            }
-        });
-
-        // =======================================================
-        // MODAL DETAIL BUKU & MULTI-PHOTO SHOWCASE
-        // =======================================================
-        let currentModalBook = null;
-        let currentModalPhotos = [];
-        let currentPhotoIndex = 0;
-
-        function openBookModal(book) {
-            currentModalBook = book;
-            currentModalPhotos = [];
-            currentPhotoIndex = 0;
-
-            document.getElementById('modalTitle').innerText = book.title;
-            document.getElementById('modalAuthor').innerText = book.author;
-            document.getElementById('modalCategory').innerText = book.category;
-            document.getElementById('modalIsbn').innerText = book.isbn || 'Dalam Proses';
-            document.getElementById('modalFormat').innerText = book.format || 'UNESCO B5';
-            document.getElementById('modalPages').innerText = book.pages ? (book.pages + ' hlm') : '-';
-            document.getElementById('modalYear').innerText = book.year || '2026';
-            document.getElementById('modalPrice').innerText = book.price || 'Hubungi Admin';
-            document.getElementById('modalSynopsis').innerText = book.synopsis || 'Belum ada sinopsis untuk buku ini.';
-
-            document.getElementById('modalVectorTitle').innerText = book.title;
-            document.getElementById('modalVectorAuthor').innerText = book.author;
-            document.getElementById('modalVectorCat').innerText = book.category;
-
-            const badge = document.getElementById('modalBadgeStatus');
-            if (book.is_new_release) {
-                badge.innerText = 'Baru 2026';
-                badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
-                badge.classList.remove('hidden');
-            } else if (book.is_best_seller) {
-                badge.innerText = 'Best Seller';
-                badge.className = 'px-2.5 py-0.5 rounded-sm text-[10.5px] font-bold bg-amber-50 text-amber-700 border border-amber-200';
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-
-            const waNumber = '6281220000000';
-            const waText = encodeURIComponent('Halo PERSIS PERS, saya ingin memesan buku "' + book.title + '" (ISBN: ' + (book.isbn || '-') + ') dengan harga ' + book.price + '.');
-            document.getElementById('modalWaOrderBtn').href = 'https://wa.me/' + waNumber + '?text=' + waText;
-
-            const pdfBtn = document.getElementById('modalSamplePdfBtn');
-            if (book.sample_pdf) {
-                pdfBtn.href = '/storage/' + book.sample_pdf;
-                pdfBtn.classList.remove('hidden');
-            } else {
-                pdfBtn.classList.add('hidden');
-            }
-
-            if (book.cover_image) currentModalPhotos.push({ label: 'Depan', url: resolveBookImgUrl(book.cover_image), type: 'cover' });
-            if (book.back_cover_image) currentModalPhotos.push({ label: 'Belakang', url: resolveBookImgUrl(book.back_cover_image), type: 'back' });
-            if (book.inside_preview_image) currentModalPhotos.push({ label: 'Isi 1', url: resolveBookImgUrl(book.inside_preview_image), type: 'inside' });
-            if (book.additional_image) currentModalPhotos.push({ label: 'Isi 2', url: resolveBookImgUrl(book.additional_image), type: 'inside2' });
-
-            if (currentModalPhotos.length === 0) {
-                currentModalPhotos = [
-                    { label: 'Depan', url: null, type: 'cover' },
-                    { label: 'Belakang', url: null, type: 'back' },
-                    { label: 'Isi 1', url: null, type: 'inside' },
-                    { label: 'Isi 2', url: null, type: 'inside2' }
-                ];
-            }
-
-            const container = document.getElementById('modalPhotoSwitcherContainer');
-            container.innerHTML = '';
-
-            currentModalPhotos.forEach((photo, idx) => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = idx === 0 
-                    ? 'px-3 py-1 rounded-sm text-[10px] font-bold bg-emerald-700 text-white transition shadow-2xs'
-                    : 'px-3 py-1 rounded-sm text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
-                btn.innerText = photo.label;
-                btn.onclick = () => switchModalPhoto(idx);
-                container.appendChild(btn);
-            });
-
-            switchModalPhoto(0);
-
-            const modal = document.getElementById('publicBookModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function resolveBookImgUrl(path) {
-            if (!path) return null;
-            if (path.startsWith('http') || path.startsWith('/')) return path;
-            return '/storage/' + path;
-        }
-
-        function switchModalPhoto(index) {
-            currentPhotoIndex = index;
-            const photo = currentModalPhotos[index];
-            if (!photo) return;
-
-            const container = document.getElementById('modalPhotoSwitcherContainer');
-            Array.from(container.children).forEach((btn, idx) => {
-                btn.className = idx === index
-                    ? 'px-3 py-1 rounded-sm text-[10px] font-bold bg-emerald-700 text-white transition shadow-2xs'
-                    : 'px-3 py-1 rounded-sm text-[10px] font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 transition';
-            });
-
-            const imgEl = document.getElementById('modalMainImage');
-            const frontVec = document.getElementById('modalVectorFront');
-            const insideVec = document.getElementById('modalVectorInside');
-
-            imgEl.classList.add('hidden');
-            frontVec.classList.add('hidden');
-            insideVec.classList.add('hidden');
-
-            if (photo.url) {
-                imgEl.src = photo.url;
-                imgEl.classList.remove('hidden');
-                imgEl.classList.remove('showcase-fade-slide');
-                void imgEl.offsetWidth;
-                imgEl.classList.add('showcase-fade-slide');
-            } else {
-                if (photo.type === 'cover' || photo.type === 'back') {
-                    frontVec.classList.remove('hidden');
-                    frontVec.classList.remove('showcase-fade-slide');
-                    void frontVec.offsetWidth;
-                    frontVec.classList.add('showcase-fade-slide');
-                } else {
-                    insideVec.classList.remove('hidden');
-                    insideVec.classList.remove('showcase-fade-slide');
-                    void insideVec.offsetWidth;
-                    insideVec.classList.add('showcase-fade-slide');
-                }
-            }
-        }
-
-        function closeBookModal() {
-            const modal = document.getElementById('publicBookModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        // =======================================================
-        // FULLSCREEN LIGHTBOX & TOUCH SWIPE GESTURES
-        // =======================================================
-        function openLightboxFromDetail() {
-            const photo = currentModalPhotos[currentPhotoIndex];
-            if (!photo || !photo.url) return;
-
-            document.getElementById('lightboxImage').src = photo.url;
-            document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
-            document.getElementById('lightboxTitle').innerText = currentModalBook ? currentModalBook.title : 'Pratinjau Naskah';
-
-            const detailModal = document.getElementById('publicBookModal');
-            detailModal.classList.add('hidden');
-            detailModal.classList.remove('flex');
-
-            const lightbox = document.getElementById('bookLightboxModal');
-            lightbox.classList.remove('hidden');
-            lightbox.classList.add('flex');
-        }
-
-        function closeLightboxModal() {
-            const lightbox = document.getElementById('bookLightboxModal');
-            lightbox.classList.add('hidden');
-            lightbox.classList.remove('flex');
-
-            if (currentModalBook) {
-                const detailModal = document.getElementById('publicBookModal');
-                detailModal.classList.remove('hidden');
-                detailModal.classList.add('flex');
-            }
-        }
-
-        function prevLightboxPhoto() {
-            if (currentModalPhotos.length <= 1) return;
-            currentPhotoIndex = (currentPhotoIndex - 1 + currentModalPhotos.length) % currentModalPhotos.length;
-            switchModalPhoto(currentPhotoIndex);
-            
-            const photo = currentModalPhotos[currentPhotoIndex];
-            if (photo && photo.url) {
-                const container = document.getElementById('lightboxImgContainer');
-                container.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
-                void container.offsetWidth;
-                container.classList.add('lightbox-slide-prev');
-
-                document.getElementById('lightboxImage').src = photo.url;
-                document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
-            }
-        }
-
-        function nextLightboxPhoto() {
-            if (currentModalPhotos.length <= 1) return;
-            currentPhotoIndex = (currentPhotoIndex + 1) % currentModalPhotos.length;
-            switchModalPhoto(currentPhotoIndex);
-
-            const photo = currentModalPhotos[currentPhotoIndex];
-            if (photo && photo.url) {
-                const container = document.getElementById('lightboxImgContainer');
-                container.classList.remove('lightbox-slide-next', 'lightbox-slide-prev');
-                void container.offsetWidth;
-                container.classList.add('lightbox-slide-next');
-
-                document.getElementById('lightboxImage').src = photo.url;
-                document.getElementById('lightboxLabel').innerText = (currentPhotoIndex + 1) + ' / ' + currentModalPhotos.length + ' • ' + photo.label.toUpperCase();
-            }
-        }
-
-        function handleLightboxBackdropClick(e) {
-            if (e.target.id === 'bookLightboxModal') {
-                closeLightboxModal();
-            }
-        }
-
-        // Mobile Touch Swipe Gesture for Lightbox
+        // Touch swipe for lightbox
         let touchStartX = 0;
-        let touchEndX = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            const lightboxEl = document.getElementById('bookLightboxModal');
+            if (lightboxEl) {
+                lightboxEl.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+                lightboxEl.addEventListener('touchend', function(e) {
+                    const diff = e.changedTouches[0].screenX - touchStartX;
+                    if (diff < -40) nextLightboxPhoto();
+                    if (diff > 40) prevLightboxPhoto();
+                }, { passive: true });
+            }
 
-        const lightboxEl = document.getElementById('bookLightboxModal');
-        if (lightboxEl) {
-            lightboxEl.addEventListener('touchstart', function(e) {
-                touchStartX = e.changedTouches[0].screenX;
-            }, { passive: true });
-
-            lightboxEl.addEventListener('touchend', function(e) {
-                touchEndX = e.changedTouches[0].screenX;
-                if (touchEndX < touchStartX - 40) nextLightboxPhoto();
-                if (touchEndX > touchStartX + 40) prevLightboxPhoto();
-            }, { passive: true });
-        }
+            const publicModal = document.getElementById('publicBookModal');
+            if (publicModal) {
+                publicModal.addEventListener('click', function(e) { if (e.target === this) closeBookModal(); });
+            }
+        });
 
         document.addEventListener('keydown', function(e) {
             const lightbox = document.getElementById('bookLightboxModal');
@@ -1707,116 +1201,5 @@
                 closeBookModal();
             }
         });
-
-        document.getElementById('publicBookModal').addEventListener('click', function(e) {
-            if (e.target === this) closeBookModal();
-        });
-    
-
-        // Backward-compat aliases for old inline handlers
-        function handleSearchAutocomplete(v) { runAutocomplete(v); }
-        function handleSearchKeydown(e) {
-            if (!acDropdown || acDropdown.classList.contains('hidden')) return;
-            if (e.key === 'ArrowDown') { e.preventDefault(); acSelectedIdx = Math.min(acSelectedIdx + 1, acSuggestions.length - 1); renderAcSelection(); }
-            else if (e.key === 'ArrowUp') { e.preventDefault(); acSelectedIdx = Math.max(acSelectedIdx - 1, 0); renderAcSelection(); }
-            else if (e.key === 'Enter' && acSelectedIdx >= 0) { e.preventDefault(); openBookModal(acSuggestions[acSelectedIdx]); acDropdown.classList.add('hidden'); acDropdown.style.display = 'none'; }
-            else if (e.key === 'Escape') { acDropdown.classList.add('hidden'); acDropdown.style.display = 'none'; }
-        }
-
-        // =======================================================
-        // AUTOCOMPLETE LIVE SEARCH (BULLETPROOF)
-        // =======================================================
-        const searchableBooksData = @json($allSearchableBooks ?? []);
-        let acSelectedIdx = -1;
-        let acSuggestions = [];
-
-        const acInput = document.getElementById('catalogSearchInput');
-        const acDropdown = document.getElementById('autocompleteDropdown');
-        const acList = document.getElementById('autocompleteResultsList');
-
-        if (acInput) {
-            acInput.addEventListener('input', function() { runAutocomplete(this.value); });
-            acInput.addEventListener('focus', function() { runAutocomplete(this.value); });
-            acInput.addEventListener('keydown', function(e) {
-                if (!acDropdown || acDropdown.style.display === 'none') return;
-                if (e.key === 'ArrowDown') { e.preventDefault(); acSelectedIdx = Math.min(acSelectedIdx + 1, acSuggestions.length - 1); renderAcSelection(); }
-                else if (e.key === 'ArrowUp') { e.preventDefault(); acSelectedIdx = Math.max(acSelectedIdx - 1, 0); renderAcSelection(); }
-                else if (e.key === 'Enter' && acSelectedIdx >= 0) { e.preventDefault(); openBookModal(acSuggestions[acSelectedIdx]); acDropdown.style.display = 'none'; }
-                else if (e.key === 'Escape') { acDropdown.style.display = 'none'; }
-            });
-        }
-
-        document.addEventListener('click', function(e) {
-            if (acDropdown && acInput && !acInput.closest('form').contains(e.target)) {
-                acDropdown.style.display = 'none';
-            }
-        });
-
-        function runAutocomplete(query) {
-            const q = (query || '').trim().toLowerCase();
-            const clearBtn = document.getElementById('clearSearchBtn');
-            if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
-
-            if (!acDropdown || !acList) return;
-
-            if (!q) { acDropdown.classList.add('hidden'); acDropdown.style.display = 'none'; return; }
-
-            acSuggestions = searchableBooksData.filter(b =>
-                (b.title || '').toLowerCase().includes(q) ||
-                (b.author || '').toLowerCase().includes(q) ||
-                (b.category || '').toLowerCase().includes(q) ||
-                (b.isbn || '').toLowerCase().includes(q)
-            ).slice(0, 6);
-
-            acList.innerHTML = '';
-            acSelectedIdx = -1;
-
-            if (acSuggestions.length === 0) {
-                acList.innerHTML = '<div class="p-3 text-center text-xs text-slate-400"><i class="fa-solid fa-magnifying-glass text-slate-300 text-base block mb-1"></i>Tidak ada hasil untuk "' + q + '"</div>';
-            } else {
-                acSuggestions.forEach(function(book, idx) {
-                    const row = document.createElement('div');
-                    row.className = 'flex items-center gap-2.5 px-3 py-2.5 cursor-pointer hover:bg-emerald-50 transition border-b border-slate-100 last:border-0';
-
-                    const coverSrc = book.cover_image
-                        ? (book.cover_image.startsWith('/') || book.cover_image.startsWith('http') ? book.cover_image : '/storage/' + book.cover_image)
-                        : null;
-
-                    const titleHL = book.title || '';
-
-                    row.innerHTML =
-                        '<div class="w-9 h-12 rounded-xs overflow-hidden shrink-0 border border-slate-200 bg-[#032c21]">' +
-                            (coverSrc ? '<img src="' + coverSrc + '" class="w-full h-full object-cover" />' : '<div class="w-full h-full flex items-center justify-center text-emerald-400 text-[7px] font-bold p-1 text-center leading-tight">PERSIS PERS</div>') +
-                        '</div>' +
-                        '<div class="flex-1 min-w-0">' +
-                            '<span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 rounded-xs">' + (book.category || '') + '</span>' +
-                            '<h5 class="text-xs font-bold text-slate-900 truncate mt-0.5">' + titleHL + '</h5>' +
-                            '<p class="text-[10px] text-slate-400 truncate">' + (book.author || '') + '</p>' +
-                        '</div>' +
-                        '<span class="text-xs font-mono font-bold text-emerald-700 shrink-0">' + (book.price || '') + '</span>';
-
-                    row.onclick = function() {
-                        openBookModal(book);
-                        acDropdown.style.display = 'none';
-                    };
-                    acList.appendChild(row);
-                });
-            }
-
-            const label = document.getElementById('autocompleteSubmitLabel');
-            if (label) label.innerText = acSuggestions.length > 0 ? ('Lihat Semua ' + acSuggestions.length + ' Hasil') : ('Cari "' + q + '" di Semua Koleksi');
-
-            acDropdown.classList.remove('hidden'); acDropdown.style.cssText = 'display: block !important; position: absolute; left: 0; right: 0; top: 100%; z-index: 99999; background: white; margin-top: 4px;';
-        }
-
-        function renderAcSelection() {
-            Array.from(acList.children).forEach(function(el, i) {
-                el.style.background = i === acSelectedIdx ? '#f0fdf4' : '';
-            });
-        }
-
-        function clearSearchInput() {
-            if (acInput) { acInput.value = ''; runAutocomplete(''); acInput.focus(); }
-        }
     </script>
 @endsection
