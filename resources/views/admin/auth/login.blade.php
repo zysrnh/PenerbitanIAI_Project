@@ -23,7 +23,7 @@
         <!-- Brand Header with Official Logo -->
         <div class="text-center mb-6">
             <a href="{{ url('/') }}" class="inline-block transition-transform duration-200 hover:scale-105" title="PERSIS PERS">
-                <img src="{{ asset('images/logo/logo_persis_pers_full_official_transparent.png') }}" alt="PERSIS PERS" class="h-12 sm:h-14 w-auto mx-auto brightness-0 invert object-contain" />
+                <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-14 w-auto mx-auto object-contain" />
             </a>
             <p class="text-xs text-slate-400 mt-2 font-medium">Panel Administrasi & Redaksi</p>
         </div>

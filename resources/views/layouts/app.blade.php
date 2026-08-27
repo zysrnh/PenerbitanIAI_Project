@@ -331,17 +331,13 @@
                 
                 <!-- Brand Info -->
                 <div class="md:col-span-4 space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-900 rounded-lg flex items-center justify-center text-white shrink-0">
-                            <i class="fa-solid fa-book-open-reader text-lg text-emerald-400"></i>
-                        </div>
-                        <div>
-                            <span class="text-[10px] font-extrabold text-brand-300 uppercase tracking-widest block">IAI PERSIS</span>
-                            <h4 class="font-extrabold text-lg text-white font-heading leading-tight">PRESS</h4>
-                        </div>
+                    <div class="flex items-center">
+                        <a href="{{ url('/') }}" title="PENERBIT PERSIS">
+                            <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
+                        </a>
                     </div>
                     <p class="text-xs text-slate-400 leading-relaxed">
-                        Penerbitan & Percetakan Resmi Institut Agama Islam Persatuan Islam (IAI PERSIS) Bandung. Melayani penerbitan buku ber-ISBN, modul ajar, jurnal ilmiah, dan percetakan berkualitas tinggi.
+                        Penerbitan & Percetakan Resmi PENERBIT PERSIS. Melayani penerbitan buku ber-ISBN resmi, modul ajar perkuliahan, monograf riset, jurnal ilmiah, dan percetakan standar UNESCO berkualitas tinggi.
                     </p>
                 </div>
 
