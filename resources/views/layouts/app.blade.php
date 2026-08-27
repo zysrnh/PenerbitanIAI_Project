@@ -72,6 +72,29 @@
             transform: translateY(-4px);
             box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
         }
+    
+        /* User Icon & Auth Animations */
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
+        }
+        .animate-subtle-pulse {
+            animation: subtlePulse 2.5s infinite ease-in-out;
+        }
+        .user-nav-btn {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .user-nav-btn:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 20px -4px rgba(4, 120, 87, 0.25);
+        }
+        .user-nav-btn:hover i {
+            transform: scale(1.12);
+        }
+        .auth-dropdown-panel {
+            transform-origin: top right;
+            transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
     </style>
 </head>
 <body class="antialiased text-slate-800 bg-white selection:bg-brand-800 selection:text-white flex flex-col min-h-screen">
@@ -108,60 +131,106 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header CTA Button + Auth -->
-                <div class="hidden sm:flex items-center gap-2.5">
+                <!-- Header CTA Button + Auth (Icon-Only with Smooth Animations) -->
+                <div class="flex items-center gap-2 sm:gap-3">
                     @auth
                         @if(Auth::user()->role === 'member')
-                            {{-- Member Dropdown --}}
+                            {{-- Member Profile Pill with Avatar & Pulse --}}
                             <div class="relative group">
-                                <button class="flex items-center gap-2 px-3.5 py-2 rounded-lg border border-slate-200 hover:border-emerald-500 text-xs font-bold text-slate-700 hover:text-emerald-800 transition bg-white hover:bg-emerald-50">
-                                    <div class="w-5 h-5 rounded-full bg-emerald-700 flex items-center justify-center text-white text-[9px] font-black shrink-0">
-                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                <a href="{{ route('member.dashboard') }}" class="user-nav-btn flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2.5 sm:pr-3 py-1 sm:py-1.5 rounded-full border border-emerald-200/90 bg-white hover:bg-emerald-50/70 hover:border-emerald-500 shadow-2xs cursor-pointer">
+                                    <div class="relative">
+                                        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#032c21] to-emerald-600 flex items-center justify-center text-white text-[11px] font-black shadow-xs">
+                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                        </div>
+                                        <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-white rounded-full"></span>
                                     </div>
-                                    <span class="max-w-[100px] truncate">{{ Auth::user()->name }}</span>
-                                    <i class="fa-solid fa-chevron-down text-[9px] opacity-60 group-hover:rotate-180 transition-transform duration-200"></i>
-                                </button>
-                                <div class="absolute right-0 top-full hidden group-hover:block w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 mt-1">
-                                    <div class="px-4 py-2 border-b border-slate-100 mb-1">
-                                        <p class="text-xs font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
-                                        <p class="text-[10px] text-slate-400 truncate">{{ Auth::user()->email }}</p>
-                                    </div>
-                                    <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition">
-                                        <i class="fa-solid fa-gauge-high text-[10px] text-emerald-600 w-3.5"></i> Dashboard
-                                    </a>
-                                    <a href="{{ route('member.profile') }}" class="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition">
-                                        <i class="fa-solid fa-user text-[10px] text-slate-500 w-3.5"></i> Profil Saya
-                                    </a>
-                                    <div class="border-t border-slate-100 mt-1 pt-1">
-                                        <form method="POST" action="{{ route('member.logout') }}">
-                                            @csrf
-                                            <button type="submit" class="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition">
-                                                <i class="fa-solid fa-right-from-bracket text-[10px] w-3.5"></i> Keluar
-                                            </button>
-                                        </form>
+                                    <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-800 max-w-[90px] sm:max-w-[120px] truncate transition">
+                                        {{ explode(' ', Auth::user()->name)[0] }}
+                                    </span>
+                                    <i class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 group-hover:rotate-180 transition-transform duration-300"></i>
+                                </a>
+
+                                <!-- Animated Dropdown on Hover -->
+                                <div class="absolute right-0 top-full pt-2 hidden group-hover:block w-52 z-50">
+                                    <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-100 rounded-xl shadow-2xl p-2 animate-fade-in-up">
+                                        <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                                            <p class="text-xs font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                                            <p class="text-[10px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
+                                        </div>
+                                        <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition">
+                                            <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard
+                                        </a>
+                                        <a href="{{ route('member.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition">
+                                            <i class="fa-solid fa-user text-slate-400 text-xs w-4"></i> Profil Saya
+                                        </a>
+                                        <div class="border-t border-slate-100 mt-1 pt-1">
+                                            <form method="POST" action="{{ route('member.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-lg transition">
+                                                    <i class="fa-solid fa-right-from-bracket text-xs w-4"></i> Keluar
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg font-bold text-xs tracking-wider uppercase transition flex items-center gap-2">
-                                <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> Admin Panel
+                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn px-3.5 py-2 bg-slate-900 hover:bg-slate-950 text-white rounded-lg font-bold text-xs tracking-wider uppercase flex items-center gap-2 shadow-xs">
+                                <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> Admin
                             </a>
                         @endif
                     @else
-                        {{-- Guest: Login + Register buttons --}}
-                        <a href="{{ route('member.login') }}" class="px-4 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-400 rounded-lg transition flex items-center gap-1.5 hover:bg-emerald-50">
-                            <i class="fa-solid fa-right-to-bracket text-[10px]"></i> Masuk
-                        </a>
-                        <a href="{{ route('member.register') }}" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-lg font-bold text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
-                            <i class="fa-solid fa-user-plus text-[10px]"></i> Daftar
-                        </a>
-                    @endauth
-                </div>
+                        {{-- Guest: Icon-Only Member Trigger with Animated Interactive Dropdown --}}
+                        <div class="relative group">
+                            <a href="{{ route('member.login') }}" 
+                               aria-label="Akun Member"
+                               class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer group">
+                                <i class="fa-solid fa-user text-sm transition-transform duration-300"></i>
+                                
+                                <!-- Animated subtle green pulse ring -->
+                                <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-600 border-2 border-white"></span>
+                                </span>
+                            </a>
 
-                <!-- Mobile Menu Button -->
-                <div class="flex lg:hidden items-center gap-2">
-                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="p-2.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 focus:outline-none">
-                        <i class="fa-solid fa-bars text-lg"></i>
+                            <!-- Animated Dropdown Panel on Hover -->
+                            <div class="absolute right-0 top-full pt-2 hidden group-hover:block w-56 z-50">
+                                <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-100 rounded-2xl shadow-2xl p-3 animate-fade-in-up">
+                                    <div class="flex items-center gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
+                                        <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold shrink-0">
+                                            <i class="fa-solid fa-user"></i>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <h6 class="text-xs font-extrabold text-slate-900 truncate">Area Member</h6>
+                                            <p class="text-[10px] text-slate-400 truncate">Penerbitan & Katalog</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <a href="{{ route('member.login') }}" 
+                                            class="w-full py-2 px-3 bg-[#006830] hover:bg-[#032c21] text-white rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs hover:shadow-sm">
+                                            <i class="fa-solid fa-right-to-bracket text-[10px]"></i> Masuk Akun
+                                        </a>
+                                        <a href="{{ route('member.register') }}" 
+                                            class="w-full py-2 px-3 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-300 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5">
+                                            <i class="fa-solid fa-user-plus text-[10px] text-emerald-600"></i> Buat Akun Baru
+                                        </a>
+                                    </div>
+
+                                    <div class="mt-2.5 pt-2 border-t border-slate-100 text-center">
+                                        <a href="{{ url('/kontak') }}" class="text-[10px] font-medium text-slate-400 hover:text-emerald-700 transition flex items-center justify-center gap-1">
+                                            <i class="fa-solid fa-circle-question text-[9px]"></i> Butuh bantuan?
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endauth
+
+                    <!-- Mobile Menu Button (Hamburger) -->
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 focus:outline-none transition">
+                        <i class="fa-solid fa-bars text-base"></i>
                     </button>
                 </div>
             </div>
