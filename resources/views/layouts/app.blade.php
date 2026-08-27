@@ -145,9 +145,12 @@
                         </button>
                     @auth
                         @if(Auth::user()->role === 'member')
-                            {{-- Member Profile Pill with Avatar & Pulse --}}
-                            <div class="relative group">
-                                <a href="{{ route('member.dashboard') }}" class="user-nav-btn flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2.5 sm:pr-3 py-1 sm:py-1.5 rounded-full border border-emerald-200/90 bg-white hover:bg-emerald-50/70 hover:border-emerald-500 shadow-2xs cursor-pointer">
+                            {{-- Member Profile Pill with Click & Hover Dropdown --}}
+                            <div class="relative group" id="memberUserDropdownContainer">
+                                <button type="button" 
+                                        id="memberUserDropdownBtn"
+                                        onclick="window.toggleMemberDropdown(event)" 
+                                        class="user-nav-btn flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2.5 sm:pr-3 py-1 sm:py-1.5 rounded-full border border-emerald-200/90 bg-white hover:bg-emerald-50/70 hover:border-emerald-500 shadow-2xs cursor-pointer">
                                     <div class="relative">
                                         @if(Auth::user()->avatar_url)
                                             <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover shadow-xs border border-emerald-500" />
@@ -161,27 +164,30 @@
                                     <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-800 max-w-[90px] sm:max-w-[120px] truncate transition">
                                         {{ explode(' ', Auth::user()->name)[0] }}
                                     </span>
-                                    <i class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 group-hover:rotate-180 transition-transform duration-300"></i>
-                                </a>
+                                    <i id="memberDropdownChevron" class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200"></i>
+                                </button>
 
-                                <!-- Animated Dropdown on Hover -->
-                                <div class="absolute right-0 top-full pt-2 hidden group-hover:block w-52 z-50">
-                                    <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-100 rounded-xl shadow-2xl p-2 animate-fade-in-up">
+                                <!-- Dropdown Menu (Hover + Click) -->
+                                <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden group-hover:block w-56 z-50">
+                                    <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up">
                                         <div class="px-3 py-2 border-b border-slate-100 mb-1">
-                                            <p class="text-xs font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
-                                            <p class="text-[10px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
+                                            <p class="text-xs font-extrabold text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                                            <p class="text-[10.5px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
                                         </div>
-                                        <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition">
+                                        <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard
                                         </a>
-                                        <a href="{{ route('member.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition">
+                                        <a href="{{ route('member.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-user text-slate-400 text-xs w-4"></i> Profil Saya
                                         </a>
+                                        <button type="button" onclick="window.openCartDrawer()" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition text-left">
+                                            <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs w-4"></i> Keranjang Belanja
+                                        </button>
                                         <div class="border-t border-slate-100 mt-1 pt-1">
                                             <form method="POST" action="{{ route('member.logout') }}">
                                                 @csrf
-                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-lg transition">
-                                                    <i class="fa-solid fa-right-from-bracket text-xs w-4"></i> Keluar
+                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-sm transition">
+                                                    <i class="fa-solid fa-right-from-bracket text-xs w-4"></i> Keluar Akun
                                                 </button>
                                             </form>
                                         </div>
@@ -407,7 +413,7 @@
     <!-- ========================================================================= -->
     <!-- GLOBAL SHOPPING CART DRAWER (SLIDE-OVER) -->
     <!-- ========================================================================= -->
-    <div id="globalCartDrawer" class="fixed inset-0 z-[150] hidden">
+    <div id="globalCartDrawer" class="fixed inset-0 z-[9999] hidden">
         <!-- Backdrop -->
         <div id="cartDrawerBackdrop" onclick="window.closeCartDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0"></div>
 
