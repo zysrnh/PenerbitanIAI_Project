@@ -554,6 +554,84 @@
     <!-- GLOBAL CART JAVASCRIPT ENGINE -->
     <!-- ========================================================================= -->
     <script>
+        
+        // ==========================================
+        // SMART ZERO-FLICKER DROPDOWN SYSTEM
+        // ==========================================
+        let guestTimer = null;
+        let memberTimer = null;
+
+        function initSmartDropdowns() {
+            const guestContainer = document.getElementById('guestUserDropdownContainer');
+            const guestMenu = document.getElementById('guestUserDropdownMenu');
+            if (guestContainer && guestMenu) {
+                guestContainer.addEventListener('mouseenter', () => {
+                    clearTimeout(guestTimer);
+                    guestMenu.classList.remove('hidden');
+                });
+                guestContainer.addEventListener('mouseleave', () => {
+                    guestTimer = setTimeout(() => {
+                        guestMenu.classList.add('hidden');
+                    }, 200);
+                });
+            }
+
+            const memberContainer = document.getElementById('memberUserDropdownContainer');
+            const memberMenu = document.getElementById('memberUserDropdownMenu');
+            const memberChevron = document.getElementById('memberDropdownChevron');
+            if (memberContainer && memberMenu) {
+                memberContainer.addEventListener('mouseenter', () => {
+                    clearTimeout(memberTimer);
+                    memberMenu.classList.remove('hidden');
+                    if (memberChevron) memberChevron.classList.add('rotate-180');
+                });
+                memberContainer.addEventListener('mouseleave', () => {
+                    memberTimer = setTimeout(() => {
+                        memberMenu.classList.add('hidden');
+                        if (memberChevron) memberChevron.classList.remove('rotate-180');
+                    }, 200);
+                });
+            }
+        }
+
+        window.toggleGuestDropdown = function(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('guestUserDropdownMenu');
+            if (menu) menu.classList.toggle('hidden');
+        };
+
+        window.toggleMemberDropdown = function(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('memberUserDropdownMenu');
+            const chevron = document.getElementById('memberDropdownChevron');
+            if (menu) {
+                const isHidden = menu.classList.contains('hidden');
+                if (isHidden) {
+                    menu.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-180');
+                } else {
+                    menu.classList.add('hidden');
+                    if (chevron) chevron.classList.remove('rotate-180');
+                }
+            }
+        };
+
+        document.addEventListener('click', function(e) {
+            const guestContainer = document.getElementById('guestUserDropdownContainer');
+            const guestMenu = document.getElementById('guestUserDropdownMenu');
+            if (guestContainer && !guestContainer.contains(e.target)) {
+                if (guestMenu) guestMenu.classList.add('hidden');
+            }
+
+            const memberContainer = document.getElementById('memberUserDropdownContainer');
+            const memberMenu = document.getElementById('memberUserDropdownMenu');
+            const memberChevron = document.getElementById('memberDropdownChevron');
+            if (memberContainer && !memberContainer.contains(e.target)) {
+                if (memberMenu) memberMenu.classList.add('hidden');
+                if (memberChevron) memberChevron.classList.remove('rotate-180');
+            }
+        });
+
         window.PERSIS_CART = {
             isLoggedIn: @json(Auth::check()),
             userName: @json(Auth::check() ? Auth::user()->name : ''),
