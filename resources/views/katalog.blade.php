@@ -238,9 +238,8 @@
                                 value="{{ request('q') }}" 
                                 placeholder="Cari judul, penulis, ISBN..." 
                                 class="w-full pl-8 pr-8 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 font-medium transition"
-                                oninput="handleSearchAutocomplete(this.value)"
-                                onfocus="handleSearchAutocomplete(this.value)"
-                                onkeydown="handleSearchKeydown(event)"
+                                oninput="runAutocomplete(this.value)"
+                                onfocus="runAutocomplete(this.value)"
                             />
                             <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
                             
@@ -1713,6 +1712,17 @@
             if (e.target === this) closeBookModal();
         });
     
+
+        // Backward-compat aliases for old inline handlers
+        function handleSearchAutocomplete(v) { runAutocomplete(v); }
+        function handleSearchKeydown(e) {
+            if (!acDropdown || acDropdown.classList.contains('hidden')) return;
+            if (e.key === 'ArrowDown') { e.preventDefault(); acSelectedIdx = Math.min(acSelectedIdx + 1, acSuggestions.length - 1); renderAcSelection(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); acSelectedIdx = Math.max(acSelectedIdx - 1, 0); renderAcSelection(); }
+            else if (e.key === 'Enter' && acSelectedIdx >= 0) { e.preventDefault(); openBookModal(acSuggestions[acSelectedIdx]); acDropdown.classList.add('hidden'); acDropdown.style.display = 'none'; }
+            else if (e.key === 'Escape') { acDropdown.classList.add('hidden'); acDropdown.style.display = 'none'; }
+        }
+
         // =======================================================
         // AUTOCOMPLETE LIVE SEARCH (BULLETPROOF)
         // =======================================================
@@ -1749,7 +1759,7 @@
 
             if (!acDropdown || !acList) return;
 
-            if (!q) { acDropdown.style.display = 'none'; return; }
+            if (!q) { acDropdown.classList.add('hidden'); acDropdown.style.display = 'none'; return; }
 
             acSuggestions = searchableBooksData.filter(b =>
                 (b.title || '').toLowerCase().includes(q) ||
@@ -1796,7 +1806,7 @@
             const label = document.getElementById('autocompleteSubmitLabel');
             if (label) label.innerText = acSuggestions.length > 0 ? ('Lihat Semua ' + acSuggestions.length + ' Hasil') : ('Cari "' + q + '" di Semua Koleksi');
 
-            acDropdown.style.cssText = 'display: block !important; position: absolute; left: 0; right: 0; top: 100%; z-index: 99999; background: white; margin-top: 4px;';
+            acDropdown.classList.remove('hidden'); acDropdown.style.cssText = 'display: block !important; position: absolute; left: 0; right: 0; top: 100%; z-index: 99999; background: white; margin-top: 4px;';
         }
 
         function renderAcSelection() {
