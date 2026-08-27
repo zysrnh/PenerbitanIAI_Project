@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Book;
 use App\Models\SiteSetting;
 
@@ -33,13 +34,29 @@ class MemberDashboardController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name'  => ['required', 'string', 'max:100'],
-            'phone' => ['nullable', 'string', 'max:20'],
+            'name'   => ['required', 'string', 'max:100'],
+            'phone'  => ['nullable', 'string', 'max:20'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:3072'],
+        ], [
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'avatar.image'  => 'Berkas avatar harus berupa gambar.',
+            'avatar.mimes'  => 'Format gambar yang didukung: JPG, PNG, WEBP, atau SVG.',
+            'avatar.max'    => 'Ukuran gambar maksimal 3MB.',
         ]);
+
+        if ($request->hasFile('avatar')) {
+            // Delete previous avatar file if exists on public disk
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = $path;
+        }
 
         $user->update($validated);
 
-        return back()->with('success', 'Profil Anda berhasil diperbarui.');
+        return back()->with('success', 'Profil dan foto profil Anda berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request)

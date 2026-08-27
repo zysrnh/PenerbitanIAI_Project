@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
-#[Fillable(['name', 'email', 'phone', 'password', 'role', 'is_active'])]
+#[Fillable(['name', 'email', 'phone', 'avatar', 'password', 'role', 'is_active'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -42,6 +43,33 @@ class User extends Authenticatable
             'admin' => 'Admin Biasa',
             default => ucfirst($this->role),
         };
+    }
+
+    /**
+     * Get user avatar URL.
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (!empty($this->avatar)) {
+            if (Str::startsWith($this->avatar, ['http://', 'https://', '/'])) {
+                return $this->avatar;
+            }
+            return asset('storage/' . $this->avatar);
+        }
+        return null;
+    }
+
+    /**
+     * Get user initials.
+     */
+    public function getInitialsAttribute(): string
+    {
+        $words = explode(' ', trim($this->name));
+        $initials = '';
+        foreach (array_slice($words, 0, 2) as $w) {
+            $initials .= strtoupper(substr($w, 0, 1));
+        }
+        return $initials ?: 'U';
     }
 
     /**

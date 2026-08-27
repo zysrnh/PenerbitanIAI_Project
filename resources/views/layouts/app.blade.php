@@ -139,9 +139,13 @@
                             <div class="relative group">
                                 <a href="{{ route('member.dashboard') }}" class="user-nav-btn flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2.5 sm:pr-3 py-1 sm:py-1.5 rounded-full border border-emerald-200/90 bg-white hover:bg-emerald-50/70 hover:border-emerald-500 shadow-2xs cursor-pointer">
                                     <div class="relative">
-                                        <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#032c21] to-emerald-600 flex items-center justify-center text-white text-[11px] font-black shadow-xs">
-                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                        </div>
+                                        @if(Auth::user()->avatar_url)
+                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover shadow-xs border border-emerald-500" />
+                                        @else
+                                            <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#032c21] to-emerald-600 flex items-center justify-center text-white text-[11px] font-black shadow-xs">
+                                                {{ Auth::user()->initials }}
+                                            </div>
+                                        @endif
                                         <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-white rounded-full"></span>
                                     </div>
                                     <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-800 max-w-[90px] sm:max-w-[120px] truncate transition">
@@ -247,9 +251,13 @@
                 @auth
                     @if(Auth::user()->role === 'member')
                         <div class="px-1 py-2 bg-emerald-50 rounded-lg flex items-center gap-2 mb-2">
-                            <div class="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-white text-[10px] font-black shrink-0">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </div>
+                            @if(Auth::user()->avatar_url)
+                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover border border-emerald-600 shrink-0" />
+                            @else
+                                <div class="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                                    {{ Auth::user()->initials }}
+                                </div>
+                            @endif
                             <div>
                                 <p class="text-[11px] font-bold text-emerald-900">{{ Auth::user()->name }}</p>
                                 <p class="text-[10px] text-slate-500">Member Aktif</p>
