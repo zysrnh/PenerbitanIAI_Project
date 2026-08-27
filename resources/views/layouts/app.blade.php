@@ -17,6 +17,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            // Bikin semua utility hover: cuma aktif di device yang beneran punya
+            // hover (mouse/trackpad). Ini yang nyegah tombol "nyangkut" dalam
+            // kondisi hover abis di-tap di HP/tablet.
+            future: {
+                hoverOnlyWhenSupported: true,
+            },
             theme: {
                 extend: {
                     colors: {
@@ -82,16 +88,25 @@
             animation: subtlePulse 2.5s infinite ease-in-out;
         }
         .user-nav-btn {
-            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .user-nav-btn:hover {
-            box-shadow: 0 4px 12px rgba(0, 104, 48, 0.15);
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
         }
         .user-nav-btn i {
             transition: transform 0.2s ease;
         }
-        .user-nav-btn:hover i {
-            transform: scale(1.1);
+        /* Efek hover custom cuma jalan di device yang beneran punya hover
+           (mouse/trackpad), biar ga nyangkut kepencet-terus di HP/tablet. */
+        @media (hover: hover) and (pointer: fine) {
+            .user-nav-btn:hover {
+                box-shadow: 0 4px 12px rgba(0, 104, 48, 0.15);
+            }
+            .user-nav-btn:hover i {
+                transform: scale(1.1);
+            }
+        }
+        /* Feedback tekan instan di semua device (termasuk HP) biar tombol
+           kerasa responsif pas ditap, ga cuma ngandelin hover. */
+        .user-nav-btn:active {
+            transform: scale(0.93);
         }
         .auth-dropdown-panel {
             transform-origin: top right;
@@ -147,7 +162,7 @@
                         </button>
                     @auth
                         @if(Auth::user()->role === 'member')
-                            {{-- Member Profile Pill with Click & Hover Dropdown --}}
+                            {{-- Member Profile Pill — murni JS click-toggle, gak ada lagi CSS hover yang tabrakan --}}
                             <div class="relative group" id="memberUserDropdownContainer">
                                 <button type="button" 
                                         id="memberUserDropdownBtn"
@@ -169,8 +184,8 @@
                                     <i id="memberDropdownChevron" class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200"></i>
                                 </button>
 
-                                <!-- Dropdown Menu (Hover + Click) -->
-                                <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden group-hover:block w-56 z-50">
+                                <!-- Dropdown Menu: full JS-controlled (klik buka/tutup + klik di luar buat nutup) -->
+                                <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50">
                                     <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up">
                                         <div class="px-3 py-2 border-b border-slate-100 mb-1">
                                             <p class="text-xs font-extrabold text-slate-900 truncate">{{ Auth::user()->name }}</p>
@@ -453,7 +468,7 @@
     <button type="button"
             id="floatingCartBtn"
             onclick="window.openCartDrawer()"
-            class="fixed bottom-20 right-6 z-40 w-12 h-12 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 border-2 border-white cursor-pointer group"
+            class="fixed bottom-20 right-6 z-40 w-12 h-12 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 border-2 border-white cursor-pointer group"
             title="Buka Keranjang Belanja">
         <i class="fa-solid fa-cart-shopping text-base group-hover:scale-110 transition-transform"></i>
         <span id="floatingCartBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 bg-amber-500 text-slate-950 rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs animate-bounce">
@@ -512,52 +527,10 @@
     <!-- GLOBAL CART JAVASCRIPT ENGINE -->
     <!-- ========================================================================= -->
     <script>
-        
+
         // ==========================================
-        // SMART ZERO-FLICKER DROPDOWN SYSTEM
+        // ACCOUNT DROPDOWN (murni klik — buka/tutup + klik di luar buat nutup)
         // ==========================================
-        let guestTimer = null;
-        let memberTimer = null;
-
-        function initSmartDropdowns() {
-            const guestContainer = document.getElementById('guestUserDropdownContainer');
-            const guestMenu = document.getElementById('guestUserDropdownMenu');
-            if (guestContainer && guestMenu) {
-                guestContainer.addEventListener('mouseenter', () => {
-                    clearTimeout(guestTimer);
-                    guestMenu.classList.remove('hidden');
-                });
-                guestContainer.addEventListener('mouseleave', () => {
-                    guestTimer = setTimeout(() => {
-                        guestMenu.classList.add('hidden');
-                    }, 200);
-                });
-            }
-
-            const memberContainer = document.getElementById('memberUserDropdownContainer');
-            const memberMenu = document.getElementById('memberUserDropdownMenu');
-            const memberChevron = document.getElementById('memberDropdownChevron');
-            if (memberContainer && memberMenu) {
-                memberContainer.addEventListener('mouseenter', () => {
-                    clearTimeout(memberTimer);
-                    memberMenu.classList.remove('hidden');
-                    if (memberChevron) memberChevron.classList.add('rotate-180');
-                });
-                memberContainer.addEventListener('mouseleave', () => {
-                    memberTimer = setTimeout(() => {
-                        memberMenu.classList.add('hidden');
-                        if (memberChevron) memberChevron.classList.remove('rotate-180');
-                    }, 200);
-                });
-            }
-        }
-
-        window.toggleGuestDropdown = function(event) {
-            if (event) event.stopPropagation();
-            const menu = document.getElementById('guestUserDropdownMenu');
-            if (menu) menu.classList.toggle('hidden');
-        };
-
         window.toggleMemberDropdown = function(event) {
             if (event) event.stopPropagation();
             const menu = document.getElementById('memberUserDropdownMenu');
@@ -575,12 +548,6 @@
         };
 
         document.addEventListener('click', function(e) {
-            const guestContainer = document.getElementById('guestUserDropdownContainer');
-            const guestMenu = document.getElementById('guestUserDropdownMenu');
-            if (guestContainer && !guestContainer.contains(e.target)) {
-                if (guestMenu) guestMenu.classList.add('hidden');
-            }
-
             const memberContainer = document.getElementById('memberUserDropdownContainer');
             const memberMenu = document.getElementById('memberUserDropdownMenu');
             const memberChevron = document.getElementById('memberDropdownChevron');
