@@ -111,7 +111,7 @@
         <!-- Sidebar Brand Logo -->
         <div class="px-6 py-5 border-b border-white/10 flex items-center justify-center">
             <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PERSIS PERS">
-                <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
+                <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-13 sm:h-14 w-auto object-contain" />
             </a>
         </div>
 
@@ -190,7 +190,7 @@
             <!-- Mobile Brand Toggle -->
             <div class="flex items-center gap-3 lg:hidden">
                 <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-8 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-11 w-auto object-contain" />
                 </a>
             </div>
 

@@ -102,11 +102,11 @@
     <!-- Top Sticky Header -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-20 sm:h-24">
                 
                 <!-- Brand Logo -->
                 <a href="{{ url('/') }}" class="flex items-center py-1 group" title="PERSIS PERS">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}?v={{ time() }}" alt="PERSIS PERS" class="h-11 sm:h-13 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}?v={{ time() }}" alt="PERSIS PERS" class="h-14 sm:h-16 lg:h-18 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
                 </a>
 
                 <!-- Desktop Nav Menu -->
@@ -333,7 +333,7 @@
                 <div class="md:col-span-4 space-y-4">
                     <div class="flex items-center">
                         <a href="{{ url('/') }}" title="PENERBIT PERSIS">
-                            <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
+                            <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-14 sm:h-16 w-auto object-contain" />
                         </a>
                     </div>
                     <p class="text-xs text-slate-400 leading-relaxed">
