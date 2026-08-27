@@ -411,10 +411,18 @@
                                                     <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
                                                     <span class="text-[11px] sm:text-xs md:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $nBook->price }}</span>
                                                 </div>
-                                                <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
-                                                    <span>Detail</span>
-                                                    <i class="fa-solid fa-arrow-right text-[8px]"></i>
-                                                </button>
+                                                <div class="flex items-center gap-1.5">
+                                                    <button type="button" 
+                                                            onclick="event.stopPropagation(); window.addToCart({{ $nBook->id }}, 1);" 
+                                                            class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-emerald-50 hover:bg-[#006830] text-emerald-700 hover:text-white border border-emerald-200 hover:border-[#006830] flex items-center justify-center text-[10px] sm:text-xs transition shadow-2xs" 
+                                                            title="Tambah ke Keranjang">
+                                                        <i class="fa-solid fa-cart-plus"></i>
+                                                    </button>
+                                                    <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
+                                                        <span>Detail</span>
+                                                        <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -491,10 +499,18 @@
                                                     <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
                                                     <span class="text-[11px] sm:text-xs md:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $bBook->price }}</span>
                                                 </div>
-                                                <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
-                                                    <span>Detail</span>
-                                                    <i class="fa-solid fa-arrow-right text-[8px]"></i>
-                                                </button>
+                                                <div class="flex items-center gap-1.5">
+                                                    <button type="button" 
+                                                            onclick="event.stopPropagation(); window.addToCart({{ $bBook->id }}, 1);" 
+                                                            class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-emerald-50 hover:bg-[#006830] text-emerald-700 hover:text-white border border-emerald-200 hover:border-[#006830] flex items-center justify-center text-[10px] sm:text-xs transition shadow-2xs" 
+                                                            title="Tambah ke Keranjang">
+                                                        <i class="fa-solid fa-cart-plus"></i>
+                                                    </button>
+                                                    <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
+                                                        <span>Detail</span>
+                                                        <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -599,10 +615,18 @@
                                                 <span class="text-[9px] text-slate-400 font-medium block leading-none">Harga Cetak</span>
                                                 <span class="text-[11px] sm:text-xs md:text-[13px] font-black text-emerald-700 font-mono mt-0.5 block">{{ $book->price }}</span>
                                             </div>
-                                            <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
-                                                <span>Detail</span>
-                                                <i class="fa-solid fa-arrow-right text-[8px]"></i>
-                                            </button>
+                                            <div class="flex items-center gap-1.5">
+                                                <button type="button" 
+                                                        onclick="event.stopPropagation(); window.addToCart({{ $book->id }}, 1);" 
+                                                        class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-emerald-50 hover:bg-[#006830] text-emerald-700 hover:text-white border border-emerald-200 hover:border-[#006830] flex items-center justify-center text-[10px] sm:text-xs transition shadow-2xs" 
+                                                        title="Tambah ke Keranjang">
+                                                    <i class="fa-solid fa-cart-plus"></i>
+                                                </button>
+                                                <button type="button" class="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xs bg-slate-100 group-hover:bg-emerald-700 group-hover:text-white text-slate-600 font-bold text-[9px] sm:text-[10px] transition flex items-center gap-1">
+                                                    <span>Detail</span>
+                                                    <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -786,15 +810,39 @@
                             </div>
                         </div>
 
-                        <div class="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-2.5">
-                            <a id="modalWaOrderBtn" href="#" target="_blank" class="w-full sm:flex-1 py-2.5 px-4 rounded-sm bg-emerald-700 hover:bg-emerald-800 text-white text-xs sm:text-sm font-bold transition shadow-xs flex items-center justify-center gap-2">
-                                <i class="fa-brands fa-whatsapp text-sm"></i>
-                                <span>Pesan Buku via WhatsApp</span>
-                            </a>
-                            <a id="modalSamplePdfBtn" href="#" target="_blank" class="hidden w-full sm:w-auto py-2.5 px-4 rounded-sm bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs sm:text-sm font-bold transition border border-emerald-200 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-file-pdf"></i>
-                                <span>Sampel PDF</span>
-                            </a>
+                        <div class="pt-3 border-t border-slate-100 flex flex-col gap-2.5">
+                            <!-- Quantity & Add to Cart Action -->
+                            <div class="flex items-center gap-2">
+                                <div class="flex items-center border border-slate-200 rounded-sm bg-slate-50 p-1">
+                                    <button type="button" onclick="modalChangeQty(-1)" class="w-7 h-7 bg-white hover:bg-emerald-700 hover:text-white rounded-xs text-slate-700 font-bold flex items-center justify-center text-xs shadow-2xs transition">
+                                        <i class="fa-solid fa-minus text-[9px]"></i>
+                                    </button>
+                                    <input type="number" id="modalOrderQty" value="1" min="1" max="100" class="w-10 text-center bg-transparent font-bold font-mono text-xs text-slate-800 outline-none" readonly />
+                                    <button type="button" onclick="modalChangeQty(1)" class="w-7 h-7 bg-white hover:bg-emerald-700 hover:text-white rounded-xs text-slate-700 font-bold flex items-center justify-center text-xs shadow-2xs transition">
+                                        <i class="fa-solid fa-plus text-[9px]"></i>
+                                    </button>
+                                </div>
+
+                                <button type="button" 
+                                        id="modalAddToCartBtn" 
+                                        onclick="modalAddToCartAction()" 
+                                        class="flex-1 py-2.5 px-4 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs sm:text-sm font-bold transition shadow-xs flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fa-solid fa-cart-plus text-sm"></i>
+                                    <span>+ Tambah ke Keranjang</span>
+                                </button>
+                            </div>
+
+                            <!-- Alternate Direct WhatsApp & Sample PDF -->
+                            <div class="flex flex-col sm:flex-row items-center gap-2">
+                                <a id="modalWaOrderBtn" href="#" target="_blank" class="w-full sm:flex-1 py-2 px-3 rounded-sm bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition border border-emerald-200 flex items-center justify-center gap-1.5">
+                                    <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                    <span>Pesan via WhatsApp</span>
+                                </a>
+                                <a id="modalSamplePdfBtn" href="#" target="_blank" class="hidden w-full sm:w-auto py-2 px-3 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-file-pdf text-red-600"></i>
+                                    <span>Sampel PDF</span>
+                                </a>
+                            </div>
                         </div>
 
                     </div>
@@ -1114,6 +1162,25 @@
             const modal = document.getElementById('publicBookModal');
             if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
         }
+
+        
+        // Modal Quantity Handler
+        window.modalChangeQty = function(delta) {
+            const input = document.getElementById('modalOrderQty');
+            if (!input) return;
+            let val = parseInt(input.value || 1) + delta;
+            if (val < 1) val = 1;
+            if (val > 100) val = 100;
+            input.value = val;
+        };
+
+        window.modalAddToCartAction = function() {
+            if (!currentModalBook || !currentModalBook.id) return;
+            const qty = parseInt(document.getElementById('modalOrderQty')?.value || 1);
+            if (typeof window.addToCart === 'function') {
+                window.addToCart(currentModalBook.id, qty);
+            }
+        };
 
         // ---------- LIGHTBOX ----------
         function openLightboxFromDetail() {

@@ -81,6 +81,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 */
 use App\Http\Controllers\MemberAuthController;
 use App\Http\Controllers\MemberDashboardController;
+use App\Http\Controllers\CartController;
 
 // Guest-only member routes
 Route::middleware('guest')->prefix('member')->name('member.')->group(function () {
@@ -98,4 +99,11 @@ Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(
     Route::get('/profil',           [MemberDashboardController::class, 'profile'])->name('profile');
     Route::put('/profil',           [MemberDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profil/password',  [MemberDashboardController::class, 'updatePassword'])->name('profile.password');
+
+    // Shopping Cart Routes
+    Route::get('/cart',               [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add',          [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update/{id}',  [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{id}',[CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart/clear',      [CartController::class, 'clear'])->name('cart.clear');
 });

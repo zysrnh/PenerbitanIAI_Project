@@ -133,6 +133,16 @@
 
                 <!-- Header CTA Button + Auth (Icon-Only with Smooth Animations) -->
                 <div class="flex items-center gap-2 sm:gap-3">
+                        {{-- Shopping Cart Button --}}
+                        <button type="button" 
+                                onclick="window.openCartDrawer()" 
+                                class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition shrink-0"
+                                title="Keranjang Belanja">
+                            <i class="fa-solid fa-cart-shopping text-sm transition-transform duration-300"></i>
+                            <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#006830] text-white rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs">
+                                0
+                            </span>
+                        </button>
                     @auth
                         @if(Auth::user()->role === 'member')
                             {{-- Member Profile Pill with Avatar & Pulse --}}
@@ -397,5 +407,489 @@
             drawer.classList.toggle('hidden');
         }
     </script>
+
+    <!-- ========================================================================= -->
+    <!-- GLOBAL SHOPPING CART DRAWER (SLIDE-OVER) -->
+    <!-- ========================================================================= -->
+    <div id="globalCartDrawer" class="fixed inset-0 z-[150] hidden">
+        <!-- Backdrop -->
+        <div id="cartDrawerBackdrop" onclick="window.closeCartDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0"></div>
+
+        <!-- Slide-over Panel -->
+        <div id="cartDrawerPanel" class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl z-10 flex flex-col transform translate-x-full transition-transform duration-300 ease-out">
+            
+            <!-- Drawer Header -->
+            <div class="px-5 py-4 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-900">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-sm bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-sm font-heading">Keranjang Belanja</h3>
+                        <p class="text-[10.5px] text-emerald-200/80">Koleksi Terbitan PERSIS PERS</p>
+                    </div>
+                    <span id="cartDrawerCountBadge" class="ml-1.5 px-2 py-0.5 rounded-full bg-emerald-500 text-[#032c21] text-[10.5px] font-black">
+                        0 Item
+                    </span>
+                </div>
+                <button type="button" onclick="window.closeCartDrawer()" class="w-8 h-8 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Drawer Body: Items List -->
+            <div id="cartDrawerItemsList" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+                <!-- Skeleton / Empty state injected via JS -->
+            </div>
+
+            <!-- Drawer Footer: Subtotal & Checkout -->
+            <div id="cartDrawerFooter" class="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 space-y-3.5">
+                <div class="space-y-1.5 text-xs">
+                    <div class="flex justify-between text-slate-500">
+                        <span>Total Jumlah Item:</span>
+                        <span id="cartDrawerTotalItemsText" class="font-bold text-slate-800">0 Eksemplar</span>
+                    </div>
+                    <div class="flex justify-between text-slate-900 text-sm font-bold pt-1 border-t border-slate-200/80">
+                        <span>Total Pembayaran:</span>
+                        <span id="cartDrawerSubtotal" class="font-mono font-black text-emerald-700 text-base">Rp 0</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <button type="button" 
+                            onclick="window.checkoutCartViaWhatsApp()"
+                            class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs sm:text-sm font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-base"></i>
+                        <span>Pesan Semua via WhatsApp</span>
+                    </button>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" 
+                                onclick="window.clearCart()" 
+                                class="text-[11px] text-red-600 hover:text-red-800 hover:underline font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-trash-can text-[10px]"></i>
+                            <span>Kosongkan Keranjang</span>
+                        </button>
+
+                        <button type="button" 
+                                onclick="window.closeCartDrawer()" 
+                                class="text-[11px] text-slate-500 hover:text-slate-800 font-semibold">
+                            Lanjut Pilih Buku &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- FLOATING CART QUICK BUTTON (BOTTOM RIGHT) -->
+    <!-- ========================================================================= -->
+    <button type="button"
+            id="floatingCartBtn"
+            onclick="window.openCartDrawer()"
+            class="fixed bottom-20 right-6 z-40 w-12 h-12 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 border-2 border-white cursor-pointer group"
+            title="Buka Keranjang Belanja">
+        <i class="fa-solid fa-cart-shopping text-base group-hover:scale-110 transition-transform"></i>
+        <span id="floatingCartBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 bg-amber-500 text-slate-950 rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs animate-bounce">
+            0
+        </span>
+    </button>
+
+    <!-- ========================================================================= -->
+    <!-- LOGIN PROMPT MODAL (FOR GUEST USERS) -->
+    <!-- ========================================================================= -->
+    <div id="loginPromptModal" class="fixed inset-0 z-[160] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+        <div class="bg-white rounded-sm border border-slate-200 shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in space-y-4">
+            <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-2xl mx-auto shadow-2xs">
+                <i class="fa-solid fa-user-lock"></i>
+            </div>
+            <div>
+                <h3 class="font-extrabold text-slate-900 text-base font-heading">Perlu Masuk Akun Member</h3>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Silakan masuk ke akun member Anda terlebih dahulu untuk menambahkan buku ke keranjang belanja dan melakukan pemesanan.
+                </p>
+            </div>
+            <div class="space-y-2 pt-2">
+                <a href="{{ route('member.login') }}?redirect={{ urlencode(request()->fullUrl()) }}" 
+                   class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white font-bold text-xs rounded-sm transition shadow-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket text-xs"></i>
+                    <span>Masuk Akun Member</span>
+                </a>
+                <a href="{{ route('member.register') }}" 
+                   class="w-full py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-sm transition border border-slate-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-plus text-xs text-emerald-700"></i>
+                    <span>Daftar Akun Baru (Gratis)</span>
+                </a>
+                <button type="button" onclick="window.closeLoginPromptModal()" class="w-full py-1.5 text-xs text-slate-400 hover:text-slate-600 font-medium">
+                    Nanti Saja
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- CART TOAST NOTIFICATION -->
+    <!-- ========================================================================= -->
+    <div id="cartToastNotification" class="fixed top-20 right-6 z-[170] transform translate-y-[-150%] transition-all duration-300 opacity-0 pointer-events-none max-w-sm w-full">
+        <div class="p-3.5 bg-slate-900 text-white rounded-sm shadow-2xl border-l-4 border-emerald-500 flex items-center justify-between gap-3 pointer-events-auto">
+            <div class="flex items-center gap-2.5 min-w-0">
+                <i id="cartToastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
+                <p id="cartToastMsg" class="text-xs font-semibold text-slate-100 truncate">Buku berhasil ditambahkan!</p>
+            </div>
+            <button type="button" onclick="window.openCartDrawer()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10.5px] rounded-xs shrink-0 transition">
+                Lihat
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- GLOBAL CART JAVASCRIPT ENGINE -->
+    <!-- ========================================================================= -->
+    <script>
+        window.PERSIS_CART = {
+            isLoggedIn: @json(Auth::check()),
+            userName: @json(Auth::check() ? Auth::user()->name : ''),
+            contactWa: @json(\App\Models\SiteSetting::get('contact_whatsapp', '6282116116133')),
+            routes: {
+                get: @json(Auth::check() ? route('member.cart.index') : null),
+                add: @json(Auth::check() ? route('member.cart.add') : null),
+                update: '/member/cart/update/',
+                remove: '/member/cart/remove/',
+                clear: @json(Auth::check() ? route('member.cart.clear') : null),
+            },
+            data: {
+                count: 0,
+                total: 0,
+                formatted_total: 'Rp 0',
+                items: []
+            }
+        };
+
+        // Open & Close Modals
+        window.openLoginPromptModal = function() {
+            const m = document.getElementById('loginPromptModal');
+            if (m) {
+                m.classList.remove('hidden');
+                m.classList.add('flex');
+            }
+        };
+
+        window.closeLoginPromptModal = function() {
+            const m = document.getElementById('loginPromptModal');
+            if (m) {
+                m.classList.add('hidden');
+                m.classList.remove('flex');
+            }
+        };
+
+        // Open & Close Cart Drawer
+        window.openCartDrawer = function() {
+            if (!window.PERSIS_CART.isLoggedIn) {
+                window.openLoginPromptModal();
+                return;
+            }
+            const drawer = document.getElementById('globalCartDrawer');
+            const backdrop = document.getElementById('cartDrawerBackdrop');
+            const panel = document.getElementById('cartDrawerPanel');
+            if (drawer && backdrop && panel) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+                window.fetchCartData();
+            }
+        };
+
+        window.closeCartDrawer = function() {
+            const drawer = document.getElementById('globalCartDrawer');
+            const backdrop = document.getElementById('cartDrawerBackdrop');
+            const panel = document.getElementById('cartDrawerPanel');
+            if (drawer && backdrop && panel) {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    drawer.classList.add('hidden');
+                }, 300);
+            }
+        };
+
+        // Show Toast
+        window.showCartToast = function(msg, isSuccess = true) {
+            const toast = document.getElementById('cartToastNotification');
+            const toastMsg = document.getElementById('cartToastMsg');
+            const toastIcon = document.getElementById('cartToastIcon');
+            if (!toast || !toastMsg) return;
+
+            toastMsg.textContent = msg;
+            if (isSuccess) {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg shrink-0';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-exclamation text-amber-400 text-lg shrink-0';
+            }
+
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+            }, 3500);
+        };
+
+        // Fetch Cart Data
+        window.fetchCartData = function() {
+            if (!window.PERSIS_CART.isLoggedIn || !window.PERSIS_CART.routes.get) return;
+
+            fetch(window.PERSIS_CART.routes.get)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        window.PERSIS_CART.data = data;
+                        window.renderCartDrawerUI(data);
+                        window.updateCartBadges(data.count);
+                    }
+                })
+                .catch(err => console.error('Error fetching cart:', err));
+        };
+
+        // Update Badges
+        window.updateCartBadges = function(count) {
+            const navBadge = document.getElementById('navCartBadge');
+            const floatingBadge = document.getElementById('floatingCartBadge');
+
+            if (navBadge) {
+                if (count > 0) {
+                    navBadge.textContent = count;
+                    navBadge.classList.remove('hidden');
+                } else {
+                    navBadge.classList.add('hidden');
+                }
+            }
+
+            if (floatingBadge) {
+                if (count > 0) {
+                    floatingBadge.textContent = count;
+                    floatingBadge.classList.remove('hidden');
+                } else {
+                    floatingBadge.classList.add('hidden');
+                }
+            }
+        };
+
+        // Add to Cart Action
+        window.addToCart = function(bookId, quantity = 1) {
+            if (!window.PERSIS_CART.isLoggedIn) {
+                window.openLoginPromptModal();
+                return;
+            }
+
+            fetch(window.PERSIS_CART.routes.add, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    book_id: bookId,
+                    quantity: quantity
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.PERSIS_CART.data = data;
+                    window.updateCartBadges(data.count);
+                    window.showCartToast(data.message || 'Buku berhasil ditambahkan ke keranjang!');
+                    window.renderCartDrawerUI(data);
+                }
+            })
+            .catch(err => {
+                console.error('Error adding to cart:', err);
+                window.showCartToast('Gagal menambahkan ke keranjang.', false);
+            });
+        };
+
+        // Update Item Qty
+        window.updateCartItemQty = function(cartItemId, change) {
+            const item = window.PERSIS_CART.data.items.find(i => i.id === cartItemId);
+            if (!item) return;
+
+            const newQty = item.quantity + change;
+
+            fetch(window.PERSIS_CART.routes.update + cartItemId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ quantity: newQty })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.PERSIS_CART.data = data;
+                    window.updateCartBadges(data.count);
+                    window.renderCartDrawerUI(data);
+                }
+            });
+        };
+
+        // Remove Item
+        window.removeCartItem = function(cartItemId) {
+            fetch(window.PERSIS_CART.routes.remove + cartItemId, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.PERSIS_CART.data = data;
+                    window.updateCartBadges(data.count);
+                    window.renderCartDrawerUI(data);
+                    window.showCartToast('Item dihapus dari keranjang.');
+                }
+            });
+        };
+
+        // Clear Cart
+        window.clearCart = function() {
+            if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh isi keranjang belanja?')) return;
+
+            fetch(window.PERSIS_CART.routes.clear, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.PERSIS_CART.data = data;
+                    window.updateCartBadges(0);
+                    window.renderCartDrawerUI(data);
+                    window.showCartToast('Keranjang belanja berhasil dikosongkan.');
+                }
+            });
+        };
+
+        // Render Cart UI
+        window.renderCartDrawerUI = function(data) {
+            const list = document.getElementById('cartDrawerItemsList');
+            const countBadge = document.getElementById('cartDrawerCountBadge');
+            const totalItemsText = document.getElementById('cartDrawerTotalItemsText');
+            const subtotalText = document.getElementById('cartDrawerSubtotal');
+            const footer = document.getElementById('cartDrawerFooter');
+
+            if (!list) return;
+
+            if (countBadge) countBadge.textContent = `${data.count} Item`;
+            if (totalItemsText) totalItemsText.textContent = `${data.count} Eksemplar`;
+            if (subtotalText) subtotalText.textContent = data.formatted_total;
+
+            if (!data.items || data.items.length === 0) {
+                list.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center p-6 space-y-3.5 my-auto">
+                        <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-extrabold text-slate-800 font-heading">Keranjang Masih Kosong</h4>
+                            <p class="text-xs text-slate-400 mt-1 leading-relaxed max-w-xs">
+                                Anda belum menambahkan koleksi buku ke keranjang. Jelajahi katalog sekarang!
+                            </p>
+                        </div>
+                        <a href="{{ route('katalog') }}" onclick="window.closeCartDrawer()" class="px-4 py-2 bg-[#006830] text-white text-xs font-bold rounded-sm shadow-xs hover:bg-[#032c21] transition">
+                            Buka Katalog Buku
+                        </a>
+                    </div>
+                `;
+                if (footer) footer.classList.add('opacity-50', 'pointer-events-none');
+                return;
+            }
+
+            if (footer) footer.classList.remove('opacity-50', 'pointer-events-none');
+
+            let html = '';
+            data.items.forEach(item => {
+                const cover = item.cover_url ? 
+                    `<img src="${item.cover_url}" alt="${item.title}" class="w-full h-full object-cover" />` :
+                    `<div class="w-full h-full bg-[#032c21] text-white flex items-center justify-center text-[8px] font-bold p-1 text-center">${item.category}</div>`;
+
+                html += `
+                    <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex gap-3 items-start transition hover:border-emerald-600">
+                        <div class="w-14 h-19 aspect-[3/4.15] shrink-0 bg-slate-900 rounded-xs overflow-hidden border border-slate-200 shadow-2xs">
+                            ${cover}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-wider">${item.category}</span>
+                            <h5 class="text-xs font-bold text-slate-900 line-clamp-2 leading-snug mt-0.5" title="${item.title}">${item.title}</h5>
+                            <p class="text-[10px] text-slate-400 truncate mt-0.5">${item.author}</p>
+                            
+                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+                                <div>
+                                    <span class="font-mono font-black text-xs text-emerald-700">${item.formatted_subtotal}</span>
+                                    <span class="text-[9.5px] text-slate-400 block">@ ${item.formatted_price}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-sm border border-slate-200">
+                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, -1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition">
+                                        <i class="fa-solid fa-minus text-[8px]"></i>
+                                    </button>
+                                    <span class="text-xs font-black font-mono w-5 text-center text-slate-800">${item.quantity}</span>
+                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, 1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition">
+                                        <i class="fa-solid fa-plus text-[8px]"></i>
+                                    </button>
+                                </div>
+                                <button type="button" onclick="window.removeCartItem(${item.id})" class="text-slate-300 hover:text-red-600 transition p-1" title="Hapus item">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            list.innerHTML = html;
+        };
+
+        // Checkout via WhatsApp
+        window.checkoutCartViaWhatsApp = function() {
+            const data = window.PERSIS_CART.data;
+            if (!data.items || data.items.length === 0) {
+                alert('Keranjang belanja Anda masih kosong.');
+                return;
+            }
+
+            let text = `Halo Redaksi PERSIS PERS, saya ingin memesan buku melalui *Keranjang Belanja* website persispers.com:\n\n`;
+            if (window.PERSIS_CART.userName) {
+                text += `*Nama Pemesan:* ${window.PERSIS_CART.userName}\n`;
+            }
+            text += `*Daftar Pesanan Buku:*\n`;
+
+            data.items.forEach((item, index) => {
+                text += `${index + 1}. *${item.title}* (${item.quantity}x) = ${item.formatted_subtotal}\n`;
+            });
+
+            text += `\n*Total Item:* ${data.count} Eksemplar`;
+            text += `\n*Total Belanja:* ${data.formatted_total}`;
+            text += `\n\nMohon info ketersediaan stok buku dan rincian ongkos kirim ke alamat saya ya kak. Terima kasih!`;
+
+            const phone = window.PERSIS_CART.contactWa.replace(/[^0-9]/g, '') || '6282116116133';
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        };
+
+        // Auto load cart badge on page ready
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.PERSIS_CART.isLoggedIn) {
+                window.fetchCartData();
+            }
+        });
+    </script>
+
 </body>
 </html>
