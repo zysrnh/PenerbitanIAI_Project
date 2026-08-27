@@ -82,14 +82,16 @@
             animation: subtlePulse 2.5s infinite ease-in-out;
         }
         .user-nav-btn {
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
         }
         .user-nav-btn:hover {
-            transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 8px 20px -4px rgba(4, 120, 87, 0.25);
+            box-shadow: 0 4px 12px rgba(0, 104, 48, 0.15);
+        }
+        .user-nav-btn i {
+            transition: transform 0.2s ease;
         }
         .user-nav-btn:hover i {
-            transform: scale(1.12);
+            transform: scale(1.1);
         }
         .auth-dropdown-panel {
             transform-origin: top right;
@@ -502,10 +504,10 @@
     </button>
 
     <!-- ========================================================================= -->
-    <!-- LOGIN PROMPT MODAL (FOR GUEST USERS) -->
+    <!-- LOGIN PROMPT MODAL (FOR GUEST USERS) WITH ULTRA-SMOOTH ANIMATION -->
     <!-- ========================================================================= -->
-    <div id="loginPromptModal" class="fixed inset-0 z-[160] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-        <div class="bg-white rounded-sm border border-slate-200 shadow-2xl max-w-sm w-full p-6 text-center animate-fade-in space-y-4">
+    <div id="loginPromptModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" onclick="if(event.target === this) window.closeLoginPromptModal()">
+        <div id="loginPromptModalCard" class="bg-white rounded-2xl border border-slate-100 shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out space-y-4">
             <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-2xl mx-auto shadow-2xs">
                 <i class="fa-solid fa-user-lock"></i>
             </div>
@@ -517,16 +519,16 @@
             </div>
             <div class="space-y-2 pt-2">
                 <a href="{{ route('member.login') }}?redirect={{ urlencode(request()->fullUrl()) }}" 
-                   class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white font-bold text-xs rounded-sm transition shadow-xs flex items-center justify-center gap-2">
+                   class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white font-bold text-xs rounded-xl transition shadow-xs flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket text-xs"></i>
                     <span>Masuk Akun Member</span>
                 </a>
                 <a href="{{ route('member.register') }}" 
-                   class="w-full py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-sm transition border border-slate-200 flex items-center justify-center gap-2">
+                   class="w-full py-2.5 px-4 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-user-plus text-xs text-emerald-700"></i>
                     <span>Daftar Akun Baru (Gratis)</span>
                 </a>
-                <button type="button" onclick="window.closeLoginPromptModal()" class="w-full py-1.5 text-xs text-slate-400 hover:text-slate-600 font-medium">
+                <button type="button" onclick="window.closeLoginPromptModal()" class="w-full py-1.5 text-xs text-slate-400 hover:text-slate-600 font-medium transition cursor-pointer">
                     Nanti Saja
                 </button>
             </div>
@@ -571,20 +573,34 @@
             }
         };
 
-        // Open & Close Modals
+        // Open & Close Modals with Smooth Animation
         window.openLoginPromptModal = function() {
             const m = document.getElementById('loginPromptModal');
-            if (m) {
-                m.classList.remove('hidden');
+            const card = document.getElementById('loginPromptModalCard');
+            if (m && card) {
+                m.classList.remove('hidden', 'pointer-events-none');
                 m.classList.add('flex');
+                setTimeout(() => {
+                    m.classList.remove('opacity-0');
+                    m.classList.add('opacity-100');
+                    card.classList.remove('scale-95', 'translate-y-4', 'opacity-0');
+                    card.classList.add('scale-100', 'translate-y-0', 'opacity-100');
+                }, 10);
             }
         };
 
         window.closeLoginPromptModal = function() {
             const m = document.getElementById('loginPromptModal');
-            if (m) {
-                m.classList.add('hidden');
-                m.classList.remove('flex');
+            const card = document.getElementById('loginPromptModalCard');
+            if (m && card) {
+                m.classList.remove('opacity-100');
+                m.classList.add('opacity-0');
+                card.classList.remove('scale-100', 'translate-y-0', 'opacity-100');
+                card.classList.add('scale-95', 'translate-y-4', 'opacity-0');
+                setTimeout(() => {
+                    m.classList.add('hidden', 'pointer-events-none');
+                    m.classList.remove('flex');
+                }, 280);
             }
         };
 
