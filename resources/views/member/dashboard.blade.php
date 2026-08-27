@@ -1,209 +1,449 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Member | PERSIS PERS</title>
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#064e3b',
+                            950: '#032c21',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        heading: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .font-heading { font-family: 'Outfit', sans-serif; }
         .brand-dark { background-color: #032c21; }
-        .brand-green { color: #006830; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
-        .fade-in { animation: fadeIn 0.4s ease both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .hover-lift { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 12px 24px -8px rgba(3, 44, 33, 0.12); }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="min-h-screen text-slate-800 antialiased flex flex-col lg:flex-row">
 
-    <!-- Sidebar + Main Layout -->
-    <div class="flex min-h-screen">
+    <!-- ==================== SIDEBAR (DESKTOP) ==================== -->
+    <aside class="w-64 brand-dark text-white flex-col shrink-0 hidden lg:flex min-h-screen sticky top-0 h-screen z-40">
+        
+        <!-- Sidebar Brand Logo -->
+        <div class="px-6 py-6 border-b border-white/10 flex items-center justify-center">
+            <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PERSIS PERS">
+                <img src="{{ asset('images/logo/logo_persis_pers_full_official_transparent.png') }}" alt="PERSIS PERS" class="h-10 w-auto brightness-0 invert object-contain" />
+            </a>
+        </div>
 
-        <!-- Sidebar -->
-        <aside class="w-64 brand-dark text-white flex flex-col shrink-0 hidden lg:flex">
-            <!-- Logo (Official White/Transparent on Dark) -->
-            <div class="px-6 py-5 border-b border-white/10">
-                <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official_transparent.png') }}" alt="PERSIS PERS" class="h-10 w-auto brightness-0 invert" />
-                </a>
-            </div>
-
-            <!-- User Info -->
-            <div class="px-6 py-4 border-b border-white/10">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-sm shrink-0 shadow-xs">
-                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-xs font-bold text-white truncate">{{ $user->name }}</p>
-                        <p class="text-[10px] text-emerald-300 truncate">{{ $user->email }}</p>
-                    </div>
+        <!-- User Profile Card in Sidebar -->
+        <div class="px-5 py-4 border-b border-white/10 bg-black/15">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-sm shrink-0 shadow-xs ring-2 ring-emerald-500/30">
+                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-xs font-bold text-white truncate leading-snug">{{ $user->name }}</p>
+                    <p class="text-[10.5px] text-emerald-300/90 truncate mt-0.5">{{ $user->email }}</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Nav -->
-            <nav class="flex-1 px-4 py-4 space-y-1.5">
-                <a href="{{ route('member.dashboard') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition bg-emerald-700 text-white shadow-xs">
-                    <i class="fa-solid fa-gauge-high w-4 text-emerald-300"></i> Dashboard
-                </a>
-                <a href="{{ route('katalog') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition text-emerald-100 hover:bg-white/10 hover:text-white">
-                    <i class="fa-solid fa-book-open w-4 text-emerald-400"></i> Katalog Buku
-                </a>
-                <a href="{{ route('member.profile') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition text-emerald-100 hover:bg-white/10 hover:text-white">
-                    <i class="fa-solid fa-user w-4 text-emerald-400"></i> Profil Saya
-                </a>
-                <a href="{{ url('/kontak') }}"
-                    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold transition text-emerald-100 hover:bg-white/10 hover:text-white">
-                    <i class="fa-solid fa-headset w-4 text-emerald-400"></i> Hubungi Redaksi
-                </a>
-            </nav>
+        <!-- Navigation Menu -->
+        <nav class="flex-1 px-3.5 py-5 space-y-1.5 overflow-y-auto">
+            <a href="{{ route('member.dashboard') }}"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition bg-emerald-600/90 text-white shadow-xs">
+                <i class="fa-solid fa-gauge-high w-4 text-center text-emerald-200"></i>
+                <span>Dashboard</span>
+            </a>
 
-            <!-- Logout -->
-            <div class="px-4 py-4 border-t border-white/10">
-                <form method="POST" action="{{ route('member.logout') }}">
+            <a href="{{ route('katalog') }}"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-book-open w-4 text-center text-emerald-400"></i>
+                <span>Katalog Buku</span>
+            </a>
+
+            <a href="{{ route('member.profile') }}"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-user w-4 text-center text-emerald-400"></i>
+                <span>Profil Saya</span>
+            </a>
+
+            <a href="{{ url('/kontak') }}"
+                class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-headset w-4 text-center text-emerald-400"></i>
+                <span>Hubungi Redaksi</span>
+            </a>
+
+            <div class="pt-4 pb-1">
+                <div class="px-3 text-[10px] font-bold text-emerald-400/60 uppercase tracking-widest">Akses Cepat</div>
+            </div>
+
+            <a href="{{ url('/') }}"
+                class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium transition text-slate-300 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-arrow-up-right-from-square w-4 text-center text-slate-400"></i>
+                <span>Halaman Utama</span>
+            </a>
+        </nav>
+
+        <!-- Logout Area -->
+        <div class="p-4 border-t border-white/10">
+            <form method="POST" action="{{ route('member.logout') }}">
+                @csrf
+                <button type="submit" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-red-300 hover:bg-red-900/40 hover:text-red-100 transition border border-red-500/20">
+                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                    <span>Keluar Akun</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT AREA ==================== -->
+    <div class="flex-1 flex flex-col min-w-0 min-h-screen">
+
+        <!-- Top Header Bar -->
+        <header class="bg-white border-b border-slate-200/80 px-4 sm:px-8 py-3.5 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
+            
+            <!-- Mobile Brand Toggle -->
+            <div class="flex items-center gap-3 lg:hidden">
+                <a href="{{ url('/') }}" class="flex items-center">
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-8 w-auto object-contain" />
+                </a>
+            </div>
+
+            <!-- Desktop Breadcrumb Title -->
+            <div class="hidden lg:flex items-center gap-2 text-xs">
+                <span class="text-slate-400 font-medium">Portal Member</span>
+                <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
+                <span class="font-bold text-slate-800">Dashboard Utama</span>
+            </div>
+
+            <!-- Topbar Action Links -->
+            <div class="flex items-center gap-2.5 sm:gap-3.5">
+                <a href="{{ url('/') }}" 
+                    class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-emerald-600 text-xs font-bold text-slate-600 hover:text-emerald-800 hover:bg-emerald-50/50 transition">
+                    <i class="fa-solid fa-house text-[10px] text-emerald-700"></i>
+                    <span>Website Utama</span>
+                </a>
+
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PERSIS PERS, saya member ' . $user->name . ' ingin berkonsultasi.') }}" 
+                    target="_blank"
+                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-xs font-bold text-emerald-800 transition">
+                    <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                    <span class="hidden sm:inline">WhatsApp Redaksi</span>
+                </a>
+
+                <a href="{{ route('member.profile') }}" 
+                    class="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition">
+                    <div class="w-6 h-6 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px] font-black">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                    <span class="text-xs font-bold text-slate-700 max-w-[100px] truncate hidden sm:inline">{{ explode(' ', $user->name)[0] }}</span>
+                </a>
+
+                <!-- Mobile Logout -->
+                <form method="POST" action="{{ route('member.logout') }}" class="lg:hidden">
                     @csrf
-                    <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-red-300 hover:bg-red-900/40 hover:text-red-100 transition">
-                        <i class="fa-solid fa-right-from-bracket w-4"></i> Keluar
+                    <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg text-xs" title="Keluar">
+                        <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </form>
             </div>
-        </aside>
+        </header>
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <!-- Main Body Wrapper -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 animate-fade-in max-w-7xl w-full mx-auto space-y-6">
 
-            <!-- Mobile Topbar -->
-            <header class="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200 shadow-2xs sticky top-0 z-30">
-                <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-8 w-auto" />
-                </a>
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('member.profile') }}" class="text-xs font-bold text-slate-700 hover:text-emerald-700">{{ $user->name }}</a>
-                    <form method="POST" action="{{ route('member.logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="text-xs text-red-600 font-bold hover:underline">Logout</button>
-                    </form>
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <main class="flex-1 p-6 lg:p-8 fade-in max-w-6xl w-full mx-auto">
-
-                @if(session('success'))
-                    <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-xs sm:text-sm text-emerald-800 font-semibold shadow-xs">
-                        <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i> {{ session('success') }}
+            <!-- Success Alert Notification -->
+            @if(session('success'))
+                <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-xs sm:text-sm text-emerald-900 font-semibold shadow-xs">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-circle-check text-sm"></i>
                     </div>
-                @endif
-
-                <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Selamat Datang, {{ $user->name }}! ðŸ‘‹</h1>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Akses katalog buku, layanan penerbitan, dan profil akun Anda.</p>
-                    </div>
-                    <a href="{{ route('katalog') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-xl shadow-xs transition hover:shadow-md">
-                        <i class="fa-solid fa-book-bookmark text-xs"></i> Buka Katalog Buku
-                    </a>
-                </div>
-
-                <!-- Quick Stats -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-11 h-11 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-700 border border-emerald-100">
-                                <i class="fa-solid fa-books text-lg"></i>
-                            </div>
-                            <div>
-                                <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Koleksi Terbitan</p>
-                                <p class="text-xl font-black text-slate-900">150+ Judul</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-11 h-11 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 border border-blue-100">
-                                <i class="fa-solid fa-circle-check text-lg"></i>
-                            </div>
-                            <div>
-                                <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Status Member</p>
-                                <p class="text-sm font-extrabold text-emerald-700">Aktif & Terverifikasi âœ“</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs">
-                        <div class="flex items-center gap-3.5">
-                            <div class="w-11 h-11 bg-amber-50 rounded-xl flex items-center justify-center text-amber-700 border border-amber-100">
-                                <i class="fa-brands fa-whatsapp text-xl"></i>
-                            </div>
-                            <div>
-                                <p class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Konsultasi Naskah</p>
-                                <p class="text-sm font-extrabold text-slate-800">Redaksi PERSIS PERS</p>
-                            </div>
-                        </div>
+                        <p class="font-bold text-emerald-950">Berhasil!</p>
+                        <p class="text-xs text-emerald-800 font-normal mt-0.5">{{ session('success') }}</p>
                     </div>
                 </div>
+            @endif
 
-                <!-- Quick Actions -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    <a href="{{ route('katalog') }}"
-                        class="group bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:border-emerald-500 hover:shadow-lg transition-all duration-200 flex items-center gap-4">
-                        <div class="w-13 h-13 bg-[#032c21] group-hover:bg-[#006830] rounded-2xl flex items-center justify-center transition shrink-0 shadow-xs">
-                            <i class="fa-solid fa-magnifying-glass text-white text-base"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition">Jelajahi Katalog Buku</h3>
-                            <p class="text-xs text-slate-500 mt-1">Cari karya ilmiah, monograf dosen, dan buku ajar</p>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-emerald-600 ml-auto transition-transform duration-200 group-hover:translate-x-1"></i>
-                    </a>
+            <!-- ==================== HERO GREETING BANNER ==================== -->
+            <div class="relative overflow-hidden rounded-3xl brand-dark text-white p-6 sm:p-8 shadow-xl border border-emerald-900/60">
+                <!-- Background Glow Accents -->
+                <div class="absolute -top-16 -right-16 w-64 h-64 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                    <a href="{{ url('/kontak') }}"
-                        class="group bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:border-emerald-500 hover:shadow-lg transition-all duration-200 flex items-center gap-4">
-                        <div class="w-13 h-13 bg-slate-900 group-hover:bg-[#032c21] rounded-2xl flex items-center justify-center transition shrink-0 shadow-xs">
-                            <i class="fa-solid fa-paper-plane text-white text-base"></i>
+                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="max-w-xl space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-bold text-emerald-300 tracking-wide uppercase">
+                            <i class="fa-solid fa-circle-check text-emerald-400"></i> Member Resmi PERSIS PERS
                         </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition">Konsultasi & Terbitkan Naskah</h3>
-                            <p class="text-xs text-slate-500 mt-1">Layanan pengurusan ISBN, layout, dan cetak</p>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-emerald-600 ml-auto transition-transform duration-200 group-hover:translate-x-1"></i>
-                    </a>
-                </div>
+                        <h1 class="text-xl sm:text-2xl lg:text-3xl font-black font-heading text-white tracking-tight">
+                            Selamat Datang, {{ $user->name }}!
+                        </h1>
+                        <p class="text-xs sm:text-sm text-emerald-100/80 leading-relaxed">
+                            Akses katalog publikasi ilmiah, layanan penerbitan ber-ISBN, modul perkuliahan, dan percetakan standar UNESCO dari panel akun Anda.
+                        </p>
+                    </div>
 
-                <!-- Profile Info Card -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
-                    <div class="flex items-center justify-between mb-5 pb-4 border-b border-slate-100">
-                        <h3 class="font-bold text-slate-900 text-sm">Informasi Akun Member</h3>
-                        <a href="{{ route('member.profile') }}" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-emerald-500 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition flex items-center gap-1.5">
-                            <i class="fa-solid fa-pen text-[10px]"></i> Edit Profil
+                    <div class="flex flex-wrap items-center gap-3 shrink-0">
+                        <a href="{{ route('katalog') }}" 
+                            class="px-5 py-3 bg-emerald-500 hover:bg-emerald-400 text-[#032c21] text-xs font-extrabold rounded-xl transition-all duration-200 shadow-md hover:shadow-emerald-500/30 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open text-xs"></i>
+                            <span>Buka Katalog Buku</span>
+                        </a>
+
+                        <a href="{{ url('/kontak') }}" 
+                            class="px-5 py-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold rounded-xl transition-all duration-200 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-nib text-xs text-emerald-300"></i>
+                            <span>Terbitkan Naskah</span>
                         </a>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-                        <div class="p-3 bg-slate-50 rounded-xl">
-                            <p class="text-[11px] text-slate-400 font-semibold mb-1">Nama Lengkap</p>
-                            <p class="font-bold text-slate-800">{{ $user->name }}</p>
+                </div>
+            </div>
+
+            <!-- ==================== KEY STATS / HIGHLIGHTS ==================== -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                
+                <!-- Stat 1: Koleksi Terbitan -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover-lift flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Koleksi Terbitan</p>
+                        <h4 class="text-xl font-black text-slate-900 mt-0.5">{{ $totalBooks ?? '150+' }} Judul</h4>
+                        <p class="text-[11px] text-emerald-700 font-semibold mt-0.5">Buku Ajar, Riset & Monograf</p>
+                    </div>
+                </div>
+
+                <!-- Stat 2: Status Member -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover-lift flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Status Keanggotaan</p>
+                        <h4 class="text-base font-extrabold text-emerald-700 mt-0.5 flex items-center gap-1.5">
+                            <span>Aktif</span>
+                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        </h4>
+                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Akses Penuh Layanan</p>
+                    </div>
+                </div>
+
+                <!-- Stat 3: Layanan Redaksi -->
+                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs hover-lift flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 text-amber-700 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Layanan Redaksi</p>
+                        <h4 class="text-sm font-extrabold text-slate-900 mt-0.5">Konsultasi Cepat</h4>
+                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Senin - Sabtu (08:00 - 16:00)</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ==================== QUICK SERVICES / ACTIONS ==================== -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- Service 1: Jelajahi Katalog -->
+                <a href="{{ route('katalog') }}" 
+                    class="group bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:border-emerald-500 hover:shadow-lg transition-all duration-200 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-[#032c21] group-hover:bg-[#006830] text-white flex items-center justify-center text-lg shrink-0 transition-colors duration-200 shadow-xs">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-extrabold text-slate-900 group-hover:text-emerald-800 transition">
+                                Jelajahi Katalog & Cari Judul Buku
+                            </h3>
+                            <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-emerald-600 transition-transform duration-200 group-hover:translate-x-1"></i>
                         </div>
-                        <div class="p-3 bg-slate-50 rounded-xl">
-                            <p class="text-[11px] text-slate-400 font-semibold mb-1">Alamat Email</p>
-                            <p class="font-bold text-slate-800">{{ $user->email }}</p>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                            Cari koleksi monograf riset dosen, modul ajar mata kuliah, dan buku rujukan keislaman ber-ISBN lengkap.
+                        </p>
+                    </div>
+                </a>
+
+                <!-- Service 2: Konsultasi Terbitan -->
+                <a href="{{ url('/kontak') }}" 
+                    class="group bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:border-emerald-500 hover:shadow-lg transition-all duration-200 flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-700 group-hover:bg-[#032c21] text-white flex items-center justify-center text-lg shrink-0 transition-colors duration-200 shadow-xs">
+                        <i class="fa-solid fa-pen-nib"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-extrabold text-slate-900 group-hover:text-emerald-800 transition">
+                                Konsultasi & Pengajuan Naskah Buku
+                            </h3>
+                            <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-emerald-600 transition-transform duration-200 group-hover:translate-x-1"></i>
                         </div>
-                        <div class="p-3 bg-slate-50 rounded-xl">
-                            <p class="text-[11px] text-slate-400 font-semibold mb-1">No. WhatsApp</p>
-                            <p class="font-bold text-slate-800">{{ $user->phone ?: 'Belum diisi' }}</p>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                            Layanan terpadu penerbitan ber-ISBN resmi Perpusnas, konversi tesis/disertasi, layout standar, dan cetak naskah.
+                        </p>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- ==================== RECENT CATALOG PREVIEW ==================== -->
+            @if(isset($recentBooks) && $recentBooks->count() > 0)
+                <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-7 shadow-xs">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-slate-100">
+                        <div>
+                            <h3 class="text-base font-extrabold text-slate-900 font-heading">Koleksi Terbitan Terbaru (2026)</h3>
+                            <p class="text-xs text-slate-500 mt-0.5">Buku ajar dan karya ilmiah terbitan resmi PERSIS PERS</p>
                         </div>
-                        <div class="p-3 bg-slate-50 rounded-xl">
-                            <p class="text-[11px] text-slate-400 font-semibold mb-1">Terdaftar Sejak</p>
-                            <p class="font-bold text-slate-800">{{ $user->created_at->format('d M Y') }}</p>
+                        <a href="{{ route('katalog') }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline flex items-center gap-1.5">
+                            <span>Lihat Semua Katalog</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        @foreach($recentBooks as $buku)
+                            <div class="bg-slate-50/70 border border-slate-200/80 rounded-2xl p-3.5 flex flex-col justify-between hover-lift">
+                                <div>
+                                    <!-- Book Cover Thumbnail -->
+                                    <div class="w-full h-44 rounded-xl overflow-hidden bg-[#032c21] mb-3 relative border border-slate-200 shadow-2xs">
+                                        @if($buku->cover_image)
+                                            <img src="{{ Str::startsWith($buku->cover_image, ['http', '/']) ? $buku->cover_image : asset('storage/' . $buku->cover_image) }}" 
+                                                 alt="{{ $buku->title }}" 
+                                                 class="w-full h-full object-cover" />
+                                        @else
+                                            <div class="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#032c21] text-white">
+                                                <i class="fa-solid fa-book-open text-emerald-400 text-2xl mb-2"></i>
+                                                <span class="text-[9px] font-bold text-emerald-300 uppercase tracking-widest">PERSIS PERS</span>
+                                                <p class="text-[10px] font-bold text-white line-clamp-2 mt-1">{{ $buku->title }}</p>
+                                            </div>
+                                        @endif
+                                        
+                                        <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-white/90 backdrop-blur-md text-[9px] font-bold text-emerald-800 shadow-2xs">
+                                            {{ $buku->category ?? 'Buku' }}
+                                        </span>
+                                    </div>
+
+                                    <h4 class="text-xs font-bold text-slate-900 line-clamp-2 leading-snug" title="{{ $buku->title }}">
+                                        {{ $buku->title }}
+                                    </h4>
+                                    <p class="text-[11px] text-slate-500 truncate mt-1 flex items-center gap-1">
+                                        <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600"></i>
+                                        <span>{{ $buku->author }}</span>
+                                    </p>
+                                </div>
+
+                                <div class="pt-3 mt-3 border-t border-slate-200/60 flex items-center justify-between">
+                                    <span class="text-xs font-mono font-bold text-emerald-700">
+                                        {{ $buku->price ? $buku->price : 'Hubungi Redaksi' }}
+                                    </span>
+                                    <a href="{{ route('katalog') }}?q={{ urlencode($buku->title) }}" 
+                                        class="px-2.5 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold transition shadow-2xs">
+                                        Detail
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- ==================== PROFILE INFO & CONTACT ==================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Account Info -->
+                <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-7 shadow-xs">
+                    <div class="flex items-center justify-between mb-5 pb-4 border-b border-slate-100">
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm font-heading">Informasi Akun Member</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Detail identitas yang terdaftar</p>
+                        </div>
+                        <a href="{{ route('member.profile') }}" 
+                            class="px-3.5 py-2 rounded-xl border border-slate-200 hover:border-emerald-500 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition flex items-center gap-1.5 shadow-2xs">
+                            <i class="fa-solid fa-pen-to-square text-[11px] text-emerald-600"></i>
+                            <span>Edit Profil</span>
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs sm:text-sm">
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">Nama Lengkap</p>
+                            <p class="font-extrabold text-slate-800">{{ $user->name }}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">Alamat Email</p>
+                            <p class="font-extrabold text-slate-800 truncate">{{ $user->email }}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">No. WhatsApp</p>
+                            <p class="font-extrabold text-slate-800">{{ $user->phone ?: 'Belum ditambahkan' }}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-100 rounded-2xl">
+                            <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">Terdaftar Sejak</p>
+                            <p class="font-extrabold text-slate-800">{{ $user->created_at->format('d M Y') }}</p>
                         </div>
                     </div>
                 </div>
 
-            </main>
-        </div>
+                <!-- Editorial Help & Support Card -->
+                <div class="bg-gradient-to-br from-emerald-50 to-white rounded-3xl border border-emerald-200/80 p-6 sm:p-7 shadow-xs flex flex-col justify-between">
+                    <div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center text-base mb-3 shadow-xs">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h3 class="font-extrabold text-slate-900 text-sm font-heading">Butuh Bantuan Penerbitan?</h3>
+                        <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                            Tim redaksi PERSIS PERS siap membantu konsultasi penerbitan buku, konversi naskah, hingga distribusi.
+                        </p>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-emerald-100 space-y-2">
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin konsultasi penerbitan naskah.') }}" 
+                            target="_blank"
+                            class="w-full py-2.5 px-4 bg-emerald-700 hover:bg-[#032c21] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>Chat WhatsApp Redaksi</span>
+                        </a>
+
+                        <a href="mailto:{{ $contactEmail ?? 'penerbitan@iaipibandung.ac.id' }}" 
+                            class="w-full py-2 px-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 text-center">
+                            <i class="fa-solid fa-envelope text-slate-400"></i>
+                            <span>Kirim Email Naskah</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
     </div>
 
 </body>

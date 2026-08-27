@@ -5,19 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Book;
+use App\Models\SiteSetting;
 
 class MemberDashboardController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        return view('member.dashboard', compact('user'));
+        $totalBooks = Book::count();
+        $recentBooks = Book::latest()->take(4)->get();
+        $contactWa = SiteSetting::get('contact_whatsapp', '6282116116133');
+        $contactEmail = SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id');
+
+        return view('member.dashboard', compact('user', 'totalBooks', 'recentBooks', 'contactWa', 'contactEmail'));
     }
 
     public function profile()
     {
         $user = Auth::user();
-        return view('member.profile', compact('user'));
+        $contactWa = SiteSetting::get('contact_whatsapp', '6282116116133');
+        return view('member.profile', compact('user', 'contactWa'));
     }
 
     public function updateProfile(Request $request)
@@ -31,7 +39,7 @@ class MemberDashboardController extends Controller
 
         $user->update($validated);
 
-        return back()->with('success', 'Profil berhasil diperbarui.');
+        return back()->with('success', 'Profil Anda berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request)
@@ -53,6 +61,6 @@ class MemberDashboardController extends Controller
 
         $user->update(['password' => Hash::make($validated['password'])]);
 
-        return back()->with('success', 'Kata sandi berhasil diperbarui.');
+        return back()->with('success', 'Kata sandi Anda berhasil diperbarui.');
     }
 }
