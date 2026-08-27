@@ -200,23 +200,25 @@
                             </a>
                         @endif
                     @else
-                        {{-- Guest: Icon-Only Member Trigger with Animated Interactive Dropdown --}}
-                        <div class="relative group">
-                            <a href="{{ route('member.login') }}" 
-                               aria-label="Akun Member"
-                               class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer group">
+                        {{-- Guest: Icon-Only Member Trigger with Seamless Zero-Flicker Dropdown --}}
+                        <div class="relative group" id="guestUserDropdownContainer">
+                            <button type="button" 
+                                    id="guestUserDropdownBtn"
+                                    onclick="window.toggleGuestDropdown(event)"
+                                    aria-label="Akun Member"
+                                    class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition">
                                 <i class="fa-solid fa-user text-sm transition-transform duration-300"></i>
                                 
                                 <!-- Animated subtle green pulse ring -->
-                                <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+                                <span class="absolute -top-0.5 -right-0.5 flex h-3 w-3 pointer-events-none">
                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
                                     <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-600 border-2 border-white"></span>
                                 </span>
-                            </a>
+                            </button>
 
-                            <!-- Animated Dropdown Panel on Hover -->
-                            <div class="absolute right-0 top-full pt-2 hidden group-hover:block w-56 z-50">
-                                <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-100 rounded-2xl shadow-2xl p-3 animate-fade-in-up">
+                            <!-- Animated Dropdown Panel on Hover & Click (with seamless hover bridge) -->
+                            <div id="guestUserDropdownMenu" class="absolute right-0 top-full pt-1.5 hidden group-hover:block w-56 z-[100] before:absolute before:-top-3 before:left-0 before:right-0 before:h-4 before:content-['']">
+                                <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-200 rounded-xl shadow-2xl p-3 animate-fade-in-up">
                                     <div class="flex items-center gap-2 pb-2.5 mb-2.5 border-b border-slate-100">
                                         <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs font-bold shrink-0">
                                             <i class="fa-solid fa-user"></i>
