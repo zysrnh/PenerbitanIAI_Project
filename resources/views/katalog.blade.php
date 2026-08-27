@@ -238,8 +238,6 @@
                                 value="{{ request('q') }}" 
                                 placeholder="Cari judul, penulis, ISBN..." 
                                 class="w-full pl-8 pr-8 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 font-medium transition"
-                                oninput="runAutocomplete(this.value)"
-                                onfocus="runAutocomplete(this.value)"
                             />
                             <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
                             
@@ -936,6 +934,9 @@
 
                 showDropdown();
             }
+
+            // Expose globally for any remaining inline handlers
+            window.runAutocomplete = runAC;
 
             if (acInput) {
                 acInput.addEventListener('input', function() { runAC(this.value); });
