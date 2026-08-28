@@ -657,7 +657,7 @@
             onclick="openAdminMessageDrawer()"
             id="adminFloatingChatBtn"
             class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-2xl ring-4 ring-emerald-500/25 flex items-center justify-center text-xl sm:text-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer relative group"
-            title="Daftar Kontak Diskusi Pesanan"
+            title="Daftar Kontak &amp; Live Chat Diskusi Pesanan"
         >
             <i class="fa-solid fa-comments transition-transform group-hover:scale-110"></i>
             <span id="adminFloatingChatBadge" class="{{ ($unreadOrderMessagesCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center font-mono shadow-md animate-pulse">
@@ -666,7 +666,7 @@
         </button>
     </div>
 
-    <!-- 2. The Full-Height Slide-in Sidebar Drawer (Contact List of Orders) -->
+    <!-- 2. The Full-Height Slide-in Sidebar Drawer (Contacts List <-> Live Chat Thread Inside Drawer) -->
     <div id="adminMessageDrawer" class="fixed inset-0 z-[99999] hidden items-end sm:items-stretch sm:justify-end" style="display: none;">
         <!-- Backdrop -->
         <div id="adminMessageDrawerBackdrop" onclick="closeAdminMessageDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 cursor-pointer"></div>
@@ -679,148 +679,216 @@
                 <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
             </div>
 
-            <!-- Drawer Header -->
-            <div class="px-5 py-4 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-sm bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-xs">
-                        <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
+            <!-- ========================================================================= -->
+            <!-- SCREEN 1: CONTACTS LIST VIEW -->
+            <!-- ========================================================================= -->
+            <div id="adminDrawerContactsScreen" class="flex flex-col h-full">
+                <!-- Header -->
+                <div class="px-5 py-4 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none shrink-0">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-sm bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-xs">
+                            <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
+                                <span>Diskusi Pesanan</span>
+                                <span class="text-xs font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                                    {{ $unreadOrderMessagesCount ?? 0 }} Baru
+                                </span>
+                            </h3>
+                            <p class="text-[10px] text-emerald-200/70">Pusat Percakapan Pembeli PERSIS PERS</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
-                            <span>Diskusi &amp; Kontak Pesanan</span>
-                            <span class="text-xs font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                                {{ $unreadOrderMessagesCount ?? 0 }} Pesan Baru
-                            </span>
-                        </h3>
-                        <p class="text-[10px] text-emerald-200/70">Daftar Percakapan Pembeli Buku PERSIS PERS</p>
-                    </div>
+                    <button type="button" onclick="closeAdminMessageDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Drawer">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
                 </div>
-                <button type="button" onclick="closeAdminMessageDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Drawer">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
 
-            <!-- Drawer Search / Filter Bar -->
-            <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs select-none">
-                <span class="text-slate-500 font-bold text-[11px] uppercase tracking-wider font-heading flex items-center gap-1">
-                    <i class="fa-solid fa-address-book text-emerald-700"></i> Kontak Pembeli
-                </span>
-                <span class="text-slate-400 text-[10.5px]">Klik kontak untuk membalas</span>
-            </div>
+                <!-- Subheader info -->
+                <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs select-none shrink-0">
+                    <span class="text-slate-600 font-bold text-[11px] uppercase tracking-wider font-heading flex items-center gap-1">
+                        <i class="fa-solid fa-address-book text-emerald-700"></i> Kontak Pembeli
+                    </span>
+                    <span class="text-slate-400 text-[10.5px]">Pilih kontak untuk chat langsung</span>
+                </div>
 
-            <!-- Drawer Contacts List -->
-            <div class="flex-1 overflow-y-auto divide-y divide-slate-100 text-xs">
-                @if(isset($orderConversations) && $orderConversations->count() > 0)
-                    @foreach($orderConversations as $conv)
-                        @php
-                            $latestMsg = $conv->messages->first();
-                            $hasUnread = $conv->messages->where('sender_type', 'customer')->where('is_read_by_admin', false)->count() > 0;
-                            $unreadCount = $conv->messages->where('sender_type', 'customer')->where('is_read_by_admin', false)->count();
-                            
-                            // Shipping status badge colors
-                            $statusBg = 'bg-slate-100 text-slate-700';
-                            if ($conv->shipping_status === 'diproses') $statusBg = 'bg-indigo-50 text-indigo-700 border border-indigo-200';
-                            elseif ($conv->shipping_status === 'dikirim') $statusBg = 'bg-blue-50 text-blue-700 border border-blue-200';
-                            elseif ($conv->shipping_status === 'selesai') $statusBg = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
-                        @endphp
-
-                        <div class="p-3.5 hover:bg-slate-50/80 transition-colors {{ $hasUnread ? 'bg-emerald-50/60 border-l-4 border-emerald-600' : '' }}">
-                            <div class="flex items-start gap-3">
+                <!-- Contacts List -->
+                <div class="flex-1 overflow-y-auto divide-y divide-slate-100 text-xs">
+                    @if(isset($orderConversations) && $orderConversations->count() > 0)
+                        @foreach($orderConversations as $conv)
+                            @php
+                                $latestMsg = $conv->messages->first();
+                                $hasUnread = $conv->messages->where('sender_type', 'customer')->where('is_read_by_admin', false)->count() > 0;
+                                $unreadCount = $conv->messages->where('sender_type', 'customer')->where('is_read_by_admin', false)->count();
                                 
-                                <!-- User Avatar Initial -->
-                                <div class="w-10 h-10 rounded-full {{ $hasUnread ? 'bg-emerald-700 text-white' : 'bg-slate-800 text-slate-200' }} flex items-center justify-center font-black text-xs shrink-0 shadow-2xs">
-                                    {{ strtoupper(substr($conv->customer_name, 0, 2)) }}
-                                </div>
+                                $statusBg = 'bg-slate-100 text-slate-700';
+                                if ($conv->shipping_status === 'diproses') $statusBg = 'bg-indigo-50 text-indigo-700 border border-indigo-200';
+                                elseif ($conv->shipping_status === 'dikirim') $statusBg = 'bg-blue-50 text-blue-700 border border-blue-200';
+                                elseif ($conv->shipping_status === 'selesai') $statusBg = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+                            @endphp
 
-                                <!-- Contact Info & Latest Message -->
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center justify-between gap-1">
-                                        <h5 class="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
-                                            <span>{{ $conv->customer_name }}</span>
-                                            @if($hasUnread)
-                                                <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
-                                            @endif
-                                        </h5>
-                                        <span class="text-[10px] text-slate-400 font-mono shrink-0">
-                                            {{ $latestMsg ? $latestMsg->created_at->diffForHumans() : $conv->created_at->diffForHumans() }}
-                                        </span>
+                            <div onclick="openAdminChatThread('{{ $conv->id }}')" class="p-3.5 hover:bg-emerald-50/50 cursor-pointer transition-colors {{ $hasUnread ? 'bg-emerald-50/70 border-l-4 border-emerald-600' : '' }}">
+                                <div class="flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-full {{ $hasUnread ? 'bg-emerald-700 text-white' : 'bg-slate-800 text-slate-200' }} flex items-center justify-center font-black text-xs shrink-0 shadow-2xs">
+                                        {{ strtoupper(substr($conv->customer_name, 0, 2)) }}
                                     </div>
 
-                                    <!-- Order Metadata Tags -->
-                                    <div class="flex flex-wrap items-center gap-1.5 mt-1">
-                                        <span class="font-mono text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded-xs">
-                                            #{{ $conv->order_number }}
-                                        </span>
-                                        <span class="text-[9.5px] px-1.5 py-0.5 rounded-xs font-bold uppercase {{ $statusBg }}">
-                                            {{ str_replace('_', ' ', $conv->shipping_status) }}
-                                        </span>
-                                        <span class="text-[10px] text-slate-500 font-mono">
-                                            {{ $conv->formatted_payment }}
-                                        </span>
-                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between gap-1">
+                                            <h5 class="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
+                                                <span>{{ $conv->customer_name }}</span>
+                                                @if($hasUnread)
+                                                    <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                                                @endif
+                                            </h5>
+                                            <span class="text-[10px] text-slate-400 font-mono shrink-0">
+                                                {{ $latestMsg ? $latestMsg->created_at->diffForHumans() : $conv->created_at->diffForHumans() }}
+                                            </span>
+                                        </div>
 
-                                    <!-- Last Message Preview -->
-                                    @if($latestMsg)
-                                        <p class="text-[11px] text-slate-600 line-clamp-1 mt-1.5 bg-white p-1.5 rounded-xs border border-slate-200">
-                                            <strong class="{{ $latestMsg->sender_type === 'admin' ? 'text-emerald-700' : 'text-slate-900' }}">
-                                                {{ $latestMsg->sender_type === 'admin' ? 'Admin: ' : 'Pembeli: ' }}
-                                            </strong>
-                                            {{ $latestMsg->message }}
-                                        </p>
-                                    @endif
+                                        <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                            <span class="font-mono text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded-xs">
+                                                #{{ $conv->order_number }}
+                                            </span>
+                                            <span class="text-[9.5px] px-1.5 py-0.5 rounded-xs font-bold uppercase {{ $statusBg }}">
+                                                {{ str_replace('_', ' ', $conv->shipping_status) }}
+                                            </span>
+                                            <span class="text-[10px] text-slate-500 font-mono">
+                                                {{ $conv->formatted_payment }}
+                                            </span>
+                                        </div>
 
-                                    <!-- Actions: Open Chat & WhatsApp -->
-                                    <div class="flex items-center gap-2 mt-2.5 pt-1.5 border-t border-slate-100">
-                                        <a href="{{ route('admin.orders.show', $conv->id) }}#adminMessagesThread" class="flex-1 px-2.5 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-2xs">
-                                            <i class="fa-solid fa-comments text-[10px]"></i>
-                                            <span>Buka Diskusi</span>
-                                            @if($unreadCount > 0)
-                                                <span class="px-1 rounded-full bg-rose-600 text-white text-[9px] font-mono font-bold">{{ $unreadCount }}</span>
-                                            @endif
-                                        </a>
-
-                                        @if(!empty($conv->customer_phone))
-                                            @php
-                                                $cleanPhone = preg_replace('/[^0-9]/', '', $conv->customer_phone);
-                                                if (str_starts_with($cleanPhone, '0')) {
-                                                    $cleanPhone = '62' . substr($cleanPhone, 1);
-                                                }
-                                                $waText = urlencode("Halo {$conv->customer_name}, kami dari Tim Redaksi PERSIS PERS terkait pesanan Anda #{$conv->order_number}.");
-                                            @endphp
-                                            <a href="https://wa.me/{{ $cleanPhone }}?text={{ $waText }}" target="_blank" class="px-2.5 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-2xs" title="Chat WhatsApp Pembeli">
-                                                <i class="fa-brands fa-whatsapp text-xs"></i>
-                                                <span>WA</span>
-                                            </a>
+                                        @if($latestMsg)
+                                            <p class="text-[11px] text-slate-600 line-clamp-1 mt-1.5 bg-white/80 p-1.5 rounded-xs border border-slate-200">
+                                                <strong class="{{ $latestMsg->sender_type === 'admin' ? 'text-emerald-700' : 'text-slate-900' }}">
+                                                    {{ $latestMsg->sender_type === 'admin' ? 'Saya: ' : 'Pembeli: ' }}
+                                                </strong>
+                                                {{ $latestMsg->message }}
+                                            </p>
                                         @endif
                                     </div>
-
                                 </div>
                             </div>
+                        @endforeach
+                    @else
+                        <div class="py-16 text-center text-slate-400 text-xs space-y-2 select-none">
+                            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xl mx-auto shadow-2xs">
+                                <i class="fa-regular fa-comments"></i>
+                            </div>
+                            <p class="font-bold text-slate-700 text-sm">Belum Ada Percakapan Pesanan</p>
+                            <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Saat pembeli berdiskusi mengenai pesanannya, kontak pembeli akan otomatis muncul di sini.</p>
                         </div>
-                    @endforeach
-                @else
-                    <div class="py-16 text-center text-slate-400 text-xs space-y-2 select-none">
-                        <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xl mx-auto shadow-2xs">
-                            <i class="fa-regular fa-comments"></i>
-                        </div>
-                        <p class="font-bold text-slate-700 text-sm">Belum Ada Percakapan Pesanan</p>
-                        <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Saat pembeli berdiskusi mengenai pesanannya, kontak pembeli akan otomatis muncul di sini.</p>
-                    </div>
-                @endif
+                    @endif
+                </div>
+
+                <!-- Footer -->
+                <div class="p-3 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500 shrink-0">
+                    <a href="{{ route('admin.orders.index') }}" class="font-bold text-emerald-800 hover:text-emerald-950 transition flex items-center justify-center gap-1">
+                        <span>Lihat Semua Daftar Pesanan Buku</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
             </div>
 
-            <!-- Drawer Footer Shortcuts -->
-            <div class="p-3 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500 shrink-0">
-                <a href="{{ route('admin.orders.index') }}" class="font-bold text-emerald-800 hover:text-emerald-950 transition flex items-center justify-center gap-1">
-                    <span>Lihat Semua Riwayat Pesanan Buku</span>
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
+            <!-- ========================================================================= -->
+            <!-- SCREEN 2: ACTIVE CHAT ROOM THREAD INSIDE DRAWER -->
+            <!-- ========================================================================= -->
+            <div id="adminDrawerChatScreen" class="hidden flex-col h-full" style="display: none;">
+                <!-- Header with Back Button -->
+                <div class="px-4 py-3 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none shrink-0">
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="backToAdminContactsList()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Kembali ke Kontak">
+                            <i class="fa-solid fa-arrow-left text-sm"></i>
+                        </button>
+                        <div>
+                            <h4 id="adminChatCustomerName" class="font-bold text-xs sm:text-sm font-heading flex items-center gap-1.5 truncate">
+                                Pembeli
+                            </h4>
+                            <p id="adminChatOrderBadge" class="text-[10.5px] font-mono text-lime-300">#INV-...</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <a id="adminChatDirectWaBtn" href="#" target="_blank" class="w-7 h-7 rounded-sm bg-[#25D366] text-white hover:bg-[#1EBE5D] flex items-center justify-center transition shadow-2xs" title="Chat WhatsApp Pembeli">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                        </a>
+                        <button type="button" onclick="closeAdminMessageDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Stream Area -->
+                <div id="adminDrawerChatStream" class="flex-1 overflow-y-auto p-4 bg-slate-50/70 space-y-3 min-h-[260px]">
+                    <div class="py-12 text-center text-slate-400 text-xs">
+                        <i class="fa-solid fa-spinner fa-spin text-xl text-emerald-600 mb-2 block"></i>
+                        <span>Memuat percakapan...</span>
+                    </div>
+                </div>
+
+                <!-- Quick Reply Template Chips -->
+                <div class="px-3.5 py-2 bg-slate-100/90 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px] shrink-0">
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider shrink-0">Balasan:</span>
+                    <button type="button" onclick="setAdminDrawerReply('Halo kak, terima kasih atas pesanannya. Buku sedang disiapkan dan segera kami packing ya!')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
+                        📦 Sedang Dipacking
+                    </button>
+                    <button type="button" onclick="setAdminDrawerReply('Halo kak, paket pesanan buku Anda telah kami serahkan ke kurir ekspedisi. Nomor resi pengiriman sudah tersedia ya kak. Terima kasih!')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
+                        🚚 Paket Dikirim
+                    </button>
+                    <button type="button" onclick="setAdminDrawerReply('Halo kak, apakah ada hal lain terkait naskah atau pesanan buku yang dapat kami bantu?')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
+                        ❓ Info Naskah
+                    </button>
+                </div>
+
+                <!-- Message Input Footer -->
+                <form id="adminDrawerChatForm" onsubmit="submitAdminDrawerMessage(event)" class="p-3 sm:p-4 bg-white border-t border-slate-200 shrink-0 space-y-2">
+                    <div class="flex gap-2">
+                        <input 
+                            type="text" 
+                            id="adminDrawerMessageInput" 
+                            placeholder="Ketik balasan untuk pembeli..." 
+                            class="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-xs text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" 
+                            required 
+                            autocomplete="off"
+                        />
+                        <button 
+                            type="submit" 
+                            id="btnSendAdminDrawerMsg"
+                            class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer shrink-0"
+                        >
+                            <i class="fa-solid fa-paper-plane text-xs text-lime-300"></i>
+                            <span class="hidden sm:inline">Kirim</span>
+                        </button>
+                    </div>
+
+                    <!-- Share Status Checkbox -->
+                    <div class="flex items-center justify-between text-[11px] pt-1">
+                        <label class="flex items-center gap-1.5 text-slate-600 cursor-pointer">
+                            <input type="checkbox" id="chkAdminDrawerShareStatus" onchange="toggleAdminDrawerShareInputs(this)" class="rounded-xs text-emerald-600">
+                            <span class="font-semibold">Update Status Pengiriman</span>
+                        </label>
+                        <a id="adminChatViewFullOrderBtn" href="#" class="text-emerald-700 hover:text-emerald-900 font-bold">
+                            Buka Detail Pesanan &rarr;
+                        </a>
+                    </div>
+
+                    <div id="adminDrawerShareInputsContainer" class="hidden grid grid-cols-2 gap-2 pt-1 border-t border-slate-200">
+                        <select id="adminDrawerShareStatusSelect" class="px-2 py-1 bg-white border border-slate-300 rounded-xs text-[11px] text-slate-800">
+                            <option value="">-- Status --</option>
+                            <option value="diproses">Sedang Dipacking</option>
+                            <option value="dikirim">Sudah Dikirim</option>
+                        </select>
+                        <input type="text" id="adminDrawerShareResiInput" placeholder="No. Resi (JNE/...)" class="px-2 py-1 bg-white border border-slate-300 rounded-xs text-[11px] font-mono uppercase" />
+                    </div>
+                </form>
             </div>
 
         </div>
     </div>
 
     <script>
+        let currentAdminActiveOrderId = null;
+        let adminChatPollInterval = null;
+
         function openAdminMessageDrawer() {
             const drawer = document.getElementById('adminMessageDrawer');
             const backdrop = document.getElementById('adminMessageDrawerBackdrop');
@@ -838,6 +906,9 @@
         }
 
         function closeAdminMessageDrawer() {
+            if (adminChatPollInterval) clearInterval(adminChatPollInterval);
+            currentAdminActiveOrderId = null;
+
             const drawer = document.getElementById('adminMessageDrawer');
             const backdrop = document.getElementById('adminMessageDrawerBackdrop');
             const panel = document.getElementById('adminMessageDrawerPanel');
@@ -849,8 +920,252 @@
                 setTimeout(() => {
                     drawer.style.display = 'none';
                     drawer.classList.add('hidden');
+                    backToAdminContactsList();
                 }, 300);
             }
+        }
+
+        // Switch to Active Chat Screen
+        function openAdminChatThread(orderId) {
+            currentAdminActiveOrderId = orderId;
+
+            const contactsScreen = document.getElementById('adminDrawerContactsScreen');
+            const chatScreen = document.getElementById('adminDrawerChatScreen');
+
+            if (contactsScreen && chatScreen) {
+                contactsScreen.style.display = 'none';
+                contactsScreen.classList.add('hidden');
+                chatScreen.style.display = 'flex';
+                chatScreen.classList.remove('hidden');
+            }
+
+            fetchAdminOrderChat(orderId, true);
+            if (adminChatPollInterval) clearInterval(adminChatPollInterval);
+            adminChatPollInterval = setInterval(() => {
+                if (currentAdminActiveOrderId) {
+                    fetchAdminOrderChat(currentAdminActiveOrderId, false);
+                }
+            }, 3500);
+        }
+
+        // Back to Contacts List
+        function backToAdminContactsList() {
+            if (adminChatPollInterval) clearInterval(adminChatPollInterval);
+            currentAdminActiveOrderId = null;
+
+            const contactsScreen = document.getElementById('adminDrawerContactsScreen');
+            const chatScreen = document.getElementById('adminDrawerChatScreen');
+
+            if (contactsScreen && chatScreen) {
+                chatScreen.style.display = 'none';
+                chatScreen.classList.add('hidden');
+                contactsScreen.style.display = 'flex';
+                contactsScreen.classList.remove('hidden');
+            }
+        }
+
+        function setAdminDrawerReply(text) {
+            const input = document.getElementById('adminDrawerMessageInput');
+            if (input) {
+                input.value = text;
+                input.focus();
+            }
+        }
+
+        function toggleAdminDrawerShareInputs(chk) {
+            const container = document.getElementById('adminDrawerShareInputsContainer');
+            if (container) {
+                if (chk.checked) container.classList.remove('hidden');
+                else container.classList.add('hidden');
+            }
+        }
+
+        // Fetch Order Messages for Admin
+        function fetchAdminOrderChat(orderId, showLoading = false) {
+            const stream = document.getElementById('adminDrawerChatStream');
+            if (!stream) return;
+
+            fetch(`/admin/orders/${orderId}/messages-api`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        renderAdminChatThread(data.order, data.messages);
+                    }
+                })
+                .catch(err => console.error('Admin chat fetch error:', err));
+        }
+
+        // Render Chat in Drawer
+        function renderAdminChatThread(order, messages) {
+            const stream = document.getElementById('adminDrawerChatStream');
+            if (!stream) return;
+
+            document.getElementById('adminChatCustomerName').textContent = order.customer_name;
+            document.getElementById('adminChatOrderBadge').textContent = '#' + order.order_number;
+            document.getElementById('adminChatViewFullOrderBtn').href = `/admin/orders/${order.id}`;
+
+            // WhatsApp link
+            if (order.customer_phone) {
+                let cleanPhone = order.customer_phone.replace(/[^0-9]/g, '');
+                if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
+                const waMsg = encodeURIComponent(`Halo ${order.customer_name}, kami dari Tim Redaksi PERSIS PERS terkait pesanan #${order.order_number}.`);
+                document.getElementById('adminChatDirectWaBtn').href = `https://wa.me/${cleanPhone}?text=${waMsg}`;
+            }
+
+            let html = '';
+
+            // 1. Order snapshot card
+            if (order.items && order.items.length > 0) {
+                html += `
+                    <div class="p-3 bg-white border border-slate-200 rounded-sm shadow-2xs space-y-2 select-none mb-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-heading flex items-center gap-1">
+                                <i class="fa-solid fa-bag-shopping text-emerald-700 text-xs"></i> Buku Pesanan
+                            </span>
+                            <span class="text-[10px] font-bold font-mono text-emerald-800">${order.formatted_payment || ''}</span>
+                        </div>
+                        <div class="space-y-2">
+                `;
+                order.items.forEach(it => {
+                    html += `
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-11 shrink-0 bg-slate-900 rounded-2xs overflow-hidden border border-slate-200 shadow-2xs">
+                                ${it.cover_url ? `<img src="${it.cover_url}" alt="${it.title}" class="w-full h-full object-cover" />` : `
+                                    <div class="w-full h-full bg-[#032c21] p-0.5 flex flex-col justify-between text-white border-l border-emerald-400">
+                                        <span class="text-[3.5px] font-mono text-emerald-300">PERSIS</span>
+                                        <span class="text-[4.5px] font-bold line-clamp-2 leading-none">${it.title}</span>
+                                    </div>
+                                `}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h6 class="text-xs font-bold text-slate-900 line-clamp-1 leading-snug">${it.title}</h6>
+                                <p class="text-[10px] text-slate-500 truncate mt-0.5">${it.author} &bull; <strong class="font-mono text-slate-700">${it.quantity} eks</strong></p>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `
+                        </div>
+                        <div class="pt-1.5 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                            <span>Status: <strong class="text-emerald-800 capitalize">${(order.shipping_status || 'Diproses').replace('_', ' ')}</strong></span>
+                            ${order.tracking_number ? `<span class="font-mono font-bold text-slate-700">Resi: ${order.tracking_number}</span>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="relative flex py-1 items-center">
+                        <div class="flex-grow border-t border-slate-200"></div>
+                        <span class="flex-shrink mx-2 text-[9.5px] font-bold uppercase tracking-wider text-slate-400 font-mono">Percakapan Pesanan</span>
+                        <div class="flex-grow border-t border-slate-200"></div>
+                    </div>
+                `;
+            }
+
+            if (!messages || messages.length === 0) {
+                html += `
+                    <div class="py-8 text-center text-slate-400 text-xs space-y-1 select-none">
+                        <div class="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-base mx-auto mb-1.5 shadow-2xs">
+                            <i class="fa-regular fa-comments"></i>
+                        </div>
+                        <p class="font-bold text-slate-700 text-xs">Belum Ada Percakapan</p>
+                        <p class="text-[10.5px] text-slate-500 max-w-xs mx-auto">Kirim pesan pertama kepada pembeli untuk mengabarkan status pesanan.</p>
+                    </div>
+                `;
+                stream.innerHTML = html;
+                return;
+            }
+
+            messages.forEach(msg => {
+                if (msg.is_admin) {
+                    // Admin Bubble (Right)
+                    html += `
+                        <div class="flex flex-col items-end select-none">
+                            <div class="max-w-[88%] sm:max-w-md bg-[#006830] text-white p-3 rounded-sm rounded-tr-none shadow-2xs space-y-1">
+                                <div class="flex items-center justify-between gap-3 text-[10px] text-emerald-200/80 pb-1 border-b border-emerald-700">
+                                    <span class="font-bold"><i class="fa-solid fa-shield-halved text-[9px] text-lime-300"></i> ${msg.sender_name || 'Saya (Admin)'}</span>
+                                    <span class="font-mono">${msg.created_at_formatted}</span>
+                                </div>
+                                <p class="text-xs leading-relaxed whitespace-pre-line">${msg.message}</p>
+                                ${msg.shared_shipping_status ? `
+                                    <div class="mt-1.5 p-2 bg-emerald-950/60 rounded-xs border border-emerald-600/40 text-[11px] text-emerald-100">
+                                        <i class="fa-solid fa-truck-fast text-lime-300 mr-1"></i> Update: <strong class="capitalize">${msg.shared_shipping_status.replace('_', ' ')}</strong>
+                                        ${msg.shared_tracking_number ? `&bull; Resi: <strong class="font-mono text-lime-300">${msg.shared_tracking_number}</strong>` : ''}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Customer Bubble (Left)
+                    html += `
+                        <div class="flex flex-col items-start select-none">
+                            <div class="max-w-[88%] sm:max-w-md bg-white border border-slate-200 text-slate-800 p-3 rounded-sm rounded-tl-none shadow-2xs space-y-1">
+                                <div class="flex items-center justify-between gap-3 text-[10px] text-slate-400 pb-1 border-b border-slate-100">
+                                    <span class="font-bold text-slate-800"><i class="fa-solid fa-user text-[9px] text-slate-500"></i> ${msg.sender_name || order.customer_name}</span>
+                                    <span class="font-mono">${msg.created_at_formatted}</span>
+                                </div>
+                                <p class="text-xs text-slate-900 leading-relaxed whitespace-pre-line">${msg.message}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            stream.innerHTML = html;
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        // Submit Admin Reply from Drawer
+        function submitAdminDrawerMessage(e) {
+            e.preventDefault();
+            if (!currentAdminActiveOrderId) return;
+
+            const input = document.getElementById('adminDrawerMessageInput');
+            const msgText = input.value.trim();
+            if (!msgText) return;
+
+            const chkShare = document.getElementById('chkAdminDrawerShareStatus');
+            const statusSelect = document.getElementById('adminDrawerShareStatusSelect');
+            const resiInput = document.getElementById('adminDrawerShareResiInput');
+
+            const payload = {
+                message: msgText,
+                share_shipping_status: (chkShare && chkShare.checked) ? statusSelect.value : null,
+                share_tracking_number: (chkShare && chkShare.checked) ? resiInput.value.trim() : null,
+            };
+
+            const btn = document.getElementById('btnSendAdminDrawerMsg');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i>';
+
+            fetch(`/admin/orders/${currentAdminActiveOrderId}/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+                if (data && data.success) {
+                    input.value = '';
+                    if (chkShare) chkShare.checked = false;
+                    toggleAdminDrawerShareInputs(chkShare);
+                    fetchAdminOrderChat(currentAdminActiveOrderId, false);
+                } else {
+                    alert(data.message || 'Gagal mengirim balasan.');
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+                console.error('Send reply error:', err);
+                alert('Gagal mengirim balasan.');
+            });
         }
     </script>
 </body>

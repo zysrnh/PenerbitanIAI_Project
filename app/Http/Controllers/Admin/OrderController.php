@@ -168,6 +168,66 @@ class OrderController extends Controller
         return back()->with('success', 'Pesan berhasil dikirimkan ke pembeli.');
     }
 
+    
+    /**
+     * Get Order details and messages stream JSON for Admin drawer chat
+     */
+    public function getOrderMessagesApi($id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Mark customer messages as read by admin
+        $order->messages()->where('sender_type', 'customer')->update(['is_read_by_admin' => true]);
+
+        $items = is_array($order->items_json) ? $order->items_json : json_decode($order->items_json ?? '[]', true);
+        $formattedItems = [];
+        foreach ($items as $it) {
+            $cover = $it['cover_image'] ?? null;
+            if (!$cover && !empty($it['book_id'])) {
+                $b = \App\Models\Book::find($it['book_id']);
+                $cover = $b ? $b->cover_image : null;
+            }
+            $hasCover = $cover && (file_exists(public_path('storage/' . $cover)) || file_exists(public_path('images/' . $cover)));
+            $coverUrl = $hasCover ? (file_exists(public_path('storage/' . $cover)) ? asset('storage/' . $cover) : asset('images/' . $cover)) : null;
+
+            $formattedItems[] = [
+                'title'           => $it['title'] ?? 'Buku PERSIS PERS',
+                'author'          => $it['author'] ?? 'Penulis PERSIS',
+                'quantity'        => (int)($it['quantity'] ?? ($it['qty'] ?? 1)),
+                'formatted_price' => $it['formatted_price'] ?? ('Rp ' . number_format($it['price'] ?? 0, 0, ',', '.')),
+                'cover_url'       => $coverUrl,
+            ];
+        }
+
+        $messages = $order->messages()->get()->map(function($msg) {
+            return [
+                'id'                     => $msg->id,
+                'sender_type'            => $msg->sender_type,
+                'sender_name'            => $msg->sender_name,
+                'message'                => $msg->message,
+                'shared_shipping_status' => $msg->shared_shipping_status,
+                'shared_tracking_number' => $msg->shared_tracking_number,
+                'created_at_formatted'   => $msg->created_at->format('d M Y, H:i') . ' WIB',
+                'is_admin'               => $msg->sender_type === 'admin',
+            ];
+        });
+
+        return response()->json([
+            'success'  => true,
+            'order'    => [
+                'id'                 => $order->id,
+                'order_number'       => $order->order_number,
+                'customer_name'      => $order->customer_name,
+                'customer_phone'     => $order->customer_phone,
+                'shipping_status'    => $order->shipping_status,
+                'tracking_number'    => $order->tracking_number,
+                'formatted_payment'  => $order->formatted_payment,
+                'items'              => $formattedItems,
+            ],
+            'messages' => $messages
+        ]);
+    }
+
     public function destroy($id)
     {
         $order = Order::findOrFail($id);
