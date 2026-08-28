@@ -378,23 +378,17 @@
                                 </div>
                             </button>
 
-                            <!-- Guest Dropdown Menu (Login & Sign Up) -->
-                            <div id="guestUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-44 z-[1100]" style="display: none;">
-                                <div class="bg-white border border-slate-200 rounded-sm shadow-xl p-1.5 animate-fade-in-up select-none">
-                                    <a href="{{ route('member.login') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-900 hover:bg-emerald-50 rounded-sm transition">
+                            <!-- Guest Dropdown Menu (Login & Sign Up Only) -->
+                            <div id="guestUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-40 z-[1100]" style="display: none;">
+                                <div class="bg-white border border-slate-200 rounded-xl shadow-xl p-1.5 animate-fade-in-up select-none">
+                                    <a href="{{ route('member.login') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-900 hover:bg-emerald-50 rounded-lg transition">
                                         <i class="fa-solid fa-arrow-right-to-bracket text-emerald-600 text-xs w-4"></i>
                                         <span>Login</span>
                                     </a>
-                                    <a href="{{ route('member.register') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-900 hover:bg-emerald-50 rounded-sm transition">
+                                    <a href="{{ route('member.register') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-900 hover:bg-emerald-50 rounded-lg transition">
                                         <i class="fa-solid fa-user-plus text-emerald-600 text-xs w-4"></i>
                                         <span>Sign Up</span>
                                     </a>
-                                    <div class="border-t border-slate-100 my-1 pt-1">
-                                        <a href="{{ route('admin.login') }}" class="flex items-center gap-2 px-3 py-1.5 text-[10.5px] font-medium text-slate-400 hover:text-slate-700 transition">
-                                            <i class="fa-solid fa-shield-halved text-[10px] w-3.5"></i>
-                                            <span>Admin Login</span>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
