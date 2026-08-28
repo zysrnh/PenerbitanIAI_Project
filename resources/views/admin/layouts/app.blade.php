@@ -645,5 +645,165 @@
 
 
     @stack('scripts')
+
+    <!-- ========================================================================= -->
+    <!-- FLOATING FAST MESSAGE & SPEED CHAT BUTTON (ADMIN QUICK ACTION) -->
+    <!-- ========================================================================= -->
+    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2 select-none" id="adminFloatingContainer">
+        
+        <!-- Quick Messages Popover Card -->
+        <div id="adminQuickMessagePopover" class="hidden mb-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden transform scale-95 opacity-0 transition-all duration-200 ease-out z-50 pointer-events-auto" style="display: none;">
+            <!-- Header -->
+            <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-comments text-[11px]"></i>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wider font-heading">Pusat Pesan Cepat</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
+                        {{ $totalUnreadChatCount ?? 0 }} Pesan
+                    </span>
+                    <button type="button" onclick="toggleAdminQuickMessagePopover()" class="w-6 h-6 rounded-sm text-slate-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content List -->
+            <div class="max-h-80 overflow-y-auto divide-y divide-slate-100 text-xs">
+                @if(isset($latestOrderMessages) && $latestOrderMessages->count() > 0)
+                    <div class="px-3 py-1.5 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                        <span>Pesan Diskusi Pesanan Buku</span>
+                        <span class="text-emerald-700 font-mono">{{ $unreadOrderMessagesCount ?? 0 }} Baru</span>
+                    </div>
+                    @foreach($latestOrderMessages as $omsg)
+                        <a href="{{ route('admin.orders.show', $omsg->order_id) }}#adminMessagesThread" class="block p-3 hover:bg-slate-50 transition {{ !$omsg->is_read_by_admin ? 'bg-emerald-50/50' : '' }}">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="font-bold text-slate-900 truncate flex items-center gap-1">
+                                    <i class="fa-solid fa-receipt text-[10px] text-emerald-700"></i> #{{ $omsg->order ? $omsg->order->order_number : 'Pesanan' }}
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $omsg->created_at->diffForHumans() }}</span>
+                            </div>
+                            <p class="text-[11px] text-slate-600 truncate mt-0.5 leading-snug">
+                                <strong class="text-slate-800">{{ $omsg->sender_name }}:</strong> "{{ $omsg->message }}"
+                            </p>
+                        </a>
+                    @endforeach
+                @endif
+
+                @if(isset($latestMessages) && $latestMessages->count() > 0)
+                    <div class="px-3 py-1.5 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100 flex items-center justify-between">
+                        <span>Pesan Pengajuan Naskah / Web</span>
+                        <span class="text-amber-700 font-mono">{{ $unreadMessagesCount ?? 0 }} Baru</span>
+                    </div>
+                    @foreach($latestMessages->take(3) as $cmsg)
+                        <a href="{{ route('admin.messages.show', $cmsg->id) }}" class="block p-3 hover:bg-slate-50 transition {{ $cmsg->status === 'pending' ? 'bg-emerald-50/50' : '' }}">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="font-bold text-slate-900 truncate flex items-center gap-1">
+                                    <i class="fa-solid fa-envelope text-[10px] text-slate-500"></i> {{ $cmsg->name }}
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $cmsg->created_at->diffForHumans() }}</span>
+                            </div>
+                            <p class="text-[11px] text-slate-600 truncate mt-0.5 leading-snug">
+                                {{ $cmsg->subject ?: Str::limit($cmsg->message, 40) }}
+                            </p>
+                        </a>
+                    @endforeach
+                @endif
+
+                @if((!isset($latestOrderMessages) || $latestOrderMessages->count() === 0) && (!isset($latestMessages) || $latestMessages->count() === 0))
+                    <div class="py-10 text-center text-slate-400 text-xs">
+                        <i class="fa-regular fa-comment-dots text-3xl mb-2 text-slate-300 block"></i>
+                        Belum ada pesan masuk saat ini.
+                    </div>
+                @endif
+            </div>
+
+            <!-- Footer -->
+            <div class="p-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
+                <a href="{{ route('admin.orders.index') }}" class="text-emerald-800 hover:text-emerald-950 transition flex items-center gap-1">
+                    <span>Daftar Pesanan</span>
+                    <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                </a>
+                <a href="{{ route('admin.messages.index') }}" class="text-slate-600 hover:text-slate-900 transition flex items-center gap-1">
+                    <span>Semua Pesan Naskah</span>
+                    <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- The Round Floating Action Button -->
+        <button 
+            type="button" 
+            onclick="handleAdminFloatingChatClick()"
+            id="adminFloatingChatBtn"
+            class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-2xl ring-4 ring-emerald-500/25 flex items-center justify-center text-lg sm:text-xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer relative group"
+            title="Pesan &amp; Balas Cepat"
+        >
+            <i class="fa-solid fa-comments transition-transform group-hover:scale-110"></i>
+            <span id="adminFloatingChatBadge" class="{{ ($totalUnreadChatCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full bg-rose-600 text-white text-[9.5px] font-black flex items-center justify-center font-mono shadow-md animate-pulse">
+                {{ $totalUnreadChatCount ?? 0 }}
+            </span>
+        </button>
+    </div>
+
+    <script>
+        function handleAdminFloatingChatClick() {
+            // If on order detail page with reply input, smoothly scroll to it and focus
+            const replyInput = document.getElementById('adminReplyMessageInput');
+            const thread = document.getElementById('adminMessagesThread');
+            if (replyInput && thread) {
+                thread.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => {
+                    replyInput.focus();
+                    replyInput.classList.add('ring-2', 'ring-emerald-500');
+                    setTimeout(() => replyInput.classList.remove('ring-2', 'ring-emerald-500'), 1500);
+                }, 400);
+                return;
+            }
+
+            // Otherwise, toggle quick message popover
+            toggleAdminQuickMessagePopover();
+        }
+
+        function toggleAdminQuickMessagePopover() {
+            const popover = document.getElementById('adminQuickMessagePopover');
+            if (!popover) return;
+
+            const isClosed = popover.classList.contains('hidden') || popover.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(popover).display === 'none');
+            if (isClosed) {
+                popover.style.display = 'block';
+                popover.classList.remove('hidden', 'pointer-events-none');
+                setTimeout(() => {
+                    popover.classList.remove('opacity-0', 'scale-95');
+                    popover.classList.add('opacity-100', 'scale-100');
+                }, 10);
+            } else {
+                popover.classList.remove('opacity-100', 'scale-100');
+                popover.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    popover.style.display = 'none';
+                    popover.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        // Close popover on clicking outside
+        document.addEventListener('click', function(e) {
+            const popover = document.getElementById('adminQuickMessagePopover');
+            const container = document.getElementById('adminFloatingContainer');
+            if (popover && container && !container.contains(e.target)) {
+                popover.classList.remove('opacity-100', 'scale-100');
+                popover.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    popover.style.display = 'none';
+                    popover.classList.add('hidden');
+                }, 200);
+            }
+        });
+    </script>
+
 </body>
 </html>
