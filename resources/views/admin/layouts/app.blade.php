@@ -1033,19 +1033,52 @@
             }
         }
 
-        // Fetch Order Messages for Admin
+        // Fetch Order Messages for Admin (Fast & Robust)
         function fetchAdminOrderChat(orderId, showLoading = false) {
             const stream = document.getElementById('adminDrawerChatStream');
             if (!stream) return;
 
-            fetch(`/admin/orders/${orderId}/messages-api`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data && data.success) {
-                        renderAdminChatThread(data.order, data.messages);
-                    }
-                })
-                .catch(err => console.error('Admin chat fetch error:', err));
+            if (showLoading) {
+                stream.innerHTML = `
+                    <div class="py-12 text-center text-slate-400 text-xs select-none">
+                        <i class="fa-solid fa-spinner fa-spin text-xl text-emerald-600 mb-2 block"></i>
+                        <span>Memuat percakapan...</span>
+                    </div>
+                `;
+            }
+
+            fetch(`/admin/orders/${orderId}/messages-api`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP error ' + res.status);
+                return res.json();
+            })
+            .then(data => {
+                if (data && data.success) {
+                    renderAdminChatThread(data.order, data.messages);
+                } else {
+                    stream.innerHTML = `<div class="p-6 text-center text-rose-600 text-xs">Gagal memuat pesan: ${data.message || 'Error'}</div>`;
+                }
+            })
+            .catch(err => {
+                console.error('Admin chat fetch error:', err);
+                if (showLoading) {
+                    stream.innerHTML = `
+                        <div class="py-8 text-center text-slate-500 text-xs select-none">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xl mb-1.5 block"></i>
+                            <p class="font-bold text-slate-700">Gagal Memuat Percakapan</p>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Silakan periksa koneksi internet atau muat ulang halaman.</p>
+                            <button type="button" onclick="fetchAdminOrderChat(${orderId}, true)" class="mt-2 px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xs text-[11px] font-bold">
+                                Coba Lagi
+                            </button>
+                        </div>
+                    `;
+                }
+            });
         }
 
         // Render Chat in Drawer
