@@ -125,7 +125,7 @@
                         type="button" 
                         id="clearOrderSearchBtn" 
                         onclick="clearOrderSearch()" 
-                        class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs"
+                        class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs cursor-pointer"
                         title="Hapus pencarian"
                     >
                         <i class="fa-solid fa-xmark"></i>
@@ -149,7 +149,11 @@
         <!-- 1. MOBILE NATIVE ORDER CARDS (Visible on mobile < 640px) -->
         <div class="block sm:hidden divide-y divide-slate-100" id="orderMobileList">
             @forelse($orders as $order)
-                <div class="p-3.5 space-y-2.5 hover:bg-slate-50/80 transition order-card-item" data-invoice="{{ strtolower($order->order_number) }}" data-name="{{ strtolower($order->customer_name) }}" data-phone="{{ strtolower($order->customer_phone) }}" data-book="{{ strtolower($order->items->pluck('book.title')->implode(' ')) }}">
+                @php
+                    $itemsArr = $order->items_json ?? [];
+                    $bookNames = collect($itemsArr)->pluck('title')->filter()->implode(', ');
+                @endphp
+                <div class="p-3.5 space-y-2.5 hover:bg-slate-50/80 transition order-card-item" data-invoice="{{ strtolower($order->order_number) }}" data-name="{{ strtolower($order->customer_name) }}" data-phone="{{ strtolower($order->customer_phone ?? '') }}" data-book="{{ strtolower($bookNames) }}">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-1.5">
                             <span class="font-mono font-bold text-xs text-slate-900">{{ $order->order_number }}</span>
@@ -169,9 +173,13 @@
                     <div class="text-xs space-y-1">
                         <p class="font-bold text-slate-900">{{ $order->customer_name }}</p>
                         <p class="text-[11px] text-slate-500 truncate">
-                            @foreach($order->items as $item)
-                                {{ $item->book->title ?? 'Buku' }} ({{ $item->quantity }}x)@if(!$loop->last), @endif
-                            @endforeach
+                            @if(!empty($itemsArr))
+                                @foreach($itemsArr as $item)
+                                    {{ $item['title'] ?? 'Buku' }} ({{ $item['quantity'] ?? 1 }}x)@if(!$loop->last), @endif
+                                @endforeach
+                            @else
+                                {{ $bookNames ?: 'Item Buku' }}
+                            @endif
                         </p>
                     </div>
 
@@ -215,7 +223,11 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-medium">
                     @forelse($orders as $order)
-                        <tr class="hover:bg-slate-50/70 transition order-table-row" data-invoice="{{ strtolower($order->order_number) }}" data-name="{{ strtolower($order->customer_name) }}" data-phone="{{ strtolower($order->customer_phone) }}" data-book="{{ strtolower($order->items->pluck('book.title')->implode(' ')) }}">
+                        @php
+                            $itemsArr = $order->items_json ?? [];
+                            $bookNames = collect($itemsArr)->pluck('title')->filter()->implode(', ');
+                        @endphp
+                        <tr class="hover:bg-slate-50/70 transition order-table-row" data-invoice="{{ strtolower($order->order_number) }}" data-name="{{ strtolower($order->customer_name) }}" data-phone="{{ strtolower($order->customer_phone ?? '') }}" data-book="{{ strtolower($bookNames) }}">
                             <!-- No. Invoice & Date -->
                             <td class="py-3 px-4 whitespace-nowrap">
                                 <a href="{{ route('admin.orders.show', $order->id) }}" class="font-mono font-bold text-emerald-800 hover:underline">
@@ -238,11 +250,15 @@
                             <!-- Ordered Books -->
                             <td class="py-3 px-4 max-w-xs">
                                 <div class="space-y-1">
-                                    @foreach($order->items as $item)
-                                        <p class="text-xs text-slate-800 truncate" title="{{ $item->book->title ?? 'Buku' }}">
-                                            • {{ $item->book->title ?? 'Buku Dihapus' }} <span class="text-slate-400 font-mono text-[11px]">({{ $item->quantity }} eks)</span>
-                                        </p>
-                                    @endforeach
+                                    @if(!empty($itemsArr))
+                                        @foreach($itemsArr as $it)
+                                            <p class="text-xs text-slate-800 truncate" title="{{ $it['title'] ?? 'Buku' }}">
+                                                • {{ $it['title'] ?? 'Buku' }} <span class="text-slate-400 font-mono text-[11px]">({{ $it['quantity'] ?? 1 }} eks)</span>
+                                            </p>
+                                        @endforeach
+                                    @else
+                                        <p class="text-xs text-slate-500 italic">-</p>
+                                    @endif
                                 </div>
                             </td>
 
@@ -269,21 +285,21 @@
 
                             <!-- Shipping Status Badge -->
                             <td class="py-3 px-4 text-center whitespace-nowrap">
-                                @if($order->shipping_status === 'shipped')
+                                @if($order->shipping_status === 'dikirim' || $order->shipping_status === 'shipped')
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
                                         <i class="fa-solid fa-truck-fast text-[9px]"></i> DIKIRIM
                                     </span>
-                                @elseif($order->shipping_status === 'delivered')
+                                @elseif($order->shipping_status === 'selesai' || $order->shipping_status === 'delivered')
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                                         <i class="fa-solid fa-circle-check text-[9px]"></i> DITERIMA
                                     </span>
-                                @elseif($order->shipping_status === 'processing')
+                                @elseif($order->shipping_status === 'diproses' || $order->shipping_status === 'processing')
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-indigo-50 text-indigo-800 border border-indigo-200">
                                         <i class="fa-solid fa-box text-[9px]"></i> PACKING
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                                        <i class="fa-solid fa-clock text-[9px]"></i> PERLU PROSES
+                                        <i class="fa-solid fa-clock text-[9px]"></i> MENUNGGU PROSES
                                     </span>
                                 @endif
                             </td>
@@ -308,7 +324,7 @@
                                 <div class="w-12 h-12 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center mx-auto text-xl mb-2">
                                     <i class="fa-solid fa-receipt"></i>
                                 </div>
-                                <h3 class="text-sm font-bold text-slate-900 font-heading">Tidak Ada Pesan Masuk</h3>
+                                <h3 class="text-sm font-bold text-slate-900 font-heading">Tidak Ada Pesanan Ditemukan</h3>
                                 <p class="text-xs text-slate-500 mt-0.5">Belum ada transaksi pesanan yang sesuai filter.</p>
                             </td>
                         </tr>
@@ -331,13 +347,16 @@
     // Prepare order data for autocomplete
     const orderIndexData = [
         @foreach($orders as $order)
+            @php
+                $itNames = collect($order->items_json ?? [])->pluck('title')->filter()->implode(', ');
+            @endphp
             {
                 id: {{ $order->id }},
                 invoice: "{{ $order->order_number }}",
                 name: "{{ addslashes($order->customer_name) }}",
                 phone: "{{ $order->customer_phone ?? '' }}",
                 total: "Rp {{ number_format($order->total_amount, 0, ',', '.') }}",
-                books: "{{ addslashes($order->items->pluck('book.title')->implode(', ')) }}",
+                books: "{{ addslashes($itNames) }}",
                 url: "{{ route('admin.orders.show', $order->id) }}"
             },
         @endforeach
