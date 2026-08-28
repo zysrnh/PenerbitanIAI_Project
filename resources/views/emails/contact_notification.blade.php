@@ -19,7 +19,13 @@
                                 <tr>
                                     <!-- Official Logo Emblem -->
                                     <td width="75" valign="middle" style="padding-right: 18px;">
-                                        <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" width="70" style="display: block; width: 70px; height: auto;" />
+                                        @php
+                                            $logoPath = public_path('images/logo/logo_penerbit_persis_emblem.png');
+                                            $logoSrc = (isset($message) && is_object($message) && method_exists($message, 'embed') && file_exists($logoPath)) 
+                                                ? $message->embed($logoPath) 
+                                                : url('images/logo/logo_penerbit_persis_emblem.png');
+                                        @endphp
+                                        <img src="{{ $logoSrc }}" alt="PERSIS PERS" width="70" style="display: block; width: 70px; height: auto; border: 0;" />
                                     </td>
                                     <!-- Institutional Identity Text -->
                                     <td valign="middle" style="text-align: left;">

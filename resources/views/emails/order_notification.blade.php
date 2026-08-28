@@ -13,22 +13,53 @@
                     
                     <!-- Official Header -->
                     <tr>
-                        <td style="padding: 24px 32px; background-color: #032c21; color: #ffffff;">
+                        <td style="padding: 28px 36px 20px; background-color: #ffffff;">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td>
-                                        <div style="font-size: 11px; font-weight: 800; color: #4ade80; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">
-                                            NOTIFIKASI TRANSAKSI RESMI
+                                    <!-- Official Logo Emblem -->
+                                    <td width="75" valign="middle" style="padding-right: 18px;">
+                                        @php
+                                            $logoPath = public_path('images/logo/logo_penerbit_persis_emblem.png');
+                                            $logoSrc = (isset($message) && is_object($message) && method_exists($message, 'embed') && file_exists($logoPath)) 
+                                                ? $message->embed($logoPath) 
+                                                : url('images/logo/logo_penerbit_persis_emblem.png');
+                                        @endphp
+                                        <img src="{{ $logoSrc }}" alt="PERSIS PERS" width="70" style="display: block; width: 70px; height: auto; border: 0;" />
+                                    </td>
+                                    <!-- Institutional Identity Text -->
+                                    <td valign="middle" style="text-align: left;">
+                                        <div style="font-size: 20px; font-weight: 800; color: #006830; letter-spacing: 0.5px; line-height: 1.2; text-transform: uppercase;">
+                                            PERSIS PERS
                                         </div>
-                                        <h1 style="font-size: 20px; font-weight: 800; margin: 0; color: #ffffff;">
-                                            PERSIS PERS &bull; Pesanan Buku Masuk
-                                        </h1>
-                                        <p style="font-size: 12px; color: #cbd5e1; margin: 4px 0 0;">
-                                            No. Invoice: <strong>#{{ $order->order_number }}</strong> &bull; {{ $order->created_at->format('d/m/Y H:i') }} WIB
-                                        </p>
+                                        <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">
+                                            Penerbitan &amp; Percetakan PERSIS PERS
+                                        </div>
+                                        <div style="font-size: 11px; color: #64748b; margin-top: 4px; line-height: 1.4;">
+                                            {{ \App\Models\SiteSetting::get('contact_address', 'Kantor Redaksi PERSIS PERS, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287') }}<br>
+                                            Telepon/WhatsApp: {{ \App\Models\SiteSetting::get('contact_whatsapp', '082116116133') }} | Email: {{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
+                        </td>
+                    </tr>
+
+                    <!-- Formal Double Divider Line -->
+                    <tr>
+                        <td style="padding: 0 36px;">
+                            <div style="border-top: 3px solid #006830; border-bottom: 1px solid #006830; height: 3px;"></div>
+                        </td>
+                    </tr>
+
+                    <!-- Order Notice Title -->
+                    <tr>
+                        <td style="padding: 24px 36px 12px;">
+                            <div style="background-color: #f8fafc; border-left: 4px solid #006830; padding: 12px 16px;">
+                                <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">NOTIFIKASI TRANSAKSI RESMI</div>
+                                <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">
+                                    Pesanan Buku Masuk &bull; Invoice #{{ $order->order_number }}
+                                </div>
+                            </div>
                         </td>
                     </tr>
 
