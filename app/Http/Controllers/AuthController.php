@@ -10,7 +10,10 @@ class AuthController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('admin.dashboard');
+            if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect()->route('member.dashboard');
         }
 
         return view('admin.auth.login');
@@ -26,6 +29,21 @@ class AuthController extends Controller
         $remember = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember)) {
+            // Check if user is an admin or super_admin
+            if (!in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Akun ini terdaftar sebagai Member/Pembaca. Silakan login melalui Portal Member.',
+                ])->onlyInput('email');
+            }
+
+            if (!Auth::user()->is_active) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Akun administrator Anda telah dinonaktifkan.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
             return redirect()->intended(route('admin.dashboard'))->with('success', 'Selamat datang kembali, ' . Auth::user()->name . '!');
         }
@@ -41,6 +59,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Anda telah berhasil logout.');
+        return redirect()->route('admin.login')->with('success', 'Anda telah berhasil logout.');
     }
 }

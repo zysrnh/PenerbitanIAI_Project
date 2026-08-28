@@ -47,7 +47,7 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.log
 | Admin Protected Dashboard Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
