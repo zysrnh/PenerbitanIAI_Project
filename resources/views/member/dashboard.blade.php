@@ -266,7 +266,7 @@
                     </div>
 
                     <div class="flex items-center gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
-                        <a href="{{ route('katalog') }}" class="flex-1 sm:flex-none px-3.5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-sm text-xs font-black transition flex items-center justify-center gap-1.5 shadow-2xs">
+                        <a href="{{ route('katalog') }}" class="flex-1 sm:flex-none px-3.5 py-2 bg-[#006830] hover:bg-[#032c21] text-white border border-emerald-400/30 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
                             <i class="fa-solid fa-book-open text-xs"></i>
                             <span>Buka Katalog</span>
                         </a>
