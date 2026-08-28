@@ -288,50 +288,69 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header Action Buttons (100% Unified Structure on Both Desktop & Mobile) -->
+                <!-- Header Action Buttons (100% Unified Clean Style for All Logged-in Users) -->
                 <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
                     @auth
-                        @if(Auth::user()->role === 'member')
-                            {{-- 1. Shopping Cart Button (Bordered Box, Equal Height) --}}
+                        {{-- 1. Shopping Cart Button --}}
+                        <button type="button" 
+                                onclick="window.openCartDrawer()" 
+                                class="user-nav-btn relative w-10 h-10 rounded-sm flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs cursor-pointer transition select-none shrink-0"
+                                title="Keranjang Belanja">
+                            <i class="fa-solid fa-cart-shopping text-sm pointer-events-none text-emerald-800"></i>
+                            <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#006830] text-white rounded-full text-[9px] font-black flex items-center justify-center border border-white shadow-xs pointer-events-none">
+                                0
+                            </span>
+                        </button>
+
+                        {{-- 2. Clean User / Admin Profile Button (Identical Light Pill Style) --}}
+                        <div class="relative group" id="memberUserDropdownContainer">
                             <button type="button" 
-                                    onclick="window.openCartDrawer()" 
-                                    class="user-nav-btn relative w-10 h-10 rounded-sm flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs cursor-pointer transition select-none shrink-0"
-                                    title="Keranjang Belanja">
-                                <i class="fa-solid fa-cart-shopping text-sm pointer-events-none text-emerald-800"></i>
-                                <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#006830] text-white rounded-full text-[9px] font-black flex items-center justify-center border border-white shadow-xs pointer-events-none">
-                                    0
+                                    id="memberUserDropdownBtn"
+                                    onclick="window.toggleMemberDropdown(event)" 
+                                    class="user-nav-btn w-10 sm:w-auto h-10 rounded-sm flex items-center justify-center sm:justify-start gap-2 px-0 sm:px-2.5 bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 shadow-2xs cursor-pointer transition select-none shrink-0"
+                                    title="Menu Akun">
+                                <div class="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-emerald-600 shadow-2xs pointer-events-none">
+                                    @if(Auth::user()->avatar_url)
+                                        <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover pointer-events-none" />
+                                    @else
+                                        <div class="w-full h-full bg-[#006830] flex items-center justify-center text-white text-[9.5px] font-black pointer-events-none">
+                                            {{ Auth::user()->initials }}
+                                        </div>
+                                    @endif
+                                </div>
+                                <span class="hidden sm:inline text-xs font-bold text-slate-800 max-w-[90px] truncate leading-tight pointer-events-none">
+                                    {{ explode(' ', Auth::user()->name)[0] }}
                                 </span>
+                                <i id="memberDropdownChevron" class="hidden sm:inline fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200 pointer-events-none"></i>
                             </button>
 
-                            {{-- 2. Member Profile Button (Unified Bordered Box on Mobile, Pill on Desktop) --}}
-                            <div class="relative group" id="memberUserDropdownContainer">
-                                <button type="button" 
-                                        id="memberUserDropdownBtn"
-                                        onclick="window.toggleMemberDropdown(event)" 
-                                        class="user-nav-btn w-10 sm:w-auto h-10 rounded-sm flex items-center justify-center sm:justify-start gap-2 px-0 sm:px-2.5 bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 shadow-2xs cursor-pointer transition select-none shrink-0"
-                                        title="Menu Akun">
-                                    <div class="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-emerald-600 shadow-2xs pointer-events-none">
-                                        @if(Auth::user()->avatar_url)
-                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover pointer-events-none" />
-                                        @else
-                                            <div class="w-full h-full bg-[#006830] flex items-center justify-center text-white text-[9.5px] font-black pointer-events-none">
-                                                {{ Auth::user()->initials }}
-                                            </div>
-                                        @endif
+                            <!-- Clean Dropdown Menu for Both Member & Admin -->
+                            <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50" style="display: none;">
+                                <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
+                                    <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                                        <p class="text-xs font-extrabold text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                                        <p class="text-[10px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
                                     </div>
-                                    <span class="hidden sm:inline text-xs font-bold text-slate-800 max-w-[90px] truncate leading-tight pointer-events-none">
-                                        {{ explode(' ', Auth::user()->name)[0] }}
-                                    </span>
-                                    <i id="memberDropdownChevron" class="hidden sm:inline fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200 pointer-events-none"></i>
-                                </button>
 
-                                <!-- Dropdown Menu -->
-                                <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50" style="display: none;">
-                                    <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
-                                        <div class="px-3 py-2 border-b border-slate-100 mb-1">
-                                            <p class="text-xs font-extrabold text-slate-900 truncate">{{ Auth::user()->name }}</p>
-                                            <p class="text-[10px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
+                                    @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
+                                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard Admin
+                                        </a>
+                                        <a href="{{ route('admin.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-user text-slate-400 text-xs w-4"></i> Profil Saya
+                                        </a>
+                                        <button type="button" onclick="window.openCartDrawer()" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition text-left cursor-pointer">
+                                            <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs w-4"></i> Keranjang Belanja
+                                        </button>
+                                        <div class="border-t border-slate-100 mt-1 pt-1">
+                                            <form method="POST" action="{{ route('admin.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-sm transition cursor-pointer">
+                                                    <i class="fa-solid fa-right-from-bracket text-xs w-4"></i> Keluar Akun
+                                                </button>
+                                            </form>
                                         </div>
+                                    @else
                                         <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard
                                         </a>
@@ -349,66 +368,10 @@
                                                 </button>
                                             </form>
                                         </div>
-                                    </div>
+                                    @endif
                                 </div>
                             </div>
-                        @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                            {{-- Admin Dropdown Button with Full Profile & Fast Navigation --}}
-                            <div class="relative group" id="adminUserDropdownContainer">
-                                <button type="button" 
-                                        id="adminUserDropdownBtn"
-                                        onclick="window.toggleAdminNavDropdown(event)" 
-                                        class="user-nav-btn h-10 px-3 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs flex items-center gap-2 shadow-xs border border-slate-800 transition select-none cursor-pointer">
-                                    <div class="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-emerald-500 bg-emerald-900/60 flex items-center justify-center text-emerald-300 text-[10px] font-black">
-                                        @if(Auth::user()->avatar_url)
-                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover" />
-                                        @else
-                                            <i class="fa-solid fa-shield-halved text-[10px] text-emerald-400"></i>
-                                        @endif
-                                    </div>
-                                    <span class="hidden sm:inline font-bold tracking-wide text-xs truncate max-w-[110px]">
-                                        {{ explode(' ', Auth::user()->name)[0] }}
-                                    </span>
-                                    <span class="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded">
-                                        {{ Auth::user()->role === 'super_admin' ? 'Super' : 'Admin' }}
-                                    </span>
-                                    <i id="adminDropdownChevron" class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-400 transition-transform duration-200"></i>
-                                </button>
-
-                                <!-- Admin Dropdown Menu -->
-                                <div id="adminUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-60 z-50" style="display: none;">
-                                    <div class="bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
-                                        <div class="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50/70 rounded-xs">
-                                            <p class="text-xs font-black text-slate-900 truncate">{{ Auth::user()->name }}</p>
-                                            <div class="flex items-center gap-1.5 mt-0.5">
-                                                <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                <p class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{{ Auth::user()->role_label }}</p>
-                                            </div>
-                                        </div>
-                                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
-                                            <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard Admin
-                                        </a>
-                                        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
-                                            <i class="fa-solid fa-receipt text-emerald-600 text-xs w-4"></i> Kelola Pesanan
-                                        </a>
-                                        <a href="{{ route('admin.books.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
-                                            <i class="fa-solid fa-book text-emerald-600 text-xs w-4"></i> Kelola Buku
-                                        </a>
-                                        <a href="{{ route('admin.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
-                                            <i class="fa-solid fa-user-shield text-slate-500 text-xs w-4"></i> Profil Admin
-                                        </a>
-                                        <div class="border-t border-slate-100 mt-1 pt-1">
-                                            <form method="POST" action="{{ route('admin.logout') }}">
-                                                @csrf
-                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-sm transition cursor-pointer">
-                                                    <i class="fa-solid fa-right-from-bracket text-xs w-4"></i> Keluar (Logout)
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                     @else
                         {{-- Desktop Only "Masuk" Button (Hidden on Mobile phone screen) --}}
                         <a href="{{ route('member.login') }}" 
@@ -450,50 +413,37 @@
 
             <div class="pt-3 border-t border-slate-100 space-y-2">
                 @auth
-                    @if(Auth::user()->role === 'member')
-                        <div class="px-3 py-2 bg-emerald-50 rounded-sm flex items-center gap-2.5 mb-2 border border-emerald-200">
-                            @if(Auth::user()->avatar_url)
-                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover border border-emerald-600 shrink-0" />
-                            @else
-                                <div class="w-8 h-8 rounded-full bg-emerald-700 flex items-center justify-center text-white text-xs font-black shrink-0">
-                                    {{ Auth::user()->initials }}
-                                </div>
-                            @endif
-                            <div class="min-w-0">
-                                <p class="text-xs font-bold text-emerald-900 truncate">{{ Auth::user()->name }}</p>
-                                <p class="text-[10px] text-slate-500 font-mono">Member Aktif</p>
+                    <div class="px-3 py-2 bg-emerald-50 rounded-sm flex items-center gap-2.5 mb-2 border border-emerald-200">
+                        @if(Auth::user()->avatar_url)
+                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover border border-emerald-600 shrink-0" />
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-[#006830] flex items-center justify-center text-white text-xs font-black shrink-0">
+                                {{ Auth::user()->initials }}
                             </div>
+                        @endif
+                        <div class="min-w-0">
+                            <p class="text-xs font-bold text-emerald-900 truncate">{{ Auth::user()->name }}</p>
+                            <p class="text-[10px] text-slate-500 font-medium">{{ Auth::user()->role === 'member' ? 'Member Aktif' : Auth::user()->role_label }}</p>
                         </div>
+                    </div>
+                    @if(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
+                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
+                            <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Admin
+                        </a>
+                        <form method="POST" action="{{ route('admin.logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50 cursor-pointer">
+                                <i class="fa-solid fa-right-from-bracket text-xs"></i> Keluar Akun
+                            </button>
+                        </form>
+                    @else
                         <a href="{{ route('member.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
                             <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Saya
                         </a>
                         <form method="POST" action="{{ route('member.logout') }}">
                             @csrf
                             <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50 cursor-pointer">
-                                <i class="fa-solid fa-right-from-bracket text-xs"></i> Keluar
-                            </button>
-                        </form>
-                    @else
-                        <div class="px-3 py-2 bg-slate-900 text-white rounded-sm flex items-center gap-2.5 mb-2 border border-slate-800">
-                            @if(Auth::user()->avatar_url)
-                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover border border-emerald-500 shrink-0" />
-                            @else
-                                <div class="w-8 h-8 rounded-full bg-emerald-800 flex items-center justify-center text-emerald-200 text-xs font-black shrink-0">
-                                    <i class="fa-solid fa-shield-halved"></i>
-                                </div>
-                            @endif
-                            <div class="min-w-0">
-                                <p class="text-xs font-bold text-white truncate">{{ Auth::user()->name }}</p>
-                                <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">{{ Auth::user()->role_label }}</p>
-                            </div>
-                        </div>
-                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
-                            <i class="fa-solid fa-gauge-high text-emerald-400 text-xs"></i> Panel Dashboard Admin
-                        </a>
-                        <form method="POST" action="{{ route('admin.logout') }}">
-                            @csrf
-                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50 cursor-pointer">
-                                <i class="fa-solid fa-right-from-bracket text-xs"></i> Keluar (Logout)
+                                <i class="fa-solid fa-right-from-bracket text-xs"></i> Keluar Akun
                             </button>
                         </form>
                     @endif
