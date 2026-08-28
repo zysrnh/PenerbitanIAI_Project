@@ -164,10 +164,9 @@
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
                 </button>
 
-                <div class="flex items-center gap-2 lg:hidden">
-                    <a href="{{ url('/') }}">
-                        <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-9 w-auto object-contain bg-[#032c21] p-1 rounded-sm" />
-                    </a>
+                <div class="flex items-center gap-1.5 lg:hidden">
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="Logo" class="w-6 h-6 object-contain" />
+                    <span class="font-extrabold text-xs text-slate-900 font-heading tracking-tight">Portal Member</span>
                 </div>
             </div>
 

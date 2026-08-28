@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pesanan & Transaksi Saya | Portal Member PENERBIT PERSIS</title>
     <!-- Favicons & App Icons (Forced & Canonical) -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
@@ -47,11 +47,15 @@
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
         .font-heading { font-family: 'Outfit', sans-serif; }
         .brand-dark { background-color: #032c21; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        .animate-fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+        /* Hide scrollbars for clean mobile tab scrolling */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Signature 3D Realistic Book Cover */
         .book-stage-3d {
@@ -59,20 +63,16 @@
         }
         .book-cover-3d {
             transform-style: preserve-3d;
-            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-            box-shadow: 4px 6px 14px -2px rgba(0, 0, 0, 0.22), 1px 1px 3px rgba(0,0,0,0.1);
-        }
-        .group:hover .book-cover-3d {
-            transform: rotateY(-10deg) rotateX(3deg) translateY(-2px) scale(1.03);
-            box-shadow: 8px 12px 20px -3px rgba(0, 0, 0, 0.3), 2px 2px 5px rgba(0,0,0,0.12);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            box-shadow: 2px 4px 10px -2px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0,0,0,0.1);
         }
         .book-spine-strip {
             position: absolute;
             top: 0;
             bottom: 0;
             left: 0;
-            width: 6px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.35) 100%);
+            width: 5px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.4) 100%);
             border-right: 1px solid rgba(0,0,0,0.15);
             z-index: 10;
         }
@@ -81,27 +81,30 @@
             top: 1px;
             bottom: 1px;
             right: 0;
-            width: 3px;
+            width: 2px;
             background: repeating-linear-gradient(180deg, #fdfbf7, #fdfbf7 1px, #e2dcd0 1px, #e2dcd0 2px);
             border-left: 1px solid rgba(0,0,0,0.15);
             z-index: 5;
         }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 antialiased bg-slate-100/70 flex">
+<body class="min-h-screen text-slate-800 antialiased bg-slate-100 flex flex-col lg:flex-row">
 
     <!-- Backdrop Overlay for Mobile Sidebar -->
-    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
 
-            <!-- ==================== SIDEBAR ==================== -->
-    <aside id="member-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 brand-dark text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside id="member-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 brand-dark text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-2xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
         
         <div class="p-5">
             <!-- Brand Header (Clean Full Logo) -->
-            <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-center">
+            <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-between lg:justify-center">
                 <a href="{{ route('member.dashboard') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
+                <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-sm hover:bg-white/10 transition" title="Tutup Menu">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
             </div>
 
             <!-- User Profile Box -->
@@ -190,40 +193,39 @@
     <!-- ==================== MAIN CONTENT AREA ==================== -->
     <div id="main-content-wrapper" class="flex-1 flex flex-col min-w-0 min-h-screen transition-all duration-300 lg:pl-64">
 
-        <!-- Top Header Bar with Hamburger Toggle -->
-        <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
+        <!-- Top Header Bar (Native Mobile Feel) -->
+        <header class="bg-white border-b border-slate-200/90 px-3.5 sm:px-8 py-2.5 sm:py-3 sticky top-0 z-30 flex items-center justify-between shadow-xs">
             
-            <div class="flex items-center gap-3">
-                <!-- Hamburger Toggle Button (Desktop & Mobile) -->
-                <button type="button" onclick="toggleSidebar()" class="p-2 text-slate-600 hover:text-emerald-800 hover:bg-slate-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer" title="Buka / Tutup Menu Sidebar">
+            <div class="flex items-center gap-2.5">
+                <!-- Hamburger Button -->
+                <button type="button" onclick="toggleSidebar()" class="w-9 h-9 text-slate-700 hover:text-emerald-800 hover:bg-slate-100 active:bg-slate-200 rounded-sm border border-slate-200 flex items-center justify-center transition cursor-pointer" title="Menu Sidebar">
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
                 </button>
 
-                <!-- Mobile Logo -->
-                <div class="flex items-center gap-2 lg:hidden">
-                    <a href="{{ url('/') }}">
-                        <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-9 w-auto object-contain bg-[#032c21] p-1 rounded-sm" />
-                    </a>
+                <!-- Mobile Header Title Brand -->
+                <div class="flex items-center gap-1.5 lg:hidden">
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="Logo" class="w-6 h-6 object-contain" />
+                    <span class="font-extrabold text-xs text-slate-900 font-heading tracking-tight">Portal Member</span>
                 </div>
 
-                <!-- Breadcrumb -->
-                <div class="hidden sm:flex items-center gap-2 text-xs">
+                <!-- Desktop Breadcrumb -->
+                <div class="hidden lg:flex items-center gap-2 text-xs">
                     <a href="{{ route('member.dashboard') }}" class="text-slate-500 hover:text-emerald-700 transition">Portal Member</a>
                     <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
-                    <span class="font-bold text-slate-800">Pesanan & Transaksi Buku</span>
+                    <span class="font-bold text-slate-800">Pesanan &amp; Transaksi Buku</span>
                 </div>
             </div>
 
             <!-- Top Header Right Actions -->
-            <div class="flex items-center gap-2.5 sm:gap-3.5">
+            <div class="flex items-center gap-2">
                 <a href="{{ route('katalog') }}" 
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold transition shadow-2xs">
+                    class="h-8.5 px-3 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold transition shadow-2xs flex items-center gap-1.5">
                     <i class="fa-solid fa-book-open text-[10px]"></i>
-                    <span class="hidden sm:inline">Katalog Buku</span>
+                    <span class="hidden sm:inline">Katalog</span>
                 </a>
 
                 <a href="{{ route('member.profile') }}" 
-                    class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-sm bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition">
+                    class="h-8.5 flex items-center gap-1.5 pl-1 pr-2 rounded-sm bg-slate-100 hover:bg-slate-200 border border-slate-200 transition">
                     @if($user->avatar_url)
                         <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-6 h-6 rounded-sm object-cover" />
                     @else
@@ -231,18 +233,18 @@
                             {{ $user->initials }}
                         </div>
                     @endif
-                    <span class="text-xs font-bold text-slate-700 max-w-[100px] truncate hidden sm:inline">{{ explode(' ', $user->name)[0] }}</span>
+                    <span class="text-xs font-bold text-slate-700 max-w-[80px] truncate hidden sm:inline">{{ explode(' ', $user->name)[0] }}</span>
                 </a>
             </div>
         </header>
 
-        <!-- Main Body Content -->
-        <main class="flex-1 p-4 sm:p-6 lg:p-8 animate-fade-in max-w-6xl w-full mx-auto space-y-5">
+        <!-- Main Body Content (App-like Mobile Experience) -->
+        <main class="flex-1 p-3.5 sm:p-6 lg:p-8 animate-fade-in max-w-6xl w-full mx-auto space-y-3.5 sm:space-y-5">
 
             <!-- Success Alert Notification -->
             @if(session('success'))
-                <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-sm flex items-center gap-2.5 text-xs sm:text-sm text-emerald-900 font-semibold shadow-2xs">
-                    <i class="fa-solid fa-circle-check text-emerald-600 text-base shrink-0"></i>
+                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-sm flex items-start gap-2.5 text-xs sm:text-sm text-emerald-900 font-semibold shadow-2xs">
+                    <i class="fa-solid fa-circle-check text-emerald-600 text-base shrink-0 mt-0.5"></i>
                     <div>
                         <p class="font-bold text-emerald-950">Berhasil!</p>
                         <p class="text-xs text-emerald-800 font-normal mt-0.5">{{ session('success') }}</p>
@@ -250,305 +252,206 @@
                 </div>
             @endif
 
-            <!-- Title & Filter Section -->
-            <div class="bg-white rounded-sm border border-slate-200 p-5 shadow-xs space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
-                    <div>
-                        <h1 class="text-lg sm:text-xl font-black text-slate-900 font-heading tracking-tight flex items-center gap-2">
-                            <span class="w-7 h-7 rounded-xs bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-receipt"></i>
-                            </span>
-                            <span>Riwayat Pesanan & Transaksi Buku</span>
-                        </h1>
-                        <p class="text-xs text-slate-500 mt-1">Pantau status pembayaran QRIS, progres pengemasan redaksi, nomor resi pengiriman, dan konfirmasi penerimaan.</p>
+            <!-- App Title Bar for Mobile -->
+            <div class="bg-white rounded-sm border border-slate-200/90 p-3.5 sm:p-5 shadow-2xs space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xs bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs shrink-0">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-sm sm:text-lg font-extrabold text-slate-900 font-heading leading-tight">
+                                Riwayat Pesanan Saya
+                            </h1>
+                            <p class="text-[11px] text-slate-500 hidden sm:block mt-0.5">Pantau status transaksi QRIS dan pengiriman buku resmi Anda</p>
+                        </div>
                     </div>
+                    <span class="text-[11px] font-bold font-mono text-emerald-800 bg-emerald-50 px-2 py-0.5 border border-emerald-200 rounded-xs">
+                        {{ $countAll }} Order
+                    </span>
                 </div>
 
-                <!-- Status Filter Tabs -->
-                <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs select-none">
+                <!-- Modern Touch-Friendly Horizontal Status Tabs -->
+                <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5 text-xs select-none -mx-1 px-1">
                     <a href="{{ route('member.orders') }}" 
-                        class="px-3.5 py-1.5 rounded-sm transition whitespace-nowrap {{ !$statusFilter ? 'bg-[#006830] text-white shadow-xs font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 font-semibold' }}">
+                        class="px-3 py-1.5 rounded-sm transition whitespace-nowrap {{ !$statusFilter ? 'bg-[#006830] text-white shadow-2xs font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium' }}">
                         Semua ({{ $countAll }})
                     </a>
                     <a href="{{ route('member.orders', ['status' => 'diproses']) }}" 
-                        class="px-3.5 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'diproses' ? 'bg-[#006830] text-white shadow-xs font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 font-semibold' }}">
-                        <i class="fa-solid fa-box-archive mr-1"></i> Sedang Dipacking ({{ $countProcessing }})
+                        class="px-3 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'diproses' ? 'bg-[#006830] text-white shadow-2xs font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium' }}">
+                        <i class="fa-solid fa-box-archive text-[10px] mr-1"></i> Dipacking ({{ $countProcessing }})
                     </a>
                     <a href="{{ route('member.orders', ['status' => 'dikirim']) }}" 
-                        class="px-3.5 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'dikirim' ? 'bg-[#006830] text-white shadow-xs font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 font-semibold' }}">
-                        <i class="fa-solid fa-truck-fast mr-1"></i> Dalam Pengiriman ({{ $countShipping }})
+                        class="px-3 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'dikirim' ? 'bg-[#006830] text-white shadow-2xs font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium' }}">
+                        <i class="fa-solid fa-truck-fast text-[10px] mr-1"></i> Dikirim ({{ $countShipping }})
                     </a>
                     <a href="{{ route('member.orders', ['status' => 'selesai']) }}" 
-                        class="px-3.5 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'selesai' ? 'bg-[#006830] text-white shadow-xs font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 font-semibold' }}">
-                        <i class="fa-solid fa-circle-check mr-1"></i> Selesai / Diterima ({{ $countCompleted }})
+                        class="px-3 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'selesai' ? 'bg-[#006830] text-white shadow-2xs font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium' }}">
+                        <i class="fa-solid fa-circle-check text-[10px] mr-1"></i> Selesai ({{ $countCompleted }})
                     </a>
                     <a href="{{ route('member.orders', ['status' => 'pending']) }}" 
-                        class="px-3.5 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'pending' ? 'bg-amber-600 text-white shadow-xs font-bold' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 font-semibold' }}">
-                        <i class="fa-solid fa-clock mr-1"></i> Menunggu Bayar ({{ $countPending }})
+                        class="px-3 py-1.5 rounded-sm transition whitespace-nowrap {{ $statusFilter === 'pending' ? 'bg-amber-600 text-white shadow-2xs font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 font-medium' }}">
+                        <i class="fa-solid fa-clock text-[10px] mr-1"></i> Belum Bayar ({{ $countPending }})
                     </a>
                 </div>
             </div>
 
-            <!-- Orders Cards Grid -->
+            <!-- Orders Cards Grid (Clean Native App Style) -->
             @if($orders->count() > 0)
-                <div class="space-y-5">
+                <div class="space-y-3.5 sm:space-y-4">
                     @foreach($orders as $ord)
-                        <div class="bg-white rounded-sm border border-slate-200 shadow-xs overflow-hidden transition-all duration-200 hover:border-emerald-700/60 hover:shadow-md group">
+                        <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs overflow-hidden transition hover:border-slate-300">
                             
-                            <!-- Card Header -->
-                            <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                                <div class="flex flex-wrap items-center gap-2.5 sm:gap-3">
-                                    <span class="font-mono font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-xs">
+                            <!-- Card Top Bar: Invoice, Date, and Status Badge -->
+                            <div class="px-3.5 py-2.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-2 text-xs">
+                                <div class="min-w-0">
+                                    <span class="font-mono font-bold text-slate-900 text-xs sm:text-sm block truncate">
                                         #{{ $ord->order_number }}
                                     </span>
-                                    <span class="text-slate-500 font-medium flex items-center gap-1.5">
-                                        <i class="fa-regular fa-calendar-days text-[11px] text-slate-400"></i>
-                                        {{ $ord->created_at->format('d M Y, H:i') }} WIB
-                                    </span>
-                                    <span class="text-slate-300 hidden sm:inline">•</span>
-                                    <span class="font-mono uppercase text-slate-600 font-bold bg-slate-100 px-2 py-0.5 rounded-xs border border-slate-200">
-                                        {{ $ord->payment_method }}
+                                    <span class="text-[10.5px] text-slate-400 block mt-0.5">
+                                        {{ $ord->created_at->format('d M Y, H:i') }} WIB • <span class="font-mono uppercase">{{ $ord->payment_method }}</span>
                                     </span>
                                 </div>
 
-                                <div class="flex items-center gap-2 shrink-0">
+                                <div class="shrink-0">
                                     @if($ord->payment_status === 'completed')
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-xs text-xs font-bold uppercase border border-emerald-300 shadow-2xs">
-                                            <i class="fa-solid fa-circle-check text-emerald-600"></i> Lunas (QRIS)
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-xs text-[10px] font-bold uppercase border border-emerald-300">
+                                            <i class="fa-solid fa-check text-[9px]"></i> Lunas
                                         </span>
                                     @elseif($ord->payment_status === 'pending')
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-900 rounded-xs text-xs font-bold uppercase border border-amber-300">
-                                            <i class="fa-solid fa-clock text-amber-600"></i> Menunggu Pembayaran
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-900 rounded-xs text-[10px] font-bold uppercase border border-amber-300 animate-pulse">
+                                            <i class="fa-solid fa-clock text-[9px]"></i> Menunggu Bayar
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-100 text-red-800 rounded-xs text-xs font-bold uppercase">
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-800 rounded-xs text-[10px] font-bold uppercase">
                                             {{ strtoupper($ord->payment_status) }}
                                         </span>
                                     @endif
                                 </div>
                             </div>
 
-                            <!-- Card Middle: Interactive Step Tracker -->
-                            <div class="px-5 py-3 bg-slate-50/50 border-b border-slate-100 hidden sm:block">
-                                <div class="grid grid-cols-4 gap-2 text-center text-[11px]">
-                                    
-                                    <!-- Step 1: Pembayaran -->
-                                    <div class="flex flex-col items-center">
-                                        <div class="w-6 h-6 rounded-full {{ $ord->payment_status === 'completed' ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white' }} flex items-center justify-center text-[10px] font-bold shadow-2xs">
-                                            <i class="fa-solid {{ $ord->payment_status === 'completed' ? 'fa-check' : 'fa-clock' }}"></i>
-                                        </div>
-                                        <span class="font-bold text-slate-800 mt-1">1. Pembayaran</span>
-                                        <span class="text-[10px] {{ $ord->payment_status === 'completed' ? 'text-emerald-700 font-semibold' : 'text-amber-600' }}">
-                                            {{ $ord->payment_status === 'completed' ? 'Terverifikasi' : 'Menunggu' }}
-                                        </span>
-                                    </div>
-
-                                    <!-- Step 2: Dikemas -->
-                                    <div class="flex flex-col items-center">
+                            <!-- Card Middle: Book Items List (App Layout) -->
+                            <div class="p-3.5 sm:p-4 space-y-3">
+                                @if(!empty($ord->items_json))
+                                    @foreach($ord->items_json as $it)
                                         @php
-                                            $isPack = in_array($ord->shipping_status, ['diproses', 'dikirim', 'selesai']);
+                                            $coverPath = $it['cover_image'] ?? null;
+                                            if (!$coverPath && !empty($it['book_id'])) {
+                                                $b = \App\Models\Book::find($it['book_id']);
+                                                $coverPath = $b ? $b->cover_image : null;
+                                            }
+                                            $hasImage = $coverPath && (file_exists(public_path('storage/' . $coverPath)) || file_exists(public_path('images/' . $coverPath)));
+                                            $imageSrc = $hasImage ? (file_exists(public_path('storage/' . $coverPath)) ? asset('storage/' . $coverPath) : asset('images/' . $coverPath)) : null;
                                         @endphp
-                                        <div class="w-6 h-6 rounded-full {{ $isPack ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center text-[10px] font-bold">
-                                            <i class="fa-solid fa-box-archive"></i>
-                                        </div>
-                                        <span class="font-bold text-slate-800 mt-1">2. Pengemasan</span>
-                                        <span class="text-[10px] {{ $isPack ? 'text-emerald-700 font-semibold' : 'text-slate-400' }}">
-                                            {{ $isPack ? 'Siap / Selesai' : 'Antrean' }}
-                                        </span>
-                                    </div>
 
-                                    <!-- Step 3: Dikirim -->
-                                    <div class="flex flex-col items-center">
-                                        @php
-                                            $isShip = in_array($ord->shipping_status, ['dikirim', 'selesai']);
-                                        @endphp
-                                        <div class="w-6 h-6 rounded-full {{ $isShip ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center text-[10px] font-bold">
-                                            <i class="fa-solid fa-truck-fast"></i>
-                                        </div>
-                                        <span class="font-bold text-slate-800 mt-1">3. Pengiriman</span>
-                                        <span class="text-[10px] {{ $isShip ? 'text-emerald-700 font-semibold' : 'text-slate-400' }}">
-                                            {{ $isShip ? ($ord->tracking_number ? 'Resi Aktif' : 'Dalam Perjalanan') : 'Belum Dikirim' }}
-                                        </span>
-                                    </div>
-
-                                    <!-- Step 4: Selesai -->
-                                    <div class="flex flex-col items-center">
-                                        @php
-                                            $isDone = ($ord->shipping_status === 'selesai');
-                                        @endphp
-                                        <div class="w-6 h-6 rounded-full {{ $isDone ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-500' }} flex items-center justify-center text-[10px] font-bold">
-                                            <i class="fa-solid fa-hand-holding-heart"></i>
-                                        </div>
-                                        <span class="font-bold text-slate-800 mt-1">4. Diterima</span>
-                                        <span class="text-[10px] {{ $isDone ? 'text-emerald-700 font-semibold' : 'text-slate-400' }}">
-                                            {{ $isDone ? 'Paket Sampai' : 'Konfirmasi' }}
-                                        </span>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!-- Card Body: Large Clear Book Covers & Details -->
-                            <div class="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                                
-                                <!-- Left: Books List with High-Res 3D Cover (7 cols) -->
-                                <div class="lg:col-span-7 space-y-4">
-                                    @if(!empty($ord->items_json))
-                                        @foreach($ord->items_json as $it)
-                                            @php
-                                                // Resolve Book Cover image
-                                                $coverPath = $it['cover_image'] ?? null;
-                                                if (!$coverPath && !empty($it['book_id'])) {
-                                                    $b = \App\Models\Book::find($it['book_id']);
-                                                    $coverPath = $b ? $b->cover_image : null;
-                                                }
-                                                $hasImage = $coverPath && (file_exists(public_path('storage/' . $coverPath)) || file_exists(public_path('images/' . $coverPath)));
-                                                $imageSrc = $hasImage ? (file_exists(public_path('storage/' . $coverPath)) ? asset('storage/' . $coverPath) : asset('images/' . $coverPath)) : null;
-                                            @endphp
-
-                                            <div class="flex items-start gap-4 p-3 bg-slate-50/70 border border-slate-200/80 rounded-sm">
-                                                
-                                                <!-- High-Definition 3D Book Cover Stage -->
-                                                <div class="book-stage-3d shrink-0">
-                                                    <div class="book-cover-3d relative w-20 sm:w-24 aspect-[3/4.2] bg-slate-900 rounded-xs overflow-hidden border border-slate-300 shadow-sm select-none">
-                                                        <div class="book-spine-strip"></div>
-                                                        <div class="book-paper-edge"></div>
-                                                        
-                                                        @if($hasImage)
-                                                            <img src="{{ $imageSrc }}" alt="{{ $it['title'] ?? 'Buku' }}" class="w-full h-full object-cover" />
-                                                        @else
-                                                            <div class="w-full h-full bg-[#032c21] p-2 pl-3 flex flex-col justify-between text-white border-l-2 border-emerald-400">
-                                                                <div class="flex justify-between items-center border-b border-white/20 pb-0.5">
-                                                                    <span class="text-[7px] font-mono text-emerald-300 font-bold uppercase">PERSIS</span>
-                                                                </div>
-                                                                <div class="my-auto py-1 text-center">
-                                                                    <h5 class="text-[8.5px] font-black text-white leading-tight line-clamp-3">{{ $it['title'] ?? 'Buku' }}</h5>
-                                                                </div>
-                                                                <div class="text-[6.5px] text-slate-300 truncate border-t border-white/10 pt-0.5">
-                                                                    {{ $it['author'] ?? 'Penulis' }}
-                                                                </div>
+                                        <div class="flex items-start gap-3 py-1">
+                                            
+                                            <!-- 3D Miniature Book Cover -->
+                                            <div class="book-stage-3d shrink-0">
+                                                <div class="book-cover-3d relative w-14 sm:w-20 aspect-[3/4.2] bg-slate-900 rounded-xs overflow-hidden border border-slate-300 select-none">
+                                                    <div class="book-spine-strip"></div>
+                                                    <div class="book-paper-edge"></div>
+                                                    
+                                                    @if($hasImage)
+                                                        <img src="{{ $imageSrc }}" alt="{{ $it['title'] ?? 'Buku' }}" class="w-full h-full object-cover" />
+                                                    @else
+                                                        <div class="w-full h-full bg-[#032c21] p-1 flex flex-col justify-between text-white border-l border-emerald-400">
+                                                            <div class="text-[5px] font-mono text-emerald-300 uppercase">PERSIS</div>
+                                                            <div class="my-auto text-center">
+                                                                <h5 class="text-[6.5px] font-bold text-white leading-tight line-clamp-2">{{ $it['title'] ?? 'Buku' }}</h5>
                                                             </div>
-                                                        @endif
-                                                    </div>
+                                                            <div class="text-[5px] text-slate-300 truncate border-t border-white/10 pt-0.5">
+                                                                {{ $it['author'] ?? '-' }}
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
+                                            </div>
 
-                                                <!-- Book Text Information -->
-                                                <div class="flex-1 min-w-0 space-y-1 text-xs">
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded-xs uppercase tracking-wide border border-emerald-200">
-                                                            {{ $it['category'] ?? 'Penerbitan' }}
-                                                        </span>
-                                                    </div>
-                                                    <h3 class="font-black text-slate-900 text-sm leading-snug hover:text-emerald-800 transition">
-                                                        {{ $it['title'] ?? 'Judul Buku' }}
-                                                    </h3>
-                                                    <p class="text-[11px] text-slate-600 flex items-center gap-1.5 font-medium">
-                                                        <i class="fa-solid fa-user-pen text-slate-400 text-[10px]"></i>
-                                                        <span>{{ $it['author'] ?? 'Tim Penulis IAI Persis' }}</span>
-                                                    </p>
-
-                                                    <div class="pt-2 flex items-center justify-between border-t border-slate-200/60 mt-2">
-                                                        <span class="text-xs text-slate-500 font-mono">
-                                                            {{ $it['quantity'] ?? 1 }} eks @ {{ $it['formatted_price'] ?? 'Rp 0' }}
-                                                        </span>
-                                                        <span class="font-black font-mono text-sm text-slate-900">
-                                                            {{ $it['formatted_subtotal'] ?? 'Rp 0' }}
-                                                        </span>
-                                                    </div>
+                                            <!-- Book Info -->
+                                            <div class="flex-1 min-w-0 space-y-0.5 text-xs">
+                                                <span class="inline-block px-1.5 py-0.2 bg-emerald-50 text-emerald-700 text-[9px] font-bold rounded-xs uppercase border border-emerald-200">
+                                                    {{ $it['category'] ?? 'Penerbitan' }}
+                                                </span>
+                                                <h3 class="font-bold text-slate-900 text-xs sm:text-sm leading-snug line-clamp-2">
+                                                    {{ $it['title'] ?? 'Judul Buku' }}
+                                                </h3>
+                                                <p class="text-[10.5px] text-slate-500 truncate">
+                                                    {{ $it['author'] ?? 'Penulis IAI Persis' }}
+                                                </p>
+                                                <div class="pt-1 flex items-center justify-between text-xs">
+                                                    <span class="text-[11px] text-slate-500 font-mono">{{ $it['quantity'] ?? 1 }}x @ {{ $it['formatted_price'] ?? 'Rp 0' }}</span>
+                                                    <span class="font-bold font-mono text-slate-900 text-xs sm:text-sm">{{ $it['formatted_subtotal'] ?? 'Rp 0' }}</span>
                                                 </div>
-
                                             </div>
-                                        @endforeach
-                                    @endif
-                                </div>
 
-                                <!-- Right: Shipping Info & Status Breakdown (5 cols) -->
-                                <div class="lg:col-span-5 bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-sm space-y-3.5 text-xs">
-                                    
-                                    <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
-                                        <span class="font-bold text-slate-500 uppercase tracking-wider text-[10.5px]">Status Pengiriman:</span>
-                                        @if($ord->shipping_status === 'selesai')
-                                            <span class="px-2.5 py-1 rounded-xs text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 uppercase shadow-2xs">
-                                                <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Diterima / Selesai
-                                            </span>
-                                        @elseif($ord->shipping_status === 'dikirim')
-                                            <span class="px-2.5 py-1 rounded-xs text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-300 uppercase shadow-2xs animate-pulse">
-                                                <i class="fa-solid fa-truck-fast text-blue-600 mr-1"></i> Sedang Dikirim
-                                            </span>
-                                        @elseif($ord->shipping_status === 'diproses')
-                                            <span class="px-2.5 py-1 rounded-xs text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300 uppercase">
-                                                <i class="fa-solid fa-box-archive text-amber-600 mr-1"></i> Sedang Dikemas
-                                            </span>
-                                        @else
-                                            <span class="px-2.5 py-1 rounded-xs text-[11px] font-bold bg-slate-200 text-slate-700 uppercase">
-                                                <i class="fa-solid fa-hourglass-half text-slate-500 mr-1"></i> Menunggu Antrean
-                                            </span>
-                                        @endif
-                                    </div>
-
-                                    @if($ord->tracking_number)
-                                        <div class="p-3 bg-white rounded-xs border border-slate-200 space-y-1">
-                                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Nomor Resi Ekspedisi:</span>
-                                            <div class="flex items-center justify-between">
-                                                <span class="font-black text-emerald-900 font-mono text-sm tracking-wide select-all">{{ $ord->tracking_number }}</span>
-                                                <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-1.5 py-0.5 rounded-xs font-semibold">Aktif</span>
-                                            </div>
                                         </div>
-                                    @endif
-
-                                    <div class="space-y-1.5 pt-1">
-                                        <div class="flex justify-between text-slate-500">
-                                            <span>Subtotal Buku:</span>
-                                            <span class="font-mono text-slate-800 font-medium">{{ $ord->formatted_total }}</span>
-                                        </div>
-                                        @if($ord->fee > 0)
-                                            <div class="flex justify-between text-slate-500">
-                                                <span>Biaya Layanan QRIS:</span>
-                                                <span class="font-mono text-slate-800 font-medium">{{ $ord->formatted_fee }}</span>
-                                            </div>
-                                        @endif
-                                        <div class="pt-2 border-t border-slate-300 flex justify-between items-center text-slate-900">
-                                            <span class="font-bold text-xs">Total Pembayaran:</span>
-                                            <span class="font-black font-mono text-base text-emerald-900">{{ $ord->formatted_payment }}</span>
-                                        </div>
-                                    </div>
-
-                                </div>
-
+                                    @endforeach
+                                @endif
                             </div>
 
-                            <!-- Card Footer: Delivery Address & Action Buttons -->
-                            <div class="p-4 bg-slate-50/90 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3.5 text-xs">
-                                <div class="text-[11px] text-slate-600 text-center sm:text-left leading-relaxed">
-                                    <span class="text-slate-400 font-medium">Alamat Penerima:</span> <strong class="text-slate-800 font-bold">{{ $ord->customer_name }}</strong> ({{ $ord->customer_phone }}) — <span class="text-slate-500">{{ Str::limit($ord->customer_address, 65) }}</span>
+                            <!-- Card Summary Strip (Status Pengiriman & Total) -->
+                            <div class="mx-3.5 mb-3.5 p-2.5 bg-slate-50 border border-slate-200 rounded-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10.5px] font-bold text-slate-400 uppercase">Pengiriman:</span>
+                                    @if($ord->shipping_status === 'selesai')
+                                        <span class="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 uppercase">
+                                            <i class="fa-solid fa-circle-check text-emerald-600"></i> Diterima
+                                        </span>
+                                    @elseif($ord->shipping_status === 'dikirim')
+                                        <span class="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300 uppercase">
+                                            <i class="fa-solid fa-truck-fast text-blue-600"></i> Sedang Dikirim
+                                        </span>
+                                        @if($ord->tracking_number)
+                                            <span class="text-[10px] font-mono text-emerald-800 font-bold bg-white px-1.5 py-0.2 border border-slate-200 rounded-xs">
+                                                Resi: {{ $ord->tracking_number }}
+                                            </span>
+                                        @endif
+                                    @elseif($ord->shipping_status === 'diproses')
+                                        <span class="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 uppercase">
+                                            <i class="fa-solid fa-box-archive text-amber-600"></i> Sedang Dipacking
+                                        </span>
+                                    @else
+                                        <span class="px-2 py-0.5 rounded-xs text-[10px] font-bold bg-slate-200 text-slate-700 uppercase">
+                                            <i class="fa-solid fa-hourglass-start text-slate-500"></i> Menunggu Antrean
+                                        </span>
+                                    @endif
                                 </div>
 
-                                <div class="flex items-center gap-2.5 shrink-0">
+                                <div class="flex items-center justify-between sm:justify-end gap-3 pt-1.5 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                                    <span class="text-slate-500 text-[11px]">Total Bayar:</span>
+                                    <span class="font-black font-mono text-sm sm:text-base text-emerald-900">{{ $ord->formatted_payment }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Card Bottom Actions Footer -->
+                            <div class="px-3.5 py-2.5 bg-slate-50/80 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                                <div class="text-[10.5px] text-slate-500 truncate max-w-full sm:max-w-xs text-center sm:text-left">
+                                    Tujuan: <strong class="text-slate-700">{{ $ord->customer_name }}</strong> ({{ $ord->customer_phone }})
+                                </div>
+
+                                <div class="w-full sm:w-auto flex items-center gap-2">
                                     <!-- Tombol Konfirmasi Diterima (Jika status dikirim) -->
                                     @if($ord->shipping_status === 'dikirim')
-                                        <form method="POST" action="{{ route('member.orders.confirm_received', $ord->order_number) }}" onsubmit="return confirm('Apakah Anda yakin paket buku telah sampai dan diterima dengan baik?')">
+                                        <form method="POST" action="{{ route('member.orders.confirm_received', $ord->order_number) }}" onsubmit="return confirm('Apakah Anda yakin paket buku telah sampai dan diterima dengan baik?')" class="flex-1 sm:flex-none">
                                             @csrf
-                                            <button type="submit" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer">
-                                                <i class="fa-solid fa-circle-check text-lime-300 text-sm"></i>
-                                                <span>Konfirmasi Paket Diterima</span>
+                                            <button type="submit" class="w-full sm:w-auto px-3 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                                                <i class="fa-solid fa-circle-check text-lime-300"></i>
+                                                <span>Terima Paket</span>
                                             </button>
                                         </form>
-                                    @elseif($ord->shipping_status === 'selesai')
-                                        <span class="px-3 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-bold flex items-center gap-1.5">
-                                            <i class="fa-solid fa-circle-check text-emerald-600"></i> Paket Selesai Diterima
-                                        </span>
                                     @endif
 
                                     <!-- Tombol Lihat Invoice -->
-                                    <a href="{{ route('order.invoice', $ord->order_number) }}" target="_blank" class="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+                                    <a href="{{ route('order.invoice', $ord->order_number) }}" target="_blank" class="flex-1 sm:flex-none px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1 shadow-2xs">
                                         <i class="fa-solid fa-file-invoice text-emerald-700"></i>
-                                        <span>Lihat Invoice</span>
+                                        <span>Invoice</span>
                                     </a>
 
                                     <!-- Tombol WhatsApp Redaksi -->
-                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya ingin menanyakan pesanan #' . $ord->order_number . ' atas nama ' . $ord->customer_name . '.') }}" target="_blank" class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-bold transition flex items-center gap-1.5">
+                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya ingin menanyakan pesanan #' . $ord->order_number . ' atas nama ' . $ord->customer_name . '.') }}" target="_blank" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1 shrink-0" title="Hubungi WhatsApp">
                                         <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
-                                        <span class="hidden sm:inline">Hubungi Redaksi</span>
+                                        <span class="hidden sm:inline">WhatsApp</span>
                                     </a>
                                 </div>
                             </div>
@@ -558,30 +461,30 @@
 
                     <!-- Pagination -->
                     @if($orders->hasPages())
-                        <div class="pt-3">
+                        <div class="pt-2">
                             {{ $orders->links() }}
                         </div>
                     @endif
                 </div>
             @else
-                <div class="p-12 text-center bg-white rounded-sm border border-slate-200 space-y-3.5 shadow-xs">
-                    <div class="w-16 h-16 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center mx-auto text-2xl">
+                <div class="p-8 text-center bg-white rounded-sm border border-slate-200/90 space-y-3 shadow-2xs">
+                    <div class="w-12 h-12 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center mx-auto text-xl">
                         <i class="fa-solid fa-receipt"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-slate-900 font-heading">Tidak Ada Pesanan Ditemukan</h3>
-                        <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto leading-relaxed">
+                        <h3 class="text-sm font-bold text-slate-900 font-heading">Tidak Ada Pesanan</h3>
+                        <p class="text-xs text-slate-500 mt-0.5 max-w-xs mx-auto">
                             @if($statusFilter)
-                                Tidak ada transaksi buku dengan filter status yang Anda pilih.
+                                Tidak ada transaksi buku dengan status ini.
                             @else
-                                Anda belum memiliki riwayat pembelian buku di PENERBIT PERSIS. Mulai pesan sekarang!
+                                Anda belum memiliki riwayat pembelian buku.
                             @endif
                         </p>
                     </div>
-                    <div class="pt-2">
-                        <a href="{{ route('katalog') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition shadow-xs">
+                    <div class="pt-1">
+                        <a href="{{ route('katalog') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition shadow-2xs">
                             <i class="fa-solid fa-book-open text-xs"></i>
-                            <span>Jelajahi Katalog Buku</span>
+                            <span>Buka Katalog Buku</span>
                         </a>
                     </div>
                 </div>
@@ -592,7 +495,6 @@
 
     <!-- Dropdown & Sidebar JS with Persistent Collapse Memory -->
     <script>
-        // Check stored desktop preference
         if (window.innerWidth >= 1024) {
             const savedState = localStorage.getItem('persis_member_sidebar_collapsed');
             if (savedState === 'true') {
@@ -606,11 +508,9 @@
             const overlay = document.getElementById('sidebar-overlay');
 
             if (window.innerWidth < 1024) {
-                // Mobile behavior (Off-canvas drawer)
                 sidebar.classList.toggle('-translate-x-full');
                 overlay.classList.toggle('hidden');
             } else {
-                // Desktop behavior (Collapsible Full / Hidden toggle)
                 if (sidebar.classList.contains('lg:translate-x-0')) {
                     collapseSidebarDesktop();
                 } else {
