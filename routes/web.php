@@ -111,6 +111,7 @@ Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(
     Route::get('/order/status/{orderNumber}', [PaymentController::class, 'checkStatus'])->name('order.status');
 });
 
-// Order Invoice & Pakasir Webhook Routes
+// Order Invoice, Status Check & Pakasir Webhook Routes
+Route::get('/order/status/{orderNumber}',  [PaymentController::class, 'checkStatus'])->name('public.order.status');
 Route::get('/order/invoice/{orderNumber}', [PaymentController::class, 'showInvoice'])->name('order.invoice');
 Route::post('/api/pakasir/webhook',        [PaymentController::class, 'handleWebhook'])->name('pakasir.webhook');

@@ -560,6 +560,8 @@
                 update: '/member/cart/update/',
                 remove: '/member/cart/remove/',
                 clear: @json(Auth::check() ? route('member.cart.clear') : null),
+                checkoutQris: @json(Auth::check() ? route('member.cart.checkout.qris') : null),
+                orderStatus: '/order/status/',
             },
             data: {
                 count: 0,
@@ -1016,7 +1018,7 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Menghubungkan ke QRIS Pakasir...</span>';
             }
 
-            fetch('{{ route('cart.checkout.qris') }}', {
+            fetch(window.PERSIS_CART.routes.checkoutQris || '/member/cart/checkout/qris', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1080,7 +1082,7 @@
             clearInterval(qrisPollInterval);
 
             qrisPollInterval = setInterval(() => {
-                fetch('/order/status/' + orderNumber)
+                fetch((window.PERSIS_CART.routes.orderStatus || '/order/status/') + orderNumber)
                     .then(res => res.json())
                     .then(res => {
                         if (res.success && res.payment_status === 'completed') {
@@ -1105,7 +1107,7 @@
         // Manual status check trigger
         window.manualCheckPaymentStatus = function() {
             if (!currentOrderNumber) return;
-            fetch('/order/status/' + currentOrderNumber)
+            fetch((window.PERSIS_CART.routes.orderStatus || '/order/status/') + currentOrderNumber)
                 .then(res => res.json())
                 .then(res => {
                     if (res.success && res.payment_status === 'completed') {
