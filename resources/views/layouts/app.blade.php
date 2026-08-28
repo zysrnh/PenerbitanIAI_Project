@@ -642,39 +642,9 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- GLOBAL CART JAVASCRIPT ENGINE -->
+    <!-- GLOBAL CART & MODAL JAVASCRIPT ENGINE -->
     <!-- ========================================================================= -->
     <script>
-
-        // ==========================================
-        // ACCOUNT DROPDOWN (murni klik — buka/tutup + klik di luar buat nutup)
-        // ==========================================
-        window.toggleMemberDropdown = function(event) {
-            if (event) event.stopPropagation();
-            const menu = document.getElementById('memberUserDropdownMenu');
-            const chevron = document.getElementById('memberDropdownChevron');
-            if (menu) {
-                const isHidden = menu.classList.contains('hidden');
-                if (isHidden) {
-                    menu.classList.remove('hidden');
-                    if (chevron) chevron.classList.add('rotate-180');
-                } else {
-                    menu.classList.add('hidden');
-                    if (chevron) chevron.classList.remove('rotate-180');
-                }
-            }
-        };
-
-        document.addEventListener('click', function(e) {
-            const memberContainer = document.getElementById('memberUserDropdownContainer');
-            const memberMenu = document.getElementById('memberUserDropdownMenu');
-            const memberChevron = document.getElementById('memberDropdownChevron');
-            if (memberContainer && !memberContainer.contains(e.target)) {
-                if (memberMenu) memberMenu.classList.add('hidden');
-                if (memberChevron) memberChevron.classList.remove('rotate-180');
-            }
-        });
-
         window.PERSIS_CART = {
             isLoggedIn: @json(Auth::check()),
             userName: @json(Auth::check() ? Auth::user()->name : ''),
@@ -696,7 +666,7 @@
             }
         };
 
-        // Open & Close Modals with Smooth Animation
+        // Open & Close Login Prompt Modal
         window.openLoginPromptModal = function() {
             const m = document.getElementById('loginPromptModal');
             const card = document.getElementById('loginPromptModalCard');
@@ -729,7 +699,7 @@
             }
         };
 
-        // Open & Close Cart Drawer (Smooth slide-over, no annoying popup)
+        // Open & Close Cart Drawer
         window.openCartDrawer = function() {
             const drawer = document.getElementById('globalCartDrawer');
             const backdrop = document.getElementById('cartDrawerBackdrop');
@@ -748,18 +718,6 @@
                 }
             }
         };
-            const backdrop = document.getElementById('cartDrawerBackdrop');
-            const panel = document.getElementById('cartDrawerPanel');
-            if (drawer && backdrop && panel) {
-                drawer.style.display = 'block';
-                drawer.classList.remove('hidden');
-                setTimeout(() => {
-                    backdrop.classList.remove('opacity-0');
-                    panel.classList.remove('translate-x-full');
-                }, 10);
-                window.fetchCartData();
-            }
-        };
 
         window.closeCartDrawer = function() {
             const drawer = document.getElementById('globalCartDrawer');
@@ -770,12 +728,12 @@
                 panel.classList.add('translate-x-full');
                 setTimeout(() => {
                     drawer.style.display = 'none';
-                drawer.classList.add('hidden');
+                    drawer.classList.add('hidden');
                 }, 300);
             }
         };
 
-        // Show Toast
+        // Show Toast (Safe bottom pop-in)
         window.showCartToast = function(msg, isSuccess = true) {
             const toast = document.getElementById('cartToastNotification');
             const toastMsg = document.getElementById('cartToastMsg');
@@ -789,13 +747,18 @@
                 toastIcon.className = 'fa-solid fa-circle-exclamation text-amber-400 text-lg shrink-0';
             }
 
-            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            toast.style.display = 'block';
+            toast.classList.remove('hidden', 'translate-y-8', 'opacity-0');
             toast.classList.add('translate-y-0', 'opacity-100');
 
             setTimeout(() => {
                 toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-[-150%]', 'opacity-0');
-            }, 3500);
+                toast.classList.add('translate-y-8', 'opacity-0');
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                    toast.classList.add('hidden');
+                }, 300);
+            }, 3000);
         };
 
         // Fetch Cart Data
@@ -838,7 +801,75 @@
             }
         };
 
-        // Add to Cart Action (Instant & Smooth)
+        // Render Cart Drawer HTML UI
+        window.renderCartDrawerUI = function(data) {
+            const itemsContainer = document.getElementById('cartDrawerItemsContainer');
+            const emptyContainer = document.getElementById('cartDrawerEmptyContainer');
+            const footerContainer = document.getElementById('cartDrawerFooter');
+            const totalText = document.getElementById('cartDrawerTotalText');
+            const countBadge = document.getElementById('cartDrawerCountBadge');
+
+            if (!itemsContainer || !emptyContainer || !footerContainer) return;
+
+            if (countBadge) {
+                countBadge.textContent = data.count > 0 ? `(${data.count})` : '';
+            }
+
+            if (!data.items || data.items.length === 0) {
+                itemsContainer.classList.add('hidden');
+                emptyContainer.classList.remove('hidden');
+                footerContainer.classList.add('hidden');
+                return;
+            }
+
+            itemsContainer.classList.remove('hidden');
+            emptyContainer.classList.add('hidden');
+            footerContainer.classList.remove('hidden');
+
+            if (totalText) {
+                totalText.textContent = data.formatted_total;
+            }
+
+            let html = '';
+            data.items.forEach(item => {
+                const book = item.book;
+                const cover = book && book.cover_image ? `/storage/${book.cover_image}` : 'https://placehold.co/100x140?text=No+Cover';
+                const title = book ? book.title : 'Buku';
+                const author = book && book.author ? book.author : 'Penulis PERSIS';
+                const price = item.formatted_price;
+                const subtotal = item.formatted_subtotal;
+
+                html += `
+                <div class="p-3.5 bg-white border border-slate-200 rounded-sm hover:border-emerald-500 transition-colors shadow-2xs flex gap-3 group relative">
+                    <img src="${cover}" alt="${title}" class="w-14 h-20 object-cover rounded-xs shadow-xs border border-slate-200 shrink-0" />
+                    <div class="flex-grow min-w-0 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <h4 class="font-bold text-xs text-slate-800 line-clamp-1 group-hover:text-emerald-800 transition" title="${title}">${title}</h4>
+                                <button type="button" onclick="window.removeCartItem(${item.id})" class="text-slate-400 hover:text-red-500 text-xs p-1 -mr-1 transition cursor-pointer" title="Hapus">
+                                    <i class="fa-solid fa-trash-can pointer-events-none"></i>
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-slate-500 font-mono mt-0.5 truncate">${author}</p>
+                            <p class="text-xs font-black text-emerald-700 mt-1 font-mono">${price}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-2">
+                            <div class="flex items-center border border-slate-200 rounded-xs bg-slate-50">
+                                <button type="button" onclick="window.updateCartItemQty(${item.id}, -1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 text-xs transition active:scale-95 cursor-pointer" title="Kurang">-</button>
+                                <span id="cart-item-qty-${item.id}" class="w-7 text-center font-bold text-xs font-mono text-slate-800">${item.quantity}</span>
+                                <button type="button" onclick="window.updateCartItemQty(${item.id}, 1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 text-xs transition active:scale-95 cursor-pointer" title="Tambah">+</button>
+                            </div>
+                            <span id="cart-item-subtotal-${item.id}" class="text-xs font-extrabold text-slate-900 font-mono">${subtotal}</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+
+            itemsContainer.innerHTML = html;
+        };
+
+        // Add to Cart Action
         window.addToCart = function(bookId, quantity = 1, autoOpen = true) {
             if (!window.PERSIS_CART.isLoggedIn) {
                 window.openLoginPromptModal();
@@ -858,7 +889,7 @@
             })
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
+                if (data && data.success) {
                     window.PERSIS_CART.data = data;
                     window.updateCartBadges(data.count);
                     window.renderCartDrawerUI(data);
@@ -876,7 +907,7 @@
             });
         };
 
-        // Update Item Qty (0ms INSTANT OPTIMISTIC UI)
+        // Update Item Qty (Optimistic UI)
         window.updateCartItemQty = function(cartItemId, change) {
             if (!window.PERSIS_CART.data || !window.PERSIS_CART.data.items) return;
             const item = window.PERSIS_CART.data.items.find(i => i.id === cartItemId);
@@ -888,26 +919,10 @@
                 return;
             }
 
-            // 1. Instant local state update (Zero latency!)
             item.quantity = newQty;
-            item.subtotal = (item.unit_price || 0) * newQty;
-            item.formatted_subtotal = 'Rp ' + Number(item.subtotal).toLocaleString('id-ID');
+            const qtyElem = document.getElementById(`cart-item-qty-${cartItemId}`);
+            if (qtyElem) qtyElem.textContent = newQty;
 
-            let totalCount = 0;
-            let totalAmount = 0;
-            window.PERSIS_CART.data.items.forEach(i => {
-                totalCount += i.quantity;
-                totalAmount += i.subtotal;
-            });
-            window.PERSIS_CART.data.count = totalCount;
-            window.PERSIS_CART.data.total = totalAmount;
-            window.PERSIS_CART.data.formatted_total = 'Rp ' + Number(totalAmount).toLocaleString('id-ID');
-
-            // 2. Re-render UI immediately at 60fps
-            window.updateCartBadges(totalCount);
-            window.renderCartDrawerUI(window.PERSIS_CART.data);
-
-            // 3. Sync to server in background
             fetch(window.PERSIS_CART.routes.update + cartItemId, {
                 method: 'POST',
                 headers: {
@@ -918,393 +933,60 @@
             })
             .then(res => res.json())
             .then(data => {
-                if (data.success) {
+                if (data && data.success) {
                     window.PERSIS_CART.data = data;
-                    window.updateCartBadges(data.count);
                     window.renderCartDrawerUI(data);
+                    window.updateCartBadges(data.count);
                 }
             })
-            .catch(err => console.error('Error updating cart qty:', err));
+            .catch(err => {
+                console.error('Error updating item qty:', err);
+                window.fetchCartData();
+            });
         };
 
-        // Remove Item (0ms INSTANT OPTIMISTIC REMOVE)
+        // Remove Item
         window.removeCartItem = function(cartItemId) {
-            if (!window.PERSIS_CART.data || !window.PERSIS_CART.data.items) return;
-
-            // 1. Instant local removal
-            window.PERSIS_CART.data.items = window.PERSIS_CART.data.items.filter(i => i.id !== cartItemId);
-            let totalCount = 0;
-            let totalAmount = 0;
-            window.PERSIS_CART.data.items.forEach(i => {
-                totalCount += i.quantity;
-                totalAmount += i.subtotal;
-            });
-            window.PERSIS_CART.data.count = totalCount;
-            window.PERSIS_CART.data.total = totalAmount;
-            window.PERSIS_CART.data.formatted_total = 'Rp ' + Number(totalAmount).toLocaleString('id-ID');
-
-            window.updateCartBadges(totalCount);
-            window.renderCartDrawerUI(window.PERSIS_CART.data);
-            window.showCartToast('Item dihapus dari keranjang.');
-
-            // 2. Sync to server in background
             fetch(window.PERSIS_CART.routes.remove + cartItemId, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.PERSIS_CART.data = data;
-                    window.updateCartBadges(data.count);
-                    window.renderCartDrawerUI(data);
-                }
-            })
-            .catch(err => console.error('Error removing cart item:', err));
-        };
-
-        // Clear Cart
-        window.clearCart = function() {
-            if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh isi keranjang belanja?')) return;
-
-            // Instant clear locally
-            window.PERSIS_CART.data.items = [];
-            window.PERSIS_CART.data.count = 0;
-            window.PERSIS_CART.data.total = 0;
-            window.PERSIS_CART.data.formatted_total = 'Rp 0';
-            window.updateCartBadges(0);
-            window.renderCartDrawerUI(window.PERSIS_CART.data);
-            window.showCartToast('Keranjang belanja telah dikosongkan.');
-
-            fetch(window.PERSIS_CART.routes.clear, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    window.PERSIS_CART.data = data;
-                    window.updateCartBadges(0);
-                    window.renderCartDrawerUI(data);
-                }
-            });
-        };
-
-        // Render Cart UI (Clean, Polished & Modern)
-        window.renderCartDrawerUI = function(data) {
-            const list = document.getElementById('cartDrawerItemsList');
-            const countBadge = document.getElementById('cartDrawerCountBadge');
-            const totalItemsText = document.getElementById('cartDrawerTotalItemsText');
-            const subtotalText = document.getElementById('cartDrawerSubtotal');
-            const footer = document.getElementById('cartDrawerFooter');
-
-            if (!list) return;
-
-            if (countBadge) {
-                countBadge.textContent = data.count > 0 ? `(${data.count})` : '';
-            }
-            if (totalItemsText) totalItemsText.textContent = `${data.count} Eksemplar`;
-            if (subtotalText) subtotalText.textContent = data.formatted_total;
-
-            if (!data.items || data.items.length === 0) {
-                list.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-center p-6 space-y-3.5 my-auto select-none">
-                        <div class="w-16 h-16 rounded-sm bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-2xl shadow-xs">
-                            <i class="fa-solid fa-basket-shopping"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-extrabold text-slate-800 font-heading">Keranjang Masih Kosong</h4>
-                            <p class="text-xs text-slate-400 mt-1 leading-relaxed max-w-xs">
-                                Anda belum menambahkan koleksi buku ke keranjang. Jelajahi katalog sekarang!
-                            </p>
-                        </div>
-                        <a href="{{ route('katalog') }}" onclick="window.closeCartDrawer()" class="px-5 py-2.5 bg-[#006830] text-white text-xs font-bold rounded-sm shadow-xs hover:bg-[#032c21] transition">
-                            Buka Katalog Buku
-                        </a>
-                    </div>
-                `;
-                if (footer) footer.classList.add('opacity-50', 'pointer-events-none');
-                return;
-            }
-
-            if (footer) footer.classList.remove('opacity-50', 'pointer-events-none');
-
-            let html = '';
-            data.items.forEach(item => {
-                const cover = item.cover_url ? 
-                    `<img src="${item.cover_url}" alt="${item.title}" class="w-full h-full object-cover" />` :
-                    `<div class="w-full h-full bg-[#032c21] text-white flex items-center justify-center text-[8px] font-bold p-1 text-center">${item.category}</div>`;
-
-                html += `
-                    <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex gap-3 items-start transition hover:border-emerald-700">
-                        <div class="w-14 h-19 aspect-[3/4.15] shrink-0 bg-slate-900 rounded-xs overflow-hidden border border-slate-200 shadow-2xs">
-                            ${cover}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-wider">${item.category}</span>
-                            <h5 class="text-xs font-bold text-slate-900 line-clamp-2 leading-snug mt-0.5" title="${item.title}">${item.title}</h5>
-                            <p class="text-[10px] text-slate-400 truncate mt-0.5">${item.author}</p>
-                            
-                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
-                                <div>
-                                    <span class="font-mono font-bold text-xs text-emerald-800">${item.formatted_subtotal}</span>
-                                    <span class="text-[9.5px] text-slate-400 block">@ ${item.formatted_price}</span>
-                                </div>
-                                <div class="flex items-center gap-1.5 bg-slate-50 p-0.5 rounded-xs border border-slate-200">
-                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, -1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition cursor-pointer">
-                                        <i class="fa-solid fa-minus text-[8px]"></i>
-                                    </button>
-                                    <span class="text-xs font-bold font-mono w-5 text-center text-slate-800 select-none">${item.quantity}</span>
-                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, 1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition cursor-pointer">
-                                        <i class="fa-solid fa-plus text-[8px]"></i>
-                                    </button>
-                                </div>
-                                <button type="button" onclick="window.removeCartItem(${item.id})" class="text-slate-300 hover:text-red-600 transition p-1 cursor-pointer" title="Hapus item">
-                                    <i class="fa-solid fa-trash-can text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            list.innerHTML = html;
-        };
-
-        // Checkout via WhatsApp
-        
-        // ==========================================
-        // CHECKOUT & PAKASIR QRIS REALTIME ENGINE
-        // ==========================================
-        let currentOrderNumber = null;
-        let qrisPollInterval = null;
-        let qrisTimerInterval = null;
-
-        window.openCheckoutModal = function() {
-            if (!window.PERSIS_CART.isLoggedIn) {
-                window.closeCartDrawer();
-                window.openLoginPromptModal();
-                return;
-            }
-
-            if (!window.PERSIS_CART.data || !window.PERSIS_CART.data.items || window.PERSIS_CART.data.items.length === 0) {
-                window.showCartToast('Keranjang belanja Anda masih kosong.', false);
-                return;
-            }
-
-            window.closeCartDrawer();
-
-            // Set Total Summary
-            const sumEl = document.getElementById('chkTotalSummaryText');
-            if (sumEl) sumEl.textContent = window.PERSIS_CART.data.formatted_total;
-
-            // Reset to Step 1 (Form)
-            document.getElementById('checkoutStepForm').classList.remove('hidden');
-            document.getElementById('checkoutStepQris').classList.add('hidden');
-            document.getElementById('checkoutModalTitle').textContent = 'Checkout & Pengiriman';
-
-            const modal = document.getElementById('checkoutQrisModal');
-            const card = document.getElementById('checkoutQrisModalCard');
-            if (modal && card) {
-                modal.classList.remove('hidden', 'pointer-events-none');
-                modal.classList.add('flex');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    modal.classList.add('opacity-100');
-                    card.classList.remove('scale-95', 'translate-y-4', 'opacity-0');
-                    card.classList.add('scale-100', 'translate-y-0', 'opacity-100');
-                }, 10);
-            }
-        };
-
-        window.closeCheckoutModal = function() {
-            clearInterval(qrisPollInterval);
-            clearInterval(qrisTimerInterval);
-
-            const modal = document.getElementById('checkoutQrisModal');
-            const card = document.getElementById('checkoutQrisModalCard');
-            if (modal && card) {
-                modal.classList.remove('opacity-100');
-                modal.classList.add('opacity-0');
-                card.classList.remove('scale-100', 'translate-y-0', 'opacity-100');
-                card.classList.add('scale-95', 'translate-y-4', 'opacity-0');
-                setTimeout(() => {
-                    modal.classList.add('hidden', 'pointer-events-none');
-                    modal.classList.remove('flex');
-                }, 280);
-            }
-        };
-
-        window.submitCheckoutQris = function() {
-            const name = document.getElementById('chkCustomerName')?.value.trim();
-            const phone = document.getElementById('chkCustomerPhone')?.value.trim();
-            const address = document.getElementById('chkCustomerAddress')?.value.trim();
-            const email = document.getElementById('chkCustomerEmail')?.value.trim();
-            const notes = document.getElementById('chkCustomerNotes')?.value.trim();
-
-            if (!name || !phone || !address) {
-                alert('Mohon lengkapi Nama, Nomor WhatsApp, dan Alamat Pengiriman.');
-                return;
-            }
-
-            const btn = document.getElementById('btnProcessQris');
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Menghubungkan ke QRIS Pakasir...</span>';
-            }
-
-            fetch(window.PERSIS_CART.routes.checkoutQris || '/member/cart/checkout/qris', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    customer_name: name,
-                    customer_phone: phone,
-                    customer_address: address,
-                    customer_email: email,
-                    notes: notes
-                })
+                }
             })
             .then(res => res.json())
             .then(data => {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-qrcode text-base text-lime-300"></i><span>Lanjut ke Pembayaran QRIS &rarr;</span>';
-                }
-
-                if (data.success) {
-                    currentOrderNumber = data.order_number;
-                    
-                    // Render Step 2 (QRIS)
-                    document.getElementById('qrisImageDisplay').src = data.qr_image_url;
-                    document.getElementById('qrisOrderNumber').textContent = data.order_number;
-                    document.getElementById('qrisSubtotalText').textContent = data.formatted_amount;
-                    document.getElementById('qrisFeeText').textContent = data.formatted_fee;
-                    document.getElementById('qrisTotalPaymentText').textContent = data.formatted_total;
-                    document.getElementById('qrisInvoiceDirectBtn').href = data.invoice_url;
-
-                    document.getElementById('checkoutStepForm').classList.add('hidden');
-                    document.getElementById('checkoutStepQris').classList.remove('hidden');
-                    document.getElementById('checkoutModalTitle').textContent = 'Scan QRIS untuk Bayar';
-
-                    // Refresh cart badges
-                    window.PERSIS_CART.data = { items: [], count: 0, total: 0, formatted_total: 'Rp 0' };
-                    window.updateCartBadges(0);
-                    window.renderCartDrawerUI(window.PERSIS_CART.data);
-
-                    // Start Live Polling & Timer
-                    window.startQrisPolling(data.order_number, data.invoice_url);
-                    window.startQrisTimer(15 * 60);
-
-                } else {
-                    alert(data.message || 'Gagal memproses QRIS. Silakan coba lagi.');
+                if (data && data.success) {
+                    window.PERSIS_CART.data = data;
+                    window.renderCartDrawerUI(data);
+                    window.updateCartBadges(data.count);
+                    window.showCartToast('Item berhasil dihapus dari keranjang.');
                 }
             })
-            .catch(err => {
-                console.error('Checkout error:', err);
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fa-solid fa-qrcode text-base text-lime-300"></i><span>Lanjut ke Pembayaran QRIS &rarr;</span>';
+            .catch(err => console.error('Error removing item:', err));
+        };
+
+        // Clear All Items
+        window.clearCart = function() {
+            if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh keranjang belanja?')) return;
+
+            fetch(window.PERSIS_CART.routes.clear, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
-                alert('Terjadi kendala jaringan saat menghubungi payment gateway.');
-            });
-        };
-
-        // Real-time Status Polling
-        window.startQrisPolling = function(orderNumber, invoiceUrl) {
-            clearInterval(qrisPollInterval);
-
-            qrisPollInterval = setInterval(() => {
-                fetch((window.PERSIS_CART.routes.orderStatus || '/order/status/') + orderNumber)
-                    .then(res => res.json())
-                    .then(res => {
-                        if (res.success && res.payment_status === 'completed') {
-                            clearInterval(qrisPollInterval);
-                            clearInterval(qrisTimerInterval);
-
-                            const banner = document.getElementById('qrisStatusBanner');
-                            if (banner) {
-                                banner.className = 'p-3 bg-emerald-500 text-white rounded-sm flex items-center justify-center gap-2 text-xs font-black shadow-md animate-bounce';
-                                banner.innerHTML = '<i class="fa-solid fa-circle-check text-base"></i><span>PEMBAYARAN BERHASIL! Mengalihkan ke Invoice...</span>';
-                            }
-
-                            setTimeout(() => {
-                                window.location.href = invoiceUrl || res.invoice_url;
-                            }, 1200);
-                        }
-                    })
-                    .catch(err => console.log('Polling status check:', err));
-            }, 2500);
-        };
-
-        // Manual status check trigger
-        window.manualCheckPaymentStatus = function() {
-            if (!currentOrderNumber) return;
-            fetch((window.PERSIS_CART.routes.orderStatus || '/order/status/') + currentOrderNumber)
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success && res.payment_status === 'completed') {
-                        alert('Pembayaran berhasil dikonfirmasi! Mengalihkan ke invoice...');
-                        window.location.href = res.invoice_url;
-                    } else {
-                        alert('Status pembayaran saat ini masih: ' + (res.payment_status || 'PENDING') + '. Silakan selesaikan scan QRIS terlebih dahulu.');
-                    }
-                });
-        };
-
-        // Countdown Timer
-        window.startQrisTimer = function(durationSeconds) {
-            clearInterval(qrisTimerInterval);
-            let timer = durationSeconds;
-            const timerEl = document.getElementById('qrisCountdownTimer');
-
-            qrisTimerInterval = setInterval(() => {
-                const minutes = parseInt(timer / 60, 10);
-                const seconds = parseInt(timer % 60, 10);
-
-                const displayMin = minutes < 10 ? '0' + minutes : minutes;
-                const displaySec = seconds < 10 ? '0' + seconds : seconds;
-
-                if (timerEl) timerEl.textContent = displayMin + ':' + displaySec;
-
-                if (--timer < 0) {
-                    clearInterval(qrisTimerInterval);
-                    clearInterval(qrisPollInterval);
-                    if (timerEl) timerEl.textContent = 'KADALUARSA';
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.success) {
+                    window.PERSIS_CART.data = data;
+                    window.renderCartDrawerUI(data);
+                    window.updateCartBadges(0);
+                    window.showCartToast('Keranjang belanja telah dikosongkan.');
                 }
-            }, 1000);
-        };
-
-        window.checkoutCartViaWhatsApp = function() {
-            const data = window.PERSIS_CART.data;
-            if (!data.items || data.items.length === 0) {
-                alert('Keranjang belanja Anda masih kosong.');
-                return;
-            }
-
-            let text = `Halo Redaksi PERSIS PERS, saya ingin memesan buku melalui *Keranjang Belanja* website persispers.com:\n\n`;
-            if (window.PERSIS_CART.userName) {
-                text += `*Nama Pemesan:* ${window.PERSIS_CART.userName}\n`;
-            }
-            text += `*Daftar Pesanan Buku:*\n`;
-
-            data.items.forEach((item, index) => {
-                text += `${index + 1}. *${item.title}* (${item.quantity}x) = ${item.formatted_subtotal}\n`;
-            });
-
-            text += `\n*Total Item:* ${data.count} Eksemplar`;
-            text += `\n*Total Belanja:* ${data.formatted_total}`;
-            text += `\n\nMohon info ketersediaan stok buku dan rincian ongkos kirim ke alamat saya ya kak. Terima kasih!`;
-
-            const phone = window.PERSIS_CART.contactWa.replace(/[^0-9]/g, '') || '6282116116133';
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
+            })
+            .catch(err => console.error('Error clearing cart:', err));
         };
 
         // Auto load cart badge on page ready
@@ -1314,7 +996,6 @@
             }
         });
     </script>
-
 
     <!-- ========================================================================= -->
     <!-- CHECKOUT & LIVE QRIS AUTO-PAYMENT MODAL (CLEAN & FORMAL) -->
