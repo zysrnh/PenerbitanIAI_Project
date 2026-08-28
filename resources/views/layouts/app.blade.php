@@ -160,7 +160,39 @@
         }
     };
 
-    window.toggleMemberDropdown = function(e) {
+    
+        // Admin Nav Dropdown Handler
+        window.toggleAdminNavDropdown = function(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            const menu = document.getElementById('adminUserDropdownMenu');
+            const chev = document.getElementById('adminDropdownChevron');
+            if (!menu) return;
+
+            const isHidden = menu.style.display === 'none' || menu.classList.contains('hidden');
+            if (isHidden) {
+                menu.style.display = 'block';
+                menu.classList.remove('hidden');
+                if (chev) chev.style.transform = 'rotate(180deg)';
+            } else {
+                menu.style.display = 'none';
+                menu.classList.add('hidden');
+                if (chev) chev.style.transform = 'rotate(0deg)';
+            }
+        };
+
+        // Close Admin dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('adminUserDropdownContainer');
+            const menu = document.getElementById('adminUserDropdownMenu');
+            const chev = document.getElementById('adminDropdownChevron');
+            if (container && menu && !container.contains(e.target)) {
+                menu.style.display = 'none';
+                menu.classList.add('hidden');
+                if (chev) chev.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        window.toggleMemberDropdown = function(e) {
         if (e) {
             try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
         }
@@ -321,9 +353,61 @@
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn h-10 px-3.5 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 shadow-xs">
-                                <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> <span class="hidden sm:inline">Admin</span>
-                            </a>
+                            {{-- Admin Dropdown Button with Full Profile & Fast Navigation --}}
+                            <div class="relative group" id="adminUserDropdownContainer">
+                                <button type="button" 
+                                        id="adminUserDropdownBtn"
+                                        onclick="window.toggleAdminNavDropdown(event)" 
+                                        class="user-nav-btn h-10 px-3 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs flex items-center gap-2 shadow-xs border border-slate-800 transition select-none cursor-pointer">
+                                    <div class="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-emerald-500 bg-emerald-900/60 flex items-center justify-center text-emerald-300 text-[10px] font-black">
+                                        @if(Auth::user()->avatar_url)
+                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover" />
+                                        @else
+                                            <i class="fa-solid fa-shield-halved text-[10px] text-emerald-400"></i>
+                                        @endif
+                                    </div>
+                                    <span class="hidden sm:inline font-bold tracking-wide text-xs truncate max-w-[110px]">
+                                        {{ explode(' ', Auth::user()->name)[0] }}
+                                    </span>
+                                    <span class="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded">
+                                        {{ Auth::user()->role === 'super_admin' ? 'Super' : 'Admin' }}
+                                    </span>
+                                    <i id="adminDropdownChevron" class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-400 transition-transform duration-200"></i>
+                                </button>
+
+                                <!-- Admin Dropdown Menu -->
+                                <div id="adminUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-60 z-50" style="display: none;">
+                                    <div class="bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
+                                        <div class="px-3 py-2 border-b border-slate-100 mb-1 bg-slate-50/70 rounded-xs">
+                                            <p class="text-xs font-black text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                                            <div class="flex items-center gap-1.5 mt-0.5">
+                                                <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                <p class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">{{ Auth::user()->role_label }}</p>
+                                            </div>
+                                        </div>
+                                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard Admin
+                                        </a>
+                                        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-receipt text-emerald-600 text-xs w-4"></i> Kelola Pesanan
+                                        </a>
+                                        <a href="{{ route('admin.books.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-book text-emerald-600 text-xs w-4"></i> Kelola Buku
+                                        </a>
+                                        <a href="{{ route('admin.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-800 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-user-shield text-slate-500 text-xs w-4"></i> Profil Admin
+                                        </a>
+                                        <div class="border-t border-slate-100 mt-1 pt-1">
+                                            <form method="POST" action="{{ route('admin.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-sm transition cursor-pointer">
+                                                    <i class="fa-solid fa-right-from-bracket text-xs w-4"></i> Keluar (Logout)
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
                     @else
                         {{-- Desktop Only "Masuk" Button (Hidden on Mobile phone screen) --}}
@@ -390,9 +474,28 @@
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-800 text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
-                            <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> Admin Panel
+                        <div class="px-3 py-2 bg-slate-900 text-white rounded-sm flex items-center gap-2.5 mb-2 border border-slate-800">
+                            @if(Auth::user()->avatar_url)
+                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover border border-emerald-500 shrink-0" />
+                            @else
+                                <div class="w-8 h-8 rounded-full bg-emerald-800 flex items-center justify-center text-emerald-200 text-xs font-black shrink-0">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                            @endif
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-white truncate">{{ Auth::user()->name }}</p>
+                                <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">{{ Auth::user()->role_label }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
+                            <i class="fa-solid fa-gauge-high text-emerald-400 text-xs"></i> Panel Dashboard Admin
                         </a>
+                        <form method="POST" action="{{ route('admin.logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50 cursor-pointer">
+                                <i class="fa-solid fa-right-from-bracket text-xs"></i> Keluar (Logout)
+                            </button>
+                        </form>
                     @endif
                 @else
                     <a href="{{ route('member.login') }}" class="w-full py-2.5 border border-slate-300 text-slate-700 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-slate-50 shadow-2xs">
