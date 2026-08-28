@@ -64,14 +64,11 @@
     <aside id="member-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 brand-dark text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
         
         <div class="p-5">
-            <!-- Brand Header with Quick Collapse Button -->
-            <div class="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10">
-                <a href="{{ route('member.dashboard') }}" class="flex items-center transition hover:opacity-90 min-w-0" title="PENERBIT PERSIS">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
+            <!-- Brand Header (Clean Full Logo) -->
+            <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-center">
+                <a href="{{ route('member.dashboard') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
                 </a>
-                <button type="button" onclick="toggleSidebar()" class="w-7 h-7 rounded-sm bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer shrink-0" title="Tutup Sidebar">
-                    <i class="fa-solid fa-angles-left"></i>
-                </button>
             </div>
 
             <!-- User Profile Box -->
