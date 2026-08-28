@@ -487,7 +487,7 @@
             wrapper.classList.remove('lg:pl-0');
             localStorage.setItem('persis_admin_sidebar_collapsed', 'false');
         }
-
+    </script>
 
     <!-- Live Notification Floating Toast Container -->
     <div id="adminLiveToastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>

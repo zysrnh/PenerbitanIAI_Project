@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('admin.layouts.app', function ($view) {
             try {
                 $unreadMessagesCount = ContactMessage::where('status', 'pending')->count();
-                $pendingOrdersCount = Order::whereIn('payment_status', ['paid'])->where('shipping_status', 'pending')->count();
+                $pendingOrdersCount = Order::where('payment_status', 'completed')->where('shipping_status', 'menunggu_proses')->count();
                 $latestMessages = ContactMessage::latest()->take(5)->get();
                 $latestOrders = Order::whereIn('payment_status', ['paid', 'completed'])->latest()->take(5)->get();
 

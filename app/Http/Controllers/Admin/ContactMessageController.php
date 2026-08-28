@@ -108,7 +108,7 @@ class ContactMessageController extends Controller
     public function liveNotifications()
     {
         $unreadMessagesCount = ContactMessage::where('status', 'pending')->count();
-        $pendingOrdersCount = Order::whereIn('payment_status', ['paid'])->where('shipping_status', 'pending')->count();
+        $pendingOrdersCount = Order::where('payment_status', 'completed')->where('shipping_status', 'menunggu_proses')->count();
         $totalBadge = $unreadMessagesCount + $pendingOrdersCount;
 
         $latestMessages = ContactMessage::latest()->take(5)->get()->map(function ($msg) {
@@ -131,7 +131,7 @@ class ContactMessageController extends Controller
                 'order_number'    => $ord->order_number,
                 'customer_name'   => $ord->customer_name,
                 'total_amount'    => 'Rp ' . number_format($ord->total_amount, 0, ',', '.'),
-                'shipping_status' => $ord->shipping_status_label,
+                'shipping_status' => str_replace('_', ' ', $ord->shipping_status),
                 'time_ago'        => $ord->created_at->diffForHumans(),
                 'url'             => route('admin.orders.show', $ord->id),
             ];

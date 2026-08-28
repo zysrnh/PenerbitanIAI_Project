@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
 use App\Models\Order;
 use App\Models\SiteSetting;
 use App\Mail\NewOrderAdminMail;
+use App\Mail\PaymentSuccessCustomerMail;
+use App\Mail\PaymentSuccessAdminMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\CartItem;
 use App\Models\Book;
@@ -213,10 +215,7 @@ class PaymentController extends Controller
                 $status = $tx['status'] ?? 'pending';
 
                 if ($status === 'completed' || $status === 'success') {
-                    $order->update([
-                        'payment_status' => 'completed',
-                        'paid_at'        => now(),
-                    ]);
+                    $this->handlePaymentSuccess($order);
 
                     return response()->json([
                         'success'        => true,
@@ -303,10 +302,7 @@ class PaymentController extends Controller
         }
 
         if ($status === 'completed' || $status === 'success') {
-            $order->update([
-                'payment_status' => 'completed',
-                'paid_at'        => now(),
-            ]);
+            $this->handlePaymentSuccess($order);
 
             Log::info("Order {$orderNumber} successfully marked as completed via Pakasir Webhook.");
         } elseif ($status === 'failed' || $status === 'expired') {
@@ -321,6 +317,37 @@ class PaymentController extends Controller
     /**
      * Show Order Invoice Page
      */
+    
+    /**
+     * Process Payment Success actions (Update DB & Send Confirmation Emails)
+     */
+    protected function handlePaymentSuccess(Order $order)
+    {
+        $order->update([
+            'payment_status' => 'completed',
+            'paid_at'        => now(),
+        ]);
+
+        // 1. Send confirmation email to Customer
+        try {
+            if (!empty($order->customer_email) && filter_var($order->customer_email, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($order->customer_email)->send(new PaymentSuccessCustomerMail($order));
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Customer payment success email failed: ' . $e->getMessage());
+        }
+
+        // 2. Send notification email to Admin
+        try {
+            $adminEmail = SiteSetting::get('notification_recipient_email', 'info@penerbitpersis.com');
+            if (!empty($adminEmail)) {
+                Mail::to($adminEmail)->send(new PaymentSuccessAdminMail($order));
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Admin payment success email failed: ' . $e->getMessage());
+        }
+    }
+
     public function showInvoice($orderNumber)
     {
         $order = Order::where('order_number', $orderNumber)->firstOrFail();
