@@ -373,19 +373,17 @@
                             </div>
                         </div>
                     @else
-                        {{-- Enhanced Desktop "Masuk / Daftar" Button Combo --}}
-                        <div class="hidden sm:flex items-center gap-2.5">
-                            <a href="{{ route('member.register') }}" 
-                               class="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-[#006830] hover:bg-emerald-50/70 rounded-sm transition-all duration-150">
-                                <i class="fa-solid fa-user-plus text-[11px] text-slate-400"></i>
-                                <span>Daftar</span>
-                            </a>
+                        {{-- Smooth & Clean Rounded Pill Login Button --}}
+                        <div class="flex items-center gap-2">
                             <a href="{{ route('member.login') }}" 
-                               class="group inline-flex h-10 px-3.5 sm:px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition-all duration-200 items-center gap-2 shadow-xs hover:shadow-md hover:-translate-y-0.5 border border-[#005727] cursor-pointer select-none">
-                                <div class="w-5 h-5 rounded-full bg-emerald-800/70 flex items-center justify-center text-emerald-200 group-hover:scale-110 group-hover:bg-emerald-700 transition-transform">
-                                    <i class="fa-solid fa-right-to-bracket text-[10px]"></i>
+                               class="user-nav-btn h-10 rounded-full flex items-center gap-2 px-3 sm:px-4 bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-xs transition select-none cursor-pointer group"
+                               title="Masuk Akun">
+                                <div class="w-6 h-6 rounded-full bg-emerald-100/70 group-hover:bg-[#006830] flex items-center justify-center text-[#006830] group-hover:text-white transition-all duration-200">
+                                    <i class="fa-solid fa-arrow-right-to-bracket text-[11px] pointer-events-none"></i>
                                 </div>
-                                <span class="tracking-wide">Masuk</span>
+                                <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-900 transition-colors pointer-events-none">
+                                    Masuk
+                                </span>
                             </a>
                         </div>
                     @endauth
