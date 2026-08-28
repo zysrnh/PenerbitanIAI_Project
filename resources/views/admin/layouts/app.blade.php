@@ -649,23 +649,24 @@
     <!-- ========================================================================= -->
     <!-- FLOATING FAST MESSAGE & SPEED CHAT BUTTON (ADMIN QUICK ACTION) -->
     <!-- ========================================================================= -->
-    <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2 select-none" id="adminFloatingContainer">
+    <div class="fixed bottom-6 right-6 z-[99999] flex flex-col items-end gap-2 select-none" id="adminFloatingContainer">
         
-        <!-- Quick Messages Popover Card -->
-        <div id="adminQuickMessagePopover" class="hidden mb-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden transform scale-95 opacity-0 transition-all duration-200 ease-out z-50 pointer-events-auto" style="display: none;">
+        <!-- Quick Messages Popover Card (Always Opens Above the Button) -->
+        <div id="adminQuickMessagePopover" class="hidden mb-3 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-300 overflow-hidden z-[99999] pointer-events-auto animate-fade-in" style="display: none;">
+            
             <!-- Header -->
-            <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
+            <div class="p-3.5 bg-[#032c21] text-white flex items-center justify-between border-b border-emerald-950">
                 <div class="flex items-center gap-2">
                     <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
                         <i class="fa-solid fa-comments text-[11px]"></i>
                     </div>
-                    <span class="text-xs font-bold uppercase tracking-wider font-heading">Pusat Pesan Cepat</span>
+                    <span class="text-xs font-bold uppercase tracking-wider font-heading">Pusat Pesan &amp; Diskusi</span>
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
                         {{ $totalUnreadChatCount ?? 0 }} Pesan
                     </span>
-                    <button type="button" onclick="toggleAdminQuickMessagePopover()" class="w-6 h-6 rounded-sm text-slate-400 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
+                    <button type="button" onclick="toggleAdminQuickMessagePopover(event)" class="w-6 h-6 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup">
                         <i class="fa-solid fa-xmark text-xs"></i>
                     </button>
                 </div>
@@ -679,7 +680,7 @@
                         <span class="text-emerald-700 font-mono">{{ $unreadOrderMessagesCount ?? 0 }} Baru</span>
                     </div>
                     @foreach($latestOrderMessages as $omsg)
-                        <a href="{{ route('admin.orders.show', $omsg->order_id) }}#adminMessagesThread" class="block p-3 hover:bg-slate-50 transition {{ !$omsg->is_read_by_admin ? 'bg-emerald-50/50' : '' }}">
+                        <a href="{{ route('admin.orders.show', $omsg->order_id) }}#adminMessagesThread" class="block p-3 hover:bg-slate-50 transition {{ !$omsg->is_read_by_admin ? 'bg-emerald-50/60' : '' }}">
                             <div class="flex items-start justify-between gap-2">
                                 <span class="font-bold text-slate-900 truncate flex items-center gap-1">
                                     <i class="fa-solid fa-receipt text-[10px] text-emerald-700"></i> #{{ $omsg->order ? $omsg->order->order_number : 'Pesanan' }}
@@ -699,7 +700,7 @@
                         <span class="text-amber-700 font-mono">{{ $unreadMessagesCount ?? 0 }} Baru</span>
                     </div>
                     @foreach($latestMessages->take(3) as $cmsg)
-                        <a href="{{ route('admin.messages.show', $cmsg->id) }}" class="block p-3 hover:bg-slate-50 transition {{ $cmsg->status === 'pending' ? 'bg-emerald-50/50' : '' }}">
+                        <a href="{{ route('admin.messages.show', $cmsg->id) }}" class="block p-3 hover:bg-slate-50 transition {{ $cmsg->status === 'pending' ? 'bg-amber-50/40' : '' }}">
                             <div class="flex items-start justify-between gap-2">
                                 <span class="font-bold text-slate-900 truncate flex items-center gap-1">
                                     <i class="fa-solid fa-envelope text-[10px] text-slate-500"></i> {{ $cmsg->name }}
@@ -737,56 +738,33 @@
         <!-- The Round Floating Action Button -->
         <button 
             type="button" 
-            onclick="handleAdminFloatingChatClick()"
+            onclick="toggleAdminQuickMessagePopover(event)"
             id="adminFloatingChatBtn"
-            class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-2xl ring-4 ring-emerald-500/25 flex items-center justify-center text-lg sm:text-xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer relative group"
-            title="Pesan &amp; Balas Cepat"
+            class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-2xl ring-4 ring-emerald-500/25 flex items-center justify-center text-xl sm:text-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer relative group"
+            title="Pusat Pesan Cepat"
         >
             <i class="fa-solid fa-comments transition-transform group-hover:scale-110"></i>
-            <span id="adminFloatingChatBadge" class="{{ ($totalUnreadChatCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[20px] h-[20px] px-1 rounded-full bg-rose-600 text-white text-[9.5px] font-black flex items-center justify-center font-mono shadow-md animate-pulse">
+            <span id="adminFloatingChatBadge" class="{{ ($totalUnreadChatCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center font-mono shadow-md animate-pulse">
                 {{ $totalUnreadChatCount ?? 0 }}
             </span>
         </button>
     </div>
 
     <script>
-        function handleAdminFloatingChatClick() {
-            // If on order detail page with reply input, smoothly scroll to it and focus
-            const replyInput = document.getElementById('adminReplyMessageInput');
-            const thread = document.getElementById('adminMessagesThread');
-            if (replyInput && thread) {
-                thread.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                setTimeout(() => {
-                    replyInput.focus();
-                    replyInput.classList.add('ring-2', 'ring-emerald-500');
-                    setTimeout(() => replyInput.classList.remove('ring-2', 'ring-emerald-500'), 1500);
-                }, 400);
-                return;
+        function toggleAdminQuickMessagePopover(e) {
+            if (e) {
+                try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
             }
-
-            // Otherwise, toggle quick message popover
-            toggleAdminQuickMessagePopover();
-        }
-
-        function toggleAdminQuickMessagePopover() {
             const popover = document.getElementById('adminQuickMessagePopover');
             if (!popover) return;
 
             const isClosed = popover.classList.contains('hidden') || popover.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(popover).display === 'none');
             if (isClosed) {
                 popover.style.display = 'block';
-                popover.classList.remove('hidden', 'pointer-events-none');
-                setTimeout(() => {
-                    popover.classList.remove('opacity-0', 'scale-95');
-                    popover.classList.add('opacity-100', 'scale-100');
-                }, 10);
+                popover.classList.remove('hidden');
             } else {
-                popover.classList.remove('opacity-100', 'scale-100');
-                popover.classList.add('opacity-0', 'scale-95');
-                setTimeout(() => {
-                    popover.style.display = 'none';
-                    popover.classList.add('hidden');
-                }, 200);
+                popover.style.display = 'none';
+                popover.classList.add('hidden');
             }
         }
 
@@ -795,15 +773,9 @@
             const popover = document.getElementById('adminQuickMessagePopover');
             const container = document.getElementById('adminFloatingContainer');
             if (popover && container && !container.contains(e.target)) {
-                popover.classList.remove('opacity-100', 'scale-100');
-                popover.classList.add('opacity-0', 'scale-95');
-                setTimeout(() => {
-                    popover.style.display = 'none';
-                    popover.classList.add('hidden');
-                }, 200);
+                popover.style.display = 'none';
+                popover.classList.add('hidden');
             }
         });
     </script>
-
 </body>
-</html>
