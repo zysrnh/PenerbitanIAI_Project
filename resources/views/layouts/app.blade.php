@@ -397,21 +397,21 @@
         <!-- Slide-over Panel -->
         <div id="cartDrawerPanel" class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl z-10 flex flex-col transform translate-x-full transition-transform duration-300 ease-out">
             
-            <!-- Drawer Header -->
-            <div class="px-5 py-4 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-900">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-sm bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-sm">
+            <!-- Drawer Header (Clean & Modern, No Clunky Badge) -->
+            <div class="px-5 py-4 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-900/60 select-none">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-sm shadow-xs">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-sm font-heading">Keranjang Belanja</h3>
-                        <p class="text-[10.5px] text-emerald-200/80">Koleksi Terbitan PERSIS PERS</p>
+                        <h3 class="font-extrabold text-sm font-heading flex items-center gap-1.5">
+                            Keranjang Belanja
+                            <span id="cartDrawerCountBadge" class="text-xs font-semibold text-emerald-300"></span>
+                        </h3>
+                        <p class="text-[10.5px] text-emerald-200/70">Koleksi Terbitan PERSIS PERS</p>
                     </div>
-                    <span id="cartDrawerCountBadge" class="ml-1.5 px-2 py-0.5 rounded-full bg-emerald-500 text-[#032c21] text-[10.5px] font-black">
-                        0 Item
-                    </span>
                 </div>
-                <button type="button" onclick="window.closeCartDrawer()" class="w-8 h-8 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition">
+                <button type="button" onclick="window.closeCartDrawer()" class="w-8 h-8 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Keranjang">
                     <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
@@ -688,8 +688,8 @@
             }
         };
 
-        // Add to Cart Action
-        window.addToCart = function(bookId, quantity = 1) {
+        // Add to Cart Action (Instant & Smooth)
+        window.addToCart = function(bookId, quantity = 1, autoOpen = true) {
             if (!window.PERSIS_CART.isLoggedIn) {
                 window.openLoginPromptModal();
                 return;
@@ -711,8 +711,13 @@
                 if (data.success) {
                     window.PERSIS_CART.data = data;
                     window.updateCartBadges(data.count);
-                    window.showCartToast(data.message || 'Buku berhasil ditambahkan ke keranjang!');
                     window.renderCartDrawerUI(data);
+                    window.showCartToast(data.message || 'Buku berhasil ditambahkan ke keranjang!');
+                    if (autoOpen) {
+                        window.openCartDrawer();
+                    }
+                } else {
+                    window.showCartToast(data.message || 'Gagal menambahkan ke keranjang.', false);
                 }
             })
             .catch(err => {
@@ -721,13 +726,38 @@
             });
         };
 
-        // Update Item Qty
+        // Update Item Qty (0ms INSTANT OPTIMISTIC UI)
         window.updateCartItemQty = function(cartItemId, change) {
+            if (!window.PERSIS_CART.data || !window.PERSIS_CART.data.items) return;
             const item = window.PERSIS_CART.data.items.find(i => i.id === cartItemId);
             if (!item) return;
 
             const newQty = item.quantity + change;
+            if (newQty <= 0) {
+                window.removeCartItem(cartItemId);
+                return;
+            }
 
+            // 1. Instant local state update (Zero latency!)
+            item.quantity = newQty;
+            item.subtotal = (item.unit_price || 0) * newQty;
+            item.formatted_subtotal = 'Rp ' + Number(item.subtotal).toLocaleString('id-ID');
+
+            let totalCount = 0;
+            let totalAmount = 0;
+            window.PERSIS_CART.data.items.forEach(i => {
+                totalCount += i.quantity;
+                totalAmount += i.subtotal;
+            });
+            window.PERSIS_CART.data.count = totalCount;
+            window.PERSIS_CART.data.total = totalAmount;
+            window.PERSIS_CART.data.formatted_total = 'Rp ' + Number(totalAmount).toLocaleString('id-ID');
+
+            // 2. Re-render UI immediately at 60fps
+            window.updateCartBadges(totalCount);
+            window.renderCartDrawerUI(window.PERSIS_CART.data);
+
+            // 3. Sync to server in background
             fetch(window.PERSIS_CART.routes.update + cartItemId, {
                 method: 'POST',
                 headers: {
@@ -743,11 +773,31 @@
                     window.updateCartBadges(data.count);
                     window.renderCartDrawerUI(data);
                 }
-            });
+            })
+            .catch(err => console.error('Error updating cart qty:', err));
         };
 
-        // Remove Item
+        // Remove Item (0ms INSTANT OPTIMISTIC REMOVE)
         window.removeCartItem = function(cartItemId) {
+            if (!window.PERSIS_CART.data || !window.PERSIS_CART.data.items) return;
+
+            // 1. Instant local removal
+            window.PERSIS_CART.data.items = window.PERSIS_CART.data.items.filter(i => i.id !== cartItemId);
+            let totalCount = 0;
+            let totalAmount = 0;
+            window.PERSIS_CART.data.items.forEach(i => {
+                totalCount += i.quantity;
+                totalAmount += i.subtotal;
+            });
+            window.PERSIS_CART.data.count = totalCount;
+            window.PERSIS_CART.data.total = totalAmount;
+            window.PERSIS_CART.data.formatted_total = 'Rp ' + Number(totalAmount).toLocaleString('id-ID');
+
+            window.updateCartBadges(totalCount);
+            window.renderCartDrawerUI(window.PERSIS_CART.data);
+            window.showCartToast('Item dihapus dari keranjang.');
+
+            // 2. Sync to server in background
             fetch(window.PERSIS_CART.routes.remove + cartItemId, {
                 method: 'DELETE',
                 headers: {
@@ -760,14 +810,23 @@
                     window.PERSIS_CART.data = data;
                     window.updateCartBadges(data.count);
                     window.renderCartDrawerUI(data);
-                    window.showCartToast('Item dihapus dari keranjang.');
                 }
-            });
+            })
+            .catch(err => console.error('Error removing cart item:', err));
         };
 
         // Clear Cart
         window.clearCart = function() {
             if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh isi keranjang belanja?')) return;
+
+            // Instant clear locally
+            window.PERSIS_CART.data.items = [];
+            window.PERSIS_CART.data.count = 0;
+            window.PERSIS_CART.data.total = 0;
+            window.PERSIS_CART.data.formatted_total = 'Rp 0';
+            window.updateCartBadges(0);
+            window.renderCartDrawerUI(window.PERSIS_CART.data);
+            window.showCartToast('Keranjang belanja telah dikosongkan.');
 
             fetch(window.PERSIS_CART.routes.clear, {
                 method: 'DELETE',
@@ -781,12 +840,11 @@
                     window.PERSIS_CART.data = data;
                     window.updateCartBadges(0);
                     window.renderCartDrawerUI(data);
-                    window.showCartToast('Keranjang belanja berhasil dikosongkan.');
                 }
             });
         };
 
-        // Render Cart UI
+        // Render Cart UI (Clean, Polished & Modern)
         window.renderCartDrawerUI = function(data) {
             const list = document.getElementById('cartDrawerItemsList');
             const countBadge = document.getElementById('cartDrawerCountBadge');
@@ -796,14 +854,16 @@
 
             if (!list) return;
 
-            if (countBadge) countBadge.textContent = `${data.count} Item`;
+            if (countBadge) {
+                countBadge.textContent = data.count > 0 ? `(${data.count})` : '';
+            }
             if (totalItemsText) totalItemsText.textContent = `${data.count} Eksemplar`;
             if (subtotalText) subtotalText.textContent = data.formatted_total;
 
             if (!data.items || data.items.length === 0) {
                 list.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-center p-6 space-y-3.5 my-auto">
-                        <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-2xl">
+                    <div class="h-full flex flex-col items-center justify-center text-center p-6 space-y-3.5 my-auto select-none">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-2xl shadow-xs">
                             <i class="fa-solid fa-basket-shopping"></i>
                         </div>
                         <div>
@@ -812,7 +872,7 @@
                                 Anda belum menambahkan koleksi buku ke keranjang. Jelajahi katalog sekarang!
                             </p>
                         </div>
-                        <a href="{{ route('katalog') }}" onclick="window.closeCartDrawer()" class="px-4 py-2 bg-[#006830] text-white text-xs font-bold rounded-sm shadow-xs hover:bg-[#032c21] transition">
+                        <a href="{{ route('katalog') }}" onclick="window.closeCartDrawer()" class="px-5 py-2.5 bg-[#006830] text-white text-xs font-bold rounded-xl shadow-xs hover:bg-[#032c21] transition">
                             Buka Katalog Buku
                         </a>
                     </div>
@@ -830,32 +890,34 @@
                     `<div class="w-full h-full bg-[#032c21] text-white flex items-center justify-center text-[8px] font-bold p-1 text-center">${item.category}</div>`;
 
                 html += `
-                    <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex gap-3 items-start transition hover:border-emerald-600">
-                        <div class="w-14 h-19 aspect-[3/4.15] shrink-0 bg-slate-900 rounded-xs overflow-hidden border border-slate-200 shadow-2xs">
+                    <div class="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs flex gap-3.5 items-start transition hover:border-emerald-500 hover:shadow-xs">
+                        <div class="w-14 h-19 aspect-[3/4.15] shrink-0 bg-slate-900 rounded-lg overflow-hidden border border-slate-200 shadow-2xs">
                             ${cover}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-wider">${item.category}</span>
+                            <span class="text-[9px] font-extrabold text-emerald-800 uppercase tracking-wider">${item.category}</span>
                             <h5 class="text-xs font-bold text-slate-900 line-clamp-2 leading-snug mt-0.5" title="${item.title}">${item.title}</h5>
-                            <p class="text-[10px] text-slate-400 truncate mt-0.5">${item.author}</p>
+                            <p class="text-[10.5px] text-slate-400 truncate mt-0.5">${item.author}</p>
                             
-                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
+                            <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
                                 <div>
-                                    <span class="font-mono font-black text-xs text-emerald-700">${item.formatted_subtotal}</span>
-                                    <span class="text-[9.5px] text-slate-400 block">@ ${item.formatted_price}</span>
+                                    <span class="text-xs font-black text-emerald-900 font-mono">${item.formatted_subtotal}</span>
+                                    <span class="text-[9.5px] text-slate-400 block">${item.formatted_price} / eks</span>
                                 </div>
-                                <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-sm border border-slate-200">
-                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, -1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition">
-                                        <i class="fa-solid fa-minus text-[8px]"></i>
-                                    </button>
-                                    <span class="text-xs font-black font-mono w-5 text-center text-slate-800">${item.quantity}</span>
-                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, 1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition">
-                                        <i class="fa-solid fa-plus text-[8px]"></i>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50/80 shadow-2xs">
+                                        <button type="button" onclick="window.updateCartItemQty(${item.id}, -1)" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200/80 active:bg-slate-300 font-bold transition text-xs cursor-pointer">
+                                            <i class="fa-solid fa-minus text-[9px]"></i>
+                                        </button>
+                                        <span class="w-7 text-center text-xs font-black text-slate-900 select-none">${item.quantity}</span>
+                                        <button type="button" onclick="window.updateCartItemQty(${item.id}, 1)" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200/80 active:bg-slate-300 font-bold transition text-xs cursor-pointer">
+                                            <i class="fa-solid fa-plus text-[9px]"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" onclick="window.removeCartItem(${item.id})" class="text-slate-300 hover:text-red-500 p-1.5 transition text-xs cursor-pointer" title="Hapus dari keranjang">
+                                        <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </div>
-                                <button type="button" onclick="window.removeCartItem(${item.id})" class="text-slate-300 hover:text-red-600 transition p-1" title="Hapus item">
-                                    <i class="fa-solid fa-trash-can text-xs"></i>
-                                </button>
                             </div>
                         </div>
                     </div>

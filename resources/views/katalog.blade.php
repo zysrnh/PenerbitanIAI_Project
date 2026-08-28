@@ -1177,8 +1177,18 @@
         window.modalAddToCartAction = function() {
             if (!currentModalBook || !currentModalBook.id) return;
             const qty = parseInt(document.getElementById('modalOrderQty')?.value || 1);
+            const btn = document.getElementById('modalAddToCartBtn');
+            if (btn) {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check text-sm text-lime-300"></i><span>✓ Masuk Keranjang!</span>';
+                btn.classList.add('bg-[#032c21]', 'scale-98');
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('bg-[#032c21]', 'scale-98');
+                }, 1000);
+            }
             if (typeof window.addToCart === 'function') {
-                window.addToCart(currentModalBook.id, qty);
+                window.addToCart(currentModalBook.id, qty, true);
             }
         };
 
