@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Models\Order;
+use App\Models\SiteSetting;
+use App\Mail\NewOrderAdminMail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\CartItem;
 use App\Models\Book;
 
@@ -130,6 +133,16 @@ class PaymentController extends Controller
 
             // Clear Cart
             CartItem::where('user_id', $userId)->delete();
+
+            // Send Order Notification Email to Admin
+            try {
+                $recipientEmail = SiteSetting::get('notification_recipient_email', 'info@penerbitpersis.com');
+                if (!empty($recipientEmail)) {
+                    Mail::to($recipientEmail)->send(new NewOrderAdminMail($order));
+                }
+            } catch (\Throwable $mailErr) {
+                Log::warning('Order notification email failed: ' . $mailErr->getMessage());
+            }
 
             // Generate QR Image URL
             $qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=' . urlencode($qrString);

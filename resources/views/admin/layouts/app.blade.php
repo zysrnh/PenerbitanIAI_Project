@@ -200,7 +200,7 @@
     <div id="main-content-wrapper" class="flex-1 flex flex-col min-w-0 min-h-screen lg:pl-64">
         
         <!-- Top Navigation Header -->
-        <header class="h-14 bg-white border-b border-slate-200 px-3 sm:px-6 lg:px-8 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
+        <header class="h-14 bg-white border-b border-slate-200 px-3 sm:px-6 lg:px-8 sticky top-0 z-50 flex items-center justify-between shadow-2xs">
             
             <!-- Left: Toggle Sidebar & Clean Title -->
             <div class="flex items-center gap-2.5 sm:gap-3">
@@ -247,7 +247,7 @@
                     </button>
 
                     <!-- Rich Dropdown Content -->
-                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden z-[1100] animate-fade-in select-none" style="display: none;">
+                    <div id="notifDropdown" class="hidden absolute top-full right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden z-[9999] animate-fade-in select-none" style="display: none;">
                         
                         <!-- Header -->
                         <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
