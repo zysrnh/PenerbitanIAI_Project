@@ -48,6 +48,42 @@
                 </div>
             </div>
 
+            @if($order->payment_status === 'pending' && $order->payment_qr_string)
+                <!-- QRIS PAYMENT BOX FOR PENDING ORDERS -->
+                <div class="p-6 sm:p-7 bg-emerald-50/40 border-b border-slate-200 text-center space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 border border-amber-300 rounded-xs text-xs font-bold text-amber-900">
+                        <i class="fa-solid fa-spinner fa-spin text-amber-700"></i>
+                        <span id="invoiceQrisStatusText">Menunggu Pembayaran QRIS... (Terdeteksi Otomatis Realtime)</span>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-sm border border-slate-300 shadow-md inline-block mx-auto max-w-[260px] w-full">
+                        <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+                            <span class="text-[10.5px] font-bold text-slate-800 font-heading">QRIS RESMI</span>
+                            <span class="text-[9.5px] font-bold text-emerald-800">PERSIS PERS</span>
+                        </div>
+                        
+                        @php
+                            $qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=' . urlencode($order->payment_qr_string);
+                        @endphp
+                        <div class="aspect-square w-full bg-slate-50 rounded-xs overflow-hidden flex items-center justify-center border border-slate-200 p-1">
+                            <img src="{{ $qrImageUrl }}" alt="QRIS Code" class="w-full h-full object-contain" />
+                        </div>
+
+                        <div class="mt-2 text-center">
+                            <p class="text-[10px] text-slate-500 font-medium">BCA, Mandiri, BRI, BNI, BSI, DANA, GoPay, OVO, ShopeePay</p>
+                            <p class="text-[13px] font-mono font-black text-emerald-900 mt-1">Total: {{ $order->formatted_payment }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-2 pt-1">
+                        <button type="button" onclick="checkInvoicePaymentStatus()" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                            <i class="fa-solid fa-arrows-rotate text-xs text-lime-300"></i>
+                            <span>Cek Status Pembayaran</span>
+                        </button>
+                    </div>
+                </div>
+            @endif
+
             <!-- Meta Data Grid -->
             <div class="p-6 sm:p-7 grid grid-cols-1 sm:grid-cols-2 gap-6 border-b border-slate-200 bg-slate-50/50 text-xs">
                 <div>
@@ -184,4 +220,42 @@
 
     </div>
 </div>
+@if($order->payment_status === 'pending')
+@push('scripts')
+<script>
+    function checkInvoicePaymentStatus() {
+        fetch('/order/status/{{ $order->order_number }}')
+            .then(res => res.json())
+            .then(data => {
+                if (data && (data.status === 'completed' || data.is_paid)) {
+                    const statusText = document.getElementById('invoiceQrisStatusText');
+                    if (statusText) statusText.textContent = 'Pembayaran Berhasil! Memuat ulang invoice...';
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    alert('Pembayaran belum terdeteksi. Silakan selesaikan scan transfer QRIS Anda.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Gagal memeriksa status. Silakan coba kembali.');
+            });
+    }
+
+    // Auto-poll status every 3 seconds for pending orders
+    const pollInterval = setInterval(() => {
+        fetch('/order/status/{{ $order->order_number }}')
+            .then(res => res.json())
+            .then(data => {
+                if (data && (data.status === 'completed' || data.is_paid)) {
+                    clearInterval(pollInterval);
+                    const statusText = document.getElementById('invoiceQrisStatusText');
+                    if (statusText) statusText.textContent = 'Pembayaran Berhasil! Memuat ulang invoice...';
+                    setTimeout(() => window.location.reload(), 1000);
+                }
+            })
+            .catch(err => console.error('Poll err:', err));
+    }, 3000);
+</script>
+@endpush
+@endif
 @endsection

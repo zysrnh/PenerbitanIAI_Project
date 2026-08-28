@@ -453,6 +453,14 @@
                                         </form>
                                     @endif
 
+                                    @if($ord->payment_status === 'pending')
+                                        <!-- Tombol Bayar Sekarang (QRIS) -->
+                                        <a href="{{ route('order.invoice', $ord->order_number) }}" class="flex-1 sm:flex-none px-3.5 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs animate-pulse">
+                                            <i class="fa-solid fa-qrcode text-lime-300 text-xs"></i>
+                                            <span>Bayar Sekarang (QRIS)</span>
+                                        </a>
+                                    @endif
+
                                     <!-- Tombol Lihat Invoice -->
                                     <a href="{{ route('order.invoice', $ord->order_number) }}" target="_blank" class="flex-1 sm:flex-none px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1 shadow-2xs">
                                         <i class="fa-solid fa-file-invoice text-emerald-700"></i>
