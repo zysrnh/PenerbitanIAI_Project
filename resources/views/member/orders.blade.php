@@ -80,34 +80,34 @@
                 </div>
             </div>
 
-            <!-- Navigation Links -->
-            <nav class="space-y-1">
-                <a href="{{ route('member.dashboard') }}" 
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-semibold text-emerald-100 hover:bg-emerald-800 hover:text-white transition">
-                    <i class="fa-solid fa-gauge-high text-xs w-4"></i>
-                    <span>Dashboard</span>
-                </a>
+        <!-- Navigation Menu -->
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            <a href="{{ route('member.dashboard') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition {{ request()->routeIs('member.dashboard') ? 'bg-emerald-700 text-white shadow-xs font-bold' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white' }}">
+                <i class="fa-solid fa-gauge-high w-4 text-center text-emerald-400"></i>
+                <span>Dashboard</span>
+            </a>
 
-                <a href="{{ route('member.orders') }}" 
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-bold transition bg-emerald-700 text-white shadow-2xs">
-                    <i class="fa-solid fa-receipt text-xs w-4"></i>
-                    <span>Pesanan Saya</span>
-                    @if(isset($countAll) && $countAll > 0)
-                        <span class="ml-auto px-1.5 py-0.2 bg-emerald-500 text-[#032c21] text-[9.5px] font-black rounded-xs">{{ $countAll }}</span>
-                    @endif
-                </a>
+            <a href="{{ route('member.orders') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-bold transition {{ request()->routeIs('member.orders*') ? 'bg-emerald-700 text-white shadow-xs' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white' }}">
+                <i class="fa-solid fa-receipt w-4 text-center text-emerald-300"></i>
+                <span>Pesanan Saya</span>
+                @if(isset($countAll) && $countAll > 0)
+                    <span class="ml-auto px-1.5 py-0.5 bg-emerald-500 text-[#032c21] text-[9.5px] font-black rounded-xs">{{ $countAll }}</span>
+                @endif
+            </a>
 
-                <a href="{{ route('katalog') }}" 
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-semibold text-emerald-100 hover:bg-emerald-800 hover:text-white transition">
-                    <i class="fa-solid fa-book-open text-xs w-4"></i>
-                    <span>Katalog Buku</span>
-                </a>
+            <a href="{{ route('katalog') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-book-open w-4 text-center text-emerald-400"></i>
+                <span>Katalog Buku</span>
+            </a>
 
-                <a href="{{ route('member.profile') }}" 
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-semibold text-emerald-100 hover:bg-emerald-800 hover:text-white transition">
-                    <i class="fa-solid fa-user-gear text-xs w-4"></i>
-                    <span>Profil Saya</span>
-                </a>
+            <a href="{{ route('member.profile') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition {{ request()->routeIs('member.profile') ? 'bg-emerald-700 text-white shadow-xs font-bold' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white' }}">
+                <i class="fa-solid fa-user w-4 text-center text-emerald-400"></i>
+                <span>Profil Saya</span>
+            </a>
 
                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya member ' . $user->name . ' ingin berkonsultasi mengenai pesanan buku.') }}" 
                     target="_blank"

@@ -141,9 +141,21 @@
         <!-- Navigation Menu -->
         <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             <a href="{{ route('member.dashboard') }}"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-bold transition bg-emerald-700 text-white shadow-xs">
-                <i class="fa-solid fa-gauge-high w-4 text-center text-emerald-200"></i>
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-bold transition {{ request()->routeIs('member.dashboard') ? 'bg-emerald-700 text-white shadow-xs' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white' }}">
+                <i class="fa-solid fa-gauge-high w-4 text-center text-emerald-300"></i>
                 <span>Dashboard</span>
+            </a>
+
+            <a href="{{ route('member.orders') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-bold transition {{ request()->routeIs('member.orders*') ? 'bg-emerald-700 text-white shadow-xs' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white' }}">
+                <i class="fa-solid fa-receipt w-4 text-center text-emerald-300"></i>
+                <span>Pesanan Saya</span>
+                @php
+                    $userOrdCount = \App\Models\Order::where('user_id', Auth::id())->orWhere('customer_email', Auth::user()->email)->count();
+                @endphp
+                @if($userOrdCount > 0)
+                    <span class="ml-auto px-1.5 py-0.5 bg-emerald-500 text-[#032c21] text-[9.5px] font-black rounded-xs">{{ $userOrdCount }}</span>
+                @endif
             </a>
 
             <a href="{{ route('katalog') }}"
