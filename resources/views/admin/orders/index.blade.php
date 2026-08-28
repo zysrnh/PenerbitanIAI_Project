@@ -193,10 +193,15 @@
                                 @endif
                             </td>
                             <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                                <a href="{{ route('admin.orders.show', $ord->id) }}" class="px-2.5 py-1 bg-slate-100 hover:bg-[#006830] text-slate-700 hover:text-white rounded-xs text-xs font-bold transition inline-flex items-center gap-1 shadow-2xs">
-                                    <span>Kelola</span>
-                                    <i class="fa-solid fa-angle-right text-[9px]"></i>
-                                </a>
+                                <div class="flex items-center justify-center gap-1">
+                                    <a href="{{ route('admin.orders.shipping_label', $ord->id) }}" target="_blank" class="p-1 bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 rounded-xs text-xs transition" title="Cetak Label Resi">
+                                        <i class="fa-solid fa-print"></i>
+                                    </a>
+                                    <a href="{{ route('admin.orders.show', $ord->id) }}" class="px-2.5 py-1 bg-slate-100 hover:bg-[#006830] text-slate-700 hover:text-white rounded-xs text-xs font-bold transition inline-flex items-center gap-1 shadow-2xs">
+                                        <span>Kelola</span>
+                                        <i class="fa-solid fa-angle-right text-[9px]"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @empty

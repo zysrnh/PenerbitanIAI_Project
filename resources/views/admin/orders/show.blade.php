@@ -17,6 +17,10 @@
                 <i class="fa-solid fa-file-invoice text-emerald-700 text-xs"></i>
                 <span>Buka Invoice Publik</span>
             </a>
+            <a href="{{ route('admin.orders.shipping_label', $order->id) }}" target="_blank" class="px-3.5 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                <i class="fa-solid fa-print text-xs"></i>
+                <span>Cetak Label Resi</span>
+            </a>
             <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $order->customer_phone) }}?text={{ urlencode('Halo ' . $order->customer_name . ', terkait pesanan buku #' . $order->order_number . ' di PERSIS PERS.') }}" target="_blank" class="px-3.5 py-1.5 bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-300 text-emerald-800 rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
                 <i class="fa-brands fa-whatsapp text-emerald-600 text-xs"></i>
                 <span>Chat Pemesan</span>

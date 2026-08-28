@@ -52,6 +52,12 @@ class OrderController extends Controller
         return view('admin.orders.show', compact('order'));
     }
 
+    public function printShippingLabel($id)
+    {
+        $order = Order::findOrFail($id);
+        return view('admin.orders.shipping_label', compact('order'));
+    }
+
     public function updateShipping(Request $request, $id)
     {
         $order = Order::findOrFail($id);

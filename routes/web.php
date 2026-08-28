@@ -57,6 +57,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Orders & Sales Management
     Route::get('/orders',                [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}',           [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{id}/shipping-label', [AdminOrderController::class, 'printShippingLabel'])->name('orders.shipping_label');
     Route::post('/orders/{id}/shipping', [AdminOrderController::class, 'updateShipping'])->name('orders.shipping');
     Route::post('/orders/{id}/payment',  [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment');
     Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
