@@ -966,13 +966,15 @@
             });
         };
 
-        // Remove Item
+        // Remove Item (Instant & Reliable)
         window.removeCartItem = function(cartItemId) {
             fetch(window.PERSIS_CART.routes.remove + cartItemId, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-HTTP-Method-Override': 'DELETE'
                 }
             })
             .then(res => res.json())
@@ -982,12 +984,17 @@
                     window.renderCartDrawerUI(data);
                     window.updateCartBadges(data.count);
                     window.showCartToast('Item berhasil dihapus dari keranjang.');
+                } else {
+                    window.fetchCartData();
                 }
             })
-            .catch(err => console.error('Error removing item:', err));
+            .catch(err => {
+                console.error('Error removing item:', err);
+                window.fetchCartData();
+            });
         };
 
-        // Clear All Items
+        // Clear All Items (Instant & Reliable)
         window.clearCart = function() {
             if (!confirm('Apakah Anda yakin ingin mengosongkan seluruh keranjang belanja?')) return;
 
@@ -995,7 +1002,9 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-HTTP-Method-Override': 'DELETE'
                 }
             })
             .then(res => res.json())
@@ -1005,9 +1014,14 @@
                     window.renderCartDrawerUI(data);
                     window.updateCartBadges(0);
                     window.showCartToast('Keranjang belanja telah dikosongkan.');
+                } else {
+                    window.fetchCartData();
                 }
             })
-            .catch(err => console.error('Error clearing cart:', err));
+            .catch(err => {
+                console.error('Error clearing cart:', err);
+                window.fetchCartData();
+            });
         };
 
         // Auto load cart badge on page ready

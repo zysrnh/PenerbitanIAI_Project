@@ -118,8 +118,8 @@ Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(
     Route::get('/cart',               [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add',          [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update/{id}',  [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/remove/{id}',[CartController::class, 'remove'])->name('cart.remove');
-    Route::delete('/cart/clear',      [CartController::class, 'clear'])->name('cart.clear');
+    Route::match(['post', 'delete'], '/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::match(['post', 'delete'], '/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/cart/checkout/qris',[PaymentController::class, 'createQrisPayment'])->name('cart.checkout.qris');
     Route::get('/order/status/{orderNumber}', [PaymentController::class, 'checkStatus'])->name('order.status');
 });
