@@ -262,13 +262,13 @@
                         </a>
                     @endauth
 
-                    <!-- Mobile Menu Button (Hamburger) with spacious 40x40 hit target -->
+                    <!-- Mobile Menu Button (Hamburger - Standard 44x44 Touch Target) -->
                     <button id="mobile-menu-btn" 
                             type="button"
-                            onclick="window.toggleMobileMenu()" 
-                            class="lg:hidden w-10 h-10 rounded-sm border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition cursor-pointer shadow-2xs shrink-0"
+                            onclick="window.toggleMobileMenu(event)" 
+                            class="lg:hidden w-11 h-11 rounded-sm border border-slate-200 bg-white text-slate-800 hover:bg-emerald-50 active:bg-emerald-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition-all duration-150 cursor-pointer shadow-2xs shrink-0 touch-manipulation select-none"
                             aria-label="Buka Menu Navigasi">
-                        <i id="mobileMenuIcon" class="fa-solid fa-bars text-base pointer-events-none"></i>
+                        <i id="mobileMenuIcon" class="fa-solid fa-bars text-lg pointer-events-none transition-transform duration-200"></i>
                     </button>
                 </div>
             </div>
@@ -436,7 +436,11 @@
     </footer>
 
     <script>
-        window.toggleMobileMenu = function() {
+        window.toggleMobileMenu = function(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             const drawer = document.getElementById('mobile-drawer');
             const icon = document.getElementById('mobileMenuIcon');
             if (drawer) {
@@ -445,7 +449,8 @@
                     drawer.classList.remove('hidden');
                     if (icon) {
                         icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-xmark');
+                        icon.classList.add('fa-xmark', 'rotate-90');
+                        setTimeout(() => icon.classList.remove('rotate-90'), 150);
                     }
                 } else {
                     drawer.classList.add('hidden');
@@ -462,7 +467,7 @@
             const icon = document.getElementById('mobileMenuIcon');
             if (drawer) drawer.classList.add('hidden');
             if (icon) {
-                icon.classList.remove('fa-xmark');
+                icon.classList.remove('fa-xmark', 'rotate-90');
                 icon.classList.add('fa-bars');
             }
         };
@@ -686,13 +691,24 @@
             }
         };
 
-        // Open & Close Cart Drawer
+        // Open & Close Cart Drawer (Smooth slide-over, no annoying popup)
         window.openCartDrawer = function() {
-            if (!window.PERSIS_CART.isLoggedIn) {
-                window.openLoginPromptModal();
-                return;
-            }
             const drawer = document.getElementById('globalCartDrawer');
+            const backdrop = document.getElementById('cartDrawerBackdrop');
+            const panel = document.getElementById('cartDrawerPanel');
+            if (drawer && backdrop && panel) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+                if (window.PERSIS_CART.isLoggedIn) {
+                    window.fetchCartData();
+                } else {
+                    window.renderCartDrawerUI({ items: [], count: 0, total: 0, formatted_total: 'Rp 0' });
+                }
+            }
+        };
             const backdrop = document.getElementById('cartDrawerBackdrop');
             const panel = document.getElementById('cartDrawerPanel');
             if (drawer && backdrop && panel) {
