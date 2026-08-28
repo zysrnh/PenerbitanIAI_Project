@@ -59,7 +59,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['nullable', 'string', 'max:30'],
-            'role' => ['required', 'in:super_admin,admin'],
+            'role' => ['required', 'in:super_admin,admin,member'],
             'is_active' => ['required', 'boolean'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
@@ -68,7 +68,7 @@ class UserController extends Controller
 
         User::create($validated);
 
-        return redirect()->route('admin.users.index')->with('success', 'Akun admin baru berhasil ditambahkan.');
+        return redirect()->route('admin.users.index')->with('success', 'Akun pengguna baru berhasil ditambahkan.');
     }
 
     public function edit(User $user)
@@ -84,7 +84,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'phone' => ['nullable', 'string', 'max:30'],
-            'role' => ['required', 'in:super_admin,admin'],
+            'role' => ['required', 'in:super_admin,admin,member'],
             'is_active' => ['required', 'boolean'],
             'password' => ['nullable', 'string', 'min:6', 'confirmed'],
         ]);
@@ -102,7 +102,7 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('admin.users.index')->with('success', 'Data admin berhasil diperbarui.');
+        return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
     public function destroy(User $user)
@@ -114,6 +114,6 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'Akun admin berhasil dihapus.');
+        return redirect()->route('admin.users.index')->with('success', 'Akun pengguna berhasil dihapus.');
     }
 }

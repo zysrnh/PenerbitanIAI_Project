@@ -219,6 +219,7 @@
                     <button 
                         type="button" 
                         id="adminCustomCatBtn"
+                        onclick="toggleAdminCatDropdown(event)"
                         class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-semibold text-slate-800 flex items-center justify-between hover:border-emerald-600 transition cursor-pointer shadow-2xs"
                     >
                         <span id="adminCustomCatLabel" class="truncate">{{ request('kategori') ?: 'Semua Kategori' }}</span>
@@ -226,14 +227,14 @@
                     </button>
 
                     <div id="adminCustomCatMenu" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-sm shadow-2xl overflow-hidden py-1 divide-y divide-slate-100 z-[9999] max-h-64 overflow-y-auto ring-4 ring-black/5 animate-fade-in">
-                        <button type="button" data-val="" data-lbl="Semua Kategori" class="admin-cat-opt w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
+                        <button type="button" onclick="selectAdminCatOption('', 'Semua Kategori', event)" class="w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                             <span>Semua Kategori</span>
-                            @if(!request('kategori')) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                            <i class="fa-solid fa-check text-xs text-emerald-600 {{ !request('kategori') ? '' : 'hidden' }} cat-check-icon" data-cat=""></i>
                         </button>
                         @foreach($categories as $cat)
-                            <button type="button" data-val="{{ $cat }}" data-lbl="{{ $cat }}" class="admin-cat-opt w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
+                            <button type="button" onclick="selectAdminCatOption('{{ $cat }}', '{{ $cat }}', event)" class="w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                                 <span>{{ $cat }}</span>
-                                @if(request('kategori') === $cat) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                                <i class="fa-solid fa-check text-xs text-emerald-600 {{ request('kategori') === $cat ? '' : 'hidden' }} cat-check-icon" data-cat="{{ $cat }}"></i>
                             </button>
                         @endforeach
                     </div>
@@ -1133,5 +1134,46 @@
                 closeCropperModal();
             }, 'image/jpeg', 0.92);
         }
+    
+        // =======================================================
+        // CATEGORY DROPDOWN LOGIC (BULLETPROOF)
+        // =======================================================
+        function toggleAdminCatDropdown(e) {
+            if (e) e.stopPropagation();
+            const menu = document.getElementById('adminCustomCatMenu');
+            const chev = document.getElementById('adminCustomCatChevron');
+            if (menu) menu.classList.toggle('hidden');
+            if (chev) chev.classList.toggle('rotate-180');
+        }
+
+        function selectAdminCatOption(val, label, e) {
+            if (e) e.stopPropagation();
+            const input = document.getElementById('adminCustomCatInput');
+            const labelEl = document.getElementById('adminCustomCatLabel');
+            if (input) input.value = val;
+            if (labelEl) labelEl.innerText = label;
+
+            document.querySelectorAll('.cat-check-icon').forEach(icon => {
+                if (icon.getAttribute('data-cat') === val) {
+                    icon.classList.remove('hidden');
+                } else {
+                    icon.classList.add('hidden');
+                }
+            });
+
+            toggleAdminCatDropdown();
+            handleAdminCategoryFilter(val);
+        }
+
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('adminCustomCatContainer');
+            const menu = document.getElementById('adminCustomCatMenu');
+            const chev = document.getElementById('adminCustomCatChevron');
+            if (container && !container.contains(e.target) && menu && !menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+                if (chev) chev.classList.remove('rotate-180');
+            }
+        });
+
     </script>
 @endsection

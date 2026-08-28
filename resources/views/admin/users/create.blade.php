@@ -103,6 +103,16 @@
                             </div>
                             <i id="check_role_super" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') === 'super_admin' ? '' : 'hidden' }}"></i>
                         </button>
+                        <button type="button" onclick="selectCreateRole('member', 'Member / Pengguna Umum', 'fa-solid fa-user text-blue-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-user text-blue-600 text-xs"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Member / Pengguna Umum</p>
+                                    <p class="text-[10px] text-slate-400">Pengguna toko &amp; riwayat belanja</p>
+                                </div>
+                            </div>
+                            <i id="check_role_member" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') === 'member' ? '' : 'hidden' }}"></i>
+                        </button>
                     </div>
                 </div>
 

@@ -58,6 +58,8 @@
                             Super Admin
                         @elseif(request('role') === 'admin')
                             Admin Biasa
+                        @elseif(request('role') === 'member')
+                            Member / Pembeli
                         @else
                             Semua Role
                         @endif
@@ -89,6 +91,16 @@
                             </div>
                         </div>
                         @if(request('role') === 'admin') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" data-val="member" data-lbl="Member / Pembeli" class="user-role-opt w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-user text-blue-600 text-xs"></i>
+                            <div>
+                                <p class="text-xs font-bold text-slate-900">Member / Pembeli</p>
+                                <p class="text-[10px] text-slate-400">Pengguna umum toko &amp; katalog</p>
+                            </div>
+                        </div>
+                        @if(request('role') === 'member') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
                 </div>
             </div>
@@ -178,12 +190,16 @@
 
                         <div>
                             @if($user->role === 'super_admin')
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-rose-50 text-rose-800 border border-rose-200">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-rose-50 text-rose-800 border border-rose-200 font-mono">
                                     <i class="fa-solid fa-shield-halved text-[8px]"></i> Super Admin
                                 </span>
-                            @else
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            @elseif($user->role === 'admin')
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">
                                     <i class="fa-solid fa-user-gear text-[8px]"></i> Admin
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200 font-mono">
+                                    <i class="fa-solid fa-user text-[8px]"></i> Member
                                 </span>
                             @endif
                         </div>
@@ -286,9 +302,13 @@
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-rose-50 text-rose-800 border border-rose-200 font-mono">
                                         <i class="fa-solid fa-shield-halved text-[8px]"></i> Super Admin
                                     </span>
-                                @else
+                                @elseif($user->role === 'admin')
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">
                                         <i class="fa-solid fa-user-gear text-[8px]"></i> Admin
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200 font-mono">
+                                        <i class="fa-solid fa-user text-[8px]"></i> Member
                                     </span>
                                 @endif
                             </td>
