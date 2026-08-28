@@ -441,25 +441,35 @@
                     </div>
                 </div>
 
-                <div class="space-y-2">
+                <!-- Drawer Actions (QRIS Auto & WhatsApp) -->
+                <div class="space-y-2.5 select-none">
+                    <!-- Tombol 1: Bayar Otomatis QRIS -->
+                    <button type="button" 
+                            onclick="window.openCheckoutModal()"
+                            class="w-full py-3 px-4 bg-[#006830] hover:bg-[#032c21] active:scale-98 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2.5 cursor-pointer group">
+                        <i class="fa-solid fa-qrcode text-base text-lime-300 group-hover:scale-110 transition-transform"></i>
+                        <span>Bayar Otomatis (QRIS Realtime)</span>
+                    </button>
+
+                    <!-- Tombol 2: Pesan Manual via WhatsApp -->
                     <button type="button" 
                             onclick="window.checkoutCartViaWhatsApp()"
-                            class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs sm:text-sm font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-brands fa-whatsapp text-base"></i>
-                        <span>Pesan Semua via WhatsApp</span>
+                            class="w-full py-2.5 px-4 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300/80 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
+                        <i class="fa-brands fa-whatsapp text-sm text-emerald-600"></i>
+                        <span>Pesan Manual via WhatsApp</span>
                     </button>
 
                     <div class="flex items-center justify-between pt-1">
                         <button type="button" 
                                 onclick="window.clearCart()" 
-                                class="text-[11px] text-red-600 hover:text-red-800 hover:underline font-semibold flex items-center gap-1">
+                                class="text-[11px] text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-trash-can text-[10px]"></i>
-                            <span>Kosongkan Keranjang</span>
+                            <span>Kosongkan</span>
                         </button>
 
                         <button type="button" 
                                 onclick="window.closeCartDrawer()" 
-                                class="text-[11px] text-slate-500 hover:text-slate-800 font-semibold">
+                                class="text-[11px] text-slate-500 hover:text-slate-800 font-semibold cursor-pointer">
                             Lanjut Pilih Buku &rarr;
                         </button>
                     </div>
