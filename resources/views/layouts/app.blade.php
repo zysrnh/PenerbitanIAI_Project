@@ -463,20 +463,6 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- FLOATING CART QUICK BUTTON (BOTTOM RIGHT) -->
-    <!-- ========================================================================= -->
-    <button type="button"
-            id="floatingCartBtn"
-            onclick="window.openCartDrawer()"
-            class="fixed bottom-20 right-6 z-40 w-12 h-12 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-xl hover:shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-110 active:scale-95 border-2 border-white cursor-pointer group"
-            title="Buka Keranjang Belanja">
-        <i class="fa-solid fa-cart-shopping text-base group-hover:scale-110 transition-transform"></i>
-        <span id="floatingCartBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 bg-amber-500 text-slate-950 rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs animate-bounce">
-            0
-        </span>
-    </button>
-
-    <!-- ========================================================================= -->
     <!-- LOGIN PROMPT MODAL (FOR GUEST USERS) WITH ULTRA-SMOOTH ANIMATION -->
     <!-- ========================================================================= -->
     <div id="loginPromptModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" onclick="if(event.target === this) window.closeLoginPromptModal()">
