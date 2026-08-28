@@ -712,7 +712,7 @@
                     <span class="text-slate-400 text-[10.5px]">Pilih kontak untuk chat langsung</span>
                 </div>
 
-                <!-- Contacts List -->
+                                <!-- Contacts List -->
                 <div class="flex-1 overflow-y-auto divide-y divide-slate-100 text-xs">
                     @if(isset($orderConversations) && $orderConversations->count() > 0)
                         @foreach($orderConversations as $conv)
@@ -727,12 +727,27 @@
                                 elseif ($conv->shipping_status === 'selesai') $statusBg = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
                             @endphp
 
-                            <div onclick="openAdminChatThread('{{ $conv->id }}')" class="p-3.5 hover:bg-emerald-50/50 cursor-pointer transition-colors {{ $hasUnread ? 'bg-emerald-50/70 border-l-4 border-emerald-600' : '' }}">
+                            <div class="p-3.5 hover:bg-slate-50/90 transition-colors {{ $hasUnread ? 'bg-emerald-50/70 border-l-4 border-emerald-600' : '' }}">
                                 <div class="flex items-start gap-3">
-                                    <div class="w-10 h-10 rounded-full {{ $hasUnread ? 'bg-emerald-700 text-white' : 'bg-slate-800 text-slate-200' }} flex items-center justify-center font-black text-xs shrink-0 shadow-2xs">
-                                        {{ strtoupper(substr($conv->customer_name, 0, 2)) }}
+                                    
+                                    <!-- 1. Thumbnail Cover Buku yang Dibeli -->
+                                    <div class="w-12 h-16 shrink-0 bg-slate-900 rounded-2xs overflow-hidden border border-slate-200 shadow-2xs relative">
+                                        @if(!empty($conv->first_book_cover_url))
+                                            <img src="{{ $conv->first_book_cover_url }}" alt="{{ $conv->first_book_title }}" class="w-full h-full object-cover" />
+                                        @else
+                                            <div class="w-full h-full bg-[#032c21] p-1 flex flex-col justify-between text-white border-l border-emerald-400">
+                                                <span class="text-[4px] font-mono text-emerald-300">PERSIS</span>
+                                                <span class="text-[5.5px] font-bold line-clamp-2 leading-none">{{ $conv->first_book_title ?? 'Buku' }}</span>
+                                            </div>
+                                        @endif
+                                        @if($conv->total_items_count > 1)
+                                            <span class="absolute bottom-0 right-0 bg-slate-950/90 text-white text-[8px] font-bold px-1 rounded-tl-xs font-mono">
+                                                +{{ $conv->total_items_count - 1 }}
+                                            </span>
+                                        @endif
                                     </div>
 
+                                    <!-- 2. Info Detail & Cuplikan Pesan -->
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between gap-1">
                                             <h5 class="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
@@ -746,11 +761,18 @@
                                             </span>
                                         </div>
 
+                                        <!-- Judul Buku yang Dibeli -->
+                                        <p class="text-[11px] font-semibold text-slate-700 line-clamp-1 mt-0.5" title="{{ $conv->first_book_title }}">
+                                            <i class="fa-solid fa-book text-emerald-700 text-[10px] mr-0.5"></i> {{ $conv->first_book_title }}
+                                            <span class="text-slate-400 font-normal">({{ $conv->first_book_qty ?? 1 }} eks)</span>
+                                        </p>
+
+                                        <!-- Tags Metadata Pesanan -->
                                         <div class="flex flex-wrap items-center gap-1.5 mt-1">
-                                            <span class="font-mono text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded-xs">
+                                            <span class="font-mono text-[9.5px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded-xs">
                                                 #{{ $conv->order_number }}
                                             </span>
-                                            <span class="text-[9.5px] px-1.5 py-0.5 rounded-xs font-bold uppercase {{ $statusBg }}">
+                                            <span class="text-[9px] px-1.5 py-0.5 rounded-xs font-bold uppercase {{ $statusBg }}">
                                                 {{ str_replace('_', ' ', $conv->shipping_status) }}
                                             </span>
                                             <span class="text-[10px] text-slate-500 font-mono">
@@ -758,14 +780,45 @@
                                             </span>
                                         </div>
 
+                                        <!-- Preview Pesan Terakhir -->
                                         @if($latestMsg)
-                                            <p class="text-[11px] text-slate-600 line-clamp-1 mt-1.5 bg-white/80 p-1.5 rounded-xs border border-slate-200">
+                                            <p class="text-[11px] text-slate-600 line-clamp-1 mt-1.5 bg-white p-1.5 rounded-xs border border-slate-200">
                                                 <strong class="{{ $latestMsg->sender_type === 'admin' ? 'text-emerald-700' : 'text-slate-900' }}">
                                                     {{ $latestMsg->sender_type === 'admin' ? 'Saya: ' : 'Pembeli: ' }}
                                                 </strong>
                                                 {{ $latestMsg->message }}
                                             </p>
                                         @endif
+
+                                        <!-- 3. Tombol Sederhana & Jelas -->
+                                        <div class="flex items-center gap-2 mt-2.5 pt-1.5 border-t border-slate-100">
+                                            <!-- Tombol Buka Chat (Langsung di Drawer) -->
+                                            <button type="button" 
+                                                    onclick="openAdminChatThread('{{ $conv->id }}')" 
+                                                    class="flex-1 py-1.5 px-3 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                                                <i class="fa-solid fa-comments text-xs text-lime-300"></i>
+                                                <span>Buka Chat</span>
+                                                @if($unreadCount > 0)
+                                                    <span class="px-1.5 py-0.2 rounded-full bg-rose-600 text-white text-[9px] font-mono font-bold">{{ $unreadCount }}</span>
+                                                @endif
+                                            </button>
+
+                                            <!-- Tombol WhatsApp Cepat -->
+                                            @if(!empty($conv->customer_phone))
+                                                @php
+                                                    $cleanPhone = preg_replace('/[^0-9]/', '', $conv->customer_phone);
+                                                    if (str_starts_with($cleanPhone, '0')) {
+                                                        $cleanPhone = '62' . substr($cleanPhone, 1);
+                                                    }
+                                                    $waText = urlencode("Halo {$conv->customer_name}, kami dari Tim Redaksi PERSIS PERS terkait pesanan buku Anda #{$conv->order_number}.");
+                                                @endphp
+                                                <a href="https://wa.me/{{ $cleanPhone }}?text={{ $waText }}" target="_blank" class="py-1.5 px-3 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-1 shadow-2xs" title="Chat WhatsApp Pembeli">
+                                                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                                                    <span>WA</span>
+                                                </a>
+                                            @endif
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

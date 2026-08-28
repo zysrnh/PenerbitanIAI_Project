@@ -91,6 +91,21 @@ class AppServiceProvider extends ServiceProvider
                     })
                     ->take(20);
 
+                foreach ($orderConversations as $conv) {
+                    $items = is_array($conv->items_json) ? $conv->items_json : json_decode($conv->items_json ?? '[]', true);
+                    $firstItem = $items[0] ?? null;
+                    $cover = $firstItem['cover_image'] ?? null;
+                    if (!$cover && !empty($firstItem['book_id'])) {
+                        $b = \App\Models\Book::find($firstItem['book_id']);
+                        $cover = $b ? $b->cover_image : null;
+                    }
+                    $hasCover = $cover && (file_exists(public_path('storage/' . $cover)) || file_exists(public_path('images/' . $cover)));
+                    $conv->first_book_cover_url = $hasCover ? (file_exists(public_path('storage/' . $cover)) ? asset('storage/' . $cover) : asset('images/' . $cover)) : null;
+                    $conv->first_book_title = $firstItem['title'] ?? 'Buku PERSIS PERS';
+                    $conv->first_book_qty = (int)($firstItem['quantity'] ?? ($firstItem['qty'] ?? 1));
+                    $conv->total_items_count = count($items);
+                }
+
                 $latestMessages = ContactMessage::latest()->take(5)->get();
                 $latestOrders = Order::whereIn('payment_status', ['paid', 'completed'])->latest()->take(5)->get();
 
