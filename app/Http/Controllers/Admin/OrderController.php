@@ -137,7 +137,7 @@ class OrderController extends Controller
             'order_id'               => $order->id,
             'user_id'                => Auth::id(),
             'sender_type'            => 'admin',
-            'sender_name'            => Auth::user() ? Auth::user()->name : 'Admin Redaksi PERSIS PERS',
+            'sender_name'            => Auth::user() ? (Auth::user()->name . (Auth::user()->role === 'super_admin' ? ' (Super Admin)' : ' (Admin Redaksi)')) : 'Admin Redaksi PERSIS PERS',
             'message'                => $request->input('message'),
             'shared_shipping_status' => $sharedStatus,
             'shared_tracking_number' => $sharedResi,
