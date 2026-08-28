@@ -239,7 +239,7 @@
         </header>
 
         <!-- Main Body Content (App-like Mobile Experience) -->
-        <main class="flex-1 p-3.5 sm:p-6 lg:p-8 animate-fade-in max-w-6xl w-full mx-auto space-y-3.5 sm:space-y-5">
+        <main class="flex-1 p-3.5 sm:p-6 lg:p-8 pb-24 lg:pb-8 animate-fade-in max-w-6xl w-full mx-auto space-y-3.5 sm:space-y-5">
 
             <!-- Success Alert Notification -->
             @if(session('success'))
@@ -492,6 +492,68 @@
 
         </main>
     </div>
+
+        <!-- ==================== MOBILE APP BOTTOM NAVIGATION BAR ==================== -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-2 py-1.5 flex items-center justify-around select-none">
+        
+        <!-- 1. Dashboard -->
+        <a href="{{ route('member.dashboard') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition {{ request()->routeIs('member.dashboard') ? 'text-emerald-700 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium' }}">
+            <div class="relative">
+                <i class="fa-solid fa-gauge-high text-base"></i>
+                @if(request()->routeIs('member.dashboard'))
+                    <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-emerald-600 rounded-full"></span>
+                @endif
+            </div>
+            <span class="text-[10px] mt-0.5 tracking-tight">Dashboard</span>
+        </a>
+
+        <!-- 2. Pesanan Saya (with Live Badge) -->
+        <a href="{{ route('member.orders') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition {{ request()->routeIs('member.orders*') ? 'text-emerald-700 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium' }}">
+            <div class="relative">
+                <i class="fa-solid fa-receipt text-base"></i>
+                @php
+                    $navOrdCount = \App\Models\Order::where('user_id', Auth::id())->orWhere('customer_email', Auth::user()->email)->count();
+                @endphp
+                @if($navOrdCount > 0)
+                    <span class="absolute -top-1.5 -right-2.5 px-1 min-w-[14px] h-[14px] rounded-full bg-emerald-600 text-white text-[8.5px] font-black flex items-center justify-center font-mono">
+                        {{ $navOrdCount }}
+                    </span>
+                @endif
+                @if(request()->routeIs('member.orders*'))
+                    <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-emerald-600 rounded-full"></span>
+                @endif
+            </div>
+            <span class="text-[10px] mt-0.5 tracking-tight">Pesanan</span>
+        </a>
+
+        <!-- 3. Katalog Buku -->
+        <a href="{{ route('katalog') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
+            <div class="relative">
+                <i class="fa-solid fa-book-open text-base"></i>
+            </div>
+            <span class="text-[10px] mt-0.5 tracking-tight">Katalog</span>
+        </a>
+
+        <!-- 4. WhatsApp Redaksi -->
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya member ' . $user->name . ' ingin berkonsultasi.') }}" target="_blank" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-emerald-700 font-medium">
+            <div class="relative">
+                <i class="fa-brands fa-whatsapp text-base text-emerald-600"></i>
+            </div>
+            <span class="text-[10px] mt-0.5 tracking-tight">Redaksi</span>
+        </a>
+
+        <!-- 5. Profil Akun -->
+        <a href="{{ route('member.profile') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition {{ request()->routeIs('member.profile') ? 'text-emerald-700 font-bold' : 'text-slate-500 hover:text-slate-800 font-medium' }}">
+            <div class="relative">
+                <i class="fa-solid fa-user text-base"></i>
+                @if(request()->routeIs('member.profile'))
+                    <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-emerald-600 rounded-full"></span>
+                @endif
+            </div>
+            <span class="text-[10px] mt-0.5 tracking-tight">Akun</span>
+        </a>
+
+    </nav>
 
     <!-- Dropdown & Sidebar JS with Persistent Collapse Memory -->
     <script>
