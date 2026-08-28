@@ -92,6 +92,12 @@
                 <span>Dashboard</span>
             </a>
 
+            <a href="{{ route('member.orders') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-receipt w-4 text-center text-emerald-400"></i>
+                <span>Pesanan Saya</span>
+            </a>
+
             <a href="{{ route('katalog') }}"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
                 <i class="fa-solid fa-book-open w-4 text-center text-emerald-400"></i>

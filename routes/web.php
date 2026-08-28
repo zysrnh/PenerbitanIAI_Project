@@ -105,6 +105,8 @@ Route::post('/member/logout', [MemberAuthController::class, 'logout'])->name('me
 
 Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(function () {
     Route::get('/dashboard',        [MemberDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/pesanan',          [MemberDashboardController::class, 'orders'])->name('orders');
+    Route::post('/pesanan/{orderNumber}/terima', [MemberDashboardController::class, 'confirmReceived'])->name('orders.confirm_received');
     Route::get('/profil',           [MemberDashboardController::class, 'profile'])->name('profile');
     Route::put('/profil',           [MemberDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profil/password',  [MemberDashboardController::class, 'updatePassword'])->name('profile.password');
