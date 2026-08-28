@@ -657,16 +657,16 @@
             onclick="openAdminMessageDrawer()"
             id="adminFloatingChatBtn"
             class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-2xl ring-4 ring-emerald-500/25 flex items-center justify-center text-xl sm:text-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer relative group"
-            title="Buka Pusat Pesan &amp; Diskusi"
+            title="Daftar Kontak Diskusi Pesanan"
         >
             <i class="fa-solid fa-comments transition-transform group-hover:scale-110"></i>
-            <span id="adminFloatingChatBadge" class="{{ ($totalUnreadChatCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center font-mono shadow-md animate-pulse">
-                {{ $totalUnreadChatCount ?? 0 }}
+            <span id="adminFloatingChatBadge" class="{{ ($unreadOrderMessagesCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center font-mono shadow-md animate-pulse">
+                {{ $unreadOrderMessagesCount ?? 0 }}
             </span>
         </button>
     </div>
 
-    <!-- 2. The Full-Height Slide-in Sidebar Drawer (Slide from Right) -->
+    <!-- 2. The Full-Height Slide-in Sidebar Drawer (Contact List of Orders) -->
     <div id="adminMessageDrawer" class="fixed inset-0 z-[99999] hidden items-end sm:items-stretch sm:justify-end" style="display: none;">
         <!-- Backdrop -->
         <div id="adminMessageDrawerBackdrop" onclick="closeAdminMessageDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 cursor-pointer"></div>
@@ -687,12 +687,12 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
-                            <span>Pusat Pesan &amp; Diskusi</span>
+                            <span>Diskusi &amp; Kontak Pesanan</span>
                             <span class="text-xs font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                                {{ $totalUnreadChatCount ?? 0 }} Baru
+                                {{ $unreadOrderMessagesCount ?? 0 }} Pesan Baru
                             </span>
                         </h3>
-                        <p class="text-[10px] text-emerald-200/70">Penerbitan &amp; Percetakan Resmi PERSIS PERS</p>
+                        <p class="text-[10px] text-emerald-200/70">Daftar Percakapan Pembeli Buku PERSIS PERS</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeAdminMessageDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Drawer">
@@ -700,94 +700,120 @@
                 </button>
             </div>
 
-            <!-- Drawer Body Stream List -->
+            <!-- Drawer Search / Filter Bar -->
+            <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs select-none">
+                <span class="text-slate-500 font-bold text-[11px] uppercase tracking-wider font-heading flex items-center gap-1">
+                    <i class="fa-solid fa-address-book text-emerald-700"></i> Kontak Pembeli
+                </span>
+                <span class="text-slate-400 text-[10.5px]">Klik kontak untuk membalas</span>
+            </div>
+
+            <!-- Drawer Contacts List -->
             <div class="flex-1 overflow-y-auto divide-y divide-slate-100 text-xs">
-                
-                <!-- Diskusi Pesanan Section -->
-                @if(isset($latestOrderMessages) && $latestOrderMessages->count() > 0)
-                    <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between select-none">
-                        <span class="text-[10.5px] font-bold text-slate-700 uppercase tracking-wider font-heading flex items-center gap-1.5">
-                            <i class="fa-solid fa-comments text-emerald-700"></i> Diskusi Pesanan Pembeli
-                        </span>
-                        <span class="text-[10px] font-bold font-mono text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                            {{ $unreadOrderMessagesCount ?? 0 }} Belum Dibaca
-                        </span>
-                    </div>
+                @if(isset($orderConversations) && $orderConversations->count() > 0)
+                    @foreach($orderConversations as $conv)
+                        @php
+                            $latestMsg = $conv->messages->first();
+                            $hasUnread = $conv->messages->where('sender_type', 'customer')->where('is_read_by_admin', false)->count() > 0;
+                            $unreadCount = $conv->messages->where('sender_type', 'customer')->where('is_read_by_admin', false)->count();
+                            
+                            // Shipping status badge colors
+                            $statusBg = 'bg-slate-100 text-slate-700';
+                            if ($conv->shipping_status === 'diproses') $statusBg = 'bg-indigo-50 text-indigo-700 border border-indigo-200';
+                            elseif ($conv->shipping_status === 'dikirim') $statusBg = 'bg-blue-50 text-blue-700 border border-blue-200';
+                            elseif ($conv->shipping_status === 'selesai') $statusBg = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+                        @endphp
 
-                    @foreach($latestOrderMessages as $omsg)
-                        <a href="{{ route('admin.orders.show', $omsg->order_id) }}#adminMessagesThread" class="block p-4 hover:bg-emerald-50/50 transition-colors {{ !$omsg->is_read_by_admin ? 'bg-emerald-50/70 border-l-4 border-emerald-600' : '' }}">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="flex items-center gap-1.5">
-                                    <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-bold shrink-0">
-                                        <i class="fa-solid fa-receipt"></i>
-                                    </div>
-                                    <span class="font-bold text-slate-900 font-mono text-xs">#{{ $omsg->order ? $omsg->order->order_number : 'Pesanan' }}</span>
+                        <div class="p-3.5 hover:bg-slate-50/80 transition-colors {{ $hasUnread ? 'bg-emerald-50/60 border-l-4 border-emerald-600' : '' }}">
+                            <div class="flex items-start gap-3">
+                                
+                                <!-- User Avatar Initial -->
+                                <div class="w-10 h-10 rounded-full {{ $hasUnread ? 'bg-emerald-700 text-white' : 'bg-slate-800 text-slate-200' }} flex items-center justify-center font-black text-xs shrink-0 shadow-2xs">
+                                    {{ strtoupper(substr($conv->customer_name, 0, 2)) }}
                                 </div>
-                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $omsg->created_at->diffForHumans() }}</span>
-                            </div>
-                            <p class="text-xs text-slate-800 font-semibold mt-1.5 leading-snug">
-                                {{ $omsg->sender_name }}
-                            </p>
-                            <p class="text-[11.5px] text-slate-600 line-clamp-2 mt-0.5 leading-relaxed bg-white/80 p-2 rounded-xs border border-slate-200/80">
-                                "{{ $omsg->message }}"
-                            </p>
-                        </a>
-                    @endforeach
-                @endif
 
-                <!-- Pesan Naskah & Kontak Section -->
-                @if(isset($latestMessages) && $latestMessages->count() > 0)
-                    <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between select-none">
-                        <span class="text-[10.5px] font-bold text-slate-700 uppercase tracking-wider font-heading flex items-center gap-1.5">
-                            <i class="fa-solid fa-envelope text-amber-700"></i> Pengajuan Naskah &amp; Kontak
-                        </span>
-                        <span class="text-[10px] font-bold font-mono text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
-                            {{ $unreadMessagesCount ?? 0 }} Belum Dibaca
-                        </span>
-                    </div>
-
-                    @foreach($latestMessages->take(4) as $cmsg)
-                        <a href="{{ route('admin.messages.show', $cmsg->id) }}" class="block p-4 hover:bg-slate-50 transition-colors {{ $cmsg->status === 'pending' ? 'bg-amber-50/50 border-l-4 border-amber-500' : '' }}">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="flex items-center gap-1.5">
-                                    <div class="w-6 h-6 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-[10px] font-bold shrink-0">
-                                        <i class="fa-solid fa-user"></i>
+                                <!-- Contact Info & Latest Message -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between gap-1">
+                                        <h5 class="text-xs font-bold text-slate-900 truncate flex items-center gap-1.5">
+                                            <span>{{ $conv->customer_name }}</span>
+                                            @if($hasUnread)
+                                                <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                                            @endif
+                                        </h5>
+                                        <span class="text-[10px] text-slate-400 font-mono shrink-0">
+                                            {{ $latestMsg ? $latestMsg->created_at->diffForHumans() : $conv->created_at->diffForHumans() }}
+                                        </span>
                                     </div>
-                                    <span class="font-bold text-slate-900 text-xs">{{ $cmsg->name }}</span>
-                                </div>
-                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $cmsg->created_at->diffForHumans() }}</span>
-                            </div>
-                            <p class="text-xs text-slate-800 font-semibold mt-1.5 leading-snug">
-                                {{ $cmsg->subject ?: 'Konsultasi / Pengajuan Naskah' }}
-                            </p>
-                            <p class="text-[11.5px] text-slate-600 line-clamp-2 mt-0.5 leading-relaxed bg-white/80 p-2 rounded-xs border border-slate-200/80">
-                                "{{ $cmsg->message }}"
-                            </p>
-                        </a>
-                    @endforeach
-                @endif
 
-                @if((!isset($latestOrderMessages) || $latestOrderMessages->count() === 0) && (!isset($latestMessages) || $latestMessages->count() === 0))
+                                    <!-- Order Metadata Tags -->
+                                    <div class="flex flex-wrap items-center gap-1.5 mt-1">
+                                        <span class="font-mono text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded-xs">
+                                            #{{ $conv->order_number }}
+                                        </span>
+                                        <span class="text-[9.5px] px-1.5 py-0.5 rounded-xs font-bold uppercase {{ $statusBg }}">
+                                            {{ str_replace('_', ' ', $conv->shipping_status) }}
+                                        </span>
+                                        <span class="text-[10px] text-slate-500 font-mono">
+                                            {{ $conv->formatted_payment }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Last Message Preview -->
+                                    @if($latestMsg)
+                                        <p class="text-[11px] text-slate-600 line-clamp-1 mt-1.5 bg-white p-1.5 rounded-xs border border-slate-200">
+                                            <strong class="{{ $latestMsg->sender_type === 'admin' ? 'text-emerald-700' : 'text-slate-900' }}">
+                                                {{ $latestMsg->sender_type === 'admin' ? 'Admin: ' : 'Pembeli: ' }}
+                                            </strong>
+                                            {{ $latestMsg->message }}
+                                        </p>
+                                    @endif
+
+                                    <!-- Actions: Open Chat & WhatsApp -->
+                                    <div class="flex items-center gap-2 mt-2.5 pt-1.5 border-t border-slate-100">
+                                        <a href="{{ route('admin.orders.show', $conv->id) }}#adminMessagesThread" class="flex-1 px-2.5 py-1.5 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-2xs">
+                                            <i class="fa-solid fa-comments text-[10px]"></i>
+                                            <span>Buka Diskusi</span>
+                                            @if($unreadCount > 0)
+                                                <span class="px-1 rounded-full bg-rose-600 text-white text-[9px] font-mono font-bold">{{ $unreadCount }}</span>
+                                            @endif
+                                        </a>
+
+                                        @if(!empty($conv->customer_phone))
+                                            @php
+                                                $cleanPhone = preg_replace('/[^0-9]/', '', $conv->customer_phone);
+                                                if (str_starts_with($cleanPhone, '0')) {
+                                                    $cleanPhone = '62' . substr($cleanPhone, 1);
+                                                }
+                                                $waText = urlencode("Halo {$conv->customer_name}, kami dari Tim Redaksi PERSIS PERS terkait pesanan Anda #{$conv->order_number}.");
+                                            @endphp
+                                            <a href="https://wa.me/{{ $cleanPhone }}?text={{ $waText }}" target="_blank" class="px-2.5 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1 shadow-2xs" title="Chat WhatsApp Pembeli">
+                                                <i class="fa-brands fa-whatsapp text-xs"></i>
+                                                <span>WA</span>
+                                            </a>
+                                        @endif
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
                     <div class="py-16 text-center text-slate-400 text-xs space-y-2 select-none">
                         <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xl mx-auto shadow-2xs">
-                            <i class="fa-regular fa-comment-dots"></i>
+                            <i class="fa-regular fa-comments"></i>
                         </div>
-                        <p class="font-bold text-slate-700 text-sm">Belum Ada Pesan Masuk</p>
-                        <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Semua pesan diskusi pesanan dan pengajuan naskah telah tertangani dengan baik.</p>
+                        <p class="font-bold text-slate-700 text-sm">Belum Ada Percakapan Pesanan</p>
+                        <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Saat pembeli berdiskusi mengenai pesanannya, kontak pembeli akan otomatis muncul di sini.</p>
                     </div>
                 @endif
-
             </div>
 
             <!-- Drawer Footer Shortcuts -->
-            <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs font-bold shrink-0">
-                <a href="{{ route('admin.orders.index') }}" class="px-3 py-1.5 bg-white hover:bg-emerald-50 text-emerald-800 border border-slate-300 rounded-sm transition flex items-center gap-1.5 shadow-2xs">
-                    <i class="fa-solid fa-box-open text-xs"></i>
-                    <span>Daftar Pesanan</span>
-                </a>
-                <a href="{{ route('admin.messages.index') }}" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm transition flex items-center gap-1.5 shadow-2xs">
-                    <i class="fa-solid fa-envelope-open-text text-xs"></i>
-                    <span>Semua Pesan Naskah</span>
+            <div class="p-3 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500 shrink-0">
+                <a href="{{ route('admin.orders.index') }}" class="font-bold text-emerald-800 hover:text-emerald-950 transition flex items-center justify-center gap-1">
+                    <span>Lihat Semua Riwayat Pesanan Buku</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </a>
             </div>
 

@@ -79,7 +79,18 @@ class AppServiceProvider extends ServiceProvider
                 $unreadMessagesCount = ContactMessage::where('status', 'pending')->count();
                 $pendingOrdersCount = Order::where('payment_status', 'completed')->where('shipping_status', 'menunggu_proses')->count();
                 $unreadOrderMessagesCount = OrderMessage::where('sender_type', 'customer')->where('is_read_by_admin', false)->count();
-                $latestOrderMessages = OrderMessage::where('sender_type', 'customer')->latest()->take(5)->get();
+                
+                // Get all Orders that have discussion messages, sorted by latest message
+                $orderConversations = Order::has('messages')
+                    ->with(['messages' => function($q) {
+                        $q->latest();
+                    }])
+                    ->get()
+                    ->sortByDesc(function($order) {
+                        return $order->messages->first()?->created_at ?? $order->created_at;
+                    })
+                    ->take(20);
+
                 $latestMessages = ContactMessage::latest()->take(5)->get();
                 $latestOrders = Order::whereIn('payment_status', ['paid', 'completed'])->latest()->take(5)->get();
 
@@ -87,9 +98,9 @@ class AppServiceProvider extends ServiceProvider
                     'unreadMessagesCount'      => $unreadMessagesCount,
                     'pendingOrdersCount'       => $pendingOrdersCount,
                     'unreadOrderMessagesCount' => $unreadOrderMessagesCount,
-                    'totalUnreadChatCount'     => $unreadMessagesCount + $unreadOrderMessagesCount,
+                    'totalUnreadChatCount'     => $unreadOrderMessagesCount,
                     'totalNotifCount'          => $unreadMessagesCount + $pendingOrdersCount + $unreadOrderMessagesCount,
-                    'latestOrderMessages'      => $latestOrderMessages,
+                    'orderConversations'       => $orderConversations,
                     'latestMessages'           => $latestMessages,
                     'latestOrders'             => $latestOrders,
                 ]);
