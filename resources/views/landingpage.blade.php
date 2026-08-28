@@ -405,12 +405,7 @@
         </div>
     </section>
 
-    <!-- Mini Footer Bottom -->
-    <footer class="bg-brand-950 border-t border-brand-900/60 py-4 text-center text-slate-400 text-[10px] sm:text-[11px] px-4">
-        <div class="max-w-7xl mx-auto">
-            &copy; {{ date('Y') }} PERSIS PERS - Penerbitan & Percetakan IAI PERSIS Bandung. All rights reserved.
-        </div>
-    </footer>
+
 @endsection
 
 @push('scripts')
