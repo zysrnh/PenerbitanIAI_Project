@@ -55,10 +55,13 @@
         .animate-fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 antialiased flex flex-col lg:flex-row">
+<body class="min-h-screen text-slate-800 antialiased bg-slate-100/70 flex">
+
+    <!-- Backdrop Overlay for Mobile Sidebar -->
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
 
     <!-- ==================== SIDEBAR (DESKTOP) ==================== -->
-    <aside class="w-64 brand-dark text-white flex-col shrink-0 hidden lg:flex min-h-screen sticky top-0 h-screen z-40 border-r border-white/10">
+    <aside id="member-sidebar" class="fixed top-0 left-0 bottom-0 w-64 brand-dark text-white flex flex-col justify-between z-50 transition-transform duration-300 ease-in-out border-r border-white/10 select-none -translate-x-full lg:translate-x-0">
         
         <!-- Sidebar Brand Logo -->
         <div class="px-6 py-5 border-b border-white/10 flex items-center justify-center">
@@ -146,14 +149,20 @@
     </aside>
 
     <!-- ==================== MAIN CONTENT AREA ==================== -->
-    <div class="flex-1 flex flex-col min-w-0 min-h-screen">
+    <div id="main-content-wrapper" class="flex-1 flex flex-col min-w-0 min-h-screen transition-all duration-300 lg:pl-64">
 
         <!-- Top Header Bar -->
         <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
-            <div class="flex items-center gap-3 lg:hidden">
-                <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
-                </a>
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="toggleSidebar()" class="p-2 text-slate-600 hover:text-emerald-800 hover:bg-slate-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer" title="Buka / Tutup Menu Sidebar">
+                    <i class="fa-solid fa-bars-staggered text-sm"></i>
+                </button>
+
+                <div class="flex items-center gap-2 lg:hidden">
+                    <a href="{{ url('/') }}">
+                        <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-9 w-auto object-contain bg-[#032c21] p-1 rounded-sm" />
+                    </a>
+                </div>
             </div>
 
             <div class="hidden lg:flex items-center gap-2 text-xs">
@@ -345,6 +354,52 @@
                 reader.readAsDataURL(file);
                 document.getElementById('avatarFileName').textContent = file.name;
             }
+        }
+    </script>
+    <!-- Dropdown & Sidebar JS with Persistent Collapse Memory -->
+    <script>
+        if (window.innerWidth >= 1024) {
+            const savedState = localStorage.getItem('persis_member_sidebar_collapsed');
+            if (savedState === 'true') {
+                collapseSidebarDesktop();
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('member-sidebar');
+            const wrapper = document.getElementById('main-content-wrapper');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (window.innerWidth < 1024) {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            } else {
+                if (sidebar.classList.contains('lg:translate-x-0')) {
+                    collapseSidebarDesktop();
+                } else {
+                    expandSidebarDesktop();
+                }
+            }
+        }
+
+        function collapseSidebarDesktop() {
+            const sidebar = document.getElementById('member-sidebar');
+            const wrapper = document.getElementById('main-content-wrapper');
+            sidebar.classList.remove('lg:translate-x-0');
+            sidebar.classList.add('lg:-translate-x-full');
+            wrapper.classList.remove('lg:pl-64');
+            wrapper.classList.add('lg:pl-0');
+            localStorage.setItem('persis_member_sidebar_collapsed', 'true');
+        }
+
+        function expandSidebarDesktop() {
+            const sidebar = document.getElementById('member-sidebar');
+            const wrapper = document.getElementById('main-content-wrapper');
+            sidebar.classList.add('lg:translate-x-0');
+            sidebar.classList.remove('lg:-translate-x-full');
+            wrapper.classList.add('lg:pl-64');
+            wrapper.classList.remove('lg:pl-0');
+            localStorage.setItem('persis_member_sidebar_collapsed', 'false');
         }
     </script>
 </body>
