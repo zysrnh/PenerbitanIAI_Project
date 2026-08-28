@@ -168,7 +168,7 @@
             <!-- Document Footer -->
             <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <div class="text-[11px] text-slate-500 text-center sm:text-left">
-                    <p class="font-medium text-slate-700">Penerbitan & Percetakan Resmi PENERBIT PERSIS (IAI Persis Bandung)</p>
+                    <p class="font-medium text-slate-700">Penerbitan & Percetakan Resmi PENERBIT PERSIS (PERSIS PERS)</p>
                     <p>Layanan Pelanggan WhatsApp: <strong class="text-slate-800">0821-1611-6133</strong></p>
                 </div>
                 @php

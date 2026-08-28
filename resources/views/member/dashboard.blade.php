@@ -256,7 +256,7 @@
                                 <span class="px-2 py-0.5 bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 rounded-xs text-[9.5px] font-extrabold uppercase tracking-wide">
                                     <i class="fa-solid fa-circle-check text-emerald-400"></i> Anggota Resmi
                                 </span>
-                                <span class="text-[10px] text-emerald-100/70 font-mono">IAI PERSIS Bandung</span>
+                                <span class="text-[10px] text-emerald-100/70 font-mono">PERSIS PERS Bandung</span>
                             </div>
                             <h1 class="text-base sm:text-xl font-black font-heading tracking-tight text-white leading-snug">
                                 {{ $user->name }}
@@ -403,7 +403,7 @@
                         <h3 class="font-extrabold text-xs sm:text-sm text-slate-900 font-heading group-hover:text-emerald-800 transition">
                             Bantuan Redaksi
                         </h3>
-                        <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-2">Chat langsung editor dan tim percetakan IAI Persis</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-2">Chat langsung editor dan tim percetakan PERSIS PERS</p>
                     </div>
                 </a>
 
@@ -414,7 +414,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="font-extrabold text-slate-900 text-xs sm:text-sm font-heading">Koleksi Terbitan Terbaru</h2>
-                        <p class="text-[11px] text-slate-400">Riset dosen dan monograf ilmiah terbitan IAI PERSIS Bandung</p>
+                        <p class="text-[11px] text-slate-400">Riset dosen dan monograf ilmiah terbitan PERSIS PERS Bandung</p>
                     </div>
                     <a href="{{ route('katalog') }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
                         <span>Semua Buku</span>

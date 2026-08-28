@@ -111,7 +111,7 @@
                 </div>
                 <p class="font-extrabold text-xs text-slate-900">PENERBIT PERSIS (PERSIS PERS)</p>
                 <p class="text-[10px] text-slate-700 leading-tight">
-                    Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Kab. Bandung 40287
+                    Kantor Redaksi PERSIS PERS, Jl. Ciganitri No.2, Bojongsoang, Kab. Bandung 40287
                 </p>
                 <p class="text-[10px] font-mono text-slate-800 font-bold mt-1">
                     <i class="fa-solid fa-phone text-[8.5px] mr-1"></i>082116116133

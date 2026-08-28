@@ -18,7 +18,7 @@ class MemberDashboardController extends Controller
         $totalBooks = Book::count();
         $recentBooks = Book::latest()->take(6)->get();
         $contactWa = SiteSetting::get('contact_whatsapp', '6282116116133');
-        $contactEmail = SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id');
+        $contactEmail = SiteSetting::get('contact_email', 'info@penerbitpersis.com');
 
         $userOrders = Order::where('user_id', $user->id)
             ->orWhere('customer_email', $user->email)

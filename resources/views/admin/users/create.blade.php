@@ -42,7 +42,7 @@
                         type="email" 
                         name="email" 
                         value="{{ old('email') }}" 
-                        placeholder="email@iaipibandung.ac.id" 
+                        placeholder="admin@penerbitpersis.com" 
                         required 
                         class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                     />

@@ -27,11 +27,11 @@
                                             PERSIS PERS
                                         </div>
                                         <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">
-                                            Penerbitan &amp; Percetakan IAI Persis Bandung
+                                            Penerbitan &amp; Percetakan PERSIS PERS
                                         </div>
                                         <div style="font-size: 11px; color: #64748b; margin-top: 4px; line-height: 1.4;">
-                                            {{ \App\Models\SiteSetting::get('contact_address', 'Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287') }}<br>
-                                            Telepon/WhatsApp: {{ \App\Models\SiteSetting::get('contact_whatsapp', '082116116133') }} | Email: {{ \App\Models\SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id') }}
+                                            {{ \App\Models\SiteSetting::get('contact_address', 'Kantor Redaksi PERSIS PERS, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287') }}<br>
+                                            Telepon/WhatsApp: {{ \App\Models\SiteSetting::get('contact_whatsapp', '082116116133') }} | Email: {{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}
                                         </div>
                                     </td>
                                 </tr>
@@ -88,7 +88,7 @@
                                 <div style="font-size: 13px; color: #475569;">Hormat kami,</div>
                                 <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 6px;">{{ $adminName }}</div>
                                 <div style="font-size: 12.5px; font-weight: 600; color: #006830;">Tim Redaksi &amp; Penerbitan PERSIS PERS</div>
-                                <div style="font-size: 11.5px; color: #64748b;">Institut Agama Islam Persatuan Islam Bandung</div>
+                                <div style="font-size: 11.5px; color: #64748b;">Penerbitan & Percetakan PERSIS PERS</div>
                             </div>
 
                             <!-- Reference to Original Message -->
@@ -123,7 +123,7 @@
                     <tr>
                         <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 18px 36px; text-align: center; font-size: 11px; color: #64748b; line-height: 1.5;">
                             <div>Surat elektronik resmi ini dikirimkan oleh <strong>Sistem Manajemen Redaksi PERSIS PERS</strong>.</div>
-                            <div style="margin-top: 4px; color: #94a3b8;">&copy; {{ date('Y') }} PERSIS PERS &bull; Institut Agama Islam Persatuan Islam Bandung. Seluruh hak cipta dilindungi undang-undang.</div>
+                            <div style="margin-top: 4px; color: #94a3b8;">&copy; {{ date('Y') }} PERSIS PERS &bull; Penerbitan & Percetakan PERSIS PERS. Seluruh hak cipta dilindungi undang-undang.</div>
                         </td>
                     </tr>
 

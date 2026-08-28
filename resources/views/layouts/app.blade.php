@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v=3">
     <link rel="manifest" href="{{ asset('site.webmanifest') }}?v=3">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3">
-    <title>@yield('title', 'PENERBIT PERSIS | Penerbitan & Percetakan IAI Persis Bandung')</title>
+    <title>@yield('title', 'PENERBIT PERSIS | Penerbitan & Percetakan PERSIS PERS')</title>
 
     <!-- Google Fonts Plus Jakarta Sans & Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -547,7 +547,7 @@
                     <div class="space-y-2 text-xs text-slate-400">
                         <p class="flex items-start gap-2">
                             <i class="fa-solid fa-location-dot text-emerald-400 mt-1 shrink-0"></i>
-                            <span>{{ \App\Models\SiteSetting::get('contact_address', 'Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Bandung') }}</span>
+                            <span>{{ \App\Models\SiteSetting::get('contact_address', 'Kantor Redaksi PERSIS PERS, Jl. Ciganitri No.2, Bojongsoang, Bandung') }}</span>
                         </p>
                         <p class="flex items-center gap-2">
                             <i class="fa-brands fa-whatsapp text-emerald-400 shrink-0"></i>
@@ -555,7 +555,7 @@
                         </p>
                         <p class="flex items-center gap-2">
                             <i class="fa-solid fa-envelope text-emerald-400 shrink-0"></i>
-                            <span>{{ \App\Models\SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id') }}</span>
+                            <span>{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}</span>
                         </p>
                     </div>
                 </div>
@@ -563,7 +563,7 @@
             </div>
 
             <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-                <p>&copy; {{ date('Y') }} PENERBIT PERSIS - Penerbitan &amp; Percetakan IAI PERSIS Bandung. All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} PENERBIT PERSIS - Penerbitan &amp; Percetakan PERSIS PERS Bandung. All rights reserved.</p>
                 <div class="flex items-center gap-4">
                     <a href="{{ route('admin.login') }}" class="hover:text-emerald-400 transition flex items-center gap-1">
                         <i class="fa-solid fa-lock text-[10px]"></i> Login Admin

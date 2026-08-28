@@ -134,7 +134,7 @@
                             class="w-full p-3 bg-slate-50 border border-slate-300 rounded-sm text-xs sm:text-sm text-slate-900 focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700 outline-none transition font-sans leading-relaxed"
                             placeholder="Tuliskan pesan tanggapan atau instruksi penerbitan naskah..."
                             required
-                        >{{ old('reply_message', "Halo " . $message->name . ",\n\nTerima kasih telah menghubungi Redaksi PERSIS PERS mengenai " . ($message->service_category ?? 'penerbitan naskah') . ".\n\nKami telah menerima permohonan Anda dan dengan senang hati siap membantu proses selanjutnya.\n\n[Tuliskan keterangan detail / lampiran panduan naskah di sini]\n\nSalam hangat,\nTim Redaksi PERSIS PERS\nIAI Persis Bandung") }}</textarea>
+                        >{{ old('reply_message', "Halo " . $message->name . ",\n\nTerima kasih telah menghubungi Redaksi PERSIS PERS mengenai " . ($message->service_category ?? 'penerbitan naskah') . ".\n\nKami telah menerima permohonan Anda dan dengan senang hati siap membantu proses selanjutnya.\n\n[Tuliskan keterangan detail / lampiran panduan naskah di sini]\n\nSalam hangat,\nTim Redaksi PERSIS PERS\nPERSIS PERS") }}</textarea>
                     </div>
 
                     <div class="pt-1 flex flex-col sm:flex-row items-center justify-between gap-3">

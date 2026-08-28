@@ -388,7 +388,7 @@
                                                     {{ $it['title'] ?? 'Judul Buku' }}
                                                 </h3>
                                                 <p class="text-[10.5px] text-slate-500 truncate">
-                                                    {{ $it['author'] ?? 'Penulis IAI Persis' }}
+                                                    {{ $it['author'] ?? 'Penulis PERSIS PERS' }}
                                                 </p>
                                                 <div class="pt-1 flex items-center justify-between text-xs">
                                                     <span class="text-[11px] text-slate-500 font-mono">{{ $it['quantity'] ?? 1 }}x @ {{ $it['formatted_price'] ?? 'Rp 0' }}</span>

@@ -13,9 +13,9 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Super Admin
         User::updateOrCreate(
-            ['email' => 'superadmin@iaipibandung.ac.id'],
+            ['email' => 'superadmin@penerbitpersis.com'],
             [
-                'name' => 'Super Admin IAI Persis',
+                'name' => 'Super Admin PERSIS PERS',
                 'role' => 'super_admin',
                 'phone' => '082116116133',
                 'is_active' => true,
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         // 2. Admin Biasa
         User::updateOrCreate(
-            ['email' => 'admin@iaipibandung.ac.id'],
+            ['email' => 'admin@penerbitpersis.com'],
             [
                 'name' => 'Admin Penerbitan',
                 'role' => 'admin',
@@ -41,10 +41,10 @@ class DatabaseSeeder extends Seeder
             'contact_banner_badge' => 'Layanan & Informasi',
             'contact_banner_title' => 'Hubungi Kami & Layanan Redaksi',
             'contact_banner_desc' => 'Konsultasikan naskah buku, kebutuhan cetak, pengurusan ISBN, atau publikasi ilmiah bersama tim Persis Pers. Kami siap membantu Anda.',
-            'contact_address' => 'Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287',
+            'contact_address' => 'Kantor Redaksi PERSIS PERS, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287',
             'contact_whatsapp' => '082116116133',
             'contact_phone' => '(022) 5441951',
-            'contact_email' => 'penerbitan@iaipibandung.ac.id',
+            'contact_email' => 'info@penerbitpersis.com',
             'contact_email_note' => 'Respon cepat 1x24 jam kerja',
             'contact_hours' => 'Senin - Jumat: 08:00 - 16:00 WIB',
             'contact_hours_weekend' => 'Sabtu & Minggu: Tutup',
@@ -61,9 +61,9 @@ class DatabaseSeeder extends Seeder
             // About Us Settings
             'about_banner_badge' => 'Mengenal Lembaga',
             'about_banner_title' => 'Pusat Penerbitan, Percetakan, & Hilirisasi Karya Ilmiah',
-            'about_banner_desc' => 'PERSIS PERS adalah unit penerbitan dan percetakan resmi di bawah naungan Institut Agama Islam Persatuan Islam Bandung, berdedikasi dalam menyebarluaskan khazanah keilmuan Islam dan literasi akademik berkualitas.',
+            'about_banner_desc' => 'PERSIS PERS adalah unit penerbitan dan percetakan resmi di bawah naungan Penerbitan & Percetakan PERSIS PERS, berdedikasi dalam menyebarluaskan khazanah keilmuan Islam dan literasi akademik berkualitas.',
             'about_profile_title' => 'Komitmen Membangun Peradaban Literasi & Riset Akademik',
-            'about_profile_story_1' => 'PERSIS PERS didirikan sebagai wujud nyata komitmen Institut Agama Islam Persatuan Islam (IAI PERSIS) Bandung dalam menjembatani hasil riset, gagasan akademik para dosen, peneliti, dan civitas akademika agar dapat bertransformasi menjadi karya buku bermutu tinggi yang ber-ISBN dan tersebar luas ke masyarakat umum.',
+            'about_profile_story_1' => 'PERSIS PERS didirikan sebagai wujud nyata komitmen PERSIS PERS (PERSIS PERS) Bandung dalam menjembatani hasil riset, gagasan akademik para dosen, peneliti, dan civitas akademika agar dapat bertransformasi menjadi karya buku bermutu tinggi yang ber-ISBN dan tersebar luas ke masyarakat umum.',
             'about_profile_story_2' => 'Kami melayani penerbitan buku ajar perguruan tinggi, monograf, buku referensi, konversi karya tulis ilmiah (skripsi, tesis, disertasi), hingga jurnal ilmiah. Dilengkapi divisi percetakan mandiri dengan mesin offset dan digital printing modern, kami menjamin kualitas cetak, kerapian tata letak (layout), dan desain sampul yang estetik serta presisi.',
             'about_feature_1' => 'Proses Peer-Review Berstandar Ilmiah',
             'about_feature_2' => 'Pengurusan ISBN & KDT Resmi Perpusnas',

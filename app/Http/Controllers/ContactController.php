@@ -18,10 +18,10 @@ class ContactController extends Controller
             'banner_title' => SiteSetting::get('contact_banner_title', 'Hubungi Kami & Layanan Redaksi'),
             'banner_desc' => SiteSetting::get('contact_banner_desc', 'Konsultasikan naskah buku, kebutuhan cetak, pengurusan ISBN, atau publikasi ilmiah bersama tim Persis Pers. Kami siap membantu Anda.'),
 
-            'address' => SiteSetting::get('contact_address', 'Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287'),
+            'address' => SiteSetting::get('contact_address', 'Kantor Redaksi PERSIS PERS, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287'),
             'whatsapp' => SiteSetting::get('contact_whatsapp', '082116116133'),
             'phone' => SiteSetting::get('contact_phone', '(022) 5441951'),
-            'email' => SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id'),
+            'email' => SiteSetting::get('contact_email', 'info@penerbitpersis.com'),
             'email_note' => SiteSetting::get('contact_email_note', 'Respon cepat 1x24 jam kerja'),
             'hours' => SiteSetting::get('contact_hours', 'Senin – Jumat: 08:00 – 16:00 WIB'),
             'hours_weekend' => SiteSetting::get('contact_hours_weekend', 'Sabtu & Minggu: Tutup'),

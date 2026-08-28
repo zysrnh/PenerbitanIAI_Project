@@ -11,10 +11,10 @@ class AboutController extends Controller
     {
         $bannerBadge = SiteSetting::get('about_banner_badge', 'Mengenal Lembaga');
         $bannerTitle = SiteSetting::get('about_banner_title', 'Pusat Penerbitan, Percetakan, & Hilirisasi Karya Ilmiah');
-        $bannerDesc = SiteSetting::get('about_banner_desc', 'PERSIS PERS adalah unit penerbitan dan percetakan resmi di bawah naungan Institut Agama Islam Persatuan Islam Bandung, berdedikasi dalam menyebarluaskan khazanah keilmuan Islam dan literasi akademik berkualitas.');
+        $bannerDesc = SiteSetting::get('about_banner_desc', 'PERSIS PERS adalah unit penerbitan dan percetakan resmi di bawah naungan Penerbitan & Percetakan PERSIS PERS, berdedikasi dalam menyebarluaskan khazanah keilmuan Islam dan literasi akademik berkualitas.');
 
         $profileTitle = SiteSetting::get('about_profile_title', 'Komitmen Membangun Peradaban Literasi & Riset Akademik');
-        $profileStory1 = SiteSetting::get('about_profile_story_1', 'PERSIS PERS didirikan sebagai wujud nyata komitmen Institut Agama Islam Persatuan Islam (IAI PERSIS) Bandung dalam menjembatani hasil riset, gagasan akademik para dosen, peneliti, dan civitas akademika agar dapat bertransformasi menjadi karya buku bermutu tinggi yang ber-ISBN dan tersebar luas ke masyarakat umum.');
+        $profileStory1 = SiteSetting::get('about_profile_story_1', 'PERSIS PERS didirikan sebagai wujud nyata komitmen PERSIS PERS (PERSIS PERS) Bandung dalam menjembatani hasil riset, gagasan akademik para dosen, peneliti, dan civitas akademika agar dapat bertransformasi menjadi karya buku bermutu tinggi yang ber-ISBN dan tersebar luas ke masyarakat umum.');
         $profileStory2 = SiteSetting::get('about_profile_story_2', 'Kami melayani penerbitan buku ajar perguruan tinggi, monograf, buku referensi, konversi karya tulis ilmiah (skripsi, tesis, disertasi), hingga jurnal ilmiah. Dilengkapi divisi percetakan mandiri dengan mesin offset dan digital printing modern, kami menjamin kualitas cetak, kerapian tata letak (layout), dan desain sampul yang estetik serta presisi.');
 
         $feature1 = SiteSetting::get('about_feature_1', 'Proses Peer-Review Berstandar Ilmiah');
