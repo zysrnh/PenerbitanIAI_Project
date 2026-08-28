@@ -125,14 +125,115 @@
                 <form method="POST" action="{{ route('admin.orders.shipping', $order->id) }}" class="bg-slate-50/70 p-4 rounded-sm border border-slate-200 space-y-3 text-xs">
                     @csrf
                     
-                    <div>
+                                        <!-- Custom Enterprise Status Dropdown (No Emojis) -->
+                    <div class="relative" id="customShippingDropdownContainer">
                         <label class="block text-xs font-bold text-slate-700 mb-1">Status Pengiriman</label>
-                        <select name="shipping_status" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-slate-800 text-xs font-medium focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600">
-                            <option value="menunggu_proses" {{ $order->shipping_status === 'menunggu_proses' ? 'selected' : '' }}>⏳ Menunggu Proses Packing</option>
-                            <option value="diproses" {{ $order->shipping_status === 'diproses' ? 'selected' : '' }}>📦 Sedang Diproses / Packing</option>
-                            <option value="dikirim" {{ $order->shipping_status === 'dikirim' ? 'selected' : '' }}>🚚 Sudah Dikirim (Kurir / Ekspedisi)</option>
-                            <option value="selesai" {{ $order->shipping_status === 'selesai' ? 'selected' : '' }}>✅ Pesanan Selesai / Diterima Pembeli</option>
-                        </select>
+                        
+                        <!-- Hidden Input for Form Submission -->
+                        <input type="hidden" name="shipping_status" id="shippingStatusValue" value="{{ $order->shipping_status }}" />
+
+                        <!-- Trigger Button -->
+                        <button 
+                            type="button" 
+                            id="shippingStatusTrigger"
+                            onclick="toggleShippingDropdown()"
+                            class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-slate-800 text-xs font-semibold flex items-center justify-between shadow-2xs hover:border-emerald-600 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition cursor-pointer"
+                        >
+                            <div class="flex items-center gap-2" id="selectedStatusDisplay">
+                                @if($order->shipping_status === 'selesai')
+                                    <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                                    <span class="text-slate-900 font-bold">Pesanan Selesai / Diterima</span>
+                                @elseif($order->shipping_status === 'dikirim')
+                                    <i class="fa-solid fa-truck-fast text-blue-600 text-sm"></i>
+                                    <span class="text-slate-900 font-bold">Sudah Dikirim (Kurir / Ekspedisi)</span>
+                                @elseif($order->shipping_status === 'diproses')
+                                    <i class="fa-solid fa-box text-indigo-600 text-sm"></i>
+                                    <span class="text-slate-900 font-bold">Sedang Diproses / Packing</span>
+                                @else
+                                    <i class="fa-solid fa-clock text-amber-600 text-sm"></i>
+                                    <span class="text-slate-900 font-bold">Menunggu Proses Packing</span>
+                                @endif
+                            </div>
+                            <i id="shippingDropdownChevron" class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform duration-200"></i>
+                        </button>
+
+                        <!-- Dropdown Options Menu -->
+                        <div 
+                            id="shippingStatusMenu" 
+                            class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in"
+                        >
+                            <!-- 1. Menunggu Proses -->
+                            <button 
+                                type="button" 
+                                onclick="selectShippingOption('menunggu_proses', 'fa-solid fa-clock text-amber-600', 'Menunggu Proses Packing')"
+                                class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
+                            >
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-6 h-6 rounded-xs bg-amber-50 text-amber-700 flex items-center justify-center text-xs shrink-0">
+                                        <i class="fa-solid fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900">Menunggu Proses Packing</p>
+                                        <p class="text-[10px] text-slate-400">Pesanan baru lunas siap disiapkan</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-check text-xs text-emerald-600 {{ $order->shipping_status === 'menunggu_proses' ? '' : 'hidden' }} status-check-icon" data-status="menunggu_proses"></i>
+                            </button>
+
+                            <!-- 2. Sedang Diproses -->
+                            <button 
+                                type="button" 
+                                onclick="selectShippingOption('diproses', 'fa-solid fa-box text-indigo-600', 'Sedang Diproses / Packing')"
+                                class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
+                            >
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-6 h-6 rounded-xs bg-indigo-50 text-indigo-700 flex items-center justify-center text-xs shrink-0">
+                                        <i class="fa-solid fa-box"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900">Sedang Diproses / Packing</p>
+                                        <p class="text-[10px] text-slate-400">Naskah &amp; buku sedang dikemas</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-check text-xs text-emerald-600 {{ $order->shipping_status === 'diproses' ? '' : 'hidden' }} status-check-icon" data-status="diproses"></i>
+                            </button>
+
+                            <!-- 3. Sudah Dikirim -->
+                            <button 
+                                type="button" 
+                                onclick="selectShippingOption('dikirim', 'fa-solid fa-truck-fast text-blue-600', 'Sudah Dikirim (Kurir / Ekspedisi)')"
+                                class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
+                            >
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-6 h-6 rounded-xs bg-blue-50 text-blue-700 flex items-center justify-center text-xs shrink-0">
+                                        <i class="fa-solid fa-truck-fast"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900">Sudah Dikirim (Kurir / Ekspedisi)</p>
+                                        <p class="text-[10px] text-slate-400">Paket telah diserahkan ke kurir</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-check text-xs text-emerald-600 {{ $order->shipping_status === 'dikirim' ? '' : 'hidden' }} status-check-icon" data-status="dikirim"></i>
+                            </button>
+
+                            <!-- 4. Selesai / Diterima -->
+                            <button 
+                                type="button" 
+                                onclick="selectShippingOption('selesai', 'fa-solid fa-circle-check text-emerald-600', 'Pesanan Selesai / Diterima')"
+                                class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
+                            >
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-6 h-6 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs shrink-0">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900">Pesanan Selesai / Diterima</p>
+                                        <p class="text-[10px] text-slate-400">Buku telah sukses diterima pembeli</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-check text-xs text-emerald-600 {{ $order->shipping_status === 'selesai' ? '' : 'hidden' }} status-check-icon" data-status="selesai"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div>
@@ -222,4 +323,45 @@
     </div>
 
 </div>
+
+<script>
+    function toggleShippingDropdown() {
+        const menu = document.getElementById('shippingStatusMenu');
+        const chevron = document.getElementById('shippingDropdownChevron');
+        menu.classList.toggle('hidden');
+        chevron.classList.toggle('rotate-180');
+    }
+
+    function selectShippingOption(value, iconClass, label) {
+        document.getElementById('shippingStatusValue').value = value;
+        
+        // Update trigger display
+        const display = document.getElementById('selectedStatusDisplay');
+        display.innerHTML = `<i class="${iconClass} text-sm"></i><span class="text-slate-900 font-bold">${label}</span>`;
+        
+        // Update check icons
+        document.querySelectorAll('.status-check-icon').forEach(icon => {
+            if (icon.getAttribute('data-status') === value) {
+                icon.classList.remove('hidden');
+            } else {
+                icon.classList.add('hidden');
+            }
+        });
+
+        // Close menu
+        toggleShippingDropdown();
+    }
+
+    // Close dropdown on click outside
+    document.addEventListener('click', function(e) {
+        const container = document.getElementById('customShippingDropdownContainer');
+        const menu = document.getElementById('shippingStatusMenu');
+        const chevron = document.getElementById('shippingDropdownChevron');
+        if (container && !container.contains(e.target) && menu && !menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+            chevron.classList.remove('rotate-180');
+        }
+    });
+</script>
 @endsection
+
