@@ -184,26 +184,27 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header CTA Button + Auth (Icon-Only with Smooth Animations) -->
-                <div class="flex items-center gap-2 sm:gap-3">
-                        {{-- Shopping Cart Button --}}
-                        <button type="button" 
-                                onclick="window.openCartDrawer()" 
-                                class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition shrink-0"
-                                title="Keranjang Belanja">
-                            <i class="fa-solid fa-cart-shopping text-sm transition-transform duration-300"></i>
-                            <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#006830] text-white rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs">
-                                0
-                            </span>
-                        </button>
+                <!-- Header Action Buttons (Spacious & Touch-Friendly) -->
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                    {{-- Shopping Cart Button --}}
+                    <button type="button" 
+                            onclick="window.openCartDrawer()" 
+                            class="user-nav-btn relative w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition shrink-0"
+                            title="Keranjang Belanja">
+                        <i class="fa-solid fa-cart-shopping text-sm pointer-events-none"></i>
+                        <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#006830] text-white rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs pointer-events-none">
+                            0
+                        </span>
+                    </button>
+
                     @auth
                         @if(Auth::user()->role === 'member')
-                            {{-- Member Profile Pill — murni JS click-toggle, gak ada lagi CSS hover yang tabrakan --}}
-                            <div class="relative group" id="memberUserDropdownContainer">
+                            {{-- Member Profile Pill --}}
+                            <div class="relative" id="memberUserDropdownContainer">
                                 <button type="button" 
                                         id="memberUserDropdownBtn"
                                         onclick="window.toggleMemberDropdown(event)" 
-                                        class="user-nav-btn flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2.5 sm:pr-3 py-1 sm:py-1.5 rounded-full border border-emerald-200/90 bg-white hover:bg-emerald-50/70 hover:border-emerald-500 shadow-2xs cursor-pointer">
+                                        class="user-nav-btn flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1 sm:py-1.5 rounded-full border border-emerald-200/90 bg-white hover:bg-emerald-50/70 hover:border-emerald-500 shadow-2xs cursor-pointer">
                                     <div class="relative">
                                         @if(Auth::user()->avatar_url)
                                             <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover shadow-xs border border-emerald-500" />
@@ -214,15 +215,15 @@
                                         @endif
                                         <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-white rounded-full"></span>
                                     </div>
-                                    <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-800 max-w-[90px] sm:max-w-[120px] truncate transition">
+                                    <span class="hidden sm:inline text-xs font-bold text-slate-800 group-hover:text-emerald-800 max-w-[90px] sm:max-w-[120px] truncate transition">
                                         {{ explode(' ', Auth::user()->name)[0] }}
                                     </span>
                                     <i id="memberDropdownChevron" class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200"></i>
                                 </button>
 
-                                <!-- Dropdown Menu: full JS-controlled (klik buka/tutup + klik di luar buat nutup) -->
+                                <!-- Dropdown Menu -->
                                 <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50">
-                                    <div class="auth-dropdown-panel bg-white/95 backdrop-blur-md border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up">
+                                    <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up">
                                         <div class="px-3 py-2 border-b border-slate-100 mb-1">
                                             <p class="text-xs font-extrabold text-slate-900 truncate">{{ Auth::user()->name }}</p>
                                             <p class="text-[10.5px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
@@ -239,7 +240,7 @@
                                         <div class="border-t border-slate-100 mt-1 pt-1">
                                             <form method="POST" action="{{ route('member.logout') }}">
                                                 @csrf
-                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-sm transition">
+                                                <button type="submit" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-red-600 hover:bg-red-50 rounded-sm transition cursor-pointer">
                                                     <i class="fa-solid fa-right-from-bracket text-xs w-4"></i> Keluar Akun
                                                 </button>
                                             </form>
@@ -248,70 +249,85 @@
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn px-3.5 py-2 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-2 shadow-xs">
-                                <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> Admin
+                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn px-3 py-1.5 sm:px-3.5 sm:py-2 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 shadow-xs">
+                                <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> <span class="hidden sm:inline">Admin</span>
                             </a>
                         @endif
                     @else
-                        {{-- Guest: Direct Clean "Masuk" Button --}}
+                        {{-- Desktop Only "Masuk" Button (Hidden on Mobile phone screen to avoid crowding) --}}
                         <a href="{{ route('member.login') }}" 
-                           class="px-3.5 sm:px-4 py-1.5 sm:py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer select-none">
+                           class="hidden sm:flex px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition-all duration-200 items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer select-none">
                             <i class="fa-solid fa-right-to-bracket text-xs text-emerald-300 pointer-events-none"></i>
-                            <span class="pointer-events-none">Masuk</span>
+                            <span>Masuk</span>
                         </a>
                     @endauth
 
-                    <!-- Mobile Menu Button (Hamburger) -->
-                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-sm border border-slate-200 text-slate-700 hover:bg-slate-100 focus:outline-none transition">
-                        <i class="fa-solid fa-bars text-base"></i>
+                    <!-- Mobile Menu Button (Hamburger) with spacious 40x40 hit target -->
+                    <button id="mobile-menu-btn" 
+                            type="button"
+                            onclick="window.toggleMobileMenu()" 
+                            class="lg:hidden w-10 h-10 rounded-sm border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition cursor-pointer shadow-2xs shrink-0"
+                            aria-label="Buka Menu Navigasi">
+                        <i id="mobileMenuIcon" class="fa-solid fa-bars text-base pointer-events-none"></i>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Mobile Drawer Menu -->
-        <div id="mobile-drawer" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 animate-fade-in-up">
-            <a href="{{ url('/') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->is('/') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">Beranda</a>
-            <a href="{{ route('tentang') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Tentang Kami</a>
-            <a href="{{ url('/#layanan') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Layanan Penerbitan</a>
-            <a href="{{ url('/#katalog') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Katalog Buku</a>
-            <a href="{{ url('/kontak') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('kontak') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">Kontak Redaksi</a>
+        <div id="mobile-drawer" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 animate-fade-in-up shadow-lg">
+            <a href="{{ url('/') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->is('/') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fa-solid fa-house text-emerald-700 text-xs mr-2 w-4"></i> Beranda
+            </a>
+            <a href="{{ route('tentang') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
+                <i class="fa-solid fa-building text-emerald-700 text-xs mr-2 w-4"></i> Tentang Kami
+            </a>
+            <a href="{{ url('/#layanan') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
+                <i class="fa-solid fa-list-check text-emerald-700 text-xs mr-2 w-4"></i> Layanan Penerbitan
+            </a>
+            <a href="{{ route('katalog') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
+                <i class="fa-solid fa-book-open text-emerald-700 text-xs mr-2 w-4"></i> Katalog Buku
+            </a>
+            <a href="{{ url('/kontak') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('kontak') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fa-solid fa-headset text-emerald-700 text-xs mr-2 w-4"></i> Kontak Redaksi
+            </a>
+
             <div class="pt-3 border-t border-slate-100 space-y-2">
                 @auth
                     @if(Auth::user()->role === 'member')
-                        <div class="px-1 py-2 bg-emerald-50 rounded-sm flex items-center gap-2 mb-2">
+                        <div class="px-3 py-2 bg-emerald-50 rounded-sm flex items-center gap-2.5 mb-2 border border-emerald-200">
                             @if(Auth::user()->avatar_url)
-                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover border border-emerald-600 shrink-0" />
+                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover border border-emerald-600 shrink-0" />
                             @else
-                                <div class="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                                <div class="w-8 h-8 rounded-full bg-emerald-700 flex items-center justify-center text-white text-xs font-black shrink-0">
                                     {{ Auth::user()->initials }}
                                 </div>
                             @endif
-                            <div>
-                                <p class="text-[11px] font-bold text-emerald-900">{{ Auth::user()->name }}</p>
-                                <p class="text-[10px] text-slate-500">Member Aktif</p>
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-emerald-900 truncate">{{ Auth::user()->name }}</p>
+                                <p class="text-[10px] text-slate-500 font-mono">Member Aktif</p>
                             </div>
                         </div>
-                        <a href="{{ route('member.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                        <a href="{{ route('member.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
                             <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Saya
                         </a>
                         <form method="POST" action="{{ route('member.logout') }}">
                             @csrf
-                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50">
-                                <i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar
+                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50 cursor-pointer">
+                                <i class="fa-solid fa-right-from-bracket text-xs"></i> Keluar
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-800 text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> Admin Panel
+                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-800 text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
+                            <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> Admin Panel
                         </a>
                     @endif
                 @else
-                    <a href="{{ route('member.login') }}" class="w-full py-2.5 border border-slate-200 text-slate-700 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-slate-50">
-                        <i class="fa-solid fa-right-to-bracket text-[10px]"></i> Masuk
+                    <a href="{{ route('member.login') }}" class="w-full py-2.5 border border-slate-300 text-slate-700 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-slate-50 shadow-2xs">
+                        <i class="fa-solid fa-right-to-bracket text-xs text-emerald-700"></i> Masuk Akun
                     </a>
-                    <a href="{{ route('member.register') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-user-plus text-[10px]"></i> Daftar Member
+                    <a href="{{ route('member.register') }}" class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
+                        <i class="fa-solid fa-user-plus text-xs text-lime-300"></i> Daftar Member Baru
                     </a>
                 @endauth
             </div>
@@ -420,10 +436,36 @@
     </footer>
 
     <script>
-        function toggleMobileMenu() {
+        window.toggleMobileMenu = function() {
             const drawer = document.getElementById('mobile-drawer');
-            drawer.classList.toggle('hidden');
-        }
+            const icon = document.getElementById('mobileMenuIcon');
+            if (drawer) {
+                const isHidden = drawer.classList.contains('hidden');
+                if (isHidden) {
+                    drawer.classList.remove('hidden');
+                    if (icon) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-xmark');
+                    }
+                } else {
+                    drawer.classList.add('hidden');
+                    if (icon) {
+                        icon.classList.remove('fa-xmark');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            }
+        };
+
+        window.closeMobileMenu = function() {
+            const drawer = document.getElementById('mobile-drawer');
+            const icon = document.getElementById('mobileMenuIcon');
+            if (drawer) drawer.classList.add('hidden');
+            if (icon) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        };
     </script>
 
     <!-- ========================================================================= -->
