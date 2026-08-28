@@ -122,6 +122,55 @@
     </style>
 </head>
 <body class="antialiased text-slate-800 bg-white selection:bg-brand-800 selection:text-white flex flex-col min-h-screen">
+<script>
+    window.toggleMobileMenu = function(e) {
+        if (e) {
+            try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+        }
+        const drawer = document.getElementById('mobile-drawer');
+        const icon = document.getElementById('mobileMenuIcon');
+        if (!drawer) return;
+
+        const isCurrentlyHidden = drawer.style.display === 'none' || drawer.classList.contains('hidden') || (window.getComputedStyle && window.getComputedStyle(drawer).display === 'none');
+
+        if (isCurrentlyHidden) {
+            drawer.style.display = 'block';
+            drawer.style.display = 'block';
+                drawer.classList.remove('hidden');
+            if (icon) {
+                icon.className = 'fa-solid fa-xmark text-lg pointer-events-none';
+            }
+        } else {
+            drawer.style.display = 'none';
+            drawer.style.display = 'none';
+                drawer.classList.add('hidden');
+            if (icon) {
+                icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
+            }
+        }
+    };
+
+    window.closeMobileMenu = function() {
+        const drawer = document.getElementById('mobile-drawer');
+        const icon = document.getElementById('mobileMenuIcon');
+        if (drawer) {
+            drawer.style.display = 'none';
+            drawer.style.display = 'none';
+                drawer.classList.add('hidden');
+        }
+        if (icon) {
+            icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('mobile-menu-btn');
+        if (btn) {
+            btn.onclick = window.toggleMobileMenu;
+        }
+    });
+</script>
+
 @php
     $navServicesRaw = \App\Models\SiteSetting::get('home_services_json', null);
     $navServices = $navServicesRaw ? json_decode($navServicesRaw, true) : [
@@ -146,7 +195,7 @@
 
 
     <!-- Top Sticky Header -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300">
+    <header class="sticky top-0 z-[100] bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 
@@ -435,48 +484,12 @@
         </div>
     </footer>
 
-    <script>
-        window.toggleMobileMenu = function(e) {
-            if (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            const drawer = document.getElementById('mobile-drawer');
-            const icon = document.getElementById('mobileMenuIcon');
-            if (drawer) {
-                const isHidden = drawer.classList.contains('hidden');
-                if (isHidden) {
-                    drawer.classList.remove('hidden');
-                    if (icon) {
-                        icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-xmark', 'rotate-90');
-                        setTimeout(() => icon.classList.remove('rotate-90'), 150);
-                    }
-                } else {
-                    drawer.classList.add('hidden');
-                    if (icon) {
-                        icon.classList.remove('fa-xmark');
-                        icon.classList.add('fa-bars');
-                    }
-                }
-            }
-        };
-
-        window.closeMobileMenu = function() {
-            const drawer = document.getElementById('mobile-drawer');
-            const icon = document.getElementById('mobileMenuIcon');
-            if (drawer) drawer.classList.add('hidden');
-            if (icon) {
-                icon.classList.remove('fa-xmark', 'rotate-90');
-                icon.classList.add('fa-bars');
-            }
-        };
-    </script>
+    
 
     <!-- ========================================================================= -->
     <!-- GLOBAL SHOPPING CART DRAWER (SLIDE-OVER) -->
     <!-- ========================================================================= -->
-    <div id="globalCartDrawer" class="fixed inset-0 z-[9999] hidden">
+    <div id="globalCartDrawer" class="fixed inset-0 z-[9999] hidden" style="display: none;">
         <!-- Backdrop -->
         <div id="cartDrawerBackdrop" onclick="window.closeCartDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0"></div>
 
@@ -561,7 +574,7 @@
     <!-- ========================================================================= -->
     <!-- LOGIN PROMPT MODAL (FOR GUEST USERS) WITH ULTRA-SMOOTH ANIMATION -->
     <!-- ========================================================================= -->
-    <div id="loginPromptModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" onclick="if(event.target === this) window.closeLoginPromptModal()">
+    <div id="loginPromptModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" style="display: none;" onclick="if(event.target === this) window.closeLoginPromptModal()">
         <div id="loginPromptModalCard" class="bg-white rounded-sm border border-slate-100 shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out space-y-4">
             <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-2xl mx-auto shadow-2xs">
                 <i class="fa-solid fa-user-lock"></i>
@@ -665,6 +678,7 @@
             const m = document.getElementById('loginPromptModal');
             const card = document.getElementById('loginPromptModalCard');
             if (m && card) {
+                m.style.display = 'flex';
                 m.classList.remove('hidden', 'pointer-events-none');
                 m.classList.add('flex');
                 setTimeout(() => {
@@ -685,6 +699,7 @@
                 card.classList.remove('scale-100', 'translate-y-0', 'opacity-100');
                 card.classList.add('scale-95', 'translate-y-4', 'opacity-0');
                 setTimeout(() => {
+                    m.style.display = 'none';
                     m.classList.add('hidden', 'pointer-events-none');
                     m.classList.remove('flex');
                 }, 280);
@@ -697,6 +712,7 @@
             const backdrop = document.getElementById('cartDrawerBackdrop');
             const panel = document.getElementById('cartDrawerPanel');
             if (drawer && backdrop && panel) {
+                drawer.style.display = 'block';
                 drawer.classList.remove('hidden');
                 setTimeout(() => {
                     backdrop.classList.remove('opacity-0');
@@ -712,6 +728,7 @@
             const backdrop = document.getElementById('cartDrawerBackdrop');
             const panel = document.getElementById('cartDrawerPanel');
             if (drawer && backdrop && panel) {
+                drawer.style.display = 'block';
                 drawer.classList.remove('hidden');
                 setTimeout(() => {
                     backdrop.classList.remove('opacity-0');
@@ -729,7 +746,8 @@
                 backdrop.classList.add('opacity-0');
                 panel.classList.add('translate-x-full');
                 setTimeout(() => {
-                    drawer.classList.add('hidden');
+                    drawer.style.display = 'none';
+                drawer.classList.add('hidden');
                 }, 300);
             }
         };
@@ -1278,7 +1296,7 @@
     <!-- ========================================================================= -->
     <!-- CHECKOUT & LIVE QRIS AUTO-PAYMENT MODAL (CLEAN & FORMAL) -->
     <!-- ========================================================================= -->
-    <div id="checkoutQrisModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none">
+    <div id="checkoutQrisModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none" style="display: none;">
         <div id="checkoutQrisModalCard" class="bg-white rounded-sm border border-slate-300 shadow-xl max-w-md w-full overflow-hidden transform scale-98 opacity-0 transition-all duration-200 ease-out flex flex-col max-h-[92vh]">
             
             <!-- Modal Header -->
