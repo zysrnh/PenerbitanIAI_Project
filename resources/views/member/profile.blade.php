@@ -129,7 +129,7 @@
                             <span>Profil Saya</span>
                         </a>
 
-                        <a href="{{ url('/kontak') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                        <a href="javascript:void(0)" onclick="openAdminContactDrawer()" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
                             <i class="fa-solid fa-headset w-4 text-center"></i>
                             <span>Hubungi Redaksi</span>
                         </a>
@@ -667,5 +667,296 @@
             }
         });
     </script>
+<!-- ========================================================================= -->
+    <!-- ADMIN CONTACTS & ORDER SERVICE SLIDE DRAWER (MATCHING CART DRAWER STYLE) -->
+    <!-- ========================================================================= -->
+    <div id="adminContactDrawer" class="fixed inset-0 z-[9999] hidden items-end sm:items-stretch sm:justify-end" style="display: none;">
+        <!-- Backdrop -->
+        <div id="adminContactDrawerBackdrop" onclick="closeAdminContactDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 cursor-pointer"></div>
+
+        <!-- Panel (Mobile: Bottom Sheet, Desktop: Right Sidebar) -->
+        <div id="adminContactDrawerPanel" class="relative z-10 w-full sm:max-w-md bg-white shadow-2xl rounded-t-2xl sm:rounded-none flex flex-col max-h-[88vh] sm:max-h-full sm:h-full transform translate-y-full sm:translate-y-0 sm:translate-x-full transition-transform duration-300 ease-out border-t sm:border-t-0 sm:border-l border-slate-200">
+            
+            <!-- Mobile Pull Handle -->
+            <div class="sm:hidden w-full pt-3 pb-1 flex justify-center cursor-pointer select-none" onclick="closeAdminContactDrawer()">
+                <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+            </div>
+
+            <!-- Drawer Header -->
+            <div class="px-5 py-3.5 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-sm bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-xs">
+                        <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
+                            Kontak Admin &amp; Layanan
+                        </h3>
+                        <p class="text-[10px] text-emerald-200/70">Penerbitan &amp; Percetakan Resmi PERSIS PERS</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAdminContactDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Drawer Body -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+                
+                <!-- Selected Order Status Card (If Opened from Order) -->
+                <div id="drawerSelectedOrderCard" class="hidden p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-sm space-y-2 select-none">
+                    <div class="flex items-center justify-between border-b border-emerald-200/80 pb-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-receipt text-emerald-700 text-xs"></i>
+                            <span id="drawerOrderNumberText" class="font-mono font-bold text-xs text-slate-900">#INV-...</span>
+                        </div>
+                        <span id="drawerShippingBadge" class="px-2 py-0.5 bg-emerald-700 text-white rounded-xs text-[10px] font-bold uppercase font-mono">
+                            DIPROSES
+                        </span>
+                    </div>
+
+                    <div id="drawerTrackingRow" class="text-xs text-slate-700 flex items-center justify-between pt-0.5">
+                        <span class="text-slate-500">Nomor Resi:</span>
+                        <span id="drawerTrackingNumberText" class="font-mono font-bold text-emerald-900">-</span>
+                    </div>
+                    <p class="text-[10.5px] text-slate-500 leading-snug">Pilih kontak admin spesialis di bawah untuk berkonsultasi mengenai pesanan ini:</p>
+                </div>
+
+                <!-- Section Title -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-emerald-700"></i>
+                        <span>Daftar Kontak Admin Redaksi</span>
+                    </h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Tim kami siap membantu Anda setiap hari kerja (08.00 - 17.00 WIB).</p>
+                </div>
+
+                <!-- 3 Admin Contact Cards -->
+                <div class="space-y-3">
+                    
+                    <!-- ADMIN 1: Pengiriman & Gudang -->
+                    <div class="p-3.5 bg-white border border-slate-200 hover:border-emerald-500 rounded-sm shadow-2xs transition-colors space-y-2.5">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-blue-700 to-blue-500 text-white flex items-center justify-center text-sm font-black shrink-0 shadow-xs">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="text-xs font-bold text-slate-900 truncate">Admin Pengiriman &amp; Gudang</h5>
+                                    <span class="inline-flex items-center gap-1 text-[9.5px] font-bold text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                                    </span>
+                                </div>
+                                <p class="text-[10.5px] font-semibold text-blue-700 mt-0.5">Divisi Logistik &amp; Resi Ekspedisi</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Cek status packing, kurir pengantar, &amp; kendala alamat.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-mono font-bold text-slate-700">0821-1611-6133</span>
+                            <button type="button" 
+                                    onclick="contactAdminViaWa('6282116116133', 'Admin Pengiriman & Gudang')"
+                                    class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Chat WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ADMIN 2: Naskah & Penerbitan -->
+                    <div class="p-3.5 bg-white border border-slate-200 hover:border-emerald-500 rounded-sm shadow-2xs transition-colors space-y-2.5">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-emerald-800 to-emerald-600 text-white flex items-center justify-center text-sm font-black shrink-0 shadow-xs">
+                                <i class="fa-solid fa-book-bookmark"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="text-xs font-bold text-slate-900 truncate">Admin Redaksi &amp; Naskah</h5>
+                                    <span class="inline-flex items-center gap-1 text-[9.5px] font-bold text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                                    </span>
+                                </div>
+                                <p class="text-[10.5px] font-semibold text-emerald-700 mt-0.5">Divisi Penerbitan &amp; ISBN</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Pengajuan naskah baru, layout, cover, &amp; legalitas ISBN.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-mono font-bold text-slate-700">0851-1779-7487</span>
+                            <button type="button" 
+                                    onclick="contactAdminViaWa('6285117797487', 'Admin Redaksi & Naskah')"
+                                    class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Chat WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ADMIN 3: Keuangan & Pembayaran -->
+                    <div class="p-3.5 bg-white border border-slate-200 hover:border-emerald-500 rounded-sm shadow-2xs transition-colors space-y-2.5">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-amber-700 to-amber-500 text-white flex items-center justify-center text-sm font-black shrink-0 shadow-xs">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="text-xs font-bold text-slate-900 truncate">Admin Keuangan &amp; Faktur</h5>
+                                    <span class="inline-flex items-center gap-1 text-[9.5px] font-bold text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                                    </span>
+                                </div>
+                                <p class="text-[10.5px] font-semibold text-amber-800 mt-0.5">Divisi Billing &amp; Verifikasi QRIS</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Faktur pajak, bukti potong, &amp; kendala pembayaran QRIS.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-mono font-bold text-slate-700">0821-1611-6133</span>
+                            <button type="button" 
+                                    onclick="contactAdminViaWa('6282116116133', 'Admin Keuangan & Faktur')"
+                                    class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Chat WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- In-App Quick Message Accordion -->
+                <div class="pt-2 border-t border-slate-200">
+                    <div class="p-3 bg-slate-50 rounded-sm border border-slate-200 space-y-2">
+                        <span class="text-xs font-bold text-slate-800 block">Kirim Pesan Internal ke Redaksi:</span>
+                        <textarea id="drawerDirectMessageInput" rows="2" placeholder="Tuliskan pertanyaan Anda..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xs text-xs text-slate-900 focus:border-emerald-600 outline-none transition"></textarea>
+                        <button type="button" onclick="sendDrawerDirectMessage()" class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                            <i class="fa-solid fa-paper-plane text-xs text-lime-300"></i>
+                            <span>Kirim Pesan ke Redaksi</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Drawer Footer -->
+            <div class="p-3.5 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500">
+                <span>Kantor Redaksi PENERBIT PERSIS &bull; Jl. Ciganitri No.2, Bandung</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentDrawerOrderNumber = null;
+        let currentDrawerShippingStatus = null;
+        let currentDrawerTrackingNumber = null;
+
+        function openAdminContactDrawer(orderNumber = null, shippingStatus = null, trackingNumber = null) {
+            currentDrawerOrderNumber = orderNumber;
+            currentDrawerShippingStatus = shippingStatus;
+            currentDrawerTrackingNumber = trackingNumber;
+
+            const orderCard = document.getElementById('drawerSelectedOrderCard');
+            if (orderNumber && orderCard) {
+                orderCard.classList.remove('hidden');
+                document.getElementById('drawerOrderNumberText').textContent = '#' + orderNumber;
+                
+                const statusBadge = document.getElementById('drawerShippingBadge');
+                if (statusBadge) {
+                    statusBadge.textContent = (shippingStatus || 'Diproses').replace('_', ' ');
+                }
+
+                const trackRow = document.getElementById('drawerTrackingRow');
+                const trackText = document.getElementById('drawerTrackingNumberText');
+                if (trackingNumber) {
+                    trackRow.classList.remove('hidden');
+                    trackText.textContent = trackingNumber;
+                } else {
+                    trackRow.classList.add('hidden');
+                }
+            } else if (orderCard) {
+                orderCard.classList.add('hidden');
+            }
+
+            const drawer = document.getElementById('adminContactDrawer');
+            const backdrop = document.getElementById('adminContactDrawerBackdrop');
+            const panel = document.getElementById('adminContactDrawerPanel');
+
+            if (drawer && backdrop && panel) {
+                drawer.style.display = 'flex';
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-y-full', 'sm:translate-x-full');
+                    panel.classList.add('translate-y-0', 'sm:translate-x-0');
+                }, 10);
+            }
+        }
+
+        function closeAdminContactDrawer() {
+            const drawer = document.getElementById('adminContactDrawer');
+            const backdrop = document.getElementById('adminContactDrawerBackdrop');
+            const panel = document.getElementById('adminContactDrawerPanel');
+
+            if (drawer && backdrop && panel) {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-y-full', 'sm:translate-x-full');
+                panel.classList.remove('translate-y-0', 'sm:translate-x-0');
+                setTimeout(() => {
+                    drawer.style.display = 'none';
+                    drawer.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        function contactAdminViaWa(phone, adminRole) {
+            let msg = `Halo ${adminRole}, saya ingin berkonsultasi mengenai layanan PENERBIT PERSIS`;
+            if (currentDrawerOrderNumber) {
+                msg += ` untuk pesanan *#${currentDrawerOrderNumber}*`;
+                if (currentDrawerTrackingNumber) {
+                    msg += ` (No. Resi: *${currentDrawerTrackingNumber}*)`;
+                }
+            }
+            msg += `. Mohon informasinya ya. Terima kasih!`;
+
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function sendDrawerDirectMessage() {
+            const input = document.getElementById('drawerDirectMessageInput');
+            const msg = input.value.trim();
+            if (!msg) {
+                alert('Mohon tuliskan pesan terlebih dahulu.');
+                return;
+            }
+
+            const targetUrl = currentDrawerOrderNumber 
+                ? `/member/pesanan/${currentDrawerOrderNumber}/messages` 
+                : `/kontak`;
+
+            if (currentDrawerOrderNumber) {
+                fetch(targetUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ message: msg })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || 'Pesan berhasil dikirim ke Redaksi.');
+                    input.value = '';
+                    closeAdminContactDrawer();
+                })
+                .catch(err => alert('Gagal mengirim pesan. Silakan coba WhatsApp admin.'));
+            } else {
+                contactAdminViaWa('6282116116133', 'Admin Redaksi');
+            }
+        }
+    </script>
+
+
 </body>
 </html>

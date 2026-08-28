@@ -557,12 +557,12 @@
                                         </a>
                                     @endif
 
-                                    <!-- Tombol Diskusi Pesanan (Chat Interaktif) -->
+                                    <!-- Tombol Kontak Admin & Layanan (Slide Drawer) -->
                                     <button type="button" 
-                                            onclick="openOrderChatModal('{{ $ord->order_number }}', '{{ $ord->shipping_status }}')" 
-                                            class="relative flex-1 sm:flex-none px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-300 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
-                                        <i class="fa-solid fa-comments text-emerald-700 text-xs"></i>
-                                        <span>Diskusi Pesanan</span>
+                                            onclick="openAdminContactDrawer('{{ $ord->order_number }}', '{{ $ord->shipping_status }}', '{{ $ord->tracking_number ?? '' }}')" 
+                                            class="relative flex-1 sm:flex-none px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                                        <i class="fa-solid fa-headset text-emerald-700 text-xs"></i>
+                                        <span>Kontak Admin</span>
                                         @if($ord->unreadMessagesForCustomerCount() > 0)
                                             <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
                                         @endif
@@ -755,252 +755,294 @@
         });
     </script>
 
+    
     <!-- ========================================================================= -->
-    <!-- ORDER CHAT & DISCUSSION MODAL (ULTRA-SMOOTH REALTIME EXPERIENCE) -->
+    <!-- ADMIN CONTACTS & ORDER SERVICE SLIDE DRAWER (MATCHING CART DRAWER STYLE) -->
     <!-- ========================================================================= -->
-    <div id="orderChatModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none" style="display: none;">
-        <div id="orderChatModalCard" class="bg-white rounded-sm border border-slate-300 shadow-2xl max-w-lg w-full overflow-hidden transform scale-98 opacity-0 transition-all duration-200 ease-out flex flex-col max-h-[92vh] sm:max-h-[85vh]">
+    <div id="adminContactDrawer" class="fixed inset-0 z-[9999] hidden items-end sm:items-stretch sm:justify-end" style="display: none;">
+        <!-- Backdrop -->
+        <div id="adminContactDrawerBackdrop" onclick="closeAdminContactDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 cursor-pointer"></div>
+
+        <!-- Panel (Mobile: Bottom Sheet, Desktop: Right Sidebar) -->
+        <div id="adminContactDrawerPanel" class="relative z-10 w-full sm:max-w-md bg-white shadow-2xl rounded-t-2xl sm:rounded-none flex flex-col max-h-[88vh] sm:max-h-full sm:h-full transform translate-y-full sm:translate-y-0 sm:translate-x-full transition-transform duration-300 ease-out border-t sm:border-t-0 sm:border-l border-slate-200">
             
-            <!-- Modal Header -->
-            <div class="px-5 py-3.5 bg-[#032c21] text-white flex items-center justify-between border-b border-emerald-950 shrink-0 select-none">
+            <!-- Mobile Pull Handle -->
+            <div class="sm:hidden w-full pt-3 pb-1 flex justify-center cursor-pointer select-none" onclick="closeAdminContactDrawer()">
+                <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+            </div>
+
+            <!-- Drawer Header -->
+            <div class="px-5 py-3.5 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-sm bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-xs">
                         <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold font-heading flex items-center gap-1.5">
-                            <span>Diskusi Pesanan</span>
-                            <span id="chatModalOrderNumberText" class="font-mono text-xs text-lime-300">#INV-...</span>
-                        </h4>
+                        <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
+                            Kontak Admin &amp; Layanan
+                        </h3>
                         <p class="text-[10px] text-emerald-200/70">Penerbitan &amp; Percetakan Resmi PERSIS PERS</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeOrderChatModal()" class="w-7 h-7 rounded-xs text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Diskusi">
+                <button type="button" onclick="closeAdminContactDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <!-- Messages Stream Container -->
-            <div id="orderChatMessagesContainer" class="flex-1 overflow-y-auto p-4 sm:p-5 bg-slate-50/70 space-y-3 min-h-[220px]">
-                <div class="py-12 text-center text-slate-400 text-xs">
-                    <i class="fa-solid fa-spinner fa-spin text-xl text-emerald-600 mb-2 block"></i>
-                    <span>Memuat percakapan...</span>
+            <!-- Drawer Body -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+                
+                <!-- Selected Order Status Card (If Opened from Order) -->
+                <div id="drawerSelectedOrderCard" class="hidden p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-sm space-y-2 select-none">
+                    <div class="flex items-center justify-between border-b border-emerald-200/80 pb-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-receipt text-emerald-700 text-xs"></i>
+                            <span id="drawerOrderNumberText" class="font-mono font-bold text-xs text-slate-900">#INV-...</span>
+                        </div>
+                        <span id="drawerShippingBadge" class="px-2 py-0.5 bg-emerald-700 text-white rounded-xs text-[10px] font-bold uppercase font-mono">
+                            DIPROSES
+                        </span>
+                    </div>
+
+                    <div id="drawerTrackingRow" class="text-xs text-slate-700 flex items-center justify-between pt-0.5">
+                        <span class="text-slate-500">Nomor Resi:</span>
+                        <span id="drawerTrackingNumberText" class="font-mono font-bold text-emerald-900">-</span>
+                    </div>
+                    <p class="text-[10.5px] text-slate-500 leading-snug">Pilih kontak admin spesialis di bawah untuk berkonsultasi mengenai pesanan ini:</p>
                 </div>
+
+                <!-- Section Title -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-emerald-700"></i>
+                        <span>Daftar Kontak Admin Redaksi</span>
+                    </h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Tim kami siap membantu Anda setiap hari kerja (08.00 - 17.00 WIB).</p>
+                </div>
+
+                <!-- 3 Admin Contact Cards -->
+                <div class="space-y-3">
+                    
+                    <!-- ADMIN 1: Pengiriman & Gudang -->
+                    <div class="p-3.5 bg-white border border-slate-200 hover:border-emerald-500 rounded-sm shadow-2xs transition-colors space-y-2.5">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-blue-700 to-blue-500 text-white flex items-center justify-center text-sm font-black shrink-0 shadow-xs">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="text-xs font-bold text-slate-900 truncate">Admin Pengiriman &amp; Gudang</h5>
+                                    <span class="inline-flex items-center gap-1 text-[9.5px] font-bold text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                                    </span>
+                                </div>
+                                <p class="text-[10.5px] font-semibold text-blue-700 mt-0.5">Divisi Logistik &amp; Resi Ekspedisi</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Cek status packing, kurir pengantar, &amp; kendala alamat.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-mono font-bold text-slate-700">0821-1611-6133</span>
+                            <button type="button" 
+                                    onclick="contactAdminViaWa('6282116116133', 'Admin Pengiriman & Gudang')"
+                                    class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Chat WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ADMIN 2: Naskah & Penerbitan -->
+                    <div class="p-3.5 bg-white border border-slate-200 hover:border-emerald-500 rounded-sm shadow-2xs transition-colors space-y-2.5">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-emerald-800 to-emerald-600 text-white flex items-center justify-center text-sm font-black shrink-0 shadow-xs">
+                                <i class="fa-solid fa-book-bookmark"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="text-xs font-bold text-slate-900 truncate">Admin Redaksi &amp; Naskah</h5>
+                                    <span class="inline-flex items-center gap-1 text-[9.5px] font-bold text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                                    </span>
+                                </div>
+                                <p class="text-[10.5px] font-semibold text-emerald-700 mt-0.5">Divisi Penerbitan &amp; ISBN</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Pengajuan naskah baru, layout, cover, &amp; legalitas ISBN.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-mono font-bold text-slate-700">0851-1779-7487</span>
+                            <button type="button" 
+                                    onclick="contactAdminViaWa('6285117797487', 'Admin Redaksi & Naskah')"
+                                    class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Chat WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ADMIN 3: Keuangan & Pembayaran -->
+                    <div class="p-3.5 bg-white border border-slate-200 hover:border-emerald-500 rounded-sm shadow-2xs transition-colors space-y-2.5">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-amber-700 to-amber-500 text-white flex items-center justify-center text-sm font-black shrink-0 shadow-xs">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="text-xs font-bold text-slate-900 truncate">Admin Keuangan &amp; Faktur</h5>
+                                    <span class="inline-flex items-center gap-1 text-[9.5px] font-bold text-emerald-600">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Online
+                                    </span>
+                                </div>
+                                <p class="text-[10.5px] font-semibold text-amber-800 mt-0.5">Divisi Billing &amp; Verifikasi QRIS</p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">Faktur pajak, bukti potong, &amp; kendala pembayaran QRIS.</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-mono font-bold text-slate-700">0821-1611-6133</span>
+                            <button type="button" 
+                                    onclick="contactAdminViaWa('6282116116133', 'Admin Keuangan & Faktur')"
+                                    class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                                <i class="fa-brands fa-whatsapp text-sm"></i>
+                                <span>Chat WhatsApp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- In-App Quick Message Accordion -->
+                <div class="pt-2 border-t border-slate-200">
+                    <div class="p-3 bg-slate-50 rounded-sm border border-slate-200 space-y-2">
+                        <span class="text-xs font-bold text-slate-800 block">Kirim Pesan Internal ke Redaksi:</span>
+                        <textarea id="drawerDirectMessageInput" rows="2" placeholder="Tuliskan pertanyaan Anda..." class="w-full px-3 py-2 bg-white border border-slate-300 rounded-xs text-xs text-slate-900 focus:border-emerald-600 outline-none transition"></textarea>
+                        <button type="button" onclick="sendDrawerDirectMessage()" class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                            <i class="fa-solid fa-paper-plane text-xs text-lime-300"></i>
+                            <span>Kirim Pesan ke Redaksi</span>
+                        </button>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Quick Template Chips -->
-            <div class="px-4 py-2 bg-slate-100/90 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px] shrink-0">
-                <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider shrink-0">Template:</span>
-                <button type="button" onclick="setMemberQuickPrompt('Halo Admin PERSIS PERS, apakah pesanan buku saya sudah selesai dipacking?')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
-                    📦 Status Packing
-                </button>
-                <button type="button" onclick="setMemberQuickPrompt('Halo kak, mohon informasi nomor resi dan kurir pengiriman ya. Terima kasih!')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
-                    🚚 Info No. Resi
-                </button>
-                <button type="button" onclick="setMemberQuickPrompt('Alhamdulillah buku telah saya terima dengan baik dan rapi. Terima kasih banyak PERSIS PERS!')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
-                    ⭐ Konfirmasi Terima
-                </button>
+            <!-- Drawer Footer -->
+            <div class="p-3.5 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500">
+                <span>Kantor Redaksi PENERBIT PERSIS &bull; Jl. Ciganitri No.2, Bandung</span>
             </div>
-
-            <!-- Message Input Footer -->
-            <form id="memberChatForm" onsubmit="submitMemberChatMessage(event)" class="p-3 sm:p-4 bg-white border-t border-slate-200 shrink-0 flex gap-2">
-                <input 
-                    type="text" 
-                    id="memberChatMessageInput" 
-                    placeholder="Tuliskan pesan ke Admin Redaksi..." 
-                    class="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-xs text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" 
-                    required 
-                    autocomplete="off"
-                />
-                <button 
-                    type="submit" 
-                    id="btnSendMemberChat"
-                    class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer shrink-0"
-                >
-                    <i class="fa-solid fa-paper-plane text-xs text-lime-300"></i>
-                    <span class="hidden sm:inline">Kirim</span>
-                </button>
-            </form>
 
         </div>
     </div>
 
     <script>
-        let currentChatOrderNumber = null;
-        let chatPollInterval = null;
+        let currentDrawerOrderNumber = null;
+        let currentDrawerShippingStatus = null;
+        let currentDrawerTrackingNumber = null;
 
-        // Open Order Chat Modal
-        function openOrderChatModal(orderNumber, shippingStatus) {
-            currentChatOrderNumber = orderNumber;
-            document.getElementById('chatModalOrderNumberText').textContent = '#' + orderNumber;
+        function openAdminContactDrawer(orderNumber = null, shippingStatus = null, trackingNumber = null) {
+            currentDrawerOrderNumber = orderNumber;
+            currentDrawerShippingStatus = shippingStatus;
+            currentDrawerTrackingNumber = trackingNumber;
 
-            const modal = document.getElementById('orderChatModal');
-            const card = document.getElementById('orderChatModalCard');
-            if (modal && card) {
-                modal.style.display = 'flex';
-                modal.classList.remove('hidden', 'pointer-events-none');
-                modal.classList.add('flex');
+            const orderCard = document.getElementById('drawerSelectedOrderCard');
+            if (orderNumber && orderCard) {
+                orderCard.classList.remove('hidden');
+                document.getElementById('drawerOrderNumberText').textContent = '#' + orderNumber;
+                
+                const statusBadge = document.getElementById('drawerShippingBadge');
+                if (statusBadge) {
+                    statusBadge.textContent = (shippingStatus || 'Diproses').replace('_', ' ');
+                }
+
+                const trackRow = document.getElementById('drawerTrackingRow');
+                const trackText = document.getElementById('drawerTrackingNumberText');
+                if (trackingNumber) {
+                    trackRow.classList.remove('hidden');
+                    trackText.textContent = trackingNumber;
+                } else {
+                    trackRow.classList.add('hidden');
+                }
+            } else if (orderCard) {
+                orderCard.classList.add('hidden');
+            }
+
+            const drawer = document.getElementById('adminContactDrawer');
+            const backdrop = document.getElementById('adminContactDrawerBackdrop');
+            const panel = document.getElementById('adminContactDrawerPanel');
+
+            if (drawer && backdrop && panel) {
+                drawer.style.display = 'flex';
+                drawer.classList.remove('hidden');
                 setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    modal.classList.add('opacity-100');
-                    card.classList.remove('scale-98', 'opacity-0');
-                    card.classList.add('scale-100', 'opacity-100');
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-y-full', 'sm:translate-x-full');
+                    panel.classList.add('translate-y-0', 'sm:translate-x-0');
                 }, 10);
             }
-
-            // Fetch messages initially and start auto-poll every 4 seconds
-            fetchOrderChatMessages(orderNumber);
-            if (chatPollInterval) clearInterval(chatPollInterval);
-            chatPollInterval = setInterval(() => {
-                if (currentChatOrderNumber) {
-                    fetchOrderChatMessages(currentChatOrderNumber, false);
-                }
-            }, 4000);
         }
 
-        // Close Order Chat Modal
-        function closeOrderChatModal() {
-            if (chatPollInterval) clearInterval(chatPollInterval);
-            currentChatOrderNumber = null;
+        function closeAdminContactDrawer() {
+            const drawer = document.getElementById('adminContactDrawer');
+            const backdrop = document.getElementById('adminContactDrawerBackdrop');
+            const panel = document.getElementById('adminContactDrawerPanel');
 
-            const modal = document.getElementById('orderChatModal');
-            const card = document.getElementById('orderChatModalCard');
-            if (modal && card) {
-                modal.classList.remove('opacity-100');
-                modal.classList.add('opacity-0');
-                card.classList.remove('scale-100', 'opacity-100');
-                card.classList.add('scale-98', 'opacity-0');
+            if (drawer && backdrop && panel) {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-y-full', 'sm:translate-x-full');
+                panel.classList.remove('translate-y-0', 'sm:translate-x-0');
                 setTimeout(() => {
-                    modal.style.display = 'none';
-                    modal.classList.add('hidden', 'pointer-events-none');
-                    modal.classList.remove('flex');
-                }, 200);
+                    drawer.style.display = 'none';
+                    drawer.classList.add('hidden');
+                }, 300);
             }
         }
 
-        // Set Quick Prompt
-        function setMemberQuickPrompt(text) {
-            const input = document.getElementById('memberChatMessageInput');
-            if (input) {
-                input.value = text;
-                input.focus();
+        function contactAdminViaWa(phone, adminRole) {
+            let msg = `Halo ${adminRole}, saya ingin berkonsultasi mengenai layanan PENERBIT PERSIS`;
+            if (currentDrawerOrderNumber) {
+                msg += ` untuk pesanan *#${currentDrawerOrderNumber}*`;
+                if (currentDrawerTrackingNumber) {
+                    msg += ` (No. Resi: *${currentDrawerTrackingNumber}*)`;
+                }
             }
+            msg += `. Mohon informasinya ya. Terima kasih!`;
+
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
         }
 
-        // Fetch Messages from API
-        function fetchOrderChatMessages(orderNumber, showLoading = true) {
-            const container = document.getElementById('orderChatMessagesContainer');
-            if (!container) return;
-
-            fetch(`/member/pesanan/${orderNumber}/messages`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data && data.success) {
-                        renderOrderChatMessages(data.messages, data.order);
-                    }
-                })
-                .catch(err => console.error('Error loading chat:', err));
-        }
-
-        // Render Messages List
-        function renderOrderChatMessages(messages, orderInfo) {
-            const container = document.getElementById('orderChatMessagesContainer');
-            if (!container) return;
-
-            if (!messages || messages.length === 0) {
-                container.innerHTML = `
-                    <div class="py-10 text-center text-slate-400 text-xs space-y-1">
-                        <i class="fa-regular fa-comment-dots text-3xl text-slate-300 block mb-1"></i>
-                        <p class="font-bold text-slate-700">Belum Ada Percakapan</p>
-                        <p class="text-[11px]">Tuliskan pertanyaan atau konfirmasi mengenai pesanan Anda di bawah.</p>
-                    </div>
-                `;
+        function sendDrawerDirectMessage() {
+            const input = document.getElementById('drawerDirectMessageInput');
+            const msg = input.value.trim();
+            if (!msg) {
+                alert('Mohon tuliskan pesan terlebih dahulu.');
                 return;
             }
 
-            let html = '';
-            messages.forEach(msg => {
-                if (msg.is_admin) {
-                    // Admin Bubble (Left)
-                    html += `
-                        <div class="flex flex-col items-start select-none">
-                            <div class="max-w-[85%] sm:max-w-md bg-white border border-emerald-300/80 text-slate-800 p-3 rounded-sm rounded-tl-none shadow-2xs space-y-1">
-                                <div class="flex items-center justify-between gap-3 text-[10px] text-emerald-800 font-bold pb-1 border-b border-emerald-100">
-                                    <span class="flex items-center gap-1 text-emerald-700">
-                                        <i class="fa-solid fa-shield-halved text-[9px]"></i> ${msg.sender_name || 'Admin Redaksi'}
-                                    </span>
-                                    <span class="text-slate-400 font-mono font-normal">${msg.created_at_formatted}</span>
-                                </div>
-                                <p class="text-xs text-slate-900 leading-relaxed whitespace-pre-line">${msg.message}</p>
-                                ${msg.shared_shipping_status ? `
-                                    <div class="mt-1.5 p-2 bg-emerald-50 rounded-xs border border-emerald-200 text-[11px] text-emerald-900">
-                                        <i class="fa-solid fa-truck-fast text-emerald-600 mr-1"></i> Status: <strong class="capitalize">${msg.shared_shipping_status.replace('_', ' ')}</strong>
-                                        ${msg.shared_tracking_number ? `&bull; No. Resi: <strong class="font-mono text-emerald-800">${msg.shared_tracking_number}</strong>` : ''}
-                                    </div>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    // Customer Bubble (Right)
-                    html += `
-                        <div class="flex flex-col items-end select-none">
-                            <div class="max-w-[85%] sm:max-w-md bg-[#006830] text-white p-3 rounded-sm rounded-tr-none shadow-2xs space-y-1">
-                                <div class="flex items-center justify-between gap-3 text-[10px] text-emerald-200/80 pb-1 border-b border-emerald-700">
-                                    <span class="font-bold">Saya</span>
-                                    <span class="font-mono">${msg.created_at_formatted}</span>
-                                </div>
-                                <p class="text-xs leading-relaxed whitespace-pre-line">${msg.message}</p>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
+            const targetUrl = currentDrawerOrderNumber 
+                ? `/member/pesanan/${currentDrawerOrderNumber}/messages` 
+                : `/kontak`;
 
-            container.innerHTML = html;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // Submit Message Action
-        function submitMemberChatMessage(e) {
-            e.preventDefault();
-            if (!currentChatOrderNumber) return;
-
-            const input = document.getElementById('memberChatMessageInput');
-            const msgText = input.value.trim();
-            if (!msgText) return;
-
-            const btn = document.getElementById('btnSendMemberChat');
-            const originalHtml = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i>';
-
-            fetch(`/member/pesanan/${currentChatOrderNumber}/messages`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ message: msgText })
-            })
-            .then(res => res.json())
-            .then(data => {
-                btn.disabled = false;
-                btn.innerHTML = originalHtml;
-                if (data && data.success) {
+            if (currentDrawerOrderNumber) {
+                fetch(targetUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ message: msg })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message || 'Pesan berhasil dikirim ke Redaksi.');
                     input.value = '';
-                    fetchOrderChatMessages(currentChatOrderNumber, false);
-                } else {
-                    alert(data.message || 'Gagal mengirim pesan.');
-                }
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btn.innerHTML = originalHtml;
-                console.error('Send message error:', err);
-                alert('Gagal mengirim pesan. Silakan coba kembali.');
-            });
+                    closeAdminContactDrawer();
+                })
+                .catch(err => alert('Gagal mengirim pesan. Silakan coba WhatsApp admin.'));
+            } else {
+                contactAdminViaWa('6282116116133', 'Admin Redaksi');
+            }
         }
     </script>
 
