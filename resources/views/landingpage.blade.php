@@ -516,78 +516,109 @@ Harga Bersahabat")) !!}<br>
     </footer>
 @endsection
 
-@push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.dot-indicator');
-        const prevBtn = document.getElementById('slider-prev');
-        const nextBtn = document.getElementById('slider-next');
-        const sliderContainer = document.getElementById('hero-slider');
-        
-        let currentIndex = 0;
-        let slideInterval = null;
+    (function() {
+        function initHeroSlider() {
+            const slides = document.querySelectorAll('#hero-slider .slide');
+            const dots = document.querySelectorAll('#hero-slider .dot-indicator');
+            const prevBtn = document.getElementById('slider-prev');
+            const nextBtn = document.getElementById('slider-next');
+            const sliderContainer = document.getElementById('hero-slider');
+            
+            if (!slides || slides.length === 0) return;
 
-        function showSlide(index) {
-            if (index >= slides.length) index = 0;
-            if (index < 0) index = slides.length - 1;
-            currentIndex = index;
+            let currentIndex = 0;
+            let slideInterval = null;
 
-            slides.forEach((slide, i) => {
-                if (i === currentIndex) {
-                    slide.classList.remove('hidden', 'opacity-0', 'z-0');
-                    slide.classList.add('block', 'opacity-100', 'z-10');
-                } else {
-                    slide.classList.remove('block', 'opacity-100', 'z-10');
-                    slide.classList.add('hidden', 'opacity-0', 'z-0');
-                }
+            function showSlide(index) {
+                if (index >= slides.length) index = 0;
+                if (index < 0) index = slides.length - 1;
+                currentIndex = index;
+
+                slides.forEach((slide, i) => {
+                    if (i === currentIndex) {
+                        slide.style.display = 'block';
+                        slide.style.opacity = '1';
+                        slide.style.zIndex = '10';
+                        slide.classList.remove('hidden', 'opacity-0', 'z-0');
+                        slide.classList.add('block', 'opacity-100', 'z-10');
+                    } else {
+                        slide.style.display = 'none';
+                        slide.style.opacity = '0';
+                        slide.style.zIndex = '0';
+                        slide.classList.remove('block', 'opacity-100', 'z-10');
+                        slide.classList.add('hidden', 'opacity-0', 'z-0');
+                    }
+                });
+
+                dots.forEach((dot, i) => {
+                    if (i === currentIndex) {
+                        dot.classList.remove('bg-white/40');
+                        dot.classList.add('bg-lime-400', 'w-6');
+                        dot.classList.remove('w-2.5');
+                    } else {
+                        dot.classList.remove('bg-lime-400', 'w-6');
+                        dot.classList.add('bg-white/40', 'w-2.5');
+                    }
+                });
+            }
+
+            function nextSlide() {
+                showSlide(currentIndex + 1);
+            }
+
+            function prevSlide() {
+                showSlide(currentIndex - 1);
+            }
+
+            function startTimer() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            function resetTimer() {
+                clearInterval(slideInterval);
+                startTimer();
+            }
+
+            if (nextBtn) {
+                nextBtn.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    nextSlide();
+                    resetTimer();
+                };
+            }
+
+            if (prevBtn) {
+                prevBtn.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    prevSlide();
+                    resetTimer();
+                };
+            }
+
+            dots.forEach(dot => {
+                dot.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    const idx = parseInt(this.getAttribute('data-slide'));
+                    showSlide(idx);
+                    resetTimer();
+                };
             });
 
-            dots.forEach((dot, i) => {
-                if (i === currentIndex) {
-                    dot.classList.remove('bg-white/40');
-                    dot.classList.add('bg-lime-400');
-                } else {
-                    dot.classList.remove('bg-lime-400');
-                    dot.classList.add('bg-white/40');
-                }
-            });
-        }
+            if (sliderContainer) {
+                sliderContainer.onmouseenter = function() { clearInterval(slideInterval); };
+                sliderContainer.onmouseleave = function() { startTimer(); };
+            }
 
-        function nextSlide() {
-            showSlide(currentIndex + 1);
-        }
-
-        function prevSlide() {
-            showSlide(currentIndex - 1);
-        }
-
-        if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetTimer(); });
-        if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetTimer(); });
-
-        dots.forEach(dot => {
-            dot.addEventListener('click', function () {
-                const idx = parseInt(this.getAttribute('data-slide'));
-                showSlide(idx);
-                resetTimer();
-            });
-        });
-
-        function startTimer() {
-            slideInterval = setInterval(nextSlide, 5000);
-        }
-
-        function resetTimer() {
-            clearInterval(slideInterval);
+            showSlide(0);
             startTimer();
         }
 
-        if (sliderContainer) {
-            sliderContainer.addEventListener('mouseenter', () => clearInterval(slideInterval));
-            sliderContainer.addEventListener('mouseleave', () => startTimer());
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initHeroSlider);
+        } else {
+            initHeroSlider();
         }
-
-        startTimer();
-    });
+    })();
 </script>
-@endpush
