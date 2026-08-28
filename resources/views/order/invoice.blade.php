@@ -211,9 +211,22 @@
                     $waMsg = "Halo Redaksi PENERBIT PERSIS, saya telah melakukan pemesanan buku dengan No. Invoice *{$order->order_number}* atas nama *{$order->customer_name}* (Total {$order->formatted_payment}). Mohon info konfirmasi pengiriman naskah/buku ya kak. Terima kasih!";
                     $waShareUrl = "https://wa.me/6282116116133?text=" . urlencode($waMsg);
                 @endphp
-                <a href="{{ $waShareUrl }}" target="_blank" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
-                    <i class="fa-brands fa-whatsapp text-sm text-lime-300"></i> Hubungi Redaksi via WhatsApp
-                </a>
+
+                <div class="flex items-center gap-2">
+                    @if($order->shipping_status === 'dikirim')
+                        <form method="POST" action="{{ route('member.orders.confirm_received', $order->order_number) }}" onsubmit="return confirm('Apakah paket buku pesanan ini telah Anda terima dengan baik?')">
+                            @csrf
+                            <button type="submit" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                                <i class="fa-solid fa-circle-check text-lime-300 text-xs"></i>
+                                <span>Konfirmasi Pesanan Diterima</span>
+                            </button>
+                        </form>
+                    @endif
+
+                    <a href="{{ $waShareUrl }}" target="_blank" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+                        <i class="fa-brands fa-whatsapp text-sm text-lime-300"></i> Hubungi Redaksi via WhatsApp
+                    </a>
+                </div>
             </div>
 
         </div>

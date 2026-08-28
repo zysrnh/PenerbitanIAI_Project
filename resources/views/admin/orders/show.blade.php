@@ -216,23 +216,7 @@
                                 <i class="fa-solid fa-check text-xs text-emerald-600 {{ $order->shipping_status === 'dikirim' ? '' : 'hidden' }} status-check-icon" data-status="dikirim"></i>
                             </button>
 
-                            <!-- 4. Selesai / Diterima -->
-                            <button 
-                                type="button" 
-                                onclick="selectShippingOption('selesai', 'fa-solid fa-circle-check text-emerald-600', 'Pesanan Selesai / Diterima')"
-                                class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
-                            >
-                                <div class="flex items-center gap-2.5">
-                                    <div class="w-6 h-6 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs shrink-0">
-                                        <i class="fa-solid fa-circle-check"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-900">Pesanan Selesai / Diterima</p>
-                                        <p class="text-[10px] text-slate-400">Buku telah sukses diterima pembeli</p>
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-check text-xs text-emerald-600 {{ $order->shipping_status === 'selesai' ? '' : 'hidden' }} status-check-icon" data-status="selesai"></i>
-                            </button>
+
                         </div>
                     </div>
 
