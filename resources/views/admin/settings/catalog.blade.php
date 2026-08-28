@@ -9,25 +9,25 @@
         <div>
             <div class="flex items-center gap-2.5">
                 <h3 class="text-lg font-extrabold text-slate-900">Pengaturan Konten Halaman Katalog</h3>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Pratinjau Visual Live
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xs text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+                    <span class="w-2 h-2 rounded-xs bg-emerald-500 animate-pulse"></span> Pratinjau Visual Live
                 </span>
             </div>
             <p class="text-sm text-slate-500 mt-1">Ubah teks header, kartu highlight, dan info agenda redaksi dengan visualisasi real-time.</p>
         </div>
 
         <div class="flex items-center gap-2.5 shrink-0">
-            <a href="{{ route('katalog') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
+            <a href="{{ route('katalog') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-sm text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
                 <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Katalog Publik
             </a>
-            <button type="submit" form="catalogSettingsForm" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center">
+            <button type="submit" form="catalogSettingsForm" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-sm transition shadow-xs hover:shadow-md flex items-center justify-center">
                 <i class="fa-solid fa-floppy-disk text-base"></i>
             </button>
         </div>
     </div>
 
     @if(session('success'))
-        <div class="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-medium flex items-center justify-between shadow-xs">
+        <div class="mb-6 p-4 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm font-medium flex items-center justify-between shadow-xs">
             <div class="flex items-center gap-2.5">
                 <i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>
                 <span>{{ session('success') }}</span>
@@ -37,7 +37,7 @@
     @endif
 
     @if($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-medium space-y-1">
+        <div class="mb-6 p-4 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-sm font-medium space-y-1">
             @foreach($errors->all() as $error)
                 <div>&bull; {{ $error }}</div>
             @endforeach
@@ -54,9 +54,9 @@
                 @method('PUT')
 
                 <!-- 1. Header Banner -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
                             <i class="fa-solid fa-heading"></i>
                         </div>
                         <div>
@@ -76,7 +76,7 @@
                                     value="{{ old('catalog_banner_badge', $settings['catalog_banner_badge']) }}" 
                                     required 
                                     oninput="updateCatalogPreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div class="sm:col-span-2">
@@ -88,7 +88,7 @@
                                     value="{{ old('catalog_banner_title', $settings['catalog_banner_title']) }}" 
                                     required 
                                     oninput="updateCatalogPreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -101,16 +101,16 @@
                                 rows="3" 
                                 required 
                                 oninput="updateCatalogPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition leading-relaxed"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition leading-relaxed"
                             >{{ old('catalog_banner_desc', $settings['catalog_banner_desc']) }}</textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- 2. Highlight Cards (4 Stats) -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
                             <i class="fa-solid fa-chart-simple"></i>
                         </div>
                         <div>
@@ -129,7 +129,7 @@
                                 value="{{ old('catalog_stat_books', $settings['catalog_stat_books']) }}" 
                                 required 
                                 oninput="updateCatalogPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
                             />
                         </div>
 
@@ -142,7 +142,7 @@
                                 value="{{ old('catalog_stat_authors', $settings['catalog_stat_authors']) }}" 
                                 required 
                                 oninput="updateCatalogPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
                             />
                         </div>
 
@@ -155,7 +155,7 @@
                                 value="{{ old('catalog_stat_isbn', $settings['catalog_stat_isbn']) }}" 
                                 required 
                                 oninput="updateCatalogPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
                             />
                         </div>
 
@@ -168,16 +168,16 @@
                                 value="{{ old('catalog_stat_print', $settings['catalog_stat_print']) }}" 
                                 required 
                                 oninput="updateCatalogPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-medium"
                             />
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. Sidebar Info & Promo Box -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-sm font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-amber-50 text-amber-700 flex items-center justify-center text-sm font-bold">
                             <i class="fa-solid fa-bullhorn"></i>
                         </div>
                         <div>
@@ -187,7 +187,7 @@
                     </div>
 
                     <div class="space-y-4">
-                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="p-4 bg-slate-50 rounded-sm border border-slate-200 space-y-3">
                             <span class="text-xs font-bold text-slate-900 uppercase">A. Program Promo Cetak</span>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Promo <span class="text-rose-500">*</span></label>
@@ -198,7 +198,7 @@
                                     value="{{ old('catalog_promo_title', $settings['catalog_promo_title']) }}" 
                                     required 
                                     oninput="updateCatalogPreview()"
-                                    class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium"
+                                    class="w-full px-3.5 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium"
                                 />
                             </div>
                             <div>
@@ -209,12 +209,12 @@
                                     rows="2" 
                                     required 
                                     oninput="updateCatalogPreview()"
-                                    class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                    class="w-full px-3.5 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600"
                                 >{{ old('catalog_promo_desc', $settings['catalog_promo_desc']) }}</textarea>
                             </div>
                         </div>
 
-                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                        <div class="p-4 bg-slate-50 rounded-sm border border-slate-200 space-y-3">
                             <span class="text-xs font-bold text-slate-900 uppercase">B. Agenda Akademik</span>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Agenda <span class="text-rose-500">*</span></label>
@@ -225,7 +225,7 @@
                                     value="{{ old('catalog_agenda_title', $settings['catalog_agenda_title']) }}" 
                                     required 
                                     oninput="updateCatalogPreview()"
-                                    class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium"
+                                    class="w-full px-3.5 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium"
                                 />
                             </div>
                             <div>
@@ -236,7 +236,7 @@
                                     rows="2" 
                                     required 
                                     oninput="updateCatalogPreview()"
-                                    class="w-full px-3.5 py-2 text-sm rounded-lg border border-slate-200 focus:outline-hidden focus:border-emerald-600"
+                                    class="w-full px-3.5 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600"
                                 >{{ old('catalog_agenda_desc', $settings['catalog_agenda_desc']) }}</textarea>
                             </div>
                         </div>
@@ -244,9 +244,9 @@
                 </div>
 
                 <!-- 4. CTA Box Terbitkan Naskah -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-sm font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-purple-50 text-purple-700 flex items-center justify-center text-sm font-bold">
                             <i class="fa-solid fa-box-archive"></i>
                         </div>
                         <div>
@@ -265,7 +265,7 @@
                                 value="{{ old('catalog_publish_box_title', $settings['catalog_publish_box_title']) }}" 
                                 required 
                                 oninput="updateCatalogPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium"
                             />
                         </div>
 
@@ -277,7 +277,7 @@
                                 rows="2" 
                                 required 
                                 oninput="updateCatalogPreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed"
                             >{{ old('catalog_publish_box_desc', $settings['catalog_publish_box_desc']) }}</textarea>
                         </div>
                     </div>
@@ -285,7 +285,7 @@
 
                 <!-- Action Button -->
                 <div class="flex items-center justify-end">
-                    <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center gap-2">
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-sm transition shadow-xs hover:shadow-md flex items-center justify-center gap-2">
                         <i class="fa-solid fa-floppy-disk"></i>
                         <span>Simpan Pengaturan Konten</span>
                     </button>
@@ -297,20 +297,20 @@
         <!-- RIGHT COLUMN: 1:1 LIVE PREVIEW MOCKUP (STICKY TOP-20) -->
         <div class="xl:col-span-6 sticky top-20 self-start space-y-4">
             
-            <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-lg flex items-center justify-between text-white">
+            <div class="bg-slate-900 rounded-sm p-4 border border-slate-800 shadow-lg flex items-center justify-between text-white">
                 <div class="flex items-center gap-3">
                     <div class="flex gap-1.5">
-                        <span class="w-3 h-3 rounded-full bg-rose-500"></span>
-                        <span class="w-3 h-3 rounded-full bg-amber-500"></span>
-                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span class="w-3 h-3 rounded-xs bg-rose-500"></span>
+                        <span class="w-3 h-3 rounded-xs bg-amber-500"></span>
+                        <span class="w-3 h-3 rounded-xs bg-emerald-500"></span>
                     </div>
                     <span class="text-sm font-bold tracking-wide text-white">Pratinjau Visual Halaman Katalog (Skala 1:1)</span>
                 </div>
-                <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-800 text-emerald-400 border border-slate-700">Real-time Mockup</span>
+                <span class="text-xs font-bold px-2.5 py-1 rounded-sm bg-slate-800 text-emerald-400 border border-slate-700">Real-time Mockup</span>
             </div>
 
             <!-- Visual Preview Canvas (Exact 1:1 with Public Katalog) -->
-            <div class="bg-slate-100 rounded-2xl border border-slate-200/80 shadow-md overflow-hidden text-slate-800 space-y-4 p-4">
+            <div class="bg-slate-100 rounded-sm border border-slate-200/80 shadow-md overflow-hidden text-slate-800 space-y-4 p-4">
                 
                 <!-- Preview 1: Header Banner bg-brand-950 -->
                 <div class="bg-[#032c21] text-white p-5 rounded-sm shadow-xs border-b border-[#064e3b]">

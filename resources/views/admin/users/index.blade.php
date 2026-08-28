@@ -10,13 +10,13 @@
             <h3 class="text-base font-bold text-slate-900">Daftar Admin</h3>
             <p class="text-xs text-slate-500 mt-0.5">Kelola akun dan pembagian hak akses sistem penerbitan.</p>
         </div>
-        <a href="{{ route('admin.users.create') }}" class="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold transition flex items-center gap-2 shadow-xs">
+        <a href="{{ route('admin.users.create') }}" class="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-sm text-xs font-semibold transition flex items-center gap-2 shadow-xs">
             <i class="fa-solid fa-plus text-[11px]"></i> Tambah Admin Baru
         </a>
     </div>
 
     <!-- Filter Bar -->
-    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs p-3.5 mb-6">
+    <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-3.5 mb-6">
         <form method="GET" action="{{ route('admin.users.index') }}" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
             <!-- Search Input -->
             <div class="sm:col-span-5 relative">
@@ -26,13 +26,13 @@
                     name="search" 
                     value="{{ request('search') }}" 
                     placeholder="Cari nama, email, atau no. telp..." 
-                    class="w-full pl-9 pr-3.5 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition bg-slate-50/50"
+                    class="w-full pl-9 pr-3.5 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition bg-slate-50/50"
                 />
             </div>
 
             <!-- Role Select -->
             <div class="sm:col-span-3">
-                <select name="role" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700">
+                <select name="role" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700">
                     <option value="">Semua Role</option>
                     <option value="super_admin" {{ request('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                     <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin Biasa</option>
@@ -41,7 +41,7 @@
 
             <!-- Status Select -->
             <div class="sm:col-span-2">
-                <select name="status" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700">
+                <select name="status" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700">
                     <option value="">Semua Status</option>
                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Aktif</option>
                     <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
@@ -50,11 +50,11 @@
 
             <!-- Actions -->
             <div class="sm:col-span-2 flex gap-2">
-                <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition">
+                <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-sm transition">
                     Filter
                 </button>
                 @if(request('search') || request('role') || request('status'))
-                    <a href="{{ route('admin.users.index') }}" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium rounded-lg transition flex items-center justify-center">
+                    <a href="{{ route('admin.users.index') }}" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium rounded-sm transition flex items-center justify-center">
                         Reset
                     </a>
                 @endif
@@ -63,7 +63,7 @@
     </div>
 
     <!-- Table Card -->
-    <div class="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+    <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left text-xs text-slate-700">
                 <thead class="bg-slate-50/75 text-slate-500 uppercase text-[10px] font-bold border-b border-slate-200/80 tracking-wider">
@@ -82,7 +82,7 @@
                             <!-- Name & Initial -->
                             <td class="px-5 py-3.5 font-semibold text-slate-900">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs ring-1 ring-slate-200 shrink-0">
+                                    <div class="w-8 h-8 rounded-xs bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-xs ring-1 ring-slate-200 shrink-0">
                                         {{ strtoupper(substr($user->name, 0, 1)) }}
                                     </div>
                                     <div>
@@ -106,11 +106,11 @@
                             <td class="px-5 py-3.5">
                                 @if($user->role === 'super_admin')
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-rose-50 text-rose-700 ring-1 ring-rose-200/70">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Super Admin
+                                        <span class="w-1.5 h-1.5 rounded-xs bg-rose-500"></span> Super Admin
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/70">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Admin
+                                        <span class="w-1.5 h-1.5 rounded-xs bg-emerald-500"></span> Admin
                                     </span>
                                 @endif
                             </td>

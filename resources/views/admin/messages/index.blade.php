@@ -53,9 +53,9 @@
             <div class="lg:col-span-3">
                 <select name="status" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700 font-medium">
                     <option value="">Semua Status</option>
-                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>⏳ Belum Dihubungi</option>
-                    <option value="contacted" {{ request('status') == 'contacted' ? 'selected' : '' }}>💬 Sudah Dihubungi</option>
-                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>✅ Selesai Diproses</option>
+                    <option value="pending" {{ request("status") == "pending" ? "selected" : "" }}>Belum Dihubungi</option>
+                    <option value="contacted" {{ request("status") == "contacted" ? "selected" : "" }}>Sudah Dihubungi</option>
+                    <option value="completed" {{ request("status") == "completed" ? "selected" : "" }}>Selesai Diproses</option>
                 </select>
             </div>
 
@@ -87,7 +87,67 @@
 
     <!-- Messages Table Card -->
     <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs overflow-hidden w-full">
-        <div class="overflow-x-auto w-full">
+        <!-- 1. MOBILE NATIVE MESSAGE CARDS (Visible on mobile < 640px) -->
+        <div class="block sm:hidden divide-y divide-slate-100">
+            @forelse($messages as $msg)
+                <div class="p-3.5 space-y-2.5 hover:bg-slate-50/80 transition">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="w-7 h-7 rounded-sm bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                                {{ strtoupper(substr($msg->name, 0, 1)) }}
+                            </div>
+                            <span class="font-bold text-slate-900 text-xs truncate">{{ $msg->name }}</span>
+                        </div>
+                        @if($msg->status === 'pending')
+                            <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200 uppercase font-mono shrink-0">
+                                Belum Dihubungi
+                            </span>
+                        @elseif($msg->status === 'contacted')
+                            <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-blue-50 text-blue-800 border border-blue-200 uppercase font-mono shrink-0">
+                                Sudah Dihubungi
+                            </span>
+                        @else
+                            <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 uppercase font-mono shrink-0">
+                                Selesai
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="space-y-1 text-xs">
+                        <div class="flex items-center gap-2 text-[11px] text-slate-500">
+                            <span class="px-1.5 py-0.2 bg-slate-100 border border-slate-200 text-slate-700 font-semibold rounded-xs">{{ $msg->service ?? 'Konsultasi' }}</span>
+                            <span>•</span>
+                            <span class="font-mono text-[10px] text-slate-400">{{ $msg->created_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                        <p class="font-semibold text-slate-800 line-clamp-1">{{ $msg->subject ?: 'Pengajuan Naskah' }}</p>
+                        <p class="text-slate-500 line-clamp-2 text-[11.5px] leading-relaxed">{{ $msg->message }}</p>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                        @if($msg->phone)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $msg->phone) }}" target="_blank" class="text-emerald-700 hover:underline flex items-center gap-1 text-[11px] font-mono font-bold">
+                                <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                                <span>{{ $msg->phone }}</span>
+                            </a>
+                        @else
+                            <span class="text-[11px] text-slate-400 font-mono">{{ $msg->email }}</span>
+                        @endif
+                        <a href="{{ route('admin.messages.show', $msg->id) }}" class="px-3 py-1 bg-[#006830] text-white rounded-xs text-xs font-bold shadow-2xs flex items-center gap-1">
+                            <span>Buka Pesan</span>
+                            <i class="fa-solid fa-angle-right text-[9px]"></i>
+                        </a>
+                    </div>
+                </div>
+            @empty
+                <div class="py-8 text-center text-slate-400 text-xs">
+                    <i class="fa-solid fa-inbox text-2xl mb-1 text-slate-300 block"></i>
+                    Belum ada pesan naskah masuk.
+                </div>
+            @endforelse
+        </div>
+
+        <!-- 2. DESKTOP WIDE TABLE (Visible on tablets & desktop >= 640px) -->
+        <div class="hidden sm:block overflow-x-auto w-full">
             <table class="w-full text-left text-xs text-slate-700">
                 <thead class="bg-slate-50 text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200 tracking-wider">
                     <tr>

@@ -5,29 +5,36 @@
 
 @section('content')
     <!-- Top Header -->
-    <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div class="bg-white rounded-sm border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 mb-4 sm:mb-5">
         <div>
-            <div class="flex items-center gap-2.5">
-                <h3 class="text-lg font-extrabold text-slate-900">Pengaturan Konten Halaman Kontak</h3>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Pratinjau Visual Live
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xs text-[10px] font-black uppercase font-mono tracking-wider">
+                    PENGATURAN KONTEN
                 </span>
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline">• Pratinjau Visual Live</span>
             </div>
-            <p class="text-sm text-slate-500 mt-1">Kelola email penerima notifikasi naskah, teks kontak, dan perhatikan visualisasinya secara live.</p>
+            <h1 class="text-base sm:text-xl font-extrabold text-slate-900 font-heading tracking-tight mt-1 leading-tight">
+                Pengaturan Konten Halaman Kontak &amp; Redaksi
+            </h1>
+            <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">
+                Kelola email penerima notifikasi naskah, alamat kantor, nomor WhatsApp, jam operasional, dan peta lokasi.
+            </p>
         </div>
 
-        <div class="flex items-center gap-2.5 shrink-0">
-            <a href="{{ url('/kontak') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
-                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Halaman
+        <div class="flex items-center gap-2 shrink-0">
+            <a href="{{ url('/kontak') }}" target="_blank" class="flex-1 sm:flex-none px-3 sm:px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-emerald-700"></i>
+                <span>Lihat Halaman</span>
             </a>
-            <button type="submit" form="contactSettingsForm" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center">
-                <i class="fa-solid fa-floppy-disk text-base"></i>
+            <button type="submit" form="contactSettingsForm" class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                <i class="fa-solid fa-floppy-disk text-xs"></i>
+                <span>Simpan Perubahan</span>
             </button>
         </div>
     </div>
 
     @if($errors->any())
-        <div class="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-medium space-y-1">
+        <div class="mb-6 p-4 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-sm font-medium space-y-1">
             @foreach($errors->all() as $error)
                 <div>&bull; {{ $error }}</div>
             @endforeach
@@ -44,9 +51,9 @@
                 @method('PUT')
 
                 <!-- 0. Email Penerima Notifikasi Baru -->
-                <div class="bg-gradient-to-br from-emerald-950 to-slate-900 text-white rounded-2xl p-6 sm:p-7 shadow-sm border border-emerald-900">
+                <div class="bg-gradient-to-br from-emerald-950 to-slate-900 text-white rounded-sm p-6 sm:p-7 shadow-sm border border-emerald-900">
                     <div class="flex items-center gap-3 pb-3 border-b border-emerald-800/60 mb-4">
-                        <div class="w-9 h-9 rounded-xl bg-[#25D366] text-white flex items-center justify-center text-base font-bold shadow-xs">
+                        <div class="w-9 h-9 rounded-sm bg-[#25D366] text-white flex items-center justify-center text-base font-bold shadow-xs">
                             <i class="fa-solid fa-envelope-circle-check"></i>
                         </div>
                         <div>
@@ -65,7 +72,7 @@
                                 value="{{ old('notification_recipient_email', $settings['notification_recipient_email']) }}" 
                                 required 
                                 placeholder="hbudiman953@gmail.com"
-                                class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-emerald-700/80 bg-slate-950/70 text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
+                                class="w-full pl-10 pr-4 py-2.5 text-sm rounded-sm border border-emerald-700/80 bg-slate-950/70 text-white focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 transition"
                             />
                         </div>
                         <span class="text-xs text-slate-400 mt-1.5 block">Email pengirim otomatis via SMTP: <strong class="text-emerald-300">naooolaf@gmail.com</strong>.</span>
@@ -73,9 +80,9 @@
                 </div>
 
                 <!-- 1. Header Banner -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-sm font-bold">
                             <i class="fa-solid fa-heading"></i>
                         </div>
                         <div>
@@ -95,7 +102,7 @@
                                     value="{{ old('contact_banner_badge', $settings['contact_banner_badge']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div class="sm:col-span-2">
@@ -107,7 +114,7 @@
                                     value="{{ old('contact_banner_title', $settings['contact_banner_title']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -120,16 +127,16 @@
                                 rows="3" 
                                 required 
                                 oninput="updatePreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                             >{{ old('contact_banner_desc', $settings['contact_banner_desc']) }}</textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- 2. 4 Info Cards -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-sm font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-blue-50 text-blue-700 flex items-center justify-center text-sm font-bold">
                             <i class="fa-solid fa-address-card"></i>
                         </div>
                         <div>
@@ -147,7 +154,7 @@
                                 rows="2" 
                                 required 
                                 oninput="updatePreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                             >{{ old('contact_address', $settings['contact_address']) }}</textarea>
                         </div>
 
@@ -161,7 +168,7 @@
                                     value="{{ old('contact_whatsapp', $settings['contact_whatsapp']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div>
@@ -173,7 +180,7 @@
                                     value="{{ old('contact_phone', $settings['contact_phone']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -188,7 +195,7 @@
                                     value="{{ old('contact_email', $settings['contact_email']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div>
@@ -199,7 +206,7 @@
                                     id="in_email_note"
                                     value="{{ old('contact_email_note', $settings['contact_email_note']) }}" 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -214,7 +221,7 @@
                                     value="{{ old('contact_hours', $settings['contact_hours']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div>
@@ -225,7 +232,7 @@
                                     id="in_hours_weekend"
                                     value="{{ old('contact_hours_weekend', $settings['contact_hours_weekend']) }}" 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -233,9 +240,9 @@
                 </div>
 
                 <!-- 3. WhatsApp Consultation Box -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-[#25D366]/20 text-[#128C7E] flex items-center justify-center text-base font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-[#25D366]/20 text-[#128C7E] flex items-center justify-center text-base font-bold">
                             <i class="fa-brands fa-whatsapp"></i>
                         </div>
                         <div>
@@ -255,7 +262,7 @@
                                     value="{{ old('contact_wa_box_title', $settings['contact_wa_box_title']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div>
@@ -267,7 +274,7 @@
                                     value="{{ old('contact_wa_box_subtitle', $settings['contact_wa_box_subtitle']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -280,7 +287,7 @@
                                 rows="2" 
                                 required 
                                 oninput="updatePreview()"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                             >{{ old('contact_wa_box_desc', $settings['contact_wa_box_desc']) }}</textarea>
                         </div>
 
@@ -294,7 +301,7 @@
                                     value="{{ old('contact_wa_btn_text', $settings['contact_wa_btn_text']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div>
@@ -305,7 +312,7 @@
                                     id="in_wa_msg"
                                     value="{{ old('contact_wa_default_msg', $settings['contact_wa_default_msg']) }}" 
                                     required 
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -313,9 +320,9 @@
                 </div>
 
                 <!-- 4. Location & Google Maps -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 sm:p-7">
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
-                        <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center text-sm font-bold">
+                        <div class="w-9 h-9 rounded-sm bg-rose-50 text-rose-700 flex items-center justify-center text-sm font-bold">
                             <i class="fa-solid fa-map-location-dot"></i>
                         </div>
                         <div>
@@ -335,7 +342,7 @@
                                     value="{{ old('contact_maps_title', $settings['contact_maps_title']) }}" 
                                     required 
                                     oninput="updatePreview()"
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                             <div>
@@ -346,7 +353,7 @@
                                     id="in_maps_ext"
                                     value="{{ old('contact_maps_external_url', $settings['contact_maps_external_url']) }}" 
                                     placeholder="https://maps.app.goo.gl/..."
-                                    class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                    class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                                 />
                             </div>
                         </div>
@@ -360,16 +367,16 @@
                                 required 
                                 oninput="updateMapPreview()"
                                 placeholder="https://www.google.com/maps/embed?pb=... atau tag <iframe>"
-                                class="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-mono text-xs"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-mono text-xs"
                             >{{ old('contact_maps', $settings['contact_maps']) }}</textarea>
                         </div>
                     </div>
                 </div>
 
                 <!-- Action Button Sticky -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between gap-4">
+                <div class="bg-white rounded-sm border border-slate-200/80 p-5 shadow-xs flex items-center justify-between gap-4">
         <span class="text-xs text-slate-500 font-medium">Perubahan langsung aktif di website publik setelah disimpan.</span>
-        <button type="submit" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl transition shadow-xs hover:shadow-md flex items-center justify-center">
+        <button type="submit" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-sm transition shadow-xs hover:shadow-md flex items-center justify-center">
             <i class="fa-solid fa-floppy-disk text-base"></i>
         </button>
     </div>
@@ -380,23 +387,23 @@
         <!-- RIGHT COLUMN: LARGE & SPACIOUS LIVE PREVIEW MOCKUP -->
         <div class="xl:col-span-6 sticky top-20 self-start space-y-4">
             
-            <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-lg flex items-center justify-between text-white">
+            <div class="bg-slate-900 rounded-sm p-4 border border-slate-800 shadow-lg flex items-center justify-between text-white">
                 <div class="flex items-center gap-3">
                     <div class="flex gap-1.5">
-                        <span class="w-3 h-3 rounded-full bg-rose-500"></span>
-                        <span class="w-3 h-3 rounded-full bg-amber-500"></span>
-                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                        <span class="w-3 h-3 rounded-xs bg-rose-500"></span>
+                        <span class="w-3 h-3 rounded-xs bg-amber-500"></span>
+                        <span class="w-3 h-3 rounded-xs bg-emerald-500"></span>
                     </div>
                     <span class="text-sm font-bold tracking-wide text-white">Pratinjau Visual Halaman Kontak</span>
                 </div>
-                <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-800 text-emerald-400 border border-slate-700">Real-time Mockup</span>
+                <span class="text-xs font-bold px-2.5 py-1 rounded-sm bg-slate-800 text-emerald-400 border border-slate-700">Real-time Mockup</span>
             </div>
 
             <!-- Visual Preview Canvas -->
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-md overflow-hidden text-slate-800 space-y-5 p-6">
+            <div class="bg-white rounded-sm border border-slate-200/80 shadow-md overflow-hidden text-slate-800 space-y-5 p-6">
                 
                 <!-- Mockup 1: Dark Header Banner -->
-                <div class="bg-[#032c21] text-white p-6 rounded-2xl shadow-sm">
+                <div class="bg-[#032c21] text-white p-6 rounded-sm shadow-sm">
                     <span id="prev_badge" class="text-xs font-extrabold text-emerald-400 uppercase tracking-widest block mb-1.5">
                         {{ $settings['contact_banner_badge'] }}
                     </span>
@@ -411,7 +418,7 @@
                 <!-- Mockup 2: 4 Info Cards Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
                     <!-- Alamat -->
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
                         <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
                             <i class="fa-solid fa-location-dot text-sm"></i> <span>Kantor Redaksi</span>
                         </div>
@@ -421,7 +428,7 @@
                     </div>
 
                     <!-- WhatsApp -->
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
                         <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
                             <i class="fa-brands fa-whatsapp text-base text-[#25D366]"></i> <span>WhatsApp & Telepon</span>
                         </div>
@@ -430,7 +437,7 @@
                     </div>
 
                     <!-- Email -->
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
                         <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
                             <i class="fa-solid fa-envelope text-sm"></i> <span>Email Resmi</span>
                         </div>
@@ -439,7 +446,7 @@
                     </div>
 
                     <!-- Jam Kerja -->
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
                         <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
                             <i class="fa-solid fa-clock text-sm"></i> <span>Jam Layanan</span>
                         </div>
@@ -449,9 +456,9 @@
                 </div>
 
                 <!-- Mockup 3: WhatsApp Fast Consultation Box -->
-                <div class="bg-[#032c21] text-white p-5 rounded-2xl border border-emerald-950 shadow-sm">
+                <div class="bg-[#032c21] text-white p-5 rounded-sm border border-emerald-950 shadow-sm">
                     <div class="flex items-center gap-3 mb-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-[#25D366] text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
+                        <div class="w-9 h-9 rounded-sm bg-[#25D366] text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
                             <i class="fa-brands fa-whatsapp"></i>
                         </div>
                         <div>
@@ -462,20 +469,20 @@
                     <p id="prev_wa_desc" class="text-xs text-slate-300 leading-relaxed mb-3.5">
                         {{ $settings['contact_wa_box_desc'] }}
                     </p>
-                    <div class="w-full py-2.5 bg-[#25D366] text-white rounded-xl font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-xs">
+                    <div class="w-full py-2.5 bg-[#25D366] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-xs">
                         <i class="fa-brands fa-whatsapp text-base"></i> <span id="prev_wa_btn_text">{{ $settings['contact_wa_btn_text'] }}</span>
                     </div>
                 </div>
 
                 <!-- Mockup 4: Google Maps Frame -->
-                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
                     <div class="flex items-center justify-between mb-3">
                         <span id="prev_maps_title" class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-map-location-dot text-emerald-600"></i> {{ $settings['contact_maps_title'] }}
                         </span>
                         <span class="text-xs text-emerald-700 font-bold">Interactive Map</span>
                     </div>
-                    <div class="w-full h-52 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shadow-inner">
+                    <div class="w-full h-52 rounded-sm overflow-hidden border border-slate-200 bg-slate-100 shadow-inner">
                         <iframe 
                             id="prev_map_frame"
                             src="{{ $settings['contact_maps'] }}" 
