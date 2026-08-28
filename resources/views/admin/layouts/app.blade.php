@@ -65,7 +65,7 @@
             <!-- Brand Header with Quick Collapse Button -->
             <div class="flex items-center justify-between gap-3 pb-5 mb-5 border-b border-slate-800">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo_icon.png') }}" alt="PERSIS PERS Icon" class="w-8 h-8 object-contain shrink-0" />
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS Icon" class="w-8 h-8 object-contain shrink-0" />
                     <div>
                         <span class="font-extrabold text-sm text-white tracking-wide block leading-tight font-heading">PERSIS PERS</span>
                         <span class="text-[10px] text-emerald-400 font-bold block">Admin Management</span>

@@ -67,7 +67,7 @@
             <!-- Brand Header with Quick Collapse Button -->
             <div class="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10">
                 <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5">
-                    <img src="{{ asset('images/logo_icon.png') }}" alt="PENERBIT PERSIS" class="w-8 h-8 object-contain shrink-0" />
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PENERBIT PERSIS" class="w-8 h-8 object-contain shrink-0" />
                     <div>
                         <span class="font-extrabold text-sm text-white tracking-wide block leading-tight font-heading">PENERBIT PERSIS</span>
                         <span class="text-[10px] text-emerald-400 font-bold block">Portal Anggota</span>
