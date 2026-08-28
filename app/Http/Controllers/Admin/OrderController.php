@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Mail\ShippingNotificationCustomerMail;
+use App\Mail\OrderMessageNotificationMail;
+use App\Models\OrderMessage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -102,6 +105,67 @@ class OrderController extends Controller
         $order->save();
 
         return back()->with('success', 'Status pembayaran pesanan #' . $order->order_number . ' berhasil diperbarui.');
+    }
+
+    
+    /**
+     * Send message from Admin to Customer
+     */
+    public function sendOrderMessage(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $request->validate([
+            'message'                => 'required|string|max:3000',
+            'share_shipping_status'  => 'nullable|string|in:menunggu_proses,diproses,dikirim,selesai',
+            'share_tracking_number'  => 'nullable|string|max:100',
+        ]);
+
+        $sharedStatus = $request->input('share_shipping_status');
+        $sharedResi = $request->input('share_tracking_number');
+
+        // Optional shipping status update
+        if ($sharedStatus) {
+            $order->shipping_status = $sharedStatus;
+            if ($sharedResi) {
+                $order->tracking_number = $sharedResi;
+            }
+            $order->save();
+        }
+
+        $orderMsg = OrderMessage::create([
+            'order_id'               => $order->id,
+            'user_id'                => Auth::id(),
+            'sender_type'            => 'admin',
+            'sender_name'            => Auth::user() ? Auth::user()->name : 'Admin Redaksi PERSIS PERS',
+            'message'                => $request->input('message'),
+            'shared_shipping_status' => $sharedStatus,
+            'shared_tracking_number' => $sharedResi,
+            'is_read_by_admin'       => true,
+            'is_read_by_customer'    => false,
+        ]);
+
+        // Mark previous customer messages as read
+        $order->messages()->where('sender_type', 'customer')->update(['is_read_by_admin' => true]);
+
+        // Send email notification to Customer
+        if (!empty($order->customer_email) && filter_var($order->customer_email, FILTER_VALIDATE_EMAIL)) {
+            try {
+                Mail::to($order->customer_email)->send(new OrderMessageNotificationMail($order, $orderMsg, 'customer'));
+            } catch (\Throwable $e) {
+                Log::warning('Failed sending order message email to customer: ' . $e->getMessage());
+            }
+        }
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pesan berhasil dikirim ke pembeli.',
+                'data'    => $orderMsg
+            ]);
+        }
+
+        return back()->with('success', 'Pesan berhasil dikirimkan ke pembeli.');
     }
 
     public function destroy($id)

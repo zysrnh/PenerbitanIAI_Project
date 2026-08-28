@@ -64,6 +64,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders/{id}',           [AdminOrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{id}/shipping-label', [AdminOrderController::class, 'printShippingLabel'])->name('orders.shipping_label');
     Route::post('/orders/{id}/shipping', [AdminOrderController::class, 'updateShipping'])->name('orders.shipping');
+    Route::post('/orders/{id}/messages', [AdminOrderController::class, 'sendOrderMessage'])->name('orders.message');
     Route::post('/orders/{id}/payment',  [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment');
     Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
@@ -115,6 +116,8 @@ Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(
     Route::get('/dashboard',        [MemberDashboardController::class, 'index'])->name('dashboard');
     Route::get('/pesanan',          [MemberDashboardController::class, 'orders'])->name('orders');
     Route::post('/pesanan/{orderNumber}/terima', [MemberDashboardController::class, 'confirmReceived'])->name('orders.confirm_received');
+    Route::post('/pesanan/{orderNumber}/messages', [MemberDashboardController::class, 'sendOrderMessage'])->name('orders.message');
+    Route::get('/pesanan/{orderNumber}/messages',  [MemberDashboardController::class, 'getOrderMessages'])->name('orders.messages_api');
     Route::get('/profil',           [MemberDashboardController::class, 'profile'])->name('profile');
     Route::put('/profil',           [MemberDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profil/password',  [MemberDashboardController::class, 'updatePassword'])->name('profile.password');

@@ -64,4 +64,20 @@ class Order extends Model
     {
         return $this->payment_status === 'completed';
     }
+
+    public function messages()
+    {
+        return $this->hasMany(OrderMessage::class)->orderBy('created_at', 'asc');
+    }
+
+    public function unreadMessagesForAdminCount(): int
+    {
+        return $this->messages()->where('sender_type', 'customer')->where('is_read_by_admin', false)->count();
+    }
+
+    public function unreadMessagesForCustomerCount(): int
+    {
+        return $this->messages()->where('sender_type', 'admin')->where('is_read_by_customer', false)->count();
+    }
+
 }

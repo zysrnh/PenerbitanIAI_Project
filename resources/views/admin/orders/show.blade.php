@@ -347,5 +347,168 @@
         }
     });
 </script>
+
+        <!-- ========================================================================= -->
+        <!-- ORDER MESSAGING & DISCUSSION (ADMIN <-> CUSTOMER) -->
+        <!-- ========================================================================= -->
+        <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs overflow-hidden mt-6">
+            <div class="px-5 py-3.5 bg-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-xs bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xs">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold font-heading">Diskusi &amp; Percakapan Pesanan</h4>
+                        <p class="text-[10px] text-slate-300">Pesan langsung dengan {{ $order->customer_name }} (#{{ $order->order_number }})</p>
+                    </div>
+                </div>
+                <span class="text-[10.5px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono font-bold">
+                    {{ $order->messages()->count() }} Pesan
+                </span>
+            </div>
+
+            <!-- Messages Thread -->
+            <div class="p-5 bg-slate-50/50 max-h-96 overflow-y-auto space-y-3.5 border-b border-slate-200" id="adminMessagesThread">
+                @if($order->messages()->count() > 0)
+                    @foreach($order->messages as $msg)
+                        @if($msg->sender_type === 'admin')
+                            <!-- Admin Message (Right Bubble) -->
+                            <div class="flex flex-col items-end">
+                                <div class="max-w-lg bg-[#006830] text-white p-3.5 rounded-sm rounded-tr-none shadow-2xs space-y-1.5">
+                                    <div class="flex items-center justify-between gap-3 text-[10px] text-emerald-200/80 pb-1 border-b border-emerald-700">
+                                        <span class="font-bold flex items-center gap-1">
+                                            <i class="fa-solid fa-shield-halved text-[9px] text-lime-300"></i> {{ $msg->sender_name ?: 'Admin Redaksi' }}
+                                        </span>
+                                        <span class="font-mono">{{ $msg->created_at->format('d M Y, H:i') }} WIB</span>
+                                    </div>
+                                    <p class="text-xs leading-relaxed whitespace-pre-line">{{ $msg->message }}</p>
+                                    
+                                    @if($msg->shared_shipping_status)
+                                        <div class="mt-1.5 p-2 bg-emerald-950/60 rounded-xs border border-emerald-600/40 text-[11px] text-emerald-100 flex items-center justify-between gap-2">
+                                            <span><i class="fa-solid fa-truck-fast text-lime-300 mr-1"></i> Update: <strong class="capitalize">{{ str_replace('_', ' ', $msg->shared_shipping_status) }}</strong></span>
+                                            @if($msg->shared_tracking_number)
+                                                <span class="font-mono font-bold text-lime-300">Resi: {{ $msg->shared_tracking_number }}</span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <!-- Customer Message (Left Bubble) -->
+                            <div class="flex flex-col items-start">
+                                <div class="max-w-lg bg-white border border-slate-200 text-slate-800 p-3.5 rounded-sm rounded-tl-none shadow-2xs space-y-1.5">
+                                    <div class="flex items-center justify-between gap-3 text-[10px] text-slate-400 pb-1 border-b border-slate-100">
+                                        <span class="font-bold text-slate-700 flex items-center gap-1">
+                                            <i class="fa-solid fa-user text-[9px] text-slate-500"></i> {{ $msg->sender_name ?: $order->customer_name }}
+                                        </span>
+                                        <span class="font-mono">{{ $msg->created_at->format('d M Y, H:i') }} WIB</span>
+                                    </div>
+                                    <p class="text-xs leading-relaxed whitespace-pre-line text-slate-900">{{ $msg->message }}</p>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                @else
+                    <div class="py-8 text-center text-slate-400 text-xs space-y-1">
+                        <i class="fa-regular fa-comment-dots text-3xl text-slate-300 block mb-1"></i>
+                        <p class="font-semibold text-slate-600">Belum ada percakapan untuk pesanan ini.</p>
+                        <p class="text-[11px]">Kirim pesan pertama kepada pembeli untuk mengabarkan status atau konfirmasi naskah/buku.</p>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Reply Box -->
+            <form action="{{ route('admin.orders.message', $order->id) }}" method="POST" class="p-4 sm:p-5 bg-white space-y-3">
+                @csrf
+
+                <!-- Quick Replies Chips -->
+                <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
+                    <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider mr-1">Balasan Cepat:</span>
+                    <button type="button" onclick="setAdminQuickReply('Halo kak, terima kasih atas pesanannya. Buku sedang disiapkan dan segera kami packing ya!')" class="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition cursor-pointer">
+                        📦 Sedang Dipacking
+                    </button>
+                    <button type="button" onclick="setAdminQuickReply('Halo kak, paket pesanan buku Anda telah kami serahkan ke kurir ekspedisi. Nomor resi pengiriman sudah tersedia ya kak. Terima kasih!')" class="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition cursor-pointer">
+                        🚚 Paket Telah Dikirim
+                    </button>
+                    <button type="button" onclick="setAdminQuickReply('Halo kak, apakah ada hal lain terkait naskah atau pesanan buku yang dapat kami bantu?')" class="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition cursor-pointer">
+                        ❓ Tanya Naskah / Info
+                    </button>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Tulis Balasan Pesan</label>
+                    <textarea 
+                        id="adminReplyMessageInput"
+                        name="message" 
+                        rows="3" 
+                        placeholder="Tuliskan pesan konfirmasi atau update untuk pembeli..." 
+                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" 
+                        required
+                    ></textarea>
+                </div>
+
+                <!-- Optional Share Status Row -->
+                <div class="p-3 bg-slate-50 rounded-sm border border-slate-200 space-y-2">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="chkShareStatus" onchange="toggleShareStatusInputs(this)" class="w-4 h-4 text-emerald-600 rounded-xs border-slate-300 cursor-pointer" />
+                        <label for="chkShareStatus" class="text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                            Sertakan Update Status Pengiriman Resmi di Percakapan
+                        </label>
+                    </div>
+
+                    <div id="shareStatusInputsContainer" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-slate-200">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">Status Pengiriman</label>
+                            <select name="share_shipping_status" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xs text-xs text-slate-800 outline-none focus:border-emerald-600">
+                                <option value="">-- Jangan Ubah Status --</option>
+                                <option value="diproses" {{ $order->shipping_status === 'diproses' ? 'selected' : '' }}>Sedang Diproses / Packing</option>
+                                <option value="dikirim" {{ $order->shipping_status === 'dikirim' ? 'selected' : '' }}>Sudah Dikirim (Kurir / Ekspedisi)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-600 mb-1">Nomor Resi (Opsional)</label>
+                            <input type="text" name="share_tracking_number" value="{{ $order->tracking_number }}" placeholder="Contoh: JNE/123" class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-xs text-xs text-slate-800 font-mono outline-none focus:border-emerald-600 uppercase" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end pt-1">
+                    <button type="submit" class="px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-2 shadow-2xs cursor-pointer">
+                        <i class="fa-solid fa-paper-plane text-lime-300 text-xs"></i>
+                        <span>Kirim Balasan Pesan &amp; Notifikasi Email</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function setAdminQuickReply(text) {
+                const input = document.getElementById('adminReplyMessageInput');
+                if (input) {
+                    input.value = text;
+                    input.focus();
+                }
+            }
+
+            function toggleShareStatusInputs(chk) {
+                const container = document.getElementById('shareStatusInputsContainer');
+                if (container) {
+                    if (chk.checked) {
+                        container.classList.remove('hidden');
+                    } else {
+                        container.classList.add('hidden');
+                    }
+                }
+            }
+
+            // Auto scroll admin messages thread to bottom
+            document.addEventListener('DOMContentLoaded', function() {
+                const thread = document.getElementById('adminMessagesThread');
+                if (thread) {
+                    thread.scrollTop = thread.scrollHeight;
+                }
+            });
+        </script>
+
 @endsection
 

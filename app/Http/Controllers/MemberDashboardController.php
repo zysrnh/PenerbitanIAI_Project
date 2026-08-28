@@ -11,6 +11,8 @@ use App\Models\Order;
 use App\Models\SiteSetting;
 use App\Mail\OrderCompletedAdminMail;
 use App\Mail\OrderCompletedCustomerMail;
+use App\Mail\OrderMessageNotificationMail;
+use App\Models\OrderMessage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
@@ -137,6 +139,98 @@ class MemberDashboardController extends Controller
         }
 
         return redirect()->route('member.orders')->with('success', 'Terima kasih! Pesanan #' . $order->order_number . ' telah dikonfirmasi diterima.');
+    }
+
+    
+    /**
+     * Send message from Customer/Member to Admin
+     */
+    public function sendOrderMessage(Request $request, $orderNumber)
+    {
+        $user = Auth::user();
+        $order = Order::where('order_number', $orderNumber)
+            ->where(function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhere('customer_email', $user->email);
+            })
+            ->firstOrFail();
+
+        $request->validate([
+            'message' => 'required|string|max:3000',
+        ]);
+
+        $orderMsg = OrderMessage::create([
+            'order_id'            => $order->id,
+            'user_id'             => $user->id,
+            'sender_type'         => 'customer',
+            'sender_name'         => $user->name,
+            'message'             => $request->input('message'),
+            'is_read_by_admin'    => false,
+            'is_read_by_customer' => true,
+        ]);
+
+        // Mark previous admin messages as read
+        $order->messages()->where('sender_type', 'admin')->update(['is_read_by_customer' => true]);
+
+        // Send email notification to Admin
+        try {
+            $adminEmail = SiteSetting::get('notification_recipient_email', 'info@penerbitpersis.com');
+            if (!empty($adminEmail)) {
+                Mail::to($adminEmail)->send(new OrderMessageNotificationMail($order, $orderMsg, 'admin'));
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Failed sending customer order message email to admin: ' . $e->getMessage());
+        }
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pesan berhasil dikirim ke Redaksi PERSIS PERS.',
+                'data'    => $orderMsg
+            ]);
+        }
+
+        return back()->with('success', 'Pesan berhasil dikirimkan ke Tim Redaksi.');
+    }
+
+    /**
+     * Get real-time messages list JSON for an order
+     */
+    public function getOrderMessages($orderNumber)
+    {
+        $user = Auth::user();
+        $order = Order::where('order_number', $orderNumber)
+            ->where(function ($q) use ($user) {
+                $q->where('user_id', $user->id)
+                  ->orWhere('customer_email', $user->email);
+            })
+            ->firstOrFail();
+
+        // Mark admin messages as read by customer
+        $order->messages()->where('sender_type', 'admin')->update(['is_read_by_customer' => true]);
+
+        $messages = $order->messages()->get()->map(function($msg) {
+            return [
+                'id'                     => $msg->id,
+                'sender_type'            => $msg->sender_type,
+                'sender_name'            => $msg->sender_name,
+                'message'                => $msg->message,
+                'shared_shipping_status' => $msg->shared_shipping_status,
+                'shared_tracking_number' => $msg->shared_tracking_number,
+                'created_at_formatted'   => $msg->created_at->format('d M Y, H:i') . ' WIB',
+                'is_admin'               => $msg->sender_type === 'admin',
+            ];
+        });
+
+        return response()->json([
+            'success'  => true,
+            'order'    => [
+                'order_number'    => $order->order_number,
+                'shipping_status' => $order->shipping_status,
+                'tracking_number' => $order->tracking_number,
+            ],
+            'messages' => $messages
+        ]);
     }
 
     public function profile()
