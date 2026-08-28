@@ -808,7 +808,7 @@
             }
         };
 
-        // Render Cart Drawer HTML UI
+        // Render Cart Drawer HTML UI (Flawless item cards rendering)
         window.renderCartDrawerUI = function(data) {
             const listContainer = document.getElementById('cartDrawerItemsList');
             const footerContainer = document.getElementById('cartDrawerFooter');
@@ -854,16 +854,15 @@
 
             let html = '';
             data.items.forEach(item => {
-                const book = item.book;
-                const cover = book && book.cover_image ? `/storage/${book.cover_image}` : 'https://placehold.co/100x140?text=No+Cover';
-                const title = book ? book.title : 'Buku';
-                const author = book && book.author ? book.author : 'Penulis PERSIS';
+                const cover = item.cover_url || (item.book && item.book.cover_image ? `/storage/${item.book.cover_image}` : 'https://placehold.co/100x140?text=No+Cover');
+                const title = item.title || (item.book ? item.book.title : 'Buku Terbitan');
+                const author = item.author || (item.book && item.book.author ? item.book.author : 'Penulis PERSIS');
                 const price = item.formatted_price;
                 const subtotal = item.formatted_subtotal;
 
                 html += `
-                <div class="p-3.5 bg-white border border-slate-200 rounded-sm hover:border-emerald-500 transition-colors shadow-2xs flex gap-3 group relative">
-                    <img src="${cover}" alt="${title}" class="w-14 h-20 object-cover rounded-xs shadow-xs border border-slate-200 shrink-0" />
+                <div class="p-3 bg-white border border-slate-200 rounded-sm hover:border-emerald-500 transition-colors shadow-2xs flex gap-3 group relative select-none">
+                    <img src="${cover}" alt="${title}" class="w-14 h-20 object-cover rounded-xs shadow-xs border border-slate-200 shrink-0 bg-slate-100" />
                     <div class="flex-grow min-w-0 flex flex-col justify-between">
                         <div>
                             <div class="flex items-start justify-between gap-2">
@@ -888,7 +887,7 @@
                 `;
             });
 
-            itemsContainer.innerHTML = html;
+            listContainer.innerHTML = html;
         };
 
         // Add to Cart Action
