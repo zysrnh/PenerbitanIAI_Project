@@ -1090,6 +1090,241 @@
             });
         };
 
+        // =========================================================================
+        // CHECKOUT & WHATSAPP FUNCTIONS
+        // =========================================================================
+
+        let qrisPollInterval = null;
+        let qrisCountdownTimer = null;
+        let currentOrderNumber = null;
+
+        // Open Checkout Modal
+        window.openCheckoutModal = function() {
+            if (!window.PERSIS_CART.isLoggedIn) {
+                window.closeCartDrawer();
+                window.openLoginPromptModal();
+                return;
+            }
+
+            if (!window.PERSIS_CART.data || !window.PERSIS_CART.data.items || window.PERSIS_CART.data.items.length === 0) {
+                alert('Keranjang belanja Anda masih kosong. Silakan pilih buku terlebih dahulu.');
+                return;
+            }
+
+            // Close cart drawer first
+            window.closeCartDrawer();
+
+            // Setup step 1 form
+            const summaryText = document.getElementById('chkTotalSummaryText');
+            if (summaryText) {
+                summaryText.textContent = window.PERSIS_CART.data.formatted_total || 'Rp 0';
+            }
+
+            document.getElementById('checkoutStepForm').classList.remove('hidden');
+            document.getElementById('checkoutStepQris').classList.add('hidden');
+            document.getElementById('checkoutModalTitle').textContent = 'Checkout Pengiriman';
+
+            const modal = document.getElementById('checkoutQrisModal');
+            const card = document.getElementById('checkoutQrisModalCard');
+            if (modal && card) {
+                modal.style.display = 'flex';
+                modal.classList.remove('hidden', 'pointer-events-none');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.classList.add('opacity-100');
+                    card.classList.remove('scale-98', 'opacity-0');
+                    card.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+        };
+
+        // Close Checkout Modal
+        window.closeCheckoutModal = function() {
+            if (qrisPollInterval) clearInterval(qrisPollInterval);
+            if (qrisCountdownTimer) clearInterval(qrisCountdownTimer);
+
+            const modal = document.getElementById('checkoutQrisModal');
+            const card = document.getElementById('checkoutQrisModalCard');
+            if (modal && card) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0');
+                card.classList.remove('scale-100', 'opacity-100');
+                card.classList.add('scale-98', 'opacity-0');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    modal.classList.add('hidden', 'pointer-events-none');
+                    modal.classList.remove('flex');
+                }, 200);
+            }
+        };
+
+        // Checkout Cart via WhatsApp
+        window.checkoutCartViaWhatsApp = function() {
+            const data = window.PERSIS_CART.data;
+            if (!data || !data.items || data.items.length === 0) {
+                alert('Keranjang belanja Anda masih kosong.');
+                return;
+            }
+
+            let msg = "Halo Admin PERSIS PERS, saya ingin memesan buku berikut:\n\n";
+            data.items.forEach((it, idx) => {
+                const title = it.title || (it.book ? it.book.title : 'Buku');
+                msg += `${idx + 1}. *${title}* (${it.quantity} eks) - ${it.formatted_subtotal}\n`;
+            });
+            msg += `\n*Total: ${data.formatted_total}*\n\nMohon informasi ongkos kirim dan rekening transfer. Terima kasih!`;
+
+            let waNum = String(window.PERSIS_CART.contactWa || '6282116116133').replace(/[^0-9]/g, '');
+            if (waNum.startsWith('0')) {
+                waNum = '62' + waNum.substring(1);
+            }
+            const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
+        };
+
+        // Submit Checkout Form & Generate Real-time QRIS
+        window.submitCheckoutQris = function() {
+            const name = document.getElementById('chkCustomerName').value.trim();
+            const phone = document.getElementById('chkCustomerPhone').value.trim();
+            const email = document.getElementById('chkCustomerEmail').value.trim();
+            const address = document.getElementById('chkCustomerAddress').value.trim();
+            const notes = document.getElementById('chkCustomerNotes').value.trim();
+
+            if (!name || !phone || !address) {
+                alert('Mohon lengkapi Nama Penerima, No. WhatsApp, dan Alamat Lengkap Pengiriman.');
+                return;
+            }
+
+            const btn = document.getElementById('btnProcessQris');
+            const originalBtnHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i> <span>Membuat Kode QRIS...</span>';
+
+            fetch(window.PERSIS_CART.routes.checkoutQris, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    customer_name: name,
+                    customer_phone: phone,
+                    customer_email: email,
+                    customer_address: address,
+                    notes: notes
+                })
+            })
+            .then(res => res.json())
+            .then(resData => {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+
+                if (resData && resData.success) {
+                    currentOrderNumber = resData.order_number;
+
+                    // Switch to Step 2 QRIS
+                    document.getElementById('checkoutStepForm').classList.add('hidden');
+                    document.getElementById('checkoutStepQris').classList.remove('hidden');
+                    document.getElementById('checkoutModalTitle').textContent = 'Pembayaran QRIS';
+
+                    // Populate Data
+                    document.getElementById('qrisImageDisplay').src = resData.qr_image_url;
+                    document.getElementById('qrisOrderNumber').textContent = '#' + resData.order_number;
+                    document.getElementById('qrisSubtotalText').textContent = resData.formatted_subtotal || resData.formatted_amount;
+                    document.getElementById('qrisFeeText').textContent = resData.formatted_fee || 'Rp 0';
+                    document.getElementById('qrisTotalPaymentText').textContent = resData.formatted_total_payment || resData.formatted_amount;
+                    document.getElementById('qrisInvoiceDirectBtn').href = '/order/invoice/' + resData.order_number;
+
+                    // Refresh cart state to 0
+                    window.renderCartDrawerUI({ items: [], count: 0, total: 0, formatted_total: 'Rp 0' });
+                    window.updateCartBadges(0);
+
+                    // Start Countdown (15 minutes)
+                    startQrisCountdown(15 * 60);
+
+                    // Start Auto-poll status
+                    startQrisPolling(resData.order_number);
+                } else {
+                    alert(resData.message || 'Gagal membuat transaksi QRIS. Silakan coba lagi.');
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+                console.error('Checkout error:', err);
+                alert('Terjadi kesalahan saat memproses checkout. Silakan coba lagi.');
+            });
+        };
+
+        // QRIS Countdown Timer
+        function startQrisCountdown(durationSeconds) {
+            if (qrisCountdownTimer) clearInterval(qrisCountdownTimer);
+            let timer = durationSeconds;
+            const timerEl = document.getElementById('qrisCountdownTimer');
+
+            qrisCountdownTimer = setInterval(() => {
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                if (timerEl) {
+                    timerEl.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                }
+
+                if (--timer < 0) {
+                    clearInterval(qrisCountdownTimer);
+                    if (timerEl) timerEl.textContent = 'KEDALUWARSA';
+                    const banner = document.getElementById('qrisStatusBanner');
+                    if (banner) {
+                        banner.className = 'p-2.5 bg-rose-50 border border-rose-200 rounded-xs flex items-center justify-center gap-2 text-xs font-semibold text-rose-900';
+                        banner.innerHTML = '<i class="fa-solid fa-clock-rotate-left text-rose-700"></i> <span>Waktu pembayaran habis. Silakan buat pesanan baru.</span>';
+                    }
+                }
+            }, 1000);
+        }
+
+        // Auto Poll Payment Status
+        function startQrisPolling(orderNumber) {
+            if (qrisPollInterval) clearInterval(qrisPollInterval);
+
+            qrisPollInterval = setInterval(() => {
+                fetch(window.PERSIS_CART.routes.orderStatus + orderNumber)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && (data.status === 'completed' || data.is_paid)) {
+                            clearInterval(qrisPollInterval);
+                            clearInterval(qrisCountdownTimer);
+
+                            const banner = document.getElementById('qrisStatusBanner');
+                            if (banner) {
+                                banner.className = 'p-2.5 bg-emerald-100 border border-emerald-300 rounded-xs flex items-center justify-center gap-2 text-xs font-bold text-emerald-900 animate-bounce';
+                                banner.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-700 text-sm"></i> <span>Pembayaran Berhasil! Mengalihkan ke Invoice...</span>';
+                            }
+
+                            setTimeout(() => {
+                                window.location.href = '/order/invoice/' + orderNumber;
+                            }, 1800);
+                        }
+                    })
+                    .catch(err => console.error('Poll status err:', err));
+            }, 3000);
+        }
+
+        // Manual Check Status Button
+        window.manualCheckPaymentStatus = function() {
+            if (!currentOrderNumber) return;
+            fetch(window.PERSIS_CART.routes.orderStatus + currentOrderNumber)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && (data.status === 'completed' || data.is_paid)) {
+                        alert('Pembayaran telah berhasil diverifikasi!');
+                        window.location.href = '/order/invoice/' + currentOrderNumber;
+                    } else {
+                        alert('Pembayaran belum terdeteksi. Silakan selesaikan transfer QRIS Anda.');
+                    }
+                })
+                .catch(err => alert('Gagal memeriksa status. Silakan coba sesaat lagi.'));
+        };
+
         // Auto load cart badge on page ready
         document.addEventListener('DOMContentLoaded', function() {
             if (window.PERSIS_CART.isLoggedIn) {
