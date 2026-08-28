@@ -373,12 +373,21 @@
                             </div>
                         </div>
                     @else
-                        {{-- Desktop Only "Masuk" Button (Hidden on Mobile phone screen) --}}
-                        <a href="{{ route('member.login') }}" 
-                           class="hidden sm:flex h-10 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition-all duration-200 items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer select-none">
-                            <i class="fa-solid fa-right-to-bracket text-xs text-emerald-300 pointer-events-none"></i>
-                            <span>Masuk</span>
-                        </a>
+                        {{-- Enhanced Desktop "Masuk / Daftar" Button Combo --}}
+                        <div class="hidden sm:flex items-center gap-2.5">
+                            <a href="{{ route('member.register') }}" 
+                               class="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-[#006830] hover:bg-emerald-50/70 rounded-sm transition-all duration-150">
+                                <i class="fa-solid fa-user-plus text-[11px] text-slate-400"></i>
+                                <span>Daftar</span>
+                            </a>
+                            <a href="{{ route('member.login') }}" 
+                               class="group inline-flex h-10 px-3.5 sm:px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition-all duration-200 items-center gap-2 shadow-xs hover:shadow-md hover:-translate-y-0.5 border border-[#005727] cursor-pointer select-none">
+                                <div class="w-5 h-5 rounded-full bg-emerald-800/70 flex items-center justify-center text-emerald-200 group-hover:scale-110 group-hover:bg-emerald-700 transition-transform">
+                                    <i class="fa-solid fa-right-to-bracket text-[10px]"></i>
+                                </div>
+                                <span class="tracking-wide">Masuk</span>
+                            </a>
+                        </div>
                     @endauth
 
                     <!-- 3. Mobile Menu Button (Hamburger - Identical 40x40 Square Box) -->
