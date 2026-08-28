@@ -13,13 +13,13 @@
                 <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xs text-[10px] font-black uppercase font-mono tracking-wider">
                     PENGATURAN BERANDA
                 </span>
-                <span class="text-xs text-slate-400 font-medium hidden sm:inline">• Upload Foto &amp; Real-Time Visualizer</span>
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline">• Dinamis Slider, Layanan &amp; Visualizer</span>
             </div>
             <h1 class="text-base sm:text-xl font-extrabold text-slate-900 font-heading tracking-tight mt-1 leading-tight">
-                Kelola Konten, Slider &amp; Banner Beranda
+                Kelola Konten, Slider &amp; Layanan Beranda
             </h1>
             <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">
-                Upload foto slide langsung dari komputer/HP atau gunakan URL gambar eksternal dengan pratinjau live seketika.
+                Sesuaikan foto slide, 4 nilai keunggulan, daftar kartu layanan (bisa ditambah/dikurangi), dan profil singkat redaksi.
             </p>
         </div>
 
@@ -80,7 +80,7 @@
                             <textarea name="home_slide1_desc" id="in_s1_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600">{{ old('home_slide1_desc', $settings['home_slide1_desc']) }}</textarea>
                         </div>
 
-                        <!-- Foto Slide 1: File Upload + URL Input -->
+                        <!-- Foto Slide 1 -->
                         <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
                             <div class="flex items-center justify-between">
                                 <label class="block font-bold text-slate-800">Foto Background Slide 1</label>
@@ -141,7 +141,7 @@
                             <textarea name="home_slide2_desc" id="in_s2_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600">{{ old('home_slide2_desc', $settings['home_slide2_desc']) }}</textarea>
                         </div>
 
-                        <!-- Foto Slide 2: File Upload + URL Input -->
+                        <!-- Foto Slide 2 -->
                         <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
                             <div class="flex items-center justify-between">
                                 <label class="block font-bold text-slate-800">Foto Background Slide 2</label>
@@ -202,7 +202,7 @@
                             <textarea name="home_slide3_desc" id="in_s3_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600">{{ old('home_slide3_desc', $settings['home_slide3_desc']) }}</textarea>
                         </div>
 
-                        <!-- Foto Slide 3: File Upload + URL Input -->
+                        <!-- Foto Slide 3 -->
                         <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
                             <div class="flex items-center justify-between">
                                 <label class="block font-bold text-slate-800">Foto Background Slide 3</label>
@@ -270,15 +270,82 @@
                     </div>
                 </div>
 
-                <!-- 5. PROFIL SINGKAT & ALUR PRODUKSI -->
+                <!-- 5. KELOLA LAYANAN KAMI (BISA DITAMBAH / DIKURANGI) -->
+                <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
+                    <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
+                                5
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading">Daftar Layanan Kami (Fleksibel)</h3>
+                                <p class="text-[11px] text-slate-400">Atur kartu layanan di beranda, bisa ditambah atau dikurangi.</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addNewServiceRow()" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xs text-[11px] font-bold transition flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-plus text-[10px]"></i>
+                            <span>Tambah Layanan</span>
+                        </button>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Badge Layanan</label>
+                                <input type="text" name="home_services_badge" value="{{ old('home_services_badge', $settings['home_services_badge']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                            </div>
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Judul Seksi Layanan</label>
+                                <input type="text" name="home_services_title" value="{{ old('home_services_title', $settings['home_services_title']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                            </div>
+                        </div>
+
+                        <!-- Service Items List -->
+                        <div id="servicesListContainer" class="space-y-3 pt-2">
+                            @foreach($services as $index => $srv)
+                                <div class="service-item-row p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2 relative" data-index="{{ $index }}">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10.5px] font-bold text-emerald-800 uppercase flex items-center gap-1.5">
+                                            <i class="fa-solid fa-grip-vertical text-slate-400 text-xs"></i>
+                                            <span>Layanan #<span class="service-num">{{ $index + 1 }}</span></span>
+                                        </span>
+                                        <button type="button" onclick="removeServiceRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1 cursor-pointer text-xs" title="Hapus Layanan">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Icon FontAwesome</label>
+                                            <input type="text" name="services[{{ $index }}][icon]" value="{{ $srv['icon'] ?? 'fa-solid fa-book-open' }}" placeholder="fa-solid fa-book-open" class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white font-mono text-[11px]" />
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Nama Layanan</label>
+                                            <input type="text" name="services[{{ $index }}][title]" value="{{ $srv['title'] ?? '' }}" required placeholder="Contoh: Penerbitan Buku" class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white font-bold" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Deskripsi Ringkas</label>
+                                        <input type="text" name="services[{{ $index }}][desc]" value="{{ $srv['desc'] ?? '' }}" required placeholder="Penjelasan singkat layanan..." class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white" />
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Link URL Tujuan</label>
+                                        <input type="text" name="services[{{ $index }}][link]" value="{{ $srv['link'] ?? '/kontak' }}" placeholder="/kontak" class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white font-mono text-[11px]" />
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. PROFIL SINGKAT & ALUR PRODUKSI -->
                 <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
                     <div class="flex items-center gap-3 pb-3.5 border-b border-slate-100">
                         <div class="w-8 h-8 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
-                            5
+                            6
                         </div>
                         <div>
                             <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading">Profil Singkat &amp; Alur Produksi</h3>
-                            <p class="text-[11px] text-slate-400">Konten kartu tengah beranda (Katalog otomatis terhubung dengan database).</p>
+                            <p class="text-[11px] text-slate-400">Konten kartu tengah beranda (Katalog otomatis terhubung dengan database master buku).</p>
                         </div>
                     </div>
 
@@ -293,7 +360,7 @@
                             <textarea name="home_about_desc" id="in_ab_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300">{{ old('home_about_desc', $settings['home_about_desc']) }}</textarea>
                         </div>
 
-                        <!-- Foto Profil Redaksi: File Upload + URL Input -->
+                        <!-- Foto Profil Redaksi -->
                         <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
                             <div class="flex items-center justify-between">
                                 <label class="block font-bold text-slate-800">Foto Profil Gedung / Kantor Redaksi</label>
@@ -318,53 +385,6 @@
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Catatan Mutu / Subteks Alur</label>
                                 <input type="text" name="home_process_desc" id="in_pr_desc" value="{{ old('home_process_desc', $settings['home_process_desc']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 6. BANNER CTA KONSULTASI -->
-                <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
-                    <div class="flex items-center gap-3 pb-3.5 border-b border-slate-100">
-                        <div class="w-8 h-8 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
-                            6
-                        </div>
-                        <div>
-                            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading">Banner Ajakan Konsultasi (CTA)</h3>
-                            <p class="text-[11px] text-slate-400">Banner promosi konsultasi di bagian bawah halaman.</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-3.5 text-xs">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1">Badge Teks Layanan</label>
-                                <input type="text" name="home_services_badge" value="{{ old('home_services_badge', $settings['home_services_badge']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
-                            </div>
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1">Judul Seksi Layanan</label>
-                                <input type="text" name="home_services_title" value="{{ old('home_services_title', $settings['home_services_title']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">Judul Utama Banner CTA</label>
-                            <input type="text" name="home_cta_title" id="in_cta_title" value="{{ old('home_cta_title', $settings['home_cta_title']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
-                        </div>
-
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">Deskripsi Banner CTA</label>
-                            <textarea name="home_cta_desc" id="in_cta_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300">{{ old('home_cta_desc', $settings['home_cta_desc']) }}</textarea>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1">Teks Tombol CTA</label>
-                                <input type="text" name="home_cta_btn_text" id="in_cta_btn" value="{{ old('home_cta_btn_text', $settings['home_cta_btn_text']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
-                            </div>
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1">Nomor WhatsApp Tujuan</label>
-                                <input type="text" name="home_cta_wa_number" id="in_cta_wa" value="{{ old('home_cta_wa_number', $settings['home_cta_wa_number']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 font-mono" />
                             </div>
                         </div>
                     </div>
@@ -442,7 +462,7 @@
 
                     <!-- Slide Indicators -->
                     <div class="relative z-10 flex items-center gap-1.5 pt-4">
-                        <span id="dot_s1" class="w-2 h-2 rounded-full bg-lime-400"></span>
+                        <span id="dot_s1" class="w-6 h-2 rounded-full bg-lime-400"></span>
                         <span id="dot_s2" class="w-2 h-2 rounded-full bg-white/40"></span>
                         <span id="dot_s3" class="w-2 h-2 rounded-full bg-white/40"></span>
                     </div>
@@ -550,22 +570,6 @@
 
                 </div>
 
-                <!-- 4. Bottom Action Bar Preview (Exact Dual CTA) -->
-                <div class="bg-[#032c21] text-white p-3 rounded-sm border border-slate-800 flex items-center justify-between text-xs">
-                    <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-full bg-white/10 text-lime-400 flex items-center justify-center text-xs shrink-0">
-                            <i class="fa-solid fa-headset"></i>
-                        </div>
-                        <div>
-                            <h5 class="text-[10px] font-bold text-white leading-tight" id="mock_cta_title">{{ $settings['home_cta_title'] }}</h5>
-                            <p class="text-[8.5px] text-slate-300 truncate" id="mock_cta_desc">{{ $settings['home_cta_desc'] }}</p>
-                        </div>
-                    </div>
-                    <span class="px-2 py-1 bg-lime-400 text-slate-950 font-bold text-[8.5px] rounded-xs whitespace-nowrap" id="mock_cta_btn">
-                        {{ $settings['home_cta_btn_text'] }}
-                    </span>
-                </div>
-
             </div>
         </div>
 
@@ -575,6 +579,72 @@
 
 <script>
     let currentActivePreviewSlide = 1;
+
+    function addNewServiceRow() {
+        const container = document.getElementById('servicesListContainer');
+        const count = container.querySelectorAll('.service-item-row').length;
+        const newIndex = count;
+
+        const row = document.createElement('div');
+        row.className = 'service-item-row p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2 relative animate-fade-in';
+        row.setAttribute('data-index', newIndex);
+        row.innerHTML = `
+            <div class="flex items-center justify-between">
+                <span class="text-[10.5px] font-bold text-emerald-800 uppercase flex items-center gap-1.5">
+                    <i class="fa-solid fa-grip-vertical text-slate-400 text-xs"></i>
+                    <span>Layanan #<span class="service-num">${count + 1}</span></span>
+                </span>
+                <button type="button" onclick="removeServiceRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1 cursor-pointer text-xs" title="Hapus Layanan">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div>
+                    <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Icon FontAwesome</label>
+                    <input type="text" name="services[${newIndex}][icon]" value="fa-solid fa-bookmark" class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white font-mono text-[11px]" />
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Nama Layanan</label>
+                    <input type="text" name="services[${newIndex}][title]" value="Layanan Baru" required class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white font-bold" />
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Deskripsi Ringkas</label>
+                <input type="text" name="services[${newIndex}][desc]" value="Deskripsi layanan baru..." required class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white" />
+            </div>
+            <div>
+                <label class="block text-[10px] font-semibold text-slate-500 mb-0.5">Link URL Tujuan</label>
+                <input type="text" name="services[${newIndex}][link]" value="/kontak" class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white font-mono text-[11px]" />
+            </div>
+        `;
+        container.appendChild(row);
+        renumberServices();
+    }
+
+    function removeServiceRow(btn) {
+        const container = document.getElementById('servicesListContainer');
+        const rows = container.querySelectorAll('.service-item-row');
+        if (rows.length <= 1) {
+            alert('Minimal harus ada 1 layanan.');
+            return;
+        }
+        btn.closest('.service-item-row').remove();
+        renumberServices();
+    }
+
+    function renumberServices() {
+        const container = document.getElementById('servicesListContainer');
+        const rows = container.querySelectorAll('.service-item-row');
+        rows.forEach((row, i) => {
+            row.querySelector('.service-num').innerText = (i + 1);
+            row.querySelectorAll('input').forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    input.setAttribute('name', name.replace(/services\[\d+\]/, 'services[' + i + ']'));
+                }
+            });
+        });
+    }
 
     function handleImageFilePreview(input, slideKey) {
         if (input.files && input.files[0]) {
@@ -620,7 +690,7 @@
             const dot = document.getElementById('dot_s' + n);
             if (n === slideNum) {
                 btn.className = 'px-2 py-0.5 text-[10px] font-bold rounded-xs bg-emerald-600 text-white transition';
-                dot.className = 'w-2 h-2 rounded-full bg-lime-400';
+                dot.className = 'w-6 h-2 rounded-full bg-lime-400';
             } else {
                 btn.className = 'px-2 py-0.5 text-[10px] font-bold rounded-xs text-slate-300 hover:text-white transition';
                 dot.className = 'w-2 h-2 rounded-full bg-white/40';
@@ -662,11 +732,6 @@
         if (abThumb) document.getElementById('mock_ab_img').src = abThumb;
         document.getElementById('mock_pr_title').innerText = document.getElementById('in_pr_title')?.value || 'Proses Produksi';
         document.getElementById('mock_pr_desc').innerText = document.getElementById('in_pr_desc')?.value || 'Catatan mutu...';
-
-        // CTA
-        document.getElementById('mock_cta_title').innerText = document.getElementById('in_cta_title')?.value || 'Konsultasi';
-        document.getElementById('mock_cta_desc').innerText = document.getElementById('in_cta_desc')?.value || 'Deskripsi ajakan...';
-        document.getElementById('mock_cta_btn').innerText = document.getElementById('in_cta_btn')?.value || 'KONSULTASI';
     }
 </script>
 @endsection
