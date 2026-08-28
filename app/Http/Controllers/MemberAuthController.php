@@ -11,7 +11,10 @@ class MemberAuthController extends Controller
 {
     public function showLogin()
     {
-        if (Auth::check() && Auth::user()->role === 'member') {
+        if (Auth::check()) {
+            if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+                return redirect()->route('admin.dashboard');
+            }
             return redirect()->route('member.dashboard');
         }
         return view('member.auth.login');
@@ -26,16 +29,22 @@ class MemberAuthController extends Controller
 
         $user = User::where('email', $credentials['email'])->first();
 
-        if (!$user || $user->role !== 'member') {
-            return back()->withErrors(['email' => 'Email tidak terdaftar sebagai member.'])->onlyInput('email');
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email atau kata sandi salah.'])->onlyInput('email');
         }
 
         if (!$user->is_active) {
-            return back()->withErrors(['email' => 'Akun Anda tidak aktif.'])->onlyInput('email');
+            return back()->withErrors(['email' => 'Akun Anda sedang dinonaktifkan oleh administrator.'])->onlyInput('email');
         }
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+            
+            // If admin logs in from member form, redirect to admin dashboard
+            if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+                return redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin, ' . Auth::user()->name . '!');
+            }
+
             return redirect()->route('member.dashboard')->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
         }
 
@@ -59,9 +68,9 @@ class MemberAuthController extends Controller
             'password'              => ['required', 'min:8', 'confirmed'],
             'password_confirmation' => ['required'],
         ], [
-            'email.unique'    => 'Email sudah terdaftar, silakan login.',
-            'password.min'    => 'Kata sandi minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'email.unique'          => 'Email sudah terdaftar, silakan login.',
+            'password.min'          => 'Kata sandi minimal 8 karakter.',
+            'password.confirmed'    => 'Konfirmasi kata sandi tidak cocok.',
         ]);
 
         $user = User::create([
@@ -84,6 +93,6 @@ class MemberAuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('home')->with('success', 'Anda telah logout.');
+        return redirect()->route('home')->with('success', 'Anda telah berhasil logout.');
     }
 }
