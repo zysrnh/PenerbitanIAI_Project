@@ -123,6 +123,7 @@
 </head>
 <body class="antialiased text-slate-800 bg-white selection:bg-brand-800 selection:text-white flex flex-col min-h-screen">
 <script>
+    // 1. Mobile Menu Drawer Toggle
     window.toggleMobileMenu = function(e) {
         if (e) {
             try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
@@ -136,15 +137,11 @@
         if (isClosed) {
             drawer.style.display = 'block';
             drawer.classList.remove('hidden');
-            if (icon) {
-                icon.className = 'fa-solid fa-xmark text-lg pointer-events-none';
-            }
+            if (icon) icon.className = 'fa-solid fa-xmark text-lg pointer-events-none';
         } else {
             drawer.style.display = 'none';
             drawer.classList.add('hidden');
-            if (icon) {
-                icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
-            }
+            if (icon) icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
         }
     };
 
@@ -155,44 +152,11 @@
             drawer.style.display = 'none';
             drawer.classList.add('hidden');
         }
-        if (icon) {
-            icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
-        }
+        if (icon) icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
     };
 
-    
-        // Admin Nav Dropdown Handler
-        window.toggleAdminNavDropdown = function(e) {
-            if (e) { e.preventDefault(); e.stopPropagation(); }
-            const menu = document.getElementById('adminUserDropdownMenu');
-            const chev = document.getElementById('adminDropdownChevron');
-            if (!menu) return;
-
-            const isHidden = menu.style.display === 'none' || menu.classList.contains('hidden');
-            if (isHidden) {
-                menu.style.display = 'block';
-                menu.classList.remove('hidden');
-                if (chev) chev.style.transform = 'rotate(180deg)';
-            } else {
-                menu.style.display = 'none';
-                menu.classList.add('hidden');
-                if (chev) chev.style.transform = 'rotate(0deg)';
-            }
-        };
-
-        // Close Admin dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            const container = document.getElementById('adminUserDropdownContainer');
-            const menu = document.getElementById('adminUserDropdownMenu');
-            const chev = document.getElementById('adminDropdownChevron');
-            if (container && menu && !container.contains(e.target)) {
-                menu.style.display = 'none';
-                menu.classList.add('hidden');
-                if (chev) chev.style.transform = 'rotate(0deg)';
-            }
-        });
-
-        window.toggleMemberDropdown = function(e) {
+    // 2. Member / User Profile Dropdown Toggle
+    window.toggleMemberDropdown = function(e) {
         if (e) {
             try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
         }
@@ -213,7 +177,36 @@
         }
     };
 
+    // 3. Guest Account (Login / Sign Up) Dropdown Toggle
+    window.toggleGuestDropdown = function(e) {
+        if (e) {
+            try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+        }
+        const menu = document.getElementById('guestUserDropdownMenu');
+        if (!menu) return;
+
+        const isClosed = menu.classList.contains('hidden') || menu.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(menu).display === 'none');
+
+        if (isClosed) {
+            menu.style.display = 'block';
+            menu.classList.remove('hidden');
+        } else {
+            menu.style.display = 'none';
+            menu.classList.add('hidden');
+        }
+    };
+
+    // 4. Global Click-Outside Listener to Close All Dropdowns
     document.addEventListener('click', function(e) {
+        // Guest Dropdown
+        const guestContainer = document.getElementById('guestUserDropdownContainer');
+        const guestMenu = document.getElementById('guestUserDropdownMenu');
+        if (guestContainer && guestMenu && !guestContainer.contains(e.target)) {
+            guestMenu.style.display = 'none';
+            guestMenu.classList.add('hidden');
+        }
+
+        // Member / Admin Dropdown
         const memberContainer = document.getElementById('memberUserDropdownContainer');
         const memberMenu = document.getElementById('memberUserDropdownMenu');
         const memberChevron = document.getElementById('memberDropdownChevron');
@@ -386,7 +379,7 @@
                             </button>
 
                             <!-- Guest Dropdown Menu (Login & Sign Up) -->
-                            <div id="guestUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50" style="display: none;">
+                            <div id="guestUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-60 z-[1100]" style="display: none;">
                                 <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
                                     <div class="px-3 py-2 border-b border-slate-100 mb-1">
                                         <p class="text-xs font-extrabold text-slate-900">Akun Pengguna</p>
