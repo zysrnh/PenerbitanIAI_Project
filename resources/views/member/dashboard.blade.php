@@ -376,6 +376,114 @@
 
             </div>
 
+                        <!-- ==================== RIWAYAT PESANAN BUKU & TRANSAKSI ==================== -->
+            <div id="riwayat-pesanan" class="bg-white rounded-sm border border-slate-200 p-5 sm:p-6 shadow-xs scroll-mt-20">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-7 h-7 rounded-xs bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 font-heading">Riwayat Pesanan & Transaksi Buku</h3>
+                            <p class="text-[10.5px] text-slate-500 mt-0.5">Daftar transaksi buku fisik, modul ajar, dan invoice resmi Anda</p>
+                        </div>
+                    </div>
+                    @if(isset($userOrders) && $userOrders->count() > 0)
+                        <span class="text-xs font-semibold text-slate-500 font-mono">
+                            Total: {{ $userOrders->count() }} Pesanan
+                        </span>
+                    @endif
+                </div>
+
+                @if(isset($userOrders) && $userOrders->count() > 0)
+                    <div class="overflow-x-auto border border-slate-200 rounded-sm">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="py-2.5 px-3.5">Invoice & Tanggal</th>
+                                    <th class="py-2.5 px-3.5">Buku Dipesan</th>
+                                    <th class="py-2.5 px-3.5 text-right">Total Tagihan</th>
+                                    <th class="py-2.5 px-3.5 text-center">Status Bayar</th>
+                                    <th class="py-2.5 px-3.5 text-center">Pengiriman</th>
+                                    <th class="py-2.5 px-3.5 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                @foreach($userOrders as $ord)
+                                    <tr class="hover:bg-slate-50/60 transition">
+                                        <td class="py-3 px-3.5 whitespace-nowrap">
+                                            <a href="{{ route('order.invoice', $ord->order_number) }}" class="font-bold text-emerald-800 hover:underline font-mono block">
+                                                #{{ $ord->order_number }}
+                                            </a>
+                                            <span class="text-[10.5px] text-slate-400 block mt-0.5">{{ $ord->created_at->format('d M Y, H:i') }} WIB</span>
+                                        </td>
+                                        <td class="py-3 px-3.5">
+                                            @if(!empty($ord->items_json))
+                                                @foreach($ord->items_json as $it)
+                                                    <p class="font-semibold text-slate-800 leading-snug">
+                                                        • {{ $it['title'] ?? 'Buku' }} <span class="text-slate-400 font-normal">({{ $it['quantity'] ?? 1 }}x)</span>
+                                                    </p>
+                                                @endforeach
+                                            @else
+                                                <span class="text-slate-400 italic">Buku Terbitan PERSIS</span>
+                                            @endif
+                                        </td>
+                                        <td class="py-3 px-3.5 text-right whitespace-nowrap">
+                                            <span class="font-bold font-mono text-slate-900">{{ $ord->formatted_payment }}</span>
+                                            <span class="text-[10px] text-slate-400 block uppercase">{{ $ord->payment_method }}</span>
+                                        </td>
+                                        <td class="py-3 px-3.5 text-center whitespace-nowrap">
+                                            @if($ord->payment_status === 'completed')
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-xs text-[10px] font-bold uppercase border border-emerald-300">
+                                                    <i class="fa-solid fa-check text-[9px]"></i> Lunas
+                                                </span>
+                                            @elseif($ord->payment_status === 'pending')
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 text-amber-900 rounded-xs text-[10px] font-bold uppercase border border-amber-300">
+                                                    <i class="fa-solid fa-clock text-[9px]"></i> Menunggu
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-800 rounded-xs text-[10px] font-bold uppercase">
+                                                    {{ strtoupper($ord->payment_status) }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="py-3 px-3.5 text-center whitespace-nowrap">
+                                            <span class="text-[11px] font-medium text-slate-700 capitalize block">
+                                                {{ str_replace('_', ' ', $ord->shipping_status) }}
+                                            </span>
+                                            @if($ord->tracking_number)
+                                                <span class="text-[10px] text-emerald-800 font-mono block font-bold mt-0.5">Resi: {{ $ord->tracking_number }}</span>
+                                            @endif
+                                        </td>
+                                        <td class="py-3 px-3.5 text-center whitespace-nowrap">
+                                            <div class="flex items-center justify-center gap-1.5">
+                                                <a href="{{ route('order.invoice', $ord->order_number) }}" class="px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xs text-[11px] font-medium transition shadow-2xs" title="Buka Dokumen Invoice">
+                                                    <i class="fa-solid fa-file-invoice text-slate-400 mr-0.5"></i> Invoice
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="p-8 text-center bg-slate-50 rounded-sm border border-slate-100 space-y-2.5">
+                        <div class="w-12 h-12 rounded-sm bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800">Belum Ada Riwayat Pesanan</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5 max-w-sm mx-auto">Anda belum melakukan pembelian buku di platform PERSIS PERS. Jelajahi katalog sekarang!</p>
+                        </div>
+                        <a href="{{ route('katalog') }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition shadow-2xs">
+                            <i class="fa-solid fa-book-open text-[10px]"></i>
+                            <span>Buka Katalog Buku</span>
+                        </a>
+                    </div>
+                @endif
+            </div>
+
             <!-- ==================== SIGNATURE 3D BOOK CATALOG (MATCHING PUBLIC KATALOG) ==================== -->
             @if(isset($recentBooks) && $recentBooks->count() > 0)
                 <div class="bg-white rounded-sm border border-slate-200 p-5 sm:p-6 shadow-xs">

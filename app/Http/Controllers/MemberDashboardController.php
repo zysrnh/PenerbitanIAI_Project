@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Book;
+use App\Models\Order;
 use App\Models\SiteSetting;
 
 class MemberDashboardController extends Controller
@@ -19,7 +20,24 @@ class MemberDashboardController extends Controller
         $contactWa = SiteSetting::get('contact_whatsapp', '6282116116133');
         $contactEmail = SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id');
 
-        return view('member.dashboard', compact('user', 'totalBooks', 'recentBooks', 'contactWa', 'contactEmail'));
+        // Fetch User's Orders
+        $userOrders = Order::where('user_id', $user->id)
+            ->orWhere('customer_email', $user->email)
+            ->latest()
+            ->get();
+        $totalUserOrders = $userOrders->count();
+        $paidOrdersCount = $userOrders->where('payment_status', 'completed')->count();
+
+        return view('member.dashboard', compact(
+            'user', 
+            'totalBooks', 
+            'recentBooks', 
+            'contactWa', 
+            'contactEmail',
+            'userOrders',
+            'totalUserOrders',
+            'paidOrdersCount'
+        ));
     }
 
     public function profile()

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AboutSettingController;
 use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\CatalogSettingController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -52,6 +53,13 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Messages & Naskah Submissions
     Route::resource('messages', ContactMessageController::class)->only(['index', 'show', 'update', 'destroy']);
+
+    // Orders & Sales Management
+    Route::get('/orders',                [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}',           [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{id}/shipping', [AdminOrderController::class, 'updateShipping'])->name('orders.shipping');
+    Route::post('/orders/{id}/payment',  [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment');
+    Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
     // Books & Catalog Collection
     Route::resource('books', BookController::class);

@@ -104,16 +104,25 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Katalog & Penerbitan -->
+                <!-- Section 2: Penjualan & Penerbitan -->
                 <div>
-                    <span class="px-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase block mb-2">Penerbitan</span>
+                    <span class="px-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase block mb-2">Transaksi &amp; Katalog</span>
                     <div class="space-y-1">
+                        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.orders.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                            <i class="fa-solid fa-receipt w-4 text-center"></i>
+                            <span>Pesanan Buku</span>
+                            @php
+                                $pendingOrdersCount = \App\Models\Order::where('payment_status', 'completed')->where('shipping_status', 'menunggu_proses')->count();
+                            @endphp
+                            @if($pendingOrdersCount > 0)
+                                <span class="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-[#032c21]">{{ $pendingOrdersCount }}</span>
+                            @endif
+                        </a>
+
                         <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
                             <i class="fa-solid fa-book-bookmark w-4 text-center"></i>
                             <span>Katalog Buku &amp; ISBN</span>
                         </a>
-
-                        
                     </div>
                 </div>
 
