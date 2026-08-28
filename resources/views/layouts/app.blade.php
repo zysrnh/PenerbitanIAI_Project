@@ -373,14 +373,51 @@
                             </div>
                         </div>
                     @else
-                        {{-- Minimalist Circular Icon-Only Login Button --}}
-                        <a href="{{ route('member.login') }}" 
-                           class="user-nav-btn w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-xs transition-all duration-200 select-none cursor-pointer group shrink-0"
-                           title="Masuk Akun Member">
-                            <div class="w-7 h-7 rounded-full bg-emerald-50 group-hover:bg-[#006830] flex items-center justify-center text-[#006830] group-hover:text-white transition-all duration-200">
-                                <i class="fa-solid fa-arrow-right-to-bracket text-xs pointer-events-none"></i>
+                        {{-- Circular Account Button with Login & Sign Up Dropdown --}}
+                        <div class="relative group" id="guestUserDropdownContainer">
+                            <button type="button" 
+                                    id="guestUserDropdownBtn"
+                                    onclick="window.toggleGuestDropdown(event)" 
+                                    class="user-nav-btn w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-xs transition-all duration-200 select-none cursor-pointer group shrink-0"
+                                    title="Menu Akun">
+                                <div class="w-7 h-7 rounded-full bg-emerald-50 group-hover:bg-[#006830] flex items-center justify-center text-[#006830] group-hover:text-white transition-all duration-200 pointer-events-none">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </div>
+                            </button>
+
+                            <!-- Guest Dropdown Menu (Login & Sign Up) -->
+                            <div id="guestUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50" style="display: none;">
+                                <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
+                                    <div class="px-3 py-2 border-b border-slate-100 mb-1">
+                                        <p class="text-xs font-extrabold text-slate-900">Akun Pengguna</p>
+                                        <p class="text-[10px] text-slate-500 font-medium">Masuk atau daftar member baru</p>
+                                    </div>
+                                    <a href="{{ route('member.login') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition group/item">
+                                        <div class="w-6 h-6 rounded-full bg-emerald-50 group-hover/item:bg-[#006830] flex items-center justify-center text-[#006830] group-hover/item:text-white transition-colors shrink-0">
+                                            <i class="fa-solid fa-right-to-bracket text-[10px]"></i>
+                                        </div>
+                                        <div>
+                                            <p class="leading-tight">Masuk (Login)</p>
+                                            <p class="text-[9.5px] text-slate-400 font-normal">Sudah punya akun</p>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('member.register') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition group/item">
+                                        <div class="w-6 h-6 rounded-full bg-emerald-50 group-hover/item:bg-[#006830] flex items-center justify-center text-[#006830] group-hover/item:text-white transition-colors shrink-0">
+                                            <i class="fa-solid fa-user-plus text-[10px]"></i>
+                                        </div>
+                                        <div>
+                                            <p class="leading-tight">Daftar Akun Baru</p>
+                                            <p class="text-[9.5px] text-slate-400 font-normal">Registrasi member gratis</p>
+                                        </div>
+                                    </a>
+                                    <div class="border-t border-slate-100 mt-1 pt-1">
+                                        <a href="{{ route('admin.login') }}" class="flex items-center gap-2 px-3 py-1.5 text-[10px] font-semibold text-slate-400 hover:text-slate-700 transition">
+                                            <i class="fa-solid fa-lock text-[9px] w-3"></i> Login Admin
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                        </a>
+                        </div>
                     @endauth
 
                     <!-- 3. Mobile Menu Button (Hamburger - Identical 40x40 Square Box) -->
