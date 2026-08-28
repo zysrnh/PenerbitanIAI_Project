@@ -43,7 +43,7 @@
             <div class="space-y-0.5">
                 <div class="flex items-center gap-2">
                     <span class="text-[10px] font-bold uppercase text-emerald-800 font-mono tracking-wider">INVOICE PEMESANAN</span>
-                    <span class="text-xs text-slate-400">• IAI PERSIS</span>
+                    <span class="text-xs text-slate-400">• PENERBIT PERSIS</span>
                 </div>
                 <h2 class="text-lg sm:text-xl font-black text-slate-900 font-mono">#{{ $order->order_number }}</h2>
                 <p class="text-xs text-slate-500">Dibuat pada {{ $order->created_at->format('d F Y, H:i') }} WIB</p>

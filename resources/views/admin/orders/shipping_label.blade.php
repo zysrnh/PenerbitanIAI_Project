@@ -109,7 +109,7 @@
                     <i class="fa-solid fa-paper-plane text-[9px]"></i>
                     <span>PENGIRIM (FROM):</span>
                 </div>
-                <p class="font-extrabold text-xs text-slate-900">PERSIS PERS (Penerbitan IAI PERSIS)</p>
+                <p class="font-extrabold text-xs text-slate-900">PENERBIT PERSIS (PERSIS PERS)</p>
                 <p class="text-[10px] text-slate-700 leading-tight">
                     Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Kab. Bandung 40287
                 </p>
@@ -180,8 +180,8 @@
 
         <!-- 6. Footer Note -->
         <div class="pt-2 border-t border-slate-300 flex items-center justify-between text-[9px] text-slate-500 font-mono">
-            <span>Diterbitkan resmi oleh Unit Penerbitan IAI PERSIS Bandung</span>
-            <span>www.iaipibandung.ac.id</span>
+            <span>Pusat Penerbitan & Percetakan Resmi • PENERBIT PERSIS</span>
+            <span>penerbitpersis.com</span>
         </div>
 
     </div>

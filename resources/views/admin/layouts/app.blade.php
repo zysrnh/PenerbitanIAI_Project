@@ -314,7 +314,7 @@
 
         <!-- Footer Desktop -->
         <footer class="hidden lg:block bg-white border-t border-slate-200 py-3 px-4 sm:px-8 text-center text-xs text-slate-500">
-            &copy; {{ date('Y') }} PERSIS PERS • Sistem Manajemen Penerbitan Kampus IAI PERSIS Bandung
+            &copy; {{ date('Y') }} PERSIS PERS • Sistem Manajemen Penerbitan & Percetakan • PENERBIT PERSIS
         </footer>
     </div>
 

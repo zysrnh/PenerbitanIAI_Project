@@ -12,7 +12,7 @@
                 <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xs text-[10px] font-black uppercase font-mono tracking-wider">
                     PANEL ADMINISTRATOR
                 </span>
-                <span class="text-xs text-slate-400 font-medium hidden sm:inline">• IAI PERSIS Bandung</span>
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline">• PENERBIT PERSIS</span>
             </div>
             <h1 class="text-base sm:text-xl font-extrabold text-slate-900 font-heading tracking-tight mt-1 leading-tight">
                 Ringkasan Penerbitan &amp; Penjualan Buku
