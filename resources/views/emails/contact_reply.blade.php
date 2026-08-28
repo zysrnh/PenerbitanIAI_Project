@@ -5,119 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $replySubject }}</title>
 </head>
-<body style="font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; background-color: #f1f5f9; margin: 0; padding: 24px 12px; color: #1e293b; -webkit-font-smoothing: antialiased;">
+<body style="font-family: Arial, Helvetica, sans-serif; background-color: #e2e8f0; margin: 0; padding: 30px 15px; color: #1e293b; -webkit-font-smoothing: antialiased;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td align="center">
-                <!-- Main Card Container -->
-                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);">
+                <!-- Formal Letter Container (Sharp edges, no rounded) -->
+                <table width="650" border="0" cellspacing="0" cellpadding="0" style="max-width: 650px; width: 100%; background-color: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);">
                     
-                    <!-- Top Accent Bar -->
+                    <!-- Official Letterhead Header -->
                     <tr>
-                        <td height="4" style="background: linear-gradient(90deg, #006830 0%, #15803d 50%, #d97706 100%);"></td>
-                    </tr>
-
-                    <!-- Header -->
-                    <tr>
-                        <td style="background-color: #032c21; padding: 28px 32px; color: #ffffff; text-align: left;">
+                        <td style="padding: 28px 36px 20px; background-color: #ffffff;">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
-                                    <td>
-                                        <div style="display: inline-block; background-color: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.3); color: #4ade80; font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 4px; margin-bottom: 8px;">
-                                            TANGGAPAN RESMI REDAKSI
-                                        </div>
-                                        <h1 style="color: #ffffff; font-size: 22px; font-weight: 800; margin: 0; padding: 0; letter-spacing: 0.5px; font-family: 'Segoe UI', Arial, sans-serif;">
+                                    <!-- Official Logo Emblem -->
+                                    <td width="75" valign="middle" style="padding-right: 18px;">
+                                        <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" width="70" style="display: block; width: 70px; height: auto;" />
+                                    </td>
+                                    <!-- Institutional Identity Text -->
+                                    <td valign="middle" style="text-align: left;">
+                                        <div style="font-size: 20px; font-weight: 800; color: #006830; letter-spacing: 0.5px; line-height: 1.2; text-transform: uppercase;">
                                             PERSIS PERS
-                                        </h1>
-                                        <p style="color: #cbd5e1; font-size: 12px; margin: 4px 0 0; font-weight: 500;">
+                                        </div>
+                                        <div style="font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px;">
                                             Penerbitan &amp; Percetakan IAI Persis Bandung
-                                        </p>
+                                        </div>
+                                        <div style="font-size: 11px; color: #64748b; margin-top: 4px; line-height: 1.4;">
+                                            {{ \App\Models\SiteSetting::get('contact_address', 'Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287') }}<br>
+                                            Telepon/WhatsApp: {{ \App\Models\SiteSetting::get('contact_whatsapp', '082116116133') }} | Email: {{ \App\Models\SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id') }}
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
                         </td>
                     </tr>
 
-                    <!-- Body Content -->
+                    <!-- Formal Double Divider Line -->
                     <tr>
-                        <td style="padding: 32px 32px 24px;">
-                            
-                            <!-- Subject Header Box -->
-                            <div style="background-color: #f8fafc; border-left: 4px solid #006830; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 24px;">
-                                <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; display: block;">Perihal:</span>
-                                <span style="font-size: 14px; font-weight: 700; color: #0f172a;">{{ $replySubject }}</span>
-                            </div>
+                        <td style="padding: 0 36px;">
+                            <div style="border-top: 3px solid #006830; border-bottom: 1px solid #006830; height: 3px;"></div>
+                        </td>
+                    </tr>
 
-                            <!-- Main Message Body -->
-                            <div style="font-size: 14.5px; line-height: 1.8; color: #334155; white-space: pre-line; margin-bottom: 28px;">
+                    <!-- Letter Metadata (Tanggal & Perihal) -->
+                    <tr>
+                        <td style="padding: 24px 36px 12px;">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size: 12.5px; color: #475569;">
+                                <tr>
+                                    <td width="70" style="font-weight: bold; color: #0f172a; padding-bottom: 6px;">Tanggal</td>
+                                    <td width="15" style="padding-bottom: 6px;">:</td>
+                                    <td style="color: #334155; padding-bottom: 6px;">{{ now()->translatedFormat('d F Y') }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; color: #0f172a; padding-bottom: 6px;">Kepada</td>
+                                    <td style="padding-bottom: 6px;">:</td>
+                                    <td style="font-weight: bold; color: #0f172a; padding-bottom: 6px;">{{ $contactMessage->name }} &lt;{{ $contactMessage->email }}&gt;</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; color: #0f172a;">Perihal</td>
+                                    <td>:</td>
+                                    <td style="font-weight: bold; color: #006830;">{{ $replySubject }}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Divider -->
+                    <tr>
+                        <td style="padding: 0 36px;">
+                            <div style="border-top: 1px solid #f1f5f9; margin: 12px 0;"></div>
+                        </td>
+                    </tr>
+
+                    <!-- Letter Body -->
+                    <tr>
+                        <td style="padding: 12px 36px 28px;">
+                            <div style="font-size: 14px; line-height: 1.8; color: #1e293b; white-space: pre-line; text-align: justify;">
 {{ $replyBody }}
                             </div>
 
-                            <!-- Official Signature Card -->
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-top: 1px dashed #e2e8f0; padding-top: 20px; margin-top: 24px;">
-                                <tr>
-                                    <td>
-                                        <table border="0" cellspacing="0" cellpadding="0">
-                                            <tr>
-                                                <td width="42" valign="middle" style="padding-right: 12px;">
-                                                    <div style="width: 42px; height: 42px; background-color: #006830; border-radius: 8px; text-align: center; line-height: 42px; color: #ffffff; font-weight: 900; font-size: 15px;">
-                                                        PP
-                                                    </div>
-                                                </td>
-                                                <td valign="middle">
-                                                    <div style="font-size: 13.5px; font-weight: 800; color: #0f172a;">{{ $adminName }}</div>
-                                                    <div style="font-size: 12px; color: #006830; font-weight: 600;">Tim Redaksi &amp; Penerbitan PERSIS PERS</div>
-                                                    <div style="font-size: 11px; color: #64748b;">Institut Agama Islam Persatuan Islam Bandung</div>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <!-- Quote of Sender's Original Message -->
-                            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; margin-top: 28px;">
-                                <div style="font-size: 11.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center;">
-                                    📌 Kutipan Pesan Pengajuan Anda:
-                                </div>
-                                <div style="font-size: 13px; font-style: italic; color: #475569; line-height: 1.6; background-color: #ffffff; padding: 12px 16px; border-radius: 6px; border: 1px solid #f1f5f9;">
-                                    "{{ $contactMessage->message }}"
-                                </div>
-                                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px; font-size: 11px; color: #94a3b8;">
-                                    <tr>
-                                        <td>Layanan: <strong style="color: #475569;">{{ $contactMessage->service_category ?? 'Konsultasi' }}</strong></td>
-                                        <td align="right">Tanggal: {{ $contactMessage->created_at->format('d/m/Y H:i') }} WIB</td>
-                                    </tr>
-                                </table>
+                            <!-- Formal Closing Signature -->
+                            <div style="margin-top: 32px; text-align: left;">
+                                <div style="font-size: 13px; color: #475569;">Hormat kami,</div>
+                                <div style="font-size: 14px; font-weight: 800; color: #0f172a; margin-top: 6px;">{{ $adminName }}</div>
+                                <div style="font-size: 12.5px; font-weight: 600; color: #006830;">Tim Redaksi &amp; Penerbitan PERSIS PERS</div>
+                                <div style="font-size: 11.5px; color: #64748b;">Institut Agama Islam Persatuan Islam Bandung</div>
                             </div>
 
-                            <!-- Action Button: Lanjut WA -->
-                            <div style="text-align: center; margin-top: 28px;">
-                                @php
-                                    $waNumber = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('contact_whatsapp', '6282116116133'));
-                                    if (str_starts_with($waNumber, '0')) { $waNumber = '62' . substr($waNumber, 1); }
-                                    $waLink = "https://wa.me/{$waNumber}?text=" . urlencode("Halo Tim Redaksi PERSIS PERS, saya ingin menindaklanjuti balasan email terkait: " . ($contactMessage->subject ?: 'Pengajuan Naskah'));
-                                @endphp
-                                <a href="{{ $waLink }}" target="_blank" style="background-color: #25D366; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 700; display: inline-block; box-shadow: 0 2px 4px rgba(37, 211, 102, 0.2);">
-                                    💬 Lanjut Diskusi via WhatsApp Redaksi
+                            <!-- Reference to Original Message -->
+                            <div style="margin-top: 32px; border: 1px solid #e2e8f0; background-color: #f8fafc; padding: 14px 18px;">
+                                <div style="font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">
+                                    Lampiran / Kutipan Pesan Asli Anda:
+                                </div>
+                                <div style="font-size: 12.5px; font-style: italic; color: #475569; line-height: 1.6; background-color: #ffffff; padding: 10px 14px; border: 1px solid #e2e8f0;">
+                                    "{{ $contactMessage->message }}"
+                                </div>
+                                <div style="margin-top: 8px; font-size: 11px; color: #94a3b8;">
+                                    Layanan: <strong>{{ $contactMessage->service_category ?? 'Konsultasi Naskah' }}</strong> &bull; Diterima pada: {{ $contactMessage->created_at->format('d/m/Y H:i') }} WIB
+                                </div>
+                            </div>
+
+                            <!-- Fast Follow-up WhatsApp Link -->
+                            @php
+                                $waNumber = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('contact_whatsapp', '6282116116133'));
+                                if (str_starts_with($waNumber, '0')) { $waNumber = '62' . substr($waNumber, 1); }
+                                $waLink = "https://wa.me/{$waNumber}?text=" . urlencode("Halo Tim Redaksi PERSIS PERS, saya ingin menindaklanjuti balasan email terkait: " . ($contactMessage->subject ?: 'Pengajuan Naskah'));
+                            @endphp
+                            <div style="margin-top: 24px; text-align: left;">
+                                <a href="{{ $waLink }}" target="_blank" style="background-color: #006830; color: #ffffff; padding: 10px 18px; text-decoration: none; font-size: 12px; font-weight: bold; display: inline-block;">
+                                    Hubungi Redaksi via WhatsApp &rarr;
                                 </a>
                             </div>
 
                         </td>
                     </tr>
 
-                    <!-- Footer -->
+                    <!-- Official Footer -->
                     <tr>
-                        <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 24px 32px; text-align: center; font-size: 11.5px; color: #64748b; line-height: 1.6;">
-                            <p style="margin: 0; font-weight: 700; color: #334155;">Kantor Redaksi PERSIS PERS</p>
-                            <p style="margin: 2px 0 0;">{{ \App\Models\SiteSetting::get('contact_address', 'Gedung Rektorat Lt. 2, Jl. Ciganitri No.2, Bojongsoang, Bandung 40287') }}</p>
-                            <p style="margin: 6px 0 0;">
-                                WhatsApp: <strong style="color: #0f172a;">{{ \App\Models\SiteSetting::get('contact_whatsapp', '082116116133') }}</strong> &bull; 
-                                Email: <strong style="color: #0f172a;">{{ \App\Models\SiteSetting::get('contact_email', 'penerbitan@iaipibandung.ac.id') }}</strong>
-                            </p>
-                            <p style="margin: 10px 0 0; font-size: 10.5px; color: #94a3b8;">
-                                &copy; {{ date('Y') }} PERSIS PERS &bull; Institut Agama Islam Persatuan Islam Bandung. Hak Cipta Dilindungi.
-                            </p>
+                        <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 18px 36px; text-align: center; font-size: 11px; color: #64748b; line-height: 1.5;">
+                            <div>Surat elektronik resmi ini dikirimkan oleh <strong>Sistem Manajemen Redaksi PERSIS PERS</strong>.</div>
+                            <div style="margin-top: 4px; color: #94a3b8;">&copy; {{ date('Y') }} PERSIS PERS &bull; Institut Agama Islam Persatuan Islam Bandung. Seluruh hak cipta dilindungi undang-undang.</div>
                         </td>
                     </tr>
 
