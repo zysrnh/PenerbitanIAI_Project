@@ -647,101 +647,17 @@
     @stack('scripts')
 
     <!-- ========================================================================= -->
-    <!-- FLOATING FAST MESSAGE & SPEED CHAT BUTTON (ADMIN QUICK ACTION) -->
+    <!-- FLOATING FAST MESSAGE BUTTON & SLIDE-IN SIDEBAR DRAWER (MATCHING USER STYLE) -->
     <!-- ========================================================================= -->
-    <div class="fixed bottom-6 right-6 z-[99999] flex flex-col items-end gap-2 select-none" id="adminFloatingContainer">
-        
-        <!-- Quick Messages Popover Card (Always Opens Above the Button) -->
-        <div id="adminQuickMessagePopover" class="hidden mb-3 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-300 overflow-hidden z-[99999] pointer-events-auto animate-fade-in" style="display: none;">
-            
-            <!-- Header -->
-            <div class="p-3.5 bg-[#032c21] text-white flex items-center justify-between border-b border-emerald-950">
-                <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                        <i class="fa-solid fa-comments text-[11px]"></i>
-                    </div>
-                    <span class="text-xs font-bold uppercase tracking-wider font-heading">Pusat Pesan &amp; Diskusi</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
-                        {{ $totalUnreadChatCount ?? 0 }} Pesan
-                    </span>
-                    <button type="button" onclick="toggleAdminQuickMessagePopover(event)" class="w-6 h-6 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup">
-                        <i class="fa-solid fa-xmark text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Content List -->
-            <div class="max-h-80 overflow-y-auto divide-y divide-slate-100 text-xs">
-                @if(isset($latestOrderMessages) && $latestOrderMessages->count() > 0)
-                    <div class="px-3 py-1.5 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-                        <span>Pesan Diskusi Pesanan Buku</span>
-                        <span class="text-emerald-700 font-mono">{{ $unreadOrderMessagesCount ?? 0 }} Baru</span>
-                    </div>
-                    @foreach($latestOrderMessages as $omsg)
-                        <a href="{{ route('admin.orders.show', $omsg->order_id) }}#adminMessagesThread" class="block p-3 hover:bg-slate-50 transition {{ !$omsg->is_read_by_admin ? 'bg-emerald-50/60' : '' }}">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="font-bold text-slate-900 truncate flex items-center gap-1">
-                                    <i class="fa-solid fa-receipt text-[10px] text-emerald-700"></i> #{{ $omsg->order ? $omsg->order->order_number : 'Pesanan' }}
-                                </span>
-                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $omsg->created_at->diffForHumans() }}</span>
-                            </div>
-                            <p class="text-[11px] text-slate-600 truncate mt-0.5 leading-snug">
-                                <strong class="text-slate-800">{{ $omsg->sender_name }}:</strong> "{{ $omsg->message }}"
-                            </p>
-                        </a>
-                    @endforeach
-                @endif
-
-                @if(isset($latestMessages) && $latestMessages->count() > 0)
-                    <div class="px-3 py-1.5 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100 flex items-center justify-between">
-                        <span>Pesan Pengajuan Naskah / Web</span>
-                        <span class="text-amber-700 font-mono">{{ $unreadMessagesCount ?? 0 }} Baru</span>
-                    </div>
-                    @foreach($latestMessages->take(3) as $cmsg)
-                        <a href="{{ route('admin.messages.show', $cmsg->id) }}" class="block p-3 hover:bg-slate-50 transition {{ $cmsg->status === 'pending' ? 'bg-amber-50/40' : '' }}">
-                            <div class="flex items-start justify-between gap-2">
-                                <span class="font-bold text-slate-900 truncate flex items-center gap-1">
-                                    <i class="fa-solid fa-envelope text-[10px] text-slate-500"></i> {{ $cmsg->name }}
-                                </span>
-                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $cmsg->created_at->diffForHumans() }}</span>
-                            </div>
-                            <p class="text-[11px] text-slate-600 truncate mt-0.5 leading-snug">
-                                {{ $cmsg->subject ?: Str::limit($cmsg->message, 40) }}
-                            </p>
-                        </a>
-                    @endforeach
-                @endif
-
-                @if((!isset($latestOrderMessages) || $latestOrderMessages->count() === 0) && (!isset($latestMessages) || $latestMessages->count() === 0))
-                    <div class="py-10 text-center text-slate-400 text-xs">
-                        <i class="fa-regular fa-comment-dots text-3xl mb-2 text-slate-300 block"></i>
-                        Belum ada pesan masuk saat ini.
-                    </div>
-                @endif
-            </div>
-
-            <!-- Footer -->
-            <div class="p-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
-                <a href="{{ route('admin.orders.index') }}" class="text-emerald-800 hover:text-emerald-950 transition flex items-center gap-1">
-                    <span>Daftar Pesanan</span>
-                    <i class="fa-solid fa-arrow-right text-[9px]"></i>
-                </a>
-                <a href="{{ route('admin.messages.index') }}" class="text-slate-600 hover:text-slate-900 transition flex items-center gap-1">
-                    <span>Semua Pesan Naskah</span>
-                    <i class="fa-solid fa-arrow-right text-[9px]"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- The Round Floating Action Button -->
+    
+    <!-- 1. The Floating Action Button (Bottom Right) -->
+    <div class="fixed bottom-6 right-6 z-40 select-none">
         <button 
             type="button" 
-            onclick="toggleAdminQuickMessagePopover(event)"
+            onclick="openAdminMessageDrawer()"
             id="adminFloatingChatBtn"
             class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#006830] hover:bg-[#032c21] text-white shadow-2xl ring-4 ring-emerald-500/25 flex items-center justify-center text-xl sm:text-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer relative group"
-            title="Pusat Pesan Cepat"
+            title="Buka Pusat Pesan &amp; Diskusi"
         >
             <i class="fa-solid fa-comments transition-transform group-hover:scale-110"></i>
             <span id="adminFloatingChatBadge" class="{{ ($totalUnreadChatCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center font-mono shadow-md animate-pulse">
@@ -750,32 +666,165 @@
         </button>
     </div>
 
-    <script>
-        function toggleAdminQuickMessagePopover(e) {
-            if (e) {
-                try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
-            }
-            const popover = document.getElementById('adminQuickMessagePopover');
-            if (!popover) return;
+    <!-- 2. The Full-Height Slide-in Sidebar Drawer (Slide from Right) -->
+    <div id="adminMessageDrawer" class="fixed inset-0 z-[99999] hidden items-end sm:items-stretch sm:justify-end" style="display: none;">
+        <!-- Backdrop -->
+        <div id="adminMessageDrawerBackdrop" onclick="closeAdminMessageDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 cursor-pointer"></div>
 
-            const isClosed = popover.classList.contains('hidden') || popover.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(popover).display === 'none');
-            if (isClosed) {
-                popover.style.display = 'block';
-                popover.classList.remove('hidden');
-            } else {
-                popover.style.display = 'none';
-                popover.classList.add('hidden');
+        <!-- Panel (Mobile: Bottom Sheet, Desktop: Right Sidebar) -->
+        <div id="adminMessageDrawerPanel" class="relative z-10 w-full sm:max-w-md bg-white shadow-2xl rounded-t-2xl sm:rounded-none flex flex-col max-h-[90vh] sm:max-h-full sm:h-full transform translate-y-full sm:translate-y-0 sm:translate-x-full transition-transform duration-300 ease-out border-t sm:border-t-0 sm:border-l border-slate-200">
+            
+            <!-- Mobile Pull Handle -->
+            <div class="sm:hidden w-full pt-3 pb-1 flex justify-center cursor-pointer select-none" onclick="closeAdminMessageDrawer()">
+                <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+            </div>
+
+            <!-- Drawer Header -->
+            <div class="px-5 py-4 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-sm bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-xs">
+                        <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
+                            <span>Pusat Pesan &amp; Diskusi</span>
+                            <span class="text-xs font-mono text-emerald-300 font-bold bg-emerald-500/20 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                                {{ $totalUnreadChatCount ?? 0 }} Baru
+                            </span>
+                        </h3>
+                        <p class="text-[10px] text-emerald-200/70">Penerbitan &amp; Percetakan Resmi PERSIS PERS</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAdminMessageDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Drawer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Drawer Body Stream List -->
+            <div class="flex-1 overflow-y-auto divide-y divide-slate-100 text-xs">
+                
+                <!-- Diskusi Pesanan Section -->
+                @if(isset($latestOrderMessages) && $latestOrderMessages->count() > 0)
+                    <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between select-none">
+                        <span class="text-[10.5px] font-bold text-slate-700 uppercase tracking-wider font-heading flex items-center gap-1.5">
+                            <i class="fa-solid fa-comments text-emerald-700"></i> Diskusi Pesanan Pembeli
+                        </span>
+                        <span class="text-[10px] font-bold font-mono text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                            {{ $unreadOrderMessagesCount ?? 0 }} Belum Dibaca
+                        </span>
+                    </div>
+
+                    @foreach($latestOrderMessages as $omsg)
+                        <a href="{{ route('admin.orders.show', $omsg->order_id) }}#adminMessagesThread" class="block p-4 hover:bg-emerald-50/50 transition-colors {{ !$omsg->is_read_by_admin ? 'bg-emerald-50/70 border-l-4 border-emerald-600' : '' }}">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-bold shrink-0">
+                                        <i class="fa-solid fa-receipt"></i>
+                                    </div>
+                                    <span class="font-bold text-slate-900 font-mono text-xs">#{{ $omsg->order ? $omsg->order->order_number : 'Pesanan' }}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $omsg->created_at->diffForHumans() }}</span>
+                            </div>
+                            <p class="text-xs text-slate-800 font-semibold mt-1.5 leading-snug">
+                                {{ $omsg->sender_name }}
+                            </p>
+                            <p class="text-[11.5px] text-slate-600 line-clamp-2 mt-0.5 leading-relaxed bg-white/80 p-2 rounded-xs border border-slate-200/80">
+                                "{{ $omsg->message }}"
+                            </p>
+                        </a>
+                    @endforeach
+                @endif
+
+                <!-- Pesan Naskah & Kontak Section -->
+                @if(isset($latestMessages) && $latestMessages->count() > 0)
+                    <div class="p-3 bg-slate-50 border-b border-slate-100 flex items-center justify-between select-none">
+                        <span class="text-[10.5px] font-bold text-slate-700 uppercase tracking-wider font-heading flex items-center gap-1.5">
+                            <i class="fa-solid fa-envelope text-amber-700"></i> Pengajuan Naskah &amp; Kontak
+                        </span>
+                        <span class="text-[10px] font-bold font-mono text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
+                            {{ $unreadMessagesCount ?? 0 }} Belum Dibaca
+                        </span>
+                    </div>
+
+                    @foreach($latestMessages->take(4) as $cmsg)
+                        <a href="{{ route('admin.messages.show', $cmsg->id) }}" class="block p-4 hover:bg-slate-50 transition-colors {{ $cmsg->status === 'pending' ? 'bg-amber-50/50 border-l-4 border-amber-500' : '' }}">
+                            <div class="flex items-start justify-between gap-2">
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-6 h-6 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-[10px] font-bold shrink-0">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <span class="font-bold text-slate-900 text-xs">{{ $cmsg->name }}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $cmsg->created_at->diffForHumans() }}</span>
+                            </div>
+                            <p class="text-xs text-slate-800 font-semibold mt-1.5 leading-snug">
+                                {{ $cmsg->subject ?: 'Konsultasi / Pengajuan Naskah' }}
+                            </p>
+                            <p class="text-[11.5px] text-slate-600 line-clamp-2 mt-0.5 leading-relaxed bg-white/80 p-2 rounded-xs border border-slate-200/80">
+                                "{{ $cmsg->message }}"
+                            </p>
+                        </a>
+                    @endforeach
+                @endif
+
+                @if((!isset($latestOrderMessages) || $latestOrderMessages->count() === 0) && (!isset($latestMessages) || $latestMessages->count() === 0))
+                    <div class="py-16 text-center text-slate-400 text-xs space-y-2 select-none">
+                        <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-xl mx-auto shadow-2xs">
+                            <i class="fa-regular fa-comment-dots"></i>
+                        </div>
+                        <p class="font-bold text-slate-700 text-sm">Belum Ada Pesan Masuk</p>
+                        <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Semua pesan diskusi pesanan dan pengajuan naskah telah tertangani dengan baik.</p>
+                    </div>
+                @endif
+
+            </div>
+
+            <!-- Drawer Footer Shortcuts -->
+            <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs font-bold shrink-0">
+                <a href="{{ route('admin.orders.index') }}" class="px-3 py-1.5 bg-white hover:bg-emerald-50 text-emerald-800 border border-slate-300 rounded-sm transition flex items-center gap-1.5 shadow-2xs">
+                    <i class="fa-solid fa-box-open text-xs"></i>
+                    <span>Daftar Pesanan</span>
+                </a>
+                <a href="{{ route('admin.messages.index') }}" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm transition flex items-center gap-1.5 shadow-2xs">
+                    <i class="fa-solid fa-envelope-open-text text-xs"></i>
+                    <span>Semua Pesan Naskah</span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function openAdminMessageDrawer() {
+            const drawer = document.getElementById('adminMessageDrawer');
+            const backdrop = document.getElementById('adminMessageDrawerBackdrop');
+            const panel = document.getElementById('adminMessageDrawerPanel');
+
+            if (drawer && backdrop && panel) {
+                drawer.style.display = 'flex';
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-y-full', 'sm:translate-x-full');
+                    panel.classList.add('translate-y-0', 'sm:translate-x-0');
+                }, 10);
             }
         }
 
-        // Close popover on clicking outside
-        document.addEventListener('click', function(e) {
-            const popover = document.getElementById('adminQuickMessagePopover');
-            const container = document.getElementById('adminFloatingContainer');
-            if (popover && container && !container.contains(e.target)) {
-                popover.style.display = 'none';
-                popover.classList.add('hidden');
+        function closeAdminMessageDrawer() {
+            const drawer = document.getElementById('adminMessageDrawer');
+            const backdrop = document.getElementById('adminMessageDrawerBackdrop');
+            const panel = document.getElementById('adminMessageDrawerPanel');
+
+            if (drawer && backdrop && panel) {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-y-full', 'sm:translate-x-full');
+                panel.classList.remove('translate-y-0', 'sm:translate-x-0');
+                setTimeout(() => {
+                    drawer.style.display = 'none';
+                    drawer.classList.add('hidden');
+                }, 300);
             }
-        });
+        }
     </script>
 </body>
