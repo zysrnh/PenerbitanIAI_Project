@@ -13,12 +13,18 @@
             <span>Kembali ke Daftar Pesan</span>
         </a>
 
-        @if($message->phone)
-            <a href="{{ $message->wa_link }}" target="_blank" class="px-3.5 py-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
-                <i class="fa-brands fa-whatsapp text-sm"></i>
-                <span>Balas Langsung via WhatsApp</span>
+        <div class="flex items-center gap-2">
+            @if($message->phone)
+                <a href="{{ $message->wa_link }}" target="_blank" class="px-3.5 py-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    <span>Chat WhatsApp</span>
+                </a>
+            @endif
+            <a href="#replyFormCard" class="px-3.5 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+                <i class="fa-solid fa-reply text-xs"></i>
+                <span>Balas via Email</span>
             </a>
-        @endif
+        </div>
     </div>
 
     @if(session('success'))
@@ -28,52 +34,125 @@
         </div>
     @endif
 
+    @if(session('error'))
+        <div class="p-3.5 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2 shadow-2xs animate-fade-in">
+            <i class="fa-solid fa-triangle-exclamation text-rose-600 text-sm"></i>
+            <span>{{ session('error') }}</span>
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
-        <!-- Left: Main Message Detail (8 cols) -->
-        <div class="lg:col-span-8 bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-5">
-            <div class="border-b border-slate-100 pb-4">
-                <span class="inline-block text-[10.5px] font-bold px-2.5 py-0.5 rounded-xs bg-emerald-50 text-emerald-800 border border-emerald-200 mb-2">
-                    {{ $message->service_category ?? 'Konsultasi Umum' }}
-                </span>
-                <h2 class="text-base sm:text-xl font-extrabold text-slate-900 font-heading">{{ $message->subject ?: 'Pengajuan Naskah / Konsultasi' }}</h2>
-                <span class="text-xs text-slate-400 block mt-1">
-                    Diterima pada {{ $message->created_at->format('d F Y, H:i') }} WIB ({{ $message->created_at->diffForHumans() }})
-                </span>
-            </div>
+        <!-- Left: Main Message Detail & Reply Box (8 cols) -->
+        <div class="lg:col-span-8 space-y-5">
+            
+            <!-- Message Detail Card -->
+            <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-5">
+                <div class="border-b border-slate-100 pb-4">
+                    <div class="flex items-center justify-between gap-2 flex-wrap mb-2">
+                        <span class="inline-block text-[10.5px] font-bold px-2.5 py-0.5 rounded-xs bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            {{ $message->service_category ?? 'Konsultasi Umum' }}
+                        </span>
+                        <span class="text-xs text-slate-400">
+                            Diterima: {{ $message->created_at->format('d F Y, H:i') }} WIB ({{ $message->created_at->diffForHumans() }})
+                        </span>
+                    </div>
+                    <h2 class="text-base sm:text-xl font-extrabold text-slate-900 font-heading">{{ $message->subject ?: 'Pengajuan Naskah / Konsultasi' }}</h2>
+                </div>
 
-            <!-- Content Body -->
-            <div>
-                <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider block mb-2 font-heading">Isi Pesan / Keterangan Naskah:</span>
-                <div class="p-4 rounded-sm bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans">
+                <!-- Content Body -->
+                <div>
+                    <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider block mb-2 font-heading">Isi Pesan / Keterangan Naskah:</span>
+                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans">
 {{ $message->message }}
+                    </div>
+                </div>
+
+                <!-- Sender Info Card -->
+                <div class="border-t border-slate-100 pt-4">
+                    <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider block mb-2.5 font-heading">Informasi Lengkap Pengirim:</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm">
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Nama Pengirim</span>
+                            <span class="text-xs font-bold text-slate-900 block mt-0.5 truncate">{{ $message->name }}</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm">
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Alamat Email</span>
+                            <a href="mailto:{{ $message->email }}" class="text-xs font-bold text-slate-900 hover:text-emerald-700 block mt-0.5 truncate transition">{{ $message->email }}</a>
+                        </div>
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm">
+                            <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">No. WhatsApp</span>
+                            @if($message->phone)
+                                <a href="{{ $message->wa_link }}" target="_blank" class="text-xs font-bold text-emerald-700 block mt-0.5 flex items-center gap-1">
+                                    <i class="fa-brands fa-whatsapp text-emerald-600"></i> {{ $message->phone }}
+                                </a>
+                            @else
+                                <span class="text-xs text-slate-400 block mt-0.5">-</span>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sender Info Card -->
-            <div class="border-t border-slate-100 pt-4">
-                <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider block mb-2.5 font-heading">Informasi Lengkap Pengirim:</span>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm">
-                        <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Nama Pengirim</span>
-                        <span class="text-xs font-bold text-slate-900 block mt-0.5 truncate">{{ $message->name }}</span>
+            <!-- Direct Email Reply Form Card -->
+            <div id="replyFormCard" class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
+                <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-[#006830]">
+                            <i class="fa-solid fa-reply text-xs"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 font-heading">Balas Pesan via Email Resmi</h3>
+                            <p class="text-[11px] text-slate-500">Terkirim langsung ke email <strong class="text-emerald-800">{{ $message->email }}</strong></p>
+                        </div>
                     </div>
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm">
-                        <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Alamat Email</span>
-                        <a href="mailto:{{ $message->email }}" class="text-xs font-bold text-slate-900 hover:text-emerald-700 block mt-0.5 truncate transition">{{ $message->email }}</a>
-                    </div>
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm">
-                        <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">No. WhatsApp</span>
-                        @if($message->phone)
-                            <a href="{{ $message->wa_link }}" target="_blank" class="text-xs font-bold text-emerald-700 block mt-0.5 flex items-center gap-1">
-                                <i class="fa-brands fa-whatsapp text-emerald-600"></i> {{ $message->phone }}
-                            </a>
-                        @else
-                            <span class="text-xs text-slate-400 block mt-0.5">-</span>
-                        @endif
-                    </div>
+                    <span class="text-[10px] px-2 py-0.5 bg-slate-100 text-slate-600 font-bold uppercase rounded-xs">SMTP Resmi</span>
                 </div>
+
+                <form method="POST" action="{{ route('admin.messages.reply', $message) }}" class="space-y-3.5">
+                    @csrf
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Subjek Email Balasan <span class="text-rose-500">*</span></label>
+                        <input 
+                            type="text" 
+                            name="subject" 
+                            value="{{ old('subject', 'Re: ' . ($message->subject ?: 'Tanggapan Redaksi PERSIS PERS - ' . $message->service_category)) }}" 
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700 outline-none transition font-medium"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-bold text-slate-700">Isi Pesan Balasan <span class="text-rose-500">*</span></label>
+                            <span class="text-[10.5px] text-slate-400 font-mono">Format Teks Rapi</span>
+                        </div>
+                        <textarea 
+                            name="reply_message" 
+                            rows="7" 
+                            class="w-full p-3 bg-slate-50 border border-slate-300 rounded-sm text-xs sm:text-sm text-slate-900 focus:bg-white focus:border-emerald-700 focus:ring-1 focus:ring-emerald-700 outline-none transition font-sans leading-relaxed"
+                            placeholder="Tuliskan pesan tanggapan atau instruksi penerbitan naskah..."
+                            required
+                        >{{ old('reply_message', "Halo " . $message->name . ",\n\nTerima kasih telah menghubungi Redaksi PERSIS PERS mengenai " . ($message->service_category ?? 'penerbitan naskah') . ".\n\nKami telah menerima permohonan Anda dan dengan senang hati siap membantu proses selanjutnya.\n\n[Tuliskan keterangan detail / lampiran panduan naskah di sini]\n\nSalam hangat,\nTim Redaksi PERSIS PERS\nIAI Persis Bandung") }}</textarea>
+                    </div>
+
+                    <div class="pt-1 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <p class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-info text-emerald-600"></i>
+                            <span>Status pesan akan otomatis diubah menjadi <strong>Sudah Dihubungi</strong>.</span>
+                        </p>
+                        <button 
+                            type="submit" 
+                            class="w-full sm:w-auto px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold shadow-xs hover:shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                        >
+                            <i class="fa-solid fa-paper-plane text-xs text-lime-300"></i>
+                            <span>Kirim Balasan Email Sekarang</span>
+                        </button>
+                    </div>
+                </form>
             </div>
+
         </div>
 
         <!-- Right: Status Update & Notes (4 cols) -->
@@ -118,106 +197,94 @@
                         id="msgStatusMenu" 
                         class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in"
                     >
-                        <!-- 1. Belum Dihubungi -->
                         <button 
                             type="button" 
-                            onclick="selectMsgOption('pending', 'fa-solid fa-clock text-amber-600', 'Belum Dihubungi')"
-                            class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
+                            onclick="selectMsgStatus('pending', 'Belum Dihubungi', 'fa-solid fa-clock text-amber-600 text-sm')"
+                            class="w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center gap-2 transition cursor-pointer"
                         >
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-6 h-6 rounded-xs bg-amber-50 text-amber-700 flex items-center justify-center text-xs shrink-0">
-                                    <i class="fa-solid fa-clock"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-slate-900">Belum Dihubungi</p>
-                                    <p class="text-[10px] text-slate-400">Pesan baru masuk menunggu respon</p>
-                                </div>
+                            <i class="fa-solid fa-clock text-amber-600 text-sm"></i>
+                            <div>
+                                <p class="font-bold text-slate-800">Belum Dihubungi</p>
+                                <p class="text-[10px] text-slate-400">Pesan baru belum direspon</p>
                             </div>
-                            <i class="fa-solid fa-check text-xs text-emerald-600 {{ $message->status === 'pending' ? '' : 'hidden' }} msg-check-icon" data-status="pending"></i>
                         </button>
-
-                        <!-- 2. Sudah Dihubungi -->
                         <button 
                             type="button" 
-                            onclick="selectMsgOption('contacted', 'fa-solid fa-comments text-blue-600', 'Sudah Dihubungi')"
-                            class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
+                            onclick="selectMsgStatus('contacted', 'Sudah Dihubungi', 'fa-solid fa-comments text-blue-600 text-sm')"
+                            class="w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center gap-2 transition cursor-pointer"
                         >
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-6 h-6 rounded-xs bg-blue-50 text-blue-700 flex items-center justify-center text-xs shrink-0">
-                                    <i class="fa-solid fa-comments"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-slate-900">Sudah Dihubungi</p>
-                                    <p class="text-[10px] text-slate-400">Redaksi telah menghubungi via WhatsApp/Email</p>
-                                </div>
+                            <i class="fa-solid fa-comments text-blue-600 text-sm"></i>
+                            <div>
+                                <p class="font-bold text-slate-800">Sudah Dihubungi</p>
+                                <p class="text-[10px] text-slate-400">Sedang dalam proses komunikasi</p>
                             </div>
-                            <i class="fa-solid fa-check text-xs text-emerald-600 {{ $message->status === 'contacted' ? '' : 'hidden' }} msg-check-icon" data-status="contacted"></i>
                         </button>
-
-                        <!-- 3. Selesai Diproses -->
                         <button 
                             type="button" 
-                            onclick="selectMsgOption('completed', 'fa-solid fa-circle-check text-emerald-600', 'Selesai Diproses')"
-                            class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer"
+                            onclick="selectMsgStatus('completed', 'Selesai Diproses', 'fa-solid fa-circle-check text-emerald-600 text-sm')"
+                            class="w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center gap-2 transition cursor-pointer"
                         >
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-6 h-6 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs shrink-0">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-slate-900">Selesai Diproses</p>
-                                    <p class="text-[10px] text-slate-400">Naskah telah terbit / urusan selesai</p>
-                                </div>
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                            <div>
+                                <p class="font-bold text-slate-800">Selesai Diproses</p>
+                                <p class="text-[10px] text-slate-400">Naskah/pesan telah tuntas</p>
                             </div>
-                            <i class="fa-solid fa-check text-xs text-emerald-600 {{ $message->status === 'completed' ? '' : 'hidden' }} msg-check-icon" data-status="completed"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Notes -->
+                <!-- Notes / Riwayat Balasan -->
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Catatan Internal Redaksi (Opsional)</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Riwayat &amp; Catatan Internal Redaksi</label>
                     <textarea 
                         name="notes" 
-                        rows="4" 
-                        placeholder="Tuliskan catatan internal (misal: Sudah dikontak, draf bab 1 diterima, menunggu ISBN)..."
-                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
+                        rows="6" 
+                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:bg-white focus:border-emerald-700 outline-none transition font-sans leading-relaxed" 
+                        placeholder="Tambahkan catatan khusus mengenai naskah, kesepakatan harga, atau jadwal penerbitan..."
                     >{{ old('notes', $message->notes) }}</textarea>
                 </div>
 
-                <button type="submit" class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold uppercase tracking-wider transition shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-floppy-disk text-xs"></i>
-                    <span>Perbarui Status Pesan</span>
-                </button>
+                <div class="pt-1">
+                    <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-slate-950 text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk text-xs text-emerald-400"></i>
+                        <span>Perbarui Catatan &amp; Status</span>
+                    </button>
+                </div>
             </form>
+
+            <div class="border-t border-slate-100 pt-4 mt-4">
+                <form method="POST" action="{{ route('admin.messages.destroy', $message) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesan ini secara permanen?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full py-2 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                        <span>Hapus Pesan Ini</span>
+                    </button>
+                </form>
+            </div>
         </div>
 
     </div>
 
 </div>
 
+@push('scripts')
 <script>
     function toggleMsgDropdown() {
         const menu = document.getElementById('msgStatusMenu');
         const chevron = document.getElementById('msgDropdownChevron');
-        menu.classList.toggle('hidden');
-        chevron.classList.toggle('rotate-180');
+        if (menu) {
+            menu.classList.toggle('hidden');
+            if (chevron) chevron.classList.toggle('rotate-180');
+        }
     }
 
-    function selectMsgOption(value, iconClass, label) {
+    function selectMsgStatus(value, label, iconClass) {
         document.getElementById('msgStatusValue').value = value;
-        
-        const display = document.getElementById('msgSelectedDisplay');
-        display.innerHTML = `<i class="${iconClass} text-sm"></i><span class="text-slate-900 font-bold">${label}</span>`;
-        
-        document.querySelectorAll('.msg-check-icon').forEach(icon => {
-            if (icon.getAttribute('data-status') === value) {
-                icon.classList.remove('hidden');
-            } else {
-                icon.classList.add('hidden');
-            }
-        });
-
+        document.getElementById('msgSelectedDisplay').innerHTML = `
+            <i class="${iconClass}"></i>
+            <span class="text-slate-900 font-bold">${label}</span>
+        `;
         toggleMsgDropdown();
     }
 
@@ -225,10 +292,11 @@
         const container = document.getElementById('customMsgStatusContainer');
         const menu = document.getElementById('msgStatusMenu');
         const chevron = document.getElementById('msgDropdownChevron');
-        if (container && !container.contains(e.target) && menu && !menu.classList.contains('hidden')) {
+        if (container && menu && !container.contains(e.target)) {
             menu.classList.add('hidden');
-            chevron.classList.remove('rotate-180');
+            if (chevron) chevron.classList.remove('rotate-180');
         }
     });
 </script>
+@endpush
 @endsection

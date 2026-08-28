@@ -231,67 +231,131 @@
                     <span>Lihat Web</span>
                 </a>
 
-                <!-- Notification Dropdown -->
+                <!-- Enhanced Live Notification Dropdown -->
                 <div class="relative" id="notifDropdownContainer">
                     <button 
                         type="button" 
                         onclick="toggleNotifDropdown()" 
-                        class="relative p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer"
-                        title="Notifikasi Masuk"
+                        id="adminBellBtn"
+                        class="relative p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-emerald-50 active:bg-emerald-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer select-none"
+                        title="Pusat Notifikasi Masuk"
                     >
-                        <i class="fa-regular fa-bell text-sm"></i>
-                        @if($unreadMessagesCount > 0)
-                            <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-600 text-white text-[8.5px] font-black flex items-center justify-center font-mono animate-pulse">
-                                {{ $unreadMessagesCount }}
-                            </span>
-                        @endif
+                        <i id="adminBellIcon" class="fa-regular fa-bell text-sm transition-transform duration-300"></i>
+                        <span id="adminBellBadge" class="{{ ($totalNotifCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-rose-600 text-white text-[8.5px] font-black flex items-center justify-center font-mono shadow-xs animate-pulse">
+                            {{ $totalNotifCount ?? 0 }}
+                        </span>
                     </button>
 
-                    <!-- Dropdown Content -->
-                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-72 sm:w-96 bg-white rounded-sm shadow-2xl border border-slate-200 overflow-hidden z-50 animate-fade-in">
+                    <!-- Rich Dropdown Content -->
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden z-50 animate-fade-in select-none">
+                        
+                        <!-- Header -->
                         <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-bell text-emerald-400 text-xs"></i>
+                                <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                    <i class="fa-solid fa-bell text-[11px]"></i>
+                                </div>
                                 <span class="text-xs font-bold uppercase tracking-wider font-heading">Notifikasi Masuk</span>
                             </div>
-                            <span class="text-[10px] bg-slate-800 text-emerald-300 px-2 py-0.5 rounded-xs font-mono font-bold">
-                                {{ $unreadMessagesCount }} Baru
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <span id="notifHeaderBadge" class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
+                                    {{ $totalNotifCount ?? 0 }} Baru
+                                </span>
+                                <button type="button" onclick="markAllNotificationsRead()" class="text-[10px] text-slate-400 hover:text-white transition underline cursor-pointer" title="Tandai semua pesan sudah dibaca">
+                                    Tandai Dibaca
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="max-h-80 overflow-y-auto divide-y divide-slate-100">
-                            @forelse($latestMessages as $msg)
-                                <a 
-                                    href="{{ route('admin.messages.show', $msg) }}" 
-                                    class="block p-3 hover:bg-slate-50 transition {{ $msg->status === 'pending' ? 'bg-emerald-50/40' : '' }}"
-                                >
-                                    <div class="flex items-start gap-2.5">
-                                        <div class="w-7 h-7 rounded-sm {{ $msg->status === 'pending' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600' }} flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                                            {{ strtoupper(substr($msg->name, 0, 1)) }}
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <div class="flex items-center justify-between gap-1">
-                                                <span class="text-xs font-bold text-slate-900 truncate">{{ $msg->name }}</span>
-                                                <span class="text-[10px] text-slate-400 shrink-0">{{ $msg->created_at->diffForHumans() }}</span>
-                                            </div>
-                                            <p class="text-[11px] text-slate-500 truncate leading-snug mt-0.5">
-                                                {{ $msg->subject ?: Str::limit($msg->message, 45) }}
-                                            </p>
-                                        </div>
+                        <!-- Notification List (Messages & Orders) -->
+                        <div id="notifListContainer" class="max-h-80 overflow-y-auto divide-y divide-slate-100">
+                            @php
+                                $hasItems = ($latestMessages && $latestMessages->count() > 0) || ($latestOrders && $latestOrders->count() > 0);
+                            @endphp
+
+                            @if($hasItems)
+                                {{-- Latest Messages --}}
+                                @if($latestMessages && $latestMessages->count() > 0)
+                                    <div class="px-3 py-1.5 bg-slate-50/80 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                        Pesan &amp; Pengajuan Naskah
                                     </div>
-                                </a>
-                            @empty
-                                <div class="p-6 text-center text-slate-400 text-xs">
-                                    <i class="fa-regular fa-bell-slash text-2xl mb-1 text-slate-300 block"></i>
-                                    Belum ada notifikasi pesan masuk.
+                                    @foreach($latestMessages as $msg)
+                                        <a 
+                                            href="{{ route('admin.messages.show', $msg) }}" 
+                                            class="block p-3 hover:bg-slate-50 transition {{ $msg->status === 'pending' ? 'bg-emerald-50/50' : '' }}"
+                                        >
+                                            <div class="flex items-start gap-2.5">
+                                                <div class="w-8 h-8 rounded-full {{ $msg->status === 'pending' ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-600' }} flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
+                                                    {{ strtoupper(substr($msg->name, 0, 1)) }}
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex items-center justify-between gap-1">
+                                                        <span class="text-xs font-bold text-slate-900 truncate">{{ $msg->name }}</span>
+                                                        <span class="text-[10px] text-slate-400 shrink-0 font-mono">{{ $msg->created_at->diffForHumans() }}</span>
+                                                    </div>
+                                                    <p class="text-[11px] text-slate-600 truncate leading-snug mt-0.5 font-medium">
+                                                        {{ $msg->subject ?: Str::limit($msg->message, 45) }}
+                                                    </p>
+                                                    <div class="flex items-center gap-2 mt-1">
+                                                        <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-medium">
+                                                            {{ $msg->service_category ?? 'Konsultasi' }}
+                                                        </span>
+                                                        @if($msg->status === 'pending')
+                                                            <span class="text-[9.5px] font-bold text-amber-600 flex items-center gap-1">
+                                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span> Belum Dihubungi
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                @endif
+
+                                {{-- Latest Orders --}}
+                                @if($latestOrders && $latestOrders->count() > 0)
+                                    <div class="px-3 py-1.5 bg-slate-50/80 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100">
+                                        Transaksi Buku Terbaru
+                                    </div>
+                                    @foreach($latestOrders as $ord)
+                                        <a 
+                                            href="{{ route('admin.orders.show', $ord->id) }}" 
+                                            class="block p-3 hover:bg-slate-50 transition"
+                                        >
+                                            <div class="flex items-start gap-2.5">
+                                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                                    <i class="fa-solid fa-receipt text-xs"></i>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex items-center justify-between gap-1">
+                                                        <span class="text-xs font-bold text-slate-900 truncate">#{{ $ord->order_number }}</span>
+                                                        <span class="text-[10px] text-slate-400 shrink-0 font-mono">{{ $ord->created_at->diffForHumans() }}</span>
+                                                    </div>
+                                                    <p class="text-[11px] text-slate-600 truncate mt-0.5">
+                                                        {{ $ord->customer_name }} &bull; <strong class="text-slate-900 font-mono">Rp {{ number_format($ord->total_amount, 0, ',', '.') }}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                @endif
+                            @else
+                                <div class="p-8 text-center text-slate-400 text-xs">
+                                    <i class="fa-regular fa-bell-slash text-3xl mb-2 text-slate-300 block"></i>
+                                    Belum ada notifikasi baru saat ini.
                                 </div>
-                            @endforelse
+                            @endif
                         </div>
 
-                        <div class="p-2.5 bg-slate-50 border-t border-slate-100 text-center">
-                            <a href="{{ route('admin.messages.index') }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 transition flex items-center justify-center gap-1.5 py-1">
-                                <span>Buka Kotak Masuk Lengkap</span>
-                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        <!-- Footer -->
+                        <div class="p-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
+                            <a href="{{ route('admin.messages.index') }}" class="text-slate-700 hover:text-emerald-800 transition flex items-center gap-1">
+                                <span>Pesan &amp; Naskah</span>
+                                <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                            </a>
+                            <a href="{{ route('admin.orders.index') }}" class="text-emerald-800 hover:text-emerald-950 transition flex items-center gap-1">
+                                <span>Kelola Pesanan</span>
+                                <i class="fa-solid fa-arrow-right text-[9px]"></i>
                             </a>
                         </div>
                     </div>
@@ -424,6 +488,12 @@
             localStorage.setItem('persis_admin_sidebar_collapsed', 'false');
         }
 
+
+    <!-- Live Notification Floating Toast Container -->
+    <div id="adminLiveToastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>
+
+    <script>
+        // Notification Dropdown Toggle
         function toggleNotifDropdown() {
             const notifDropdown = document.getElementById('notifDropdown');
             if (notifDropdown) {
@@ -431,6 +501,7 @@
             }
         }
 
+        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             const notifDropdown = document.getElementById('notifDropdown');
             const notifContainer = document.getElementById('notifDropdownContainer');
@@ -438,7 +509,130 @@
                 notifDropdown.classList.add('hidden');
             }
         });
+
+        // Mark All Notifications as Read
+        function markAllNotificationsRead() {
+            fetch("{{ route('admin.notifications.mark_all_read') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const badge = document.getElementById('adminBellBadge');
+                    const headerBadge = document.getElementById('notifHeaderBadge');
+                    if (badge) badge.classList.add('hidden');
+                    if (headerBadge) headerBadge.innerText = '0 Baru';
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        // Live Real-Time Polling & Toast Popup System
+        (function() {
+            let lastBadgeCount = {{ $totalNotifCount ?? 0 }};
+
+            function checkLiveNotifications() {
+                fetch("{{ route('admin.notifications.live') }}", {
+                    headers: { "Accept": "application/json" }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const currentBadge = data.total_badge;
+                    const badgeEl = document.getElementById('adminBellBadge');
+                    const headerBadgeEl = document.getElementById('notifHeaderBadge');
+                    const bellIcon = document.getElementById('adminBellIcon');
+
+                    if (badgeEl) {
+                        badgeEl.innerText = currentBadge;
+                        if (currentBadge > 0) {
+                            badgeEl.classList.remove('hidden');
+                        } else {
+                            badgeEl.classList.add('hidden');
+                        }
+                    }
+
+                    if (headerBadgeEl) {
+                        headerBadgeEl.innerText = currentBadge + ' Baru';
+                    }
+
+                    // If new notification arrived, show real-time animated popup toast & wiggle bell
+                    if (currentBadge > lastBadgeCount) {
+                        const newMessages = data.messages.filter(m => m.is_pending);
+                        if (newMessages.length > 0) {
+                            const latest = newMessages[0];
+                            showLiveToast(
+                                '🔔 Pesan & Naskah Baru Masuk!',
+                                `${latest.name}: "${latest.subject}"`,
+                                latest.url,
+                                'fa-solid fa-inbox text-emerald-400'
+                            );
+                        }
+
+                        // Bell wiggle animation
+                        if (bellIcon) {
+                            bellIcon.classList.add('animate-bounce', 'text-amber-500');
+                            setTimeout(() => {
+                                bellIcon.classList.remove('animate-bounce', 'text-amber-500');
+                            }, 3000);
+                        }
+                    }
+
+                    lastBadgeCount = currentBadge;
+                })
+                .catch(err => console.error("Notif poll error:", err));
+            }
+
+            // Show Toast Alert Popup
+            function showLiveToast(title, desc, linkUrl, iconClass) {
+                const container = document.getElementById('adminLiveToastContainer');
+                if (!container) return;
+
+                const toast = document.createElement('div');
+                toast.className = 'pointer-events-auto p-3.5 bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 cursor-pointer hover:border-emerald-500';
+                toast.onclick = () => window.location.href = linkUrl;
+
+                toast.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                        <i class="${iconClass} text-xs"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-white flex items-center justify-between">
+                            <span>${title}</span>
+                            <span class="text-[9.5px] text-emerald-400 font-mono">Baru saja</span>
+                        </p>
+                        <p class="text-[11px] text-slate-300 truncate mt-0.5">${desc}</p>
+                        <span class="inline-block mt-1 text-[10px] text-emerald-400 font-bold underline">Buka Pesan &rarr;</span>
+                    </div>
+                    <button type="button" onclick="event.stopPropagation(); this.parentElement.remove();" class="text-slate-400 hover:text-white text-xs">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+
+                container.appendChild(toast);
+
+                // Animate in
+                setTimeout(() => {
+                    toast.classList.remove('translate-x-full', 'opacity-0');
+                    toast.classList.add('translate-x-0', 'opacity-100');
+                }, 50);
+
+                // Auto remove after 7 seconds
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full', 'opacity-0');
+                    setTimeout(() => toast.remove(), 400);
+                }, 7000);
+            }
+
+            // Poll every 15 seconds
+            setInterval(checkLiveNotifications, 15000);
+        })();
     </script>
+
 
     @stack('scripts')
 </body>

@@ -53,6 +53,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Messages & Naskah Submissions
     Route::resource('messages', ContactMessageController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::post('messages/{message}/reply', [ContactMessageController::class, 'reply'])->name('messages.reply');
+
+    // Live Notification Polling & Actions
+    Route::get('notifications/live', [ContactMessageController::class, 'liveNotifications'])->name('notifications.live');
+    Route::post('notifications/mark-all-read', [ContactMessageController::class, 'markAllRead'])->name('notifications.mark_all_read');
 
     // Orders & Sales Management
     Route::get('/orders',                [AdminOrderController::class, 'index'])->name('orders.index');
