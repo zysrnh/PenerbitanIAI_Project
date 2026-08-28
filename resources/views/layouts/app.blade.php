@@ -404,22 +404,22 @@
         <!-- Slide-over Panel -->
         <div id="cartDrawerPanel" class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl z-10 flex flex-col transform translate-x-full transition-transform duration-300 ease-out">
             
-            <!-- Drawer Header (Clean & Modern, No Clunky Badge) -->
-            <div class="px-5 py-4 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-900/60 select-none">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-sm shadow-xs">
+            <!-- Drawer Header -->
+            <div class="px-5 py-3.5 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-900 select-none">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xs bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-xs">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-sm font-heading flex items-center gap-1.5">
+                        <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
                             Keranjang Belanja
-                            <span id="cartDrawerCountBadge" class="text-xs font-semibold text-emerald-300"></span>
+                            <span id="cartDrawerCountBadge" class="text-xs font-semibold text-emerald-300 font-mono"></span>
                         </h3>
-                        <p class="text-[10.5px] text-emerald-200/70">Koleksi Terbitan PERSIS PERS</p>
+                        <p class="text-[10px] text-emerald-200/70">Koleksi Terbitan PERSIS PERS</p>
                     </div>
                 </div>
-                <button type="button" onclick="window.closeCartDrawer()" class="w-8 h-8 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Keranjang">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <button type="button" onclick="window.closeCartDrawer()" class="w-7 h-7 rounded-xs text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Keranjang">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
@@ -442,19 +442,19 @@
                 </div>
 
                 <!-- Drawer Actions (QRIS Auto & WhatsApp) -->
-                <div class="space-y-2.5 select-none">
+                <div class="space-y-2 select-none">
                     <!-- Tombol 1: Bayar Otomatis QRIS -->
                     <button type="button" 
                             onclick="window.openCheckoutModal()"
-                            class="w-full py-3 px-4 bg-[#006830] hover:bg-[#032c21] active:scale-98 text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2.5 cursor-pointer group">
-                        <i class="fa-solid fa-qrcode text-base text-lime-300 group-hover:scale-110 transition-transform"></i>
+                            class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs sm:text-sm font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-qrcode text-sm text-lime-300"></i>
                         <span>Bayar Otomatis (QRIS Realtime)</span>
                     </button>
 
                     <!-- Tombol 2: Pesan Manual via WhatsApp -->
                     <button type="button" 
                             onclick="window.checkoutCartViaWhatsApp()"
-                            class="w-full py-2.5 px-4 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300/80 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
+                            class="w-full py-2 px-4 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs">
                         <i class="fa-brands fa-whatsapp text-sm text-emerald-600"></i>
                         <span>Pesan Manual via WhatsApp</span>
                     </button>
@@ -462,14 +462,14 @@
                     <div class="flex items-center justify-between pt-1">
                         <button type="button" 
                                 onclick="window.clearCart()" 
-                                class="text-[11px] text-red-500 hover:text-red-700 font-semibold flex items-center gap-1 cursor-pointer">
-                            <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                class="text-[11px] text-red-600 hover:text-red-800 font-medium flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-trash-can text-[9px]"></i>
                             <span>Kosongkan</span>
                         </button>
 
                         <button type="button" 
                                 onclick="window.closeCartDrawer()" 
-                                class="text-[11px] text-slate-500 hover:text-slate-800 font-semibold cursor-pointer">
+                                class="text-[11px] text-slate-500 hover:text-slate-800 font-medium cursor-pointer">
                             Lanjut Pilih Buku &rarr;
                         </button>
                     </div>
@@ -909,34 +909,32 @@
                     `<div class="w-full h-full bg-[#032c21] text-white flex items-center justify-center text-[8px] font-bold p-1 text-center">${item.category}</div>`;
 
                 html += `
-                    <div class="bg-white p-3.5 rounded-xl border border-slate-200/90 shadow-2xs flex gap-3.5 items-start transition hover:border-emerald-500 hover:shadow-xs">
-                        <div class="w-14 h-19 aspect-[3/4.15] shrink-0 bg-slate-900 rounded-lg overflow-hidden border border-slate-200 shadow-2xs">
+                    <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex gap-3 items-start transition hover:border-emerald-700">
+                        <div class="w-14 h-19 aspect-[3/4.15] shrink-0 bg-slate-900 rounded-xs overflow-hidden border border-slate-200 shadow-2xs">
                             ${cover}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <span class="text-[9px] font-extrabold text-emerald-800 uppercase tracking-wider">${item.category}</span>
+                            <span class="text-[9px] font-bold text-emerald-800 uppercase tracking-wider">${item.category}</span>
                             <h5 class="text-xs font-bold text-slate-900 line-clamp-2 leading-snug mt-0.5" title="${item.title}">${item.title}</h5>
-                            <p class="text-[10.5px] text-slate-400 truncate mt-0.5">${item.author}</p>
+                            <p class="text-[10px] text-slate-400 truncate mt-0.5">${item.author}</p>
                             
-                            <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
                                 <div>
-                                    <span class="text-xs font-black text-emerald-900 font-mono">${item.formatted_subtotal}</span>
-                                    <span class="text-[9.5px] text-slate-400 block">${item.formatted_price} / eks</span>
+                                    <span class="font-mono font-bold text-xs text-emerald-800">${item.formatted_subtotal}</span>
+                                    <span class="text-[9.5px] text-slate-400 block">@ ${item.formatted_price}</span>
                                 </div>
-                                <div class="flex items-center gap-2">
-                                    <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50/80 shadow-2xs">
-                                        <button type="button" onclick="window.updateCartItemQty(${item.id}, -1)" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200/80 active:bg-slate-300 font-bold transition text-xs cursor-pointer">
-                                            <i class="fa-solid fa-minus text-[9px]"></i>
-                                        </button>
-                                        <span class="w-7 text-center text-xs font-black text-slate-900 select-none">${item.quantity}</span>
-                                        <button type="button" onclick="window.updateCartItemQty(${item.id}, 1)" class="w-7 h-7 flex items-center justify-center text-slate-600 hover:bg-slate-200/80 active:bg-slate-300 font-bold transition text-xs cursor-pointer">
-                                            <i class="fa-solid fa-plus text-[9px]"></i>
-                                        </button>
-                                    </div>
-                                    <button type="button" onclick="window.removeCartItem(${item.id})" class="text-slate-300 hover:text-red-500 p-1.5 transition text-xs cursor-pointer" title="Hapus dari keranjang">
-                                        <i class="fa-solid fa-trash-can"></i>
+                                <div class="flex items-center gap-1.5 bg-slate-50 p-0.5 rounded-xs border border-slate-200">
+                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, -1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition cursor-pointer">
+                                        <i class="fa-solid fa-minus text-[8px]"></i>
+                                    </button>
+                                    <span class="text-xs font-bold font-mono w-5 text-center text-slate-800 select-none">${item.quantity}</span>
+                                    <button type="button" onclick="window.updateCartItemQty(${item.id}, 1)" class="w-5 h-5 rounded-xs bg-white text-slate-700 hover:bg-emerald-700 hover:text-white flex items-center justify-center text-[10px] font-bold shadow-2xs transition cursor-pointer">
+                                        <i class="fa-solid fa-plus text-[8px]"></i>
                                     </button>
                                 </div>
+                                <button type="button" onclick="window.removeCartItem(${item.id})" class="text-slate-300 hover:text-red-600 transition p-1 cursor-pointer" title="Hapus item">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1188,142 +1186,141 @@
 
 
     <!-- ========================================================================= -->
-    <!-- CHECKOUT & LIVE QRIS AUTO-PAYMENT MODAL -->
+    <!-- CHECKOUT & LIVE QRIS AUTO-PAYMENT MODAL (CLEAN & FORMAL) -->
     <!-- ========================================================================= -->
-    <div id="checkoutQrisModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none">
-        <div id="checkoutQrisModalCard" class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden transform scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out flex flex-col max-h-[92vh]">
+    <div id="checkoutQrisModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-200 opacity-0 pointer-events-none">
+        <div id="checkoutQrisModalCard" class="bg-white rounded-sm border border-slate-300 shadow-xl max-w-md w-full overflow-hidden transform scale-98 opacity-0 transition-all duration-200 ease-out flex flex-col max-h-[92vh]">
             
-            <!-- Modal Top Header -->
-            <div class="px-6 py-4 bg-[#032c21] text-white flex items-center justify-between border-b border-emerald-900/80 shrink-0">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-sm">
+            <!-- Modal Header -->
+            <div class="px-5 py-3 bg-[#032c21] text-white flex items-center justify-between border-b border-emerald-950 shrink-0 select-none">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 rounded-xs bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-xs">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>
                     <div>
-                        <h4 id="checkoutModalTitle" class="text-sm font-extrabold font-heading">Checkout & Pengiriman</h4>
-                        <p id="checkoutModalSubtitle" class="text-[10.5px] text-emerald-200/70">Penerbitan Resmi PERSIS PERS</p>
+                        <h4 id="checkoutModalTitle" class="text-sm font-bold font-heading">Checkout Pengiriman</h4>
+                        <p id="checkoutModalSubtitle" class="text-[10px] text-emerald-200/70">Penerbitan Resmi PERSIS PERS</p>
                     </div>
                 </div>
-                <button type="button" onclick="window.closeCheckoutModal()" class="w-8 h-8 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <button type="button" onclick="window.closeCheckoutModal()" class="w-7 h-7 rounded-xs text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <!-- STEP 1: FORM DATA PEMESAN & ALAMAT -->
-            <div id="checkoutStepForm" class="p-6 overflow-y-auto space-y-4 flex-1">
-                <div>
-                    <h5 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-1">Data Penerima Buku</h5>
-                    <p class="text-[11px] text-slate-400">Pastikan nomor WhatsApp dan alamat pengiriman sudah benar.</p>
+            <div id="checkoutStepForm" class="p-5 overflow-y-auto space-y-3 flex-1 text-xs">
+                <div class="border-b border-slate-200 pb-2">
+                    <h5 class="text-[11px] font-bold text-slate-800 uppercase tracking-wider">Data Penerima Buku</h5>
+                    <p class="text-[10.5px] text-slate-400">Pastikan nomor WhatsApp dan alamat pengiriman sudah lengkap.</p>
                 </div>
 
-                <div class="space-y-3">
+                <div class="space-y-2.5">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Lengkap Penerima <span class="text-red-500">*</span></label>
-                        <input type="text" id="chkCustomerName" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="Nama lengkap Anda" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" required />
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Nama Lengkap Penerima <span class="text-red-500">*</span></label>
+                        <input type="text" id="chkCustomerName" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="Nama penerima paket" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xs text-xs text-slate-900 focus:bg-white focus:border-emerald-700 outline-none transition" required />
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
-                            <input type="tel" id="chkCustomerPhone" placeholder="08xxxxxxxxxx" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" required />
+                            <label class="block text-[11px] font-semibold text-slate-700 mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
+                            <input type="tel" id="chkCustomerPhone" placeholder="08xxxxxxxxxx" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xs text-xs text-slate-900 focus:bg-white focus:border-emerald-700 outline-none transition" required />
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Email <span class="text-slate-400 text-[10px]">(Opsional)</span></label>
-                            <input type="email" id="chkCustomerEmail" value="{{ Auth::check() ? Auth::user()->email : '' }}" placeholder="email@contoh.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" />
+                            <label class="block text-[11px] font-semibold text-slate-700 mb-1">Email <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                            <input type="email" id="chkCustomerEmail" value="{{ Auth::check() ? Auth::user()->email : '' }}" placeholder="email@contoh.com" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xs text-xs text-slate-900 focus:bg-white focus:border-emerald-700 outline-none transition" />
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Alamat Lengkap Pengiriman <span class="text-red-500">*</span></label>
-                        <textarea id="chkCustomerAddress" rows="2" placeholder="Nama Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten, Kode Pos" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" required></textarea>
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Alamat Lengkap Pengiriman <span class="text-red-500">*</span></label>
+                        <textarea id="chkCustomerAddress" rows="2" placeholder="Nama Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten, Kode Pos" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xs text-xs text-slate-900 focus:bg-white focus:border-emerald-700 outline-none transition" required></textarea>
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Catatan Tambahan <span class="text-slate-400 text-[10px]">(Opsional)</span></label>
-                        <input type="text" id="chkCustomerNotes" placeholder="Contoh: Titip di satpam / mohon tanda tangan penulis jika ada" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" />
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Catatan Tambahan <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                        <input type="text" id="chkCustomerNotes" placeholder="Contoh: Titip di satpam / pos perumahan" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xs text-xs text-slate-900 focus:bg-white focus:border-emerald-700 outline-none transition" />
                     </div>
                 </div>
 
-                <!-- Order Total Box -->
-                <div class="p-3.5 bg-emerald-50/80 rounded-2xl border border-emerald-200/80 flex items-center justify-between">
+                <!-- Order Total Summary -->
+                <div class="p-3 bg-slate-50 rounded-xs border border-slate-200 flex items-center justify-between">
                     <div>
-                        <p class="text-[10.5px] font-bold text-emerald-800 uppercase tracking-wider">Total Tagihan Buku</p>
-                        <p id="chkTotalSummaryText" class="text-sm font-black text-emerald-950 font-mono">Rp 0</p>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Belanja</p>
+                        <p id="chkTotalSummaryText" class="text-sm font-bold text-slate-900 font-mono">Rp 0</p>
                     </div>
-                    <span class="text-[10.5px] font-semibold text-emerald-700 flex items-center gap-1">
-                        <i class="fa-solid fa-bolt text-amber-500"></i> QRIS Otomatis
+                    <span class="text-[10.5px] font-semibold text-emerald-800 flex items-center gap-1">
+                        <i class="fa-solid fa-qrcode text-emerald-700"></i> QRIS Realtime
                     </span>
                 </div>
 
-                <div class="pt-2">
+                <div class="pt-1">
                     <button type="button" 
                             id="btnProcessQris"
                             onclick="window.submitCheckoutQris()" 
-                            class="w-full py-3 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-solid fa-qrcode text-base text-lime-300"></i>
+                            class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-qrcode text-sm text-lime-300"></i>
                         <span>Lanjut ke Pembayaran QRIS &rarr;</span>
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 2: LIVE DYNAMIC QRIS SCREEN WITH REALTIME AUTO-DETECTION -->
-            <div id="checkoutStepQris" class="p-6 overflow-y-auto space-y-4 flex-1 hidden text-center">
+            <!-- STEP 2: LIVE DYNAMIC QRIS SCREEN -->
+            <div id="checkoutStepQris" class="p-5 overflow-y-auto space-y-3 flex-1 hidden text-center text-xs">
                 
-                <!-- Live Status Radar Banner -->
-                <div id="qrisStatusBanner" class="p-3 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold text-amber-800">
-                    <i class="fa-solid fa-spinner fa-spin text-amber-600"></i>
-                    <span>Menunggu Pembayaran... (Otomatis Terdeteksi)</span>
+                <!-- Status Banner -->
+                <div id="qrisStatusBanner" class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xs flex items-center justify-center gap-2 text-xs font-semibold text-emerald-900">
+                    <i class="fa-solid fa-spinner fa-spin text-emerald-700"></i>
+                    <span>Menunggu pembayaran... (Terdeteksi otomatis)</span>
                 </div>
 
                 <!-- QRIS Box -->
-                <div class="bg-white p-4 rounded-3xl border-2 border-dashed border-emerald-400/80 shadow-md inline-block mx-auto max-w-[280px] w-full">
-                    <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
-                        <span class="text-[10.5px] font-black text-slate-800 font-heading">QRIS NATIONAL</span>
-                        <span class="text-[9.5px] font-bold text-emerald-700">PERSIS PERS</span>
+                <div class="bg-white p-3.5 rounded-xs border border-slate-300 shadow-2xs inline-block mx-auto max-w-[250px] w-full">
+                    <div class="flex items-center justify-between mb-1 pb-1 border-b border-slate-100">
+                        <span class="text-[10px] font-bold text-slate-800 font-heading">QRIS RESMI</span>
+                        <span class="text-[9px] font-bold text-emerald-800">PERSIS PERS</span>
                     </div>
                     
-                    <div class="relative aspect-square w-full bg-slate-50 rounded-xl overflow-hidden flex items-center justify-center border border-slate-200">
-                        <img id="qrisImageDisplay" src="" alt="QRIS Code" class="w-full h-full object-contain" />
+                    <div class="relative aspect-square w-full bg-slate-50 rounded-xs overflow-hidden flex items-center justify-center border border-slate-200">
+                        <img id="qrisImageDisplay" src="" alt="QRIS Code" class="w-full h-full object-contain p-1" />
                     </div>
 
-                    <div class="mt-2 text-center">
-                        <p class="text-[10px] text-slate-400">Scan dengan m-Banking / E-Wallet apapun</p>
-                        <p class="text-[9px] font-bold text-slate-600 mt-0.5">BCA • Mandiri • BRI • BNI • BSI • DANA • GoPay • OVO • ShopeePay</p>
+                    <div class="mt-1.5 text-center">
+                        <p class="text-[9.5px] text-slate-500">Scan via BCA, Mandiri, BRI, BNI, BSI, DANA, GoPay, OVO, ShopeePay</p>
                     </div>
                 </div>
 
                 <!-- Amount Details -->
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/90 text-left space-y-1.5 text-xs max-w-sm mx-auto">
-                    <div class="flex justify-between text-slate-500">
+                <div class="p-3 bg-slate-50 rounded-xs border border-slate-200 text-left space-y-1 text-xs max-w-xs mx-auto">
+                    <div class="flex justify-between text-slate-600">
                         <span>No. Invoice:</span>
                         <span id="qrisOrderNumber" class="font-bold font-mono text-slate-800">-</span>
                     </div>
-                    <div class="flex justify-between text-slate-500">
-                        <span>Total Belanja:</span>
-                        <span id="qrisSubtotalText" class="font-bold font-mono text-slate-800">Rp 0</span>
+                    <div class="flex justify-between text-slate-600">
+                        <span>Subtotal:</span>
+                        <span id="qrisSubtotalText" class="font-mono text-slate-800">Rp 0</span>
                     </div>
-                    <div class="flex justify-between text-slate-500">
+                    <div class="flex justify-between text-slate-600">
                         <span>Biaya QRIS:</span>
-                        <span id="qrisFeeText" class="font-bold font-mono text-slate-800">Rp 0</span>
+                        <span id="qrisFeeText" class="font-mono text-slate-800">Rp 0</span>
                     </div>
-                    <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
-                        <span class="font-extrabold text-slate-900 text-sm">Total Bayar:</span>
-                        <span id="qrisTotalPaymentText" class="font-black font-mono text-base text-emerald-800">Rp 0</span>
+                    <div class="pt-1.5 border-t border-slate-200 flex justify-between items-center text-slate-900">
+                        <span class="font-bold text-xs">Total Tagihan:</span>
+                        <span id="qrisTotalPaymentText" class="font-bold font-mono text-sm text-emerald-900">Rp 0</span>
                     </div>
                 </div>
 
                 <!-- Countdown Timer -->
-                <div class="text-center text-xs text-slate-400 font-medium">
-                    Selesaikan pembayaran dalam <span id="qrisCountdownTimer" class="font-bold font-mono text-red-600">15:00</span>
+                <div class="text-center text-[11px] text-slate-400">
+                    Batas waktu pembayaran: <span id="qrisCountdownTimer" class="font-bold font-mono text-slate-800">15:00</span>
                 </div>
 
-                <!-- Simulation Sandbox Button (Only for testing) -->
-                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2">
-                    <button type="button" onclick="window.manualCheckPaymentStatus()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-arrows-rotate"></i> Cek Status Manual
+                <!-- Action Buttons -->
+                <div class="pt-1 flex items-center justify-center gap-2">
+                    <button type="button" onclick="window.manualCheckPaymentStatus()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-medium transition cursor-pointer shadow-2xs">
+                        <i class="fa-solid fa-arrows-rotate mr-1 text-slate-400"></i> Cek Status
                     </button>
-                    <a id="qrisInvoiceDirectBtn" href="#" class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-file-invoice"></i> Lihat Invoice
+                    <a id="qrisInvoiceDirectBtn" href="#" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-semibold transition">
+                        <i class="fa-solid fa-file-invoice mr-1 text-emerald-600"></i> Lihat Invoice
                     </a>
                 </div>
 
