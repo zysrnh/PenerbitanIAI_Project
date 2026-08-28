@@ -373,19 +373,14 @@
                             </div>
                         </div>
                     @else
-                        {{-- Smooth & Clean Rounded Pill Login Button --}}
-                        <div class="flex items-center gap-2">
-                            <a href="{{ route('member.login') }}" 
-                               class="user-nav-btn h-10 rounded-full flex items-center gap-2 px-3 sm:px-4 bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-xs transition select-none cursor-pointer group"
-                               title="Masuk Akun">
-                                <div class="w-6 h-6 rounded-full bg-emerald-100/70 group-hover:bg-[#006830] flex items-center justify-center text-[#006830] group-hover:text-white transition-all duration-200">
-                                    <i class="fa-solid fa-arrow-right-to-bracket text-[11px] pointer-events-none"></i>
-                                </div>
-                                <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-900 transition-colors pointer-events-none">
-                                    Masuk
-                                </span>
-                            </a>
-                        </div>
+                        {{-- Minimalist Circular Icon-Only Login Button --}}
+                        <a href="{{ route('member.login') }}" 
+                           class="user-nav-btn w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-xs transition-all duration-200 select-none cursor-pointer group shrink-0"
+                           title="Masuk Akun Member">
+                            <div class="w-7 h-7 rounded-full bg-emerald-50 group-hover:bg-[#006830] flex items-center justify-center text-[#006830] group-hover:text-white transition-all duration-200">
+                                <i class="fa-solid fa-arrow-right-to-bracket text-xs pointer-events-none"></i>
+                            </div>
+                        </a>
                     @endauth
 
                     <!-- 3. Mobile Menu Button (Hamburger - Identical 40x40 Square Box) -->
