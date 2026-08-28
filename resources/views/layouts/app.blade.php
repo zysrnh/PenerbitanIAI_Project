@@ -123,7 +123,10 @@
 </head>
 <body class="antialiased text-slate-800 bg-white selection:bg-brand-800 selection:text-white flex flex-col min-h-screen">
 <script>
-    window.toggleMobileMenu = function() {
+    window.toggleMobileMenu = function(e) {
+        if (e) {
+            try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+        }
         const drawer = document.getElementById('mobile-drawer');
         const icon = document.getElementById('mobileMenuIcon');
         if (!drawer) return;
@@ -156,7 +159,40 @@
             icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
         }
     };
+
+    window.toggleMemberDropdown = function(e) {
+        if (e) {
+            try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+        }
+        const menu = document.getElementById('memberUserDropdownMenu');
+        const chevron = document.getElementById('memberDropdownChevron');
+        if (!menu) return;
+
+        const isClosed = menu.classList.contains('hidden') || menu.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(menu).display === 'none');
+
+        if (isClosed) {
+            menu.style.display = 'block';
+            menu.classList.remove('hidden');
+            if (chevron) chevron.classList.add('rotate-180');
+        } else {
+            menu.style.display = 'none';
+            menu.classList.add('hidden');
+            if (chevron) chevron.classList.remove('rotate-180');
+        }
+    };
+
+    document.addEventListener('click', function(e) {
+        const memberContainer = document.getElementById('memberUserDropdownContainer');
+        const memberMenu = document.getElementById('memberUserDropdownMenu');
+        const memberChevron = document.getElementById('memberDropdownChevron');
+        if (memberContainer && memberMenu && !memberContainer.contains(e.target)) {
+            memberMenu.style.display = 'none';
+            memberMenu.classList.add('hidden');
+            if (memberChevron) memberChevron.classList.remove('rotate-180');
+        }
+    });
 </script>
+
 
 @php
     $navServicesRaw = \App\Models\SiteSetting::get('home_services_json', null);
@@ -220,14 +256,14 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header Action Buttons (Harmonious, Modern & Consistent) -->
-                <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                <!-- Header Action Buttons (100% Unified Structure on Both Desktop & Mobile) -->
+                <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
                     @auth
                         @if(Auth::user()->role === 'member')
-                            {{-- Shopping Cart Button (Clean Square Icon with Notification Badge) --}}
+                            {{-- 1. Shopping Cart Button (Bordered Box, Equal Height) --}}
                             <button type="button" 
                                     onclick="window.openCartDrawer()" 
-                                    class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-sm flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs cursor-pointer transition select-none shrink-0"
+                                    class="user-nav-btn relative w-10 h-10 rounded-sm flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs cursor-pointer transition select-none shrink-0"
                                     title="Keranjang Belanja">
                                 <i class="fa-solid fa-cart-shopping text-sm pointer-events-none text-emerald-800"></i>
                                 <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#006830] text-white rounded-full text-[9px] font-black flex items-center justify-center border border-white shadow-xs pointer-events-none">
@@ -235,29 +271,30 @@
                                 </span>
                             </button>
 
-                            {{-- Member Profile Button (Desktop: Elegant Pill, Mobile: Clean Circular Avatar) --}}
-                            <div class="relative" id="memberUserDropdownContainer">
+                            {{-- 2. Member Profile Button (Unified Bordered Box on Mobile, Pill on Desktop) --}}
+                            <div class="relative group" id="memberUserDropdownContainer">
                                 <button type="button" 
                                         id="memberUserDropdownBtn"
                                         onclick="window.toggleMemberDropdown(event)" 
-                                        class="user-nav-btn flex items-center gap-2 p-0.5 sm:pl-1.5 sm:pr-2.5 sm:py-1 rounded-full sm:rounded-sm border border-emerald-600/40 sm:border-slate-200 bg-white hover:bg-emerald-50 active:bg-emerald-100 hover:border-emerald-500 shadow-2xs cursor-pointer transition select-none h-9 sm:h-10 shrink-0">
-                                    <div class="relative w-7 h-7 sm:w-7 sm:h-7 rounded-full overflow-hidden shrink-0 border border-emerald-600 shadow-2xs">
+                                        class="user-nav-btn w-10 sm:w-auto h-10 rounded-sm flex items-center justify-center sm:justify-start gap-2 px-0 sm:px-2.5 bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 shadow-2xs cursor-pointer transition select-none shrink-0"
+                                        title="Menu Akun">
+                                    <div class="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-emerald-600 shadow-2xs pointer-events-none">
                                         @if(Auth::user()->avatar_url)
-                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover" />
+                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover pointer-events-none" />
                                         @else
-                                            <div class="w-full h-full bg-[#006830] flex items-center justify-center text-white text-[10px] font-black">
+                                            <div class="w-full h-full bg-[#006830] flex items-center justify-center text-white text-[9.5px] font-black pointer-events-none">
                                                 {{ Auth::user()->initials }}
                                             </div>
                                         @endif
                                     </div>
-                                    <span class="hidden sm:inline text-xs font-bold text-slate-800 max-w-[100px] truncate leading-tight">
+                                    <span class="hidden sm:inline text-xs font-bold text-slate-800 max-w-[90px] truncate leading-tight pointer-events-none">
                                         {{ explode(' ', Auth::user()->name)[0] }}
                                     </span>
-                                    <i id="memberDropdownChevron" class="hidden sm:inline fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200"></i>
+                                    <i id="memberDropdownChevron" class="hidden sm:inline fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200 pointer-events-none"></i>
                                 </button>
 
                                 <!-- Dropdown Menu -->
-                                <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50">
+                                <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50" style="display: none;">
                                     <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
                                         <div class="px-3 py-2 border-b border-slate-100 mb-1">
                                             <p class="text-xs font-extrabold text-slate-900 truncate">{{ Auth::user()->name }}</p>
@@ -269,7 +306,7 @@
                                         <a href="{{ route('member.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-user text-slate-400 text-xs w-4"></i> Profil Saya
                                         </a>
-                                        <button type="button" onclick="window.openCartDrawer()" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition text-left">
+                                        <button type="button" onclick="window.openCartDrawer()" class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition text-left cursor-pointer">
                                             <i class="fa-solid fa-cart-shopping text-emerald-600 text-xs w-4"></i> Keranjang Belanja
                                         </button>
                                         <div class="border-t border-slate-100 mt-1 pt-1">
@@ -284,7 +321,7 @@
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn h-9 sm:h-10 px-3 sm:px-3.5 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 shadow-xs">
+                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn h-10 px-3.5 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 shadow-xs">
                                 <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> <span class="hidden sm:inline">Admin</span>
                             </a>
                         @endif
@@ -297,11 +334,11 @@
                         </a>
                     @endauth
 
-                    <!-- Mobile Menu Button (Hamburger - Standard Uniform Size) -->
+                    <!-- 3. Mobile Menu Button (Hamburger - Identical 40x40 Square Box) -->
                     <button id="mobile-menu-btn" 
                             type="button"
-                            onclick="window.toggleMobileMenu()" 
-                            class="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-sm border border-slate-200 bg-white text-slate-800 hover:bg-emerald-50 active:bg-emerald-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition-colors cursor-pointer shadow-2xs shrink-0 select-none"
+                            onclick="window.toggleMobileMenu(event)" 
+                            class="lg:hidden w-10 h-10 rounded-sm border border-slate-200 bg-white text-slate-800 hover:bg-emerald-50 active:bg-emerald-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition-colors cursor-pointer shadow-2xs shrink-0 select-none"
                             aria-label="Buka Menu Navigasi">
                         <i id="mobileMenuIcon" class="fa-solid fa-bars text-base pointer-events-none text-slate-800"></i>
                     </button>
