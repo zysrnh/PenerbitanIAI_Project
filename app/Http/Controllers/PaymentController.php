@@ -52,6 +52,7 @@ class PaymentController extends Controller
                 'title'              => $item->book->title,
                 'author'             => $item->book->author,
                 'category'           => $item->book->category ?? 'Buku Ajar',
+                'cover_image'        => $item->book->cover_image,
                 'quantity'           => (int)$item->quantity,
                 'unit_price'         => $item->numeric_price,
                 'formatted_price'    => $item->formatted_price,

@@ -106,14 +106,37 @@
                         <tbody class="divide-y divide-slate-100">
                             @if(!empty($order->items_json))
                                 @foreach($order->items_json as $item)
+                                    @php
+                                        $cover = $item['cover_image'] ?? null;
+                                        if (!$cover && !empty($item['book_id'])) {
+                                            $b = \App\Models\Book::find($item['book_id']);
+                                            $cover = $b ? $b->cover_image : null;
+                                        }
+                                        $hasCover = $cover && (file_exists(public_path('storage/' . $cover)) || file_exists(public_path('images/' . $cover)));
+                                        $coverUrl = $hasCover ? (file_exists(public_path('storage/' . $cover)) ? asset('storage/' . $cover) : asset('images/' . $cover)) : null;
+                                    @endphp
                                     <tr class="hover:bg-slate-50/50">
-                                        <td class="py-3 px-3.5">
-                                            <p class="font-bold text-slate-900">{{ $item['title'] ?? 'Buku' }}</p>
-                                            <p class="text-[10px] text-slate-500 mt-0.5">{{ $item['category'] ?? 'Penerbitan' }} • {{ $item['author'] ?? '-' }}</p>
+                                        <td class="py-2.5 px-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-9 h-12 shrink-0 bg-slate-900 rounded-xs overflow-hidden border border-slate-200 shadow-2xs">
+                                                    @if($hasCover)
+                                                        <img src="{{ $coverUrl }}" alt="{{ $item['title'] ?? 'Buku' }}" class="w-full h-full object-cover" />
+                                                    @else
+                                                        <div class="w-full h-full bg-[#032c21] p-1 flex flex-col justify-between text-white border-l border-emerald-400">
+                                                            <span class="text-[4.5px] font-mono text-emerald-300">PERSIS</span>
+                                                            <span class="text-[5.5px] font-bold line-clamp-2 leading-none">{{ $item['title'] ?? 'Buku' }}</span>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <p class="font-bold text-slate-900">{{ $item['title'] ?? 'Buku' }}</p>
+                                                    <p class="text-[10px] text-slate-500 mt-0.5">{{ $item['category'] ?? 'Penerbitan' }} • {{ $item['author'] ?? '-' }}</p>
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td class="py-3 px-3.5 text-center font-medium text-slate-700">{{ $item['quantity'] ?? 1 }}</td>
-                                        <td class="py-3 px-3.5 text-right text-slate-600 font-mono">{{ $item['formatted_price'] ?? 'Rp 0' }}</td>
-                                        <td class="py-3 px-3.5 text-right font-bold text-slate-900 font-mono">{{ $item['formatted_subtotal'] ?? 'Rp 0' }}</td>
+                                        <td class="py-2.5 px-3.5 text-center font-medium text-slate-700">{{ $item['quantity'] ?? 1 }}</td>
+                                        <td class="py-2.5 px-3.5 text-right text-slate-600 font-mono">{{ $item['formatted_price'] ?? 'Rp 0' }}</td>
+                                        <td class="py-2.5 px-3.5 text-right font-bold text-slate-900 font-mono">{{ $item['formatted_subtotal'] ?? 'Rp 0' }}</td>
                                     </tr>
                                 @endforeach
                             @endif

@@ -54,31 +54,34 @@
         .animate-fade-in { animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
     </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex">
+<body class="min-h-screen text-slate-800 antialiased flex flex-col lg:flex-row">
 
-    <!-- ==================== SIDEBAR ==================== -->
-    <aside class="w-64 brand-dark text-white shrink-0 hidden lg:flex flex-col justify-between border-r border-emerald-900/60 select-none">
+    <!-- ==================== SIDEBAR (DESKTOP) ==================== -->
+    <aside class="w-64 brand-dark text-white flex-col shrink-0 hidden lg:flex min-h-screen sticky top-0 h-screen z-40 border-r border-white/10 select-none">
         
-        <div class="p-5 space-y-6">
-            <!-- Brand Logo -->
-            <a href="{{ url('/') }}" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
+        <!-- Sidebar Brand Logo -->
+        <div class="px-6 py-5 border-b border-white/10 flex items-center justify-center">
+            <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
+                <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-13 sm:h-14 w-auto object-contain" />
             </a>
+        </div>
 
-            <!-- User Brief -->
-            <div class="p-3 bg-white/5 border border-white/10 rounded-sm flex items-center gap-3">
+        <!-- User Profile Card in Sidebar -->
+        <div class="px-5 py-4 border-b border-white/10 bg-black/15">
+            <div class="flex items-center gap-3">
                 @if($user->avatar_url)
-                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-sm object-cover border border-emerald-400/40" />
+                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-sm object-cover shrink-0 ring-1 ring-emerald-400/40" />
                 @else
-                    <div class="w-10 h-10 rounded-sm bg-emerald-600 text-white font-extrabold flex items-center justify-center text-sm shadow-xs">
+                    <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-sm shrink-0 shadow-xs ring-1 ring-emerald-500/30">
                         {{ $user->initials }}
                     </div>
                 @endif
                 <div class="min-w-0 flex-1">
-                    <h4 class="text-xs font-bold text-white truncate">{{ $user->name }}</h4>
-                    <p class="text-[10px] text-emerald-300/80 truncate">{{ $user->email }}</p>
+                    <p class="text-xs font-bold text-white truncate leading-snug">{{ $user->name }}</p>
+                    <p class="text-[10.5px] text-emerald-300/90 truncate mt-0.5">{{ $user->email }}</p>
                 </div>
             </div>
+        </div>
 
         <!-- Navigation Menu -->
         <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -109,22 +112,25 @@
                 <span>Profil Saya</span>
             </a>
 
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya member ' . $user->name . ' ingin berkonsultasi mengenai pesanan buku.') }}" 
-                    target="_blank"
-                    class="flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-semibold text-emerald-100 hover:bg-emerald-800 hover:text-white transition">
-                    <i class="fa-brands fa-whatsapp text-xs w-4"></i>
-                    <span>Hubungi Redaksi</span>
-                </a>
-            </nav>
-        </div>
-
-        <!-- Sidebar Footer -->
-        <div class="p-4 border-t border-white/10 space-y-2">
-            <a href="{{ url('/') }}" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-sm text-xs font-medium text-emerald-200 hover:bg-white/10 transition">
-                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                <span>Halaman Utama</span>
+            <a href="{{ url('/kontak') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-headset w-4 text-center text-emerald-400"></i>
+                <span>Hubungi Redaksi</span>
             </a>
 
+            <div class="pt-3 pb-1">
+                <div class="px-3 text-[10px] font-bold text-emerald-400/60 uppercase tracking-widest">Akses Cepat</div>
+            </div>
+
+            <a href="{{ url('/') }}"
+                class="flex items-center gap-3 px-3 py-2 rounded-sm text-xs font-medium transition text-slate-300 hover:bg-white/10 hover:text-white">
+                <i class="fa-solid fa-arrow-up-right-from-square w-4 text-center text-slate-400"></i>
+                <span>Halaman Utama</span>
+            </a>
+        </nav>
+
+        <!-- Logout Area -->
+        <div class="p-3 border-t border-white/10">
             <form method="POST" action="{{ route('member.logout') }}">
                 @csrf
                 <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-sm text-xs font-bold text-red-300 hover:bg-red-900/40 hover:text-red-100 transition border border-red-500/20 cursor-pointer">
@@ -142,7 +148,7 @@
         <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
             <div class="flex items-center gap-3 lg:hidden">
                 <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-10 w-auto object-contain bg-[#032c21] p-1.5 rounded-sm" />
                 </a>
             </div>
 
@@ -188,7 +194,7 @@
                 </div>
             @endif
 
-            <!-- Title & Filter Tabs -->
+            <!-- Title & Header -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
                 <div>
                     <h1 class="text-lg sm:text-xl font-black text-slate-900 font-heading tracking-tight flex items-center gap-2">
@@ -257,21 +263,51 @@
                                 </div>
                             </div>
 
-                            <!-- Order Card Body: Items List & Shipping Status -->
+                            <!-- Order Card Body: Items List with Book Cover & Shipping Status -->
                             <div class="p-4 sm:p-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
                                 
-                                <!-- Left: Book Items (7 cols) -->
-                                <div class="lg:col-span-7 space-y-2.5 text-xs">
+                                <!-- Left: Book Items with Covers (7 cols) -->
+                                <div class="lg:col-span-7 space-y-3 text-xs">
                                     @if(!empty($ord->items_json))
                                         @foreach($ord->items_json as $it)
-                                            <div class="flex items-start justify-between gap-3 py-1 border-b border-slate-100 last:border-none">
-                                                <div>
-                                                    <h4 class="font-bold text-slate-900 leading-snug">{{ $it['title'] ?? 'Buku' }}</h4>
-                                                    <p class="text-[10px] text-slate-500 mt-0.5">{{ $it['category'] ?? 'Penerbitan' }} • {{ $it['author'] ?? '-' }}</p>
+                                            @php
+                                                // Resolve Book Cover image
+                                                $coverPath = $it['cover_image'] ?? null;
+                                                if (!$coverPath && !empty($it['book_id'])) {
+                                                    $b = \App\Models\Book::find($it['book_id']);
+                                                    $coverPath = $b ? $b->cover_image : null;
+                                                }
+                                                $hasImage = $coverPath && (file_exists(public_path('storage/' . $coverPath)) || file_exists(public_path('images/' . $coverPath)));
+                                                $imageSrc = $hasImage ? (file_exists(public_path('storage/' . $coverPath)) ? asset('storage/' . $coverPath) : asset('images/' . $coverPath)) : null;
+                                            @endphp
+
+                                            <div class="flex items-center gap-3.5 py-1.5 border-b border-slate-100 last:border-none">
+                                                
+                                                <!-- Book Cover Thumbnail -->
+                                                <div class="w-13 sm:w-14 aspect-[3/4.2] shrink-0 bg-slate-900 rounded-xs overflow-hidden border border-slate-200 shadow-2xs relative">
+                                                    @if($hasImage)
+                                                        <img src="{{ $imageSrc }}" alt="{{ $it['title'] ?? 'Buku' }}" class="w-full h-full object-cover" />
+                                                    @else
+                                                        <div class="w-full h-full bg-[#032c21] p-1.5 flex flex-col justify-between text-white border-l-2 border-emerald-400 select-none">
+                                                            <div class="text-[5.5px] font-mono text-emerald-300 truncate">PERSIS</div>
+                                                            <div class="text-[6.5px] font-black leading-tight line-clamp-2 my-auto text-white text-center">{{ $it['title'] ?? 'Buku' }}</div>
+                                                            <div class="text-[5px] text-slate-300 truncate border-t border-white/20 pt-0.5">{{ $it['author'] ?? '-' }}</div>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                                <div class="text-right whitespace-nowrap">
-                                                    <span class="font-bold font-mono text-slate-900">{{ $it['formatted_subtotal'] ?? 'Rp 0' }}</span>
-                                                    <span class="text-[10px] text-slate-400 block">{{ $it['quantity'] ?? 1 }}x @ {{ $it['formatted_price'] ?? 'Rp 0' }}</span>
+
+                                                <!-- Book Info -->
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="font-bold text-slate-900 leading-snug line-clamp-2 hover:text-emerald-800 transition">{{ $it['title'] ?? 'Buku' }}</h4>
+                                                    <p class="text-[10px] text-slate-500 mt-0.5">{{ $it['category'] ?? 'Penerbitan' }} • {{ $it['author'] ?? '-' }}</p>
+                                                    <div class="flex items-center gap-2 mt-1">
+                                                        <span class="text-[10.5px] text-slate-500 font-mono">{{ $it['quantity'] ?? 1 }}x @ {{ $it['formatted_price'] ?? 'Rp 0' }}</span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Item Subtotal -->
+                                                <div class="text-right whitespace-nowrap pl-2">
+                                                    <span class="font-bold font-mono text-slate-900 text-xs sm:text-sm">{{ $it['formatted_subtotal'] ?? 'Rp 0' }}</span>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -279,7 +315,7 @@
                                 </div>
 
                                 <!-- Right: Shipping Lifecycle & Status (5 cols) -->
-                                <div class="lg:col-span-5 bg-slate-50/70 p-3.5 rounded-sm border border-slate-200 text-xs space-y-2.5">
+                                <div class="lg:col-span-5 bg-slate-50/80 p-4 rounded-sm border border-slate-200 text-xs space-y-2.5">
                                     <div class="flex justify-between items-center text-slate-600">
                                         <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Status Pengiriman:</span>
                                         @if($ord->shipping_status === 'selesai')
