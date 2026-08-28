@@ -5,6 +5,9 @@
 
     RewriteEngine On
 
+    # Block access to hidden files and directories (except .well-known for SSL certificates)
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -23,3 +26,12 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Block direct access to sensitive file types
+<FilesMatch "(^\.env|\.(sql|log|sh|yml|yaml|lock|blade\.php|bak|config|json))$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Disable Server Signature
+ServerSignature Off

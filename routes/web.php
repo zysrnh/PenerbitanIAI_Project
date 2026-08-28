@@ -116,15 +116,15 @@ Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(
 
     // Shopping Cart & Payment Routes
     Route::get('/cart',               [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add',          [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/add',          [CartController::class, 'add'])->name('cart.add')->middleware('throttle:60,1');
     Route::post('/cart/update/{id}',  [CartController::class, 'update'])->name('cart.update');
     Route::match(['post', 'delete'], '/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
     Route::match(['post', 'delete'], '/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-    Route::post('/cart/checkout/qris',[PaymentController::class, 'createQrisPayment'])->name('cart.checkout.qris');
+    Route::post('/cart/checkout/qris',[PaymentController::class, 'createQrisPayment'])->name('cart.checkout.qris')->middleware('throttle:15,1');
     Route::get('/order/status/{orderNumber}', [PaymentController::class, 'checkStatus'])->name('order.status');
 });
 
 // Order Invoice, Status Check & Pakasir Webhook Routes
-Route::get('/order/status/{orderNumber}',  [PaymentController::class, 'checkStatus'])->name('public.order.status');
-Route::get('/order/invoice/{orderNumber}', [PaymentController::class, 'showInvoice'])->name('order.invoice');
-Route::post('/api/pakasir/webhook',        [PaymentController::class, 'handleWebhook'])->name('pakasir.webhook');
+Route::get('/order/status/{orderNumber}',  [PaymentController::class, 'checkStatus'])->name('public.order.status')->middleware('throttle:30,1');
+Route::get('/order/invoice/{orderNumber}', [PaymentController::class, 'showInvoice'])->name('order.invoice')->middleware('throttle:30,1');
+Route::post('/api/pakasir/webhook',        [PaymentController::class, 'handleWebhook'])->name('pakasir.webhook')->middleware('throttle:60,1');
