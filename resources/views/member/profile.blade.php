@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Saya | PENERBIT PERSIS</title>
-        <!-- Favicons & App Icons (Forced & Canonical) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Profil & Pengaturan Akun | Portal Member PENERBIT PERSIS</title>
+    <!-- Favicons & App Icons (Forced & Canonical) -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v=2">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}?v=2">
@@ -47,28 +47,30 @@
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
         .font-heading { font-family: 'Outfit', sans-serif; }
         .brand-dark { background-color: #032c21; }
-        .input-focus:focus { border-color: #006830; box-shadow: 0 0 0 2px rgba(0,104,48,0.15); outline: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 antialiased bg-slate-100/70 flex">
+<body class="min-h-screen text-slate-800 antialiased bg-slate-100 flex flex-col lg:flex-row">
 
     <!-- Backdrop Overlay for Mobile Sidebar -->
-    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
 
-            <!-- ==================== SIDEBAR ==================== -->
-    <aside id="member-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 brand-dark text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside id="member-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 brand-dark text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-2xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
         
         <div class="p-5">
             <!-- Brand Header (Clean Full Logo) -->
-            <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-center">
+            <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-between lg:justify-center">
                 <a href="{{ route('member.dashboard') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
+                <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-sm hover:bg-white/10 transition" title="Tutup Menu">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
             </div>
 
             <!-- User Profile Box -->
@@ -158,35 +160,47 @@
     <div id="main-content-wrapper" class="flex-1 flex flex-col min-w-0 min-h-screen transition-all duration-300 lg:pl-64">
 
         <!-- Top Header Bar -->
-        <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
+        <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-2.5 sm:py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
+            
+            <!-- Left Header: Toggle & Branding -->
             <div class="flex items-center gap-3">
-                <button type="button" onclick="toggleSidebar()" class="p-2 text-slate-600 hover:text-emerald-800 hover:bg-slate-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer" title="Buka / Tutup Menu Sidebar">
+                <!-- Desktop Sidebar Toggle Button (Hidden on Mobile) -->
+                <button type="button" onclick="toggleSidebar()" class="hidden lg:flex p-2 text-slate-600 hover:text-emerald-800 hover:bg-slate-100 rounded-sm border border-slate-200 transition items-center justify-center cursor-pointer" title="Buka / Tutup Menu Sidebar">
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
                 </button>
 
-                <div class="flex items-center gap-1.5 lg:hidden">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="Logo" class="w-6 h-6 object-contain" />
-                    <span class="font-extrabold text-xs text-slate-900 font-heading tracking-tight">Portal Member</span>
+                <!-- Mobile Official Logo Brand -->
+                <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2 lg:hidden transition hover:opacity-90">
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="Logo" class="w-7 h-7 object-contain" />
+                    <div>
+                        <span class="font-black text-xs text-slate-900 tracking-tight block font-heading leading-none">PENERBIT PERSIS</span>
+                        <span class="text-[9.5px] text-emerald-700 font-bold block leading-none mt-0.5">Portal Member</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Breadcrumb Title -->
+                <div class="hidden lg:flex items-center gap-2 text-xs">
+                    <a href="{{ route('member.dashboard') }}" class="text-slate-400 hover:text-emerald-700 transition">Portal Member</a>
+                    <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
+                    <span class="font-bold text-slate-800">Profil &amp; Pengaturan Akun</span>
                 </div>
             </div>
 
-            <div class="hidden lg:flex items-center gap-2 text-xs">
-                <a href="{{ route('member.dashboard') }}" class="text-slate-500 hover:text-emerald-700 transition">Dashboard</a>
-                <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
-                <span class="font-bold text-slate-800">Profil & Pengaturan Akun</span>
-            </div>
-
-            <div class="flex items-center gap-2.5">
+            <!-- Right Header Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
                 <a href="{{ route('member.dashboard') }}" 
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-slate-200 hover:border-emerald-600 text-xs font-bold text-slate-600 hover:text-emerald-800 hover:bg-emerald-50/50 transition">
-                    <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                    <span>Kembali ke Dashboard</span>
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-slate-200 hover:border-emerald-600 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50/50 transition shadow-2xs">
+                    <i class="fa-solid fa-arrow-left text-[10px] text-emerald-700"></i>
+                    <span class="hidden sm:inline">Kembali ke Dashboard</span>
+                    <span class="sm:hidden text-xs">Beranda</span>
                 </a>
             </div>
         </header>
 
-        <main class="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 animate-fade-in max-w-4xl w-full mx-auto space-y-5">
+        <!-- Main Body (App-like Mobile Settings) -->
+        <main class="flex-1 p-3.5 sm:p-6 lg:p-8 pb-24 lg:pb-8 animate-fade-in max-w-4xl w-full mx-auto space-y-4 sm:space-y-5">
 
+            <!-- Alerts -->
             @if(session('success'))
                 <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-sm flex items-center gap-2.5 text-xs sm:text-sm text-emerald-900 font-semibold shadow-2xs">
                     <i class="fa-solid fa-circle-check text-emerald-600 text-base shrink-0"></i>
@@ -197,143 +211,188 @@
                 </div>
             @endif
 
-            <div class="mb-4">
-                <h1 class="text-xl sm:text-2xl font-black font-heading text-slate-900">Pengaturan Profil & Foto</h1>
-                <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Kelola foto avatar, data identitas, dan keamanan kata sandi akun member Anda.</p>
-            </div>
+            @if($errors->any())
+                <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-sm text-xs text-rose-800 space-y-1 shadow-2xs">
+                    <div class="flex items-center gap-2 font-bold text-rose-900">
+                        <i class="fa-solid fa-circle-exclamation text-rose-600"></i>
+                        <span>Mohon periksa kesalahan input berikut:</span>
+                    </div>
+                    <ul class="list-disc list-inside space-y-0.5 pl-4 text-rose-700 text-[11px]">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-            <!-- Profile Info & Avatar Upload Form -->
-            <div class="bg-white rounded-sm border border-slate-200 p-5 sm:p-7 shadow-xs">
-                <div class="flex items-center gap-2.5 mb-5 pb-3.5 border-b border-slate-100">
-                    <div class="w-8 h-8 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-user-pen"></i>
+            <!-- App Title Bar -->
+            <div class="bg-white rounded-sm border border-slate-200/90 p-3.5 sm:p-5 shadow-2xs flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-base shrink-0">
+                        <i class="fa-solid fa-user-gear"></i>
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-slate-900 text-sm font-heading">Informasi Akun & Foto Profil</h3>
-                        <p class="text-[11px] text-slate-400">Perbarui foto dan identitas Anda untuk layanan pemesanan</p>
+                        <h1 class="text-sm sm:text-lg font-extrabold text-slate-900 font-heading leading-tight">
+                            Pengaturan Akun &amp; Foto
+                        </h1>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Kelola data profil, WhatsApp, dan keamanan kata sandi Anda</p>
                     </div>
                 </div>
+            </div>
 
-                <form method="POST" action="{{ route('member.profile.update') }}" enctype="multipart/form-data" class="space-y-5">
+            <!-- Profile Info & Avatar Upload Card -->
+            <div class="bg-white rounded-sm border border-slate-200/90 p-4 sm:p-6 shadow-2xs space-y-4">
+                <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                    <i class="fa-solid fa-id-card text-emerald-700 text-xs"></i>
+                    <h2 class="font-extrabold text-slate-900 text-xs sm:text-sm font-heading">Data Pribadi &amp; Foto Profil</h2>
+                </div>
+
+                <form method="POST" action="{{ route('member.profile.update') }}" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     @method('PUT')
 
-                    <!-- Avatar Upload Component -->
-                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center gap-5">
-                        <div class="relative shrink-0 group">
-                            <div id="avatarPreviewContainer" class="w-20 h-20 rounded-sm overflow-hidden bg-slate-200 border-2 border-emerald-700 shadow-2xs flex items-center justify-center">
+                    <!-- Avatar Box -->
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                        <div class="relative shrink-0">
+                            <div id="avatarPreviewContainer" class="w-18 h-18 sm:w-20 sm:h-20 rounded-sm overflow-hidden bg-slate-200 border-2 border-emerald-700 shadow-xs flex items-center justify-center">
                                 @if($user->avatar_url)
                                     <img id="avatarPreviewImg" src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" />
                                 @else
-                                    <div id="avatarFallbackText" class="w-full h-full bg-[#032c21] flex items-center justify-center text-white font-extrabold text-2xl">
+                                    <div id="avatarFallbackText" class="w-full h-full bg-[#032c21] flex items-center justify-center text-white font-extrabold text-xl sm:text-2xl">
                                         {{ $user->initials }}
                                     </div>
                                     <img id="avatarPreviewImg" src="" alt="Preview" class="w-full h-full object-cover hidden" />
                                 @endif
                             </div>
-                            <label for="avatarInput" class="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-700 hover:bg-[#032c21] text-white rounded-sm flex items-center justify-center cursor-pointer shadow-xs transition">
-                                <i class="fa-solid fa-camera text-[11px]"></i>
+                            <label for="avatar_input" class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center text-[10px] shadow-xs cursor-pointer transition" title="Ganti Foto">
+                                <i class="fa-solid fa-camera"></i>
                             </label>
                         </div>
 
-                        <div class="flex-1 text-center sm:text-left space-y-1.5">
-                            <h4 class="text-xs font-bold text-slate-900">Ganti Foto Profil</h4>
-                            <p class="text-[11px] text-slate-500 leading-relaxed">
-                                Format didukung: JPG, PNG, WEBP, atau SVG. Maksimal ukuran 3MB.
-                            </p>
-                            <div class="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                                <label for="avatarInput" class="px-3 py-1.5 bg-white border border-slate-300 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 rounded-sm text-xs font-semibold cursor-pointer shadow-2xs transition inline-flex items-center gap-1.5">
-                                    <i class="fa-solid fa-upload text-[10px] text-emerald-700"></i>
-                                    <span>Pilih Gambar</span>
+                        <div class="flex-1 min-w-0 space-y-1">
+                            <p class="text-xs font-bold text-slate-800">Unggah Foto Profil Baru</p>
+                            <p class="text-[11px] text-slate-500">Mendukung format JPG, PNG, WEBP, atau SVG (Maks. 3MB)</p>
+                            <div class="pt-1.5 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                                <input type="file" name="avatar" id="avatar_input" accept="image/*" class="hidden" onchange="previewAvatar(this)" />
+                                <label for="avatar_input" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-300 rounded-sm text-xs font-bold text-slate-700 transition cursor-pointer shadow-2xs">
+                                    <i class="fa-solid fa-upload text-emerald-700"></i>
+                                    <span>Pilih Berkas Foto</span>
                                 </label>
-                                <input type="file" name="avatar" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(this)" />
-                                <span id="avatarFileName" class="text-[11px] text-slate-400 italic">Belum ada file dipilih</span>
+                                <span id="fileNameDisplay" class="text-[11px] text-slate-500 italic">Belum ada file dipilih</span>
                             </div>
-                            @error('avatar') <p class="text-xs text-red-600 mt-1 font-semibold">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Input Fields -->
+                    <div class="space-y-3.5 pt-1">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap</label>
-                            <input type="text" name="name" value="{{ old('name', $user->name) }}"
-                                class="input-focus w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-sm transition font-medium"
-                                required>
-                            @error('name') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Nama Lengkap
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <input type="text" name="name" value="{{ old('name', $user->name) }}" required 
+                                    class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600 outline-none transition" 
+                                    placeholder="Masukkan nama lengkap Anda" />
+                            </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp</label>
-                            <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
-                                placeholder="08xxxxxxxxxx"
-                                class="input-focus w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-sm transition font-medium">
-                            @error('phone') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Nomor WhatsApp <span class="text-slate-400 font-normal text-[11px]">(Untuk konfirmasi resi pengiriman)</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-emerald-600 text-xs">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </div>
+                                <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" 
+                                    class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600 outline-none transition font-mono" 
+                                    placeholder="Contoh: 081234567890" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Alamat Email <span class="text-slate-400 font-normal text-[11px]">(Akun Login - Tidak dapat diubah)</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <input type="email" value="{{ $user->email }}" disabled 
+                                    class="w-full pl-9 pr-3 py-2 text-xs bg-slate-100 border border-slate-200 rounded-sm text-slate-500 cursor-not-allowed outline-none font-mono" />
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Email <span class="text-slate-400 font-normal">(tidak dapat diubah)</span></label>
-                        <input type="email" value="{{ $user->email }}" disabled
-                            class="w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 bg-slate-50 text-slate-500 rounded-sm cursor-not-allowed">
-                    </div>
-
-                    <div class="pt-2 border-t border-slate-100 flex justify-end">
-                        <button type="submit"
-                            class="px-5 py-2 bg-[#006830] hover:bg-[#032c21] text-white font-bold text-xs rounded-sm transition shadow-xs flex items-center gap-1.5">
+                    <div class="pt-2">
+                        <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
                             <i class="fa-solid fa-floppy-disk"></i>
-                            <span>Simpan Perubahan</span>
+                            <span>Simpan Perubahan Profil</span>
                         </button>
                     </div>
                 </form>
             </div>
 
-            <!-- Password Form -->
-            <div class="bg-white rounded-sm border border-slate-200 p-5 sm:p-7 shadow-xs">
-                <div class="flex items-center gap-2.5 mb-5 pb-3.5 border-b border-slate-100">
-                    <div class="w-8 h-8 rounded-sm bg-slate-100 text-slate-700 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-extrabold text-slate-900 text-sm font-heading">Perbarui Kata Sandi</h3>
-                        <p class="text-[11px] text-slate-400">Pastikan akun Anda terlindungi dengan kata sandi yang aman</p>
-                    </div>
+            <!-- Password Change Card -->
+            <div class="bg-white rounded-sm border border-slate-200/90 p-4 sm:p-6 shadow-2xs space-y-4">
+                <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                    <i class="fa-solid fa-shield-halved text-emerald-700 text-xs"></i>
+                    <h2 class="font-extrabold text-slate-900 text-xs sm:text-sm font-heading">Keamanan Kata Sandi</h2>
                 </div>
 
-                <form method="POST" action="{{ route('member.profile.password') }}" class="space-y-4">
+                <form method="POST" action="{{ route('member.profile.password') }}" class="space-y-3.5">
                     @csrf
                     @method('PUT')
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Kata Sandi Saat Ini</label>
-                        <input type="password" name="current_password"
-                            placeholder="Masukkan kata sandi saat ini"
-                            class="input-focus w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-sm transition font-medium"
-                            required>
-                        @error('current_password') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Kata Sandi Baru</label>
-                            <input type="password" name="password"
-                                placeholder="Minimal 8 karakter"
-                                class="input-focus w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-sm transition font-medium"
-                                required>
-                            @error('password') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Konfirmasi Kata Sandi Baru</label>
-                            <input type="password" name="password_confirmation"
-                                placeholder="Ulangi kata sandi baru"
-                                class="input-focus w-full px-3 py-2 text-xs sm:text-sm border border-slate-200 rounded-sm transition font-medium"
-                                required>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">
+                            Kata Sandi Saat Ini
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
+                            <input type="password" name="current_password" required 
+                                class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600 outline-none transition" 
+                                placeholder="Masukkan password lama" />
                         </div>
                     </div>
 
-                    <div class="pt-2 border-t border-slate-100 flex justify-end">
-                        <button type="submit"
-                            class="px-5 py-2 bg-slate-900 hover:bg-[#032c21] text-white font-bold text-xs rounded-sm transition shadow-xs flex items-center gap-1.5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Kata Sandi Baru
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                    <i class="fa-solid fa-key"></i>
+                                </div>
+                                <input type="password" name="password" required minlength="8" 
+                                    class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600 outline-none transition" 
+                                    placeholder="Minimal 8 karakter" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">
+                                Konfirmasi Kata Sandi Baru
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
+                                    <i class="fa-solid fa-check-double"></i>
+                                </div>
+                                <input type="password" name="password_confirmation" required minlength="8" 
+                                    class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600 outline-none transition" 
+                                    placeholder="Ulangi kata sandi baru" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
                             <i class="fa-solid fa-key"></i>
                             <span>Perbarui Kata Sandi</span>
                         </button>
@@ -341,27 +400,25 @@
                 </form>
             </div>
 
+            <!-- Logout Section for Mobile Convenience -->
+            <div class="bg-white rounded-sm border border-red-200 p-4 shadow-2xs flex items-center justify-between gap-3">
+                <div>
+                    <h3 class="text-xs font-bold text-red-900">Keluar dari Akun Member</h3>
+                    <p class="text-[11px] text-slate-500">Akhiri sesi aktif Anda pada perangkat ini</p>
+                </div>
+                <form method="POST" action="{{ route('member.logout') }}">
+                    @csrf
+                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin keluar dari akun?')" class="px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Keluar</span>
+                    </button>
+                </form>
+            </div>
+
         </main>
     </div>
 
-    <script>
-        function previewAvatar(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const previewImg = document.getElementById('avatarPreviewImg');
-                    const fallbackText = document.getElementById('avatarFallbackText');
-                    previewImg.src = e.target.result;
-                    previewImg.classList.remove('hidden');
-                    if (fallbackText) fallbackText.classList.add('hidden');
-                };
-                reader.readAsDataURL(file);
-                document.getElementById('avatarFileName').textContent = file.name;
-            }
-        }
-    </script>
-        <!-- ==================== MOBILE APP BOTTOM NAVIGATION BAR ==================== -->
+    <!-- ==================== MOBILE APP BOTTOM NAVIGATION BAR ==================== -->
     <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-2 py-1.5 flex items-center justify-around select-none">
         
         <!-- 1. Dashboard -->
@@ -467,6 +524,26 @@
             wrapper.classList.add('lg:pl-64');
             wrapper.classList.remove('lg:pl-0');
             localStorage.setItem('persis_member_sidebar_collapsed', 'false');
+        }
+
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('fileNameDisplay').textContent = file.name;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImg = document.getElementById('avatarPreviewImg');
+                    const fallbackText = document.getElementById('avatarFallbackText');
+
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                    if (fallbackText) {
+                        fallbackText.classList.add('hidden');
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
         }
     </script>
 </body>
