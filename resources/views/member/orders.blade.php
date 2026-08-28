@@ -955,25 +955,76 @@
                 .catch(err => console.error('Error loading messages:', err));
         }
 
-        // Render Chat Bubbles with Admin Real Names & Roles
+        // Render Chat Bubbles with Admin Real Names & Roles + Items Card
         function renderDiscussionMessages(messages, orderInfo) {
             const stream = document.getElementById('orderDiscussionMessagesStream');
             if (!stream) return;
 
-            if (!messages || messages.length === 0) {
-                stream.innerHTML = `
-                    <div class="py-12 text-center text-slate-400 text-xs space-y-1 select-none">
-                        <div class="w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-lg mx-auto mb-2 shadow-2xs">
-                            <i class="fa-regular fa-comments"></i>
+            let html = '';
+
+            // 1. Render Order Products Snapshot Header inside Stream
+            if (orderInfo && orderInfo.items && orderInfo.items.length > 0) {
+                html += `
+                    <div class="p-3 bg-white border border-slate-200 rounded-sm shadow-2xs space-y-2 select-none mb-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-heading flex items-center gap-1">
+                                <i class="fa-solid fa-bag-shopping text-emerald-700 text-xs"></i> Produk Buku Dipesan
+                            </span>
+                            <span class="text-[10px] font-bold font-mono text-emerald-800">${orderInfo.formatted_payment || ''}</span>
                         </div>
-                        <p class="font-bold text-slate-700 text-sm">Belum Ada Percakapan</p>
-                        <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Tuliskan pesan / pertanyaan Anda kepada tim admin redaksi di bawah ini.</p>
+                        <div class="space-y-2">
+                `;
+
+                orderInfo.items.forEach(it => {
+                    html += `
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-11 shrink-0 bg-slate-900 rounded-2xs overflow-hidden border border-slate-200 shadow-2xs">
+                                ${it.cover_url ? `<img src="${it.cover_url}" alt="${it.title}" class="w-full h-full object-cover" />` : `
+                                    <div class="w-full h-full bg-[#032c21] p-0.5 flex flex-col justify-between text-white border-l border-emerald-400">
+                                        <span class="text-[3.5px] font-mono text-emerald-300">PERSIS</span>
+                                        <span class="text-[4.5px] font-bold line-clamp-2 leading-none">${it.title}</span>
+                                    </div>
+                                `}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h6 class="text-xs font-bold text-slate-900 line-clamp-1 leading-snug">${it.title}</h6>
+                                <p class="text-[10px] text-slate-500 truncate mt-0.5">${it.author} &bull; <strong class="font-mono text-slate-700">${it.quantity} eks</strong></p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                        <div class="pt-1.5 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500">
+                            <span>Status: <strong class="text-emerald-800 capitalize">${(orderInfo.shipping_status || 'Diproses').replace('_', ' ')}</strong></span>
+                            ${orderInfo.tracking_number ? `<span class="font-mono font-bold text-slate-700">Resi: ${orderInfo.tracking_number}</span>` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Divider: Riwayat Diskusi -->
+                    <div class="relative flex py-1 items-center">
+                        <div class="flex-grow border-t border-slate-200"></div>
+                        <span class="flex-shrink mx-2 text-[9.5px] font-bold uppercase tracking-wider text-slate-400 font-mono">Riwayat Percakapan</span>
+                        <div class="flex-grow border-t border-slate-200"></div>
                     </div>
                 `;
+            }
+
+            if (!messages || messages.length === 0) {
+                html += `
+                    <div class="py-8 text-center text-slate-400 text-xs space-y-1 select-none">
+                        <div class="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-base mx-auto mb-1.5 shadow-2xs">
+                            <i class="fa-regular fa-comments"></i>
+                        </div>
+                        <p class="font-bold text-slate-700 text-xs">Belum Ada Percakapan</p>
+                        <p class="text-[10.5px] text-slate-500 max-w-xs mx-auto">Tuliskan pesan atau pertanyaan mengenai pesanan buku Anda di bawah.</p>
+                    </div>
+                `;
+                stream.innerHTML = html;
                 return;
             }
 
-            let html = '';
             messages.forEach(msg => {
                 if (msg.is_admin) {
                     // Admin Reply Bubble (Left) - Displaying Specific Admin Name

@@ -222,12 +222,40 @@ class MemberDashboardController extends Controller
             ];
         });
 
+        $items = is_array($order->items_json) ? $order->items_json : json_decode($order->items_json ?? '[]', true);
+        $formattedItems = [];
+        foreach ($items as $it) {
+            $cover = $it['cover_image'] ?? null;
+            if (!$cover && !empty($it['book_id'])) {
+                $b = \App\Models\Book::find($it['book_id']);
+                $cover = $b ? $b->cover_image : null;
+            }
+            $hasCover = $cover && (file_exists(public_path('storage/' . $cover)) || file_exists(public_path('images/' . $cover)));
+            $coverUrl = $hasCover ? (file_exists(public_path('storage/' . $cover)) ? asset('storage/' . $cover) : asset('images/' . $cover)) : null;
+
+            $formattedItems[] = [
+                'title'              => $it['title'] ?? 'Buku PERSIS PERS',
+                'author'             => $it['author'] ?? 'Penulis PERSIS',
+                'category'           => $it['category'] ?? 'Penerbitan',
+                'quantity'           => (int)($it['quantity'] ?? ($it['qty'] ?? 1)),
+                'formatted_price'    => $it['formatted_price'] ?? ('Rp ' . number_format($it['price'] ?? 0, 0, ',', '.')),
+                'formatted_subtotal' => $it['formatted_subtotal'] ?? ('Rp ' . number_format(($it['price'] ?? 0) * (int)($it['quantity'] ?? ($it['qty'] ?? 1)), 0, ',', '.')),
+                'cover_url'          => $coverUrl,
+            ];
+        }
+
         return response()->json([
             'success'  => true,
             'order'    => [
-                'order_number'    => $order->order_number,
-                'shipping_status' => $order->shipping_status,
-                'tracking_number' => $order->tracking_number,
+                'order_number'        => $order->order_number,
+                'shipping_status'     => $order->shipping_status,
+                'tracking_number'     => $order->tracking_number,
+                'formatted_payment'   => $order->formatted_payment,
+                'customer_name'       => $order->customer_name,
+                'customer_phone'      => $order->customer_phone,
+                'customer_address'    => $order->customer_address,
+                'created_at_formatted'=> $order->created_at->format('d M Y, H:i') . ' WIB',
+                'items'               => $formattedItems,
             ],
             'messages' => $messages
         ]);
