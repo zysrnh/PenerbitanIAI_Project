@@ -93,20 +93,16 @@
     <!-- Backdrop Overlay for Mobile Sidebar -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
 
-        <!-- ==================== SIDEBAR ==================== -->
+            <!-- ==================== SIDEBAR ==================== -->
     <aside id="member-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 brand-dark text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
         
         <div class="p-5">
             <!-- Brand Header with Quick Collapse Button -->
             <div class="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10">
-                <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PENERBIT PERSIS" class="w-8 h-8 object-contain shrink-0" />
-                    <div>
-                        <span class="font-extrabold text-sm text-white tracking-wide block leading-tight font-heading">PENERBIT PERSIS</span>
-                        <span class="text-[10px] text-emerald-400 font-bold block">Portal Anggota</span>
-                    </div>
+                <a href="{{ route('member.dashboard') }}" class="flex items-center transition hover:opacity-90 min-w-0" title="PENERBIT PERSIS">
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
-                <button type="button" onclick="toggleSidebar()" class="w-7 h-7 rounded-sm bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer" title="Tutup Sidebar">
+                <button type="button" onclick="toggleSidebar()" class="w-7 h-7 rounded-sm bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer shrink-0" title="Tutup Sidebar">
                     <i class="fa-solid fa-angles-left"></i>
                 </button>
             </div>

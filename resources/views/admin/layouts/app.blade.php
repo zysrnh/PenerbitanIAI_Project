@@ -59,19 +59,15 @@
     <!-- Mobile Overlay Backdrop -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden transition-opacity"></div>
 
-    <!-- Sidebar (Collapsible w-64) -->
-    <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#0f172a] text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-slate-800 shadow-xl overflow-y-auto">
+        <!-- Sidebar (Collapsible w-64) -->
+    <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#0f172a] text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-slate-800 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
         <div class="p-5">
             <!-- Brand Header with Quick Collapse Button -->
-            <div class="flex items-center justify-between gap-3 pb-5 mb-5 border-b border-slate-800">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS Icon" class="w-8 h-8 object-contain shrink-0" />
-                    <div>
-                        <span class="font-extrabold text-sm text-white tracking-wide block leading-tight font-heading">PERSIS PERS</span>
-                        <span class="text-[10px] text-emerald-400 font-bold block">Admin Management</span>
-                    </div>
+            <div class="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-slate-800">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center transition hover:opacity-90 min-w-0" title="PENERBIT PERSIS">
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
-                <button type="button" onclick="toggleSidebar()" class="w-7 h-7 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition" title="Tutup / Perkecil Sidebar">
+                <button type="button" onclick="toggleSidebar()" class="w-7 h-7 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer shrink-0" title="Tutup / Perkecil Sidebar">
                     <i class="fa-solid fa-angles-left"></i>
                 </button>
             </div>
@@ -144,32 +140,18 @@
                             <i class="fa-solid fa-address-book w-4 text-center"></i>
                             <span>Kelola Kontak &amp; Web</span>
                         </a>
-
-                        <a href="{{ route('admin.profile') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.profile') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
-                            <i class="fa-solid fa-user-gear w-4 text-center"></i>
-                            <span>Profil Saya</span>
-                        </a>
                     </div>
                 </div>
             </nav>
         </div>
 
-        <!-- User Profile & Logout Box -->
-        <div class="p-4 border-t border-slate-800/80 bg-slate-950/40 flex items-center justify-between">
-            <a href="{{ route('admin.profile') }}" class="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition">
-                <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
-                </div>
-                <div class="min-w-0">
-                    <span class="text-xs font-bold text-white block truncate">{{ auth()->user()->name ?? 'Administrator' }}</span>
-                    <span class="text-[10px] text-slate-400 block truncate">Super Admin</span>
-                </div>
-            </a>
-            
-            <form action="{{ route('admin.logout') }}" method="POST">
+        <!-- Logout Section in Sidebar -->
+        <div class="p-4 border-t border-slate-800">
+            <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
-                <button type="submit" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition" title="Keluar / Logout">
-                    <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-bold text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition border border-rose-500/20">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Keluar Sistem</span>
                 </button>
             </form>
         </div>
