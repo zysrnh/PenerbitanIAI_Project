@@ -13,13 +13,13 @@
                 <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xs text-[10px] font-black uppercase font-mono tracking-wider">
                     PENGATURAN BERANDA
                 </span>
-                <span class="text-xs text-slate-400 font-medium hidden sm:inline">• Live Real-Time Visualizer</span>
+                <span class="text-xs text-slate-400 font-medium hidden sm:inline">• Upload Foto &amp; Real-Time Visualizer</span>
             </div>
             <h1 class="text-base sm:text-xl font-extrabold text-slate-900 font-heading tracking-tight mt-1 leading-tight">
                 Kelola Konten, Slider &amp; Banner Beranda
             </h1>
             <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5">
-                Sesuaikan teks hero slider 3 slide, 4 poin keunggulan, profil singkat, alur produksi, dan banner ajakan naskah.
+                Upload foto slide langsung dari komputer/HP atau gunakan URL gambar eksternal dengan pratinjau live seketika.
             </p>
         </div>
 
@@ -47,7 +47,7 @@
         
         <!-- LEFT COLUMN: FORM INPUTS (6 COLS) -->
         <div class="xl:col-span-6 space-y-4">
-            <form method="POST" action="{{ route('admin.settings.home.update') }}" id="homeSettingsForm" class="space-y-4">
+            <form method="POST" action="{{ route('admin.settings.home.update') }}" enctype="multipart/form-data" id="homeSettingsForm" class="space-y-4">
                 @csrf
                 @method('PUT')
 
@@ -80,9 +80,21 @@
                             <textarea name="home_slide1_desc" id="in_s1_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600">{{ old('home_slide1_desc', $settings['home_slide1_desc']) }}</textarea>
                         </div>
 
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">URL Foto Background Slide 1 <span class="text-rose-500">*</span></label>
-                            <input type="url" name="home_slide1_image" id="in_s1_img" value="{{ old('home_slide1_image', $settings['home_slide1_image']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600" />
+                        <!-- Foto Slide 1: File Upload + URL Input -->
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <label class="block font-bold text-slate-800">Foto Background Slide 1</label>
+                                <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100/60 px-1.5 py-0.5 rounded-xs">JPG, PNG, WEBP max 5MB</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-16 h-12 rounded-xs overflow-hidden border border-slate-300 bg-slate-200 shrink-0">
+                                    <img id="thumb_s1" src="{{ $settings['home_slide1_image'] }}" class="w-full h-full object-cover" />
+                                </div>
+                                <div class="flex-1 space-y-1.5">
+                                    <input type="file" name="home_slide1_image_file" id="in_file_s1" accept="image/*" onchange="handleImageFilePreview(this, 1)" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-[#006830] file:text-white hover:file:bg-[#032c21] cursor-pointer" />
+                                    <input type="text" name="home_slide1_image" id="in_s1_img" value="{{ old('home_slide1_image', $settings['home_slide1_image']) }}" placeholder="Atau paste URL gambar di sini..." oninput="updateImageFromUrl(1)" class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                                </div>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -129,9 +141,21 @@
                             <textarea name="home_slide2_desc" id="in_s2_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600">{{ old('home_slide2_desc', $settings['home_slide2_desc']) }}</textarea>
                         </div>
 
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">URL Foto Background Slide 2 <span class="text-rose-500">*</span></label>
-                            <input type="url" name="home_slide2_image" id="in_s2_img" value="{{ old('home_slide2_image', $settings['home_slide2_image']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                        <!-- Foto Slide 2: File Upload + URL Input -->
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <label class="block font-bold text-slate-800">Foto Background Slide 2</label>
+                                <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100/60 px-1.5 py-0.5 rounded-xs">JPG, PNG, WEBP max 5MB</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-16 h-12 rounded-xs overflow-hidden border border-slate-300 bg-slate-200 shrink-0">
+                                    <img id="thumb_s2" src="{{ $settings['home_slide2_image'] }}" class="w-full h-full object-cover" />
+                                </div>
+                                <div class="flex-1 space-y-1.5">
+                                    <input type="file" name="home_slide2_image_file" id="in_file_s2" accept="image/*" onchange="handleImageFilePreview(this, 2)" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-[#006830] file:text-white hover:file:bg-[#032c21] cursor-pointer" />
+                                    <input type="text" name="home_slide2_image" id="in_s2_img" value="{{ old('home_slide2_image', $settings['home_slide2_image']) }}" placeholder="Atau paste URL gambar di sini..." oninput="updateImageFromUrl(2)" class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                                </div>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -178,9 +202,21 @@
                             <textarea name="home_slide3_desc" id="in_s3_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600">{{ old('home_slide3_desc', $settings['home_slide3_desc']) }}</textarea>
                         </div>
 
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">URL Foto Background Slide 3 <span class="text-rose-500">*</span></label>
-                            <input type="url" name="home_slide3_image" id="in_s3_img" value="{{ old('home_slide3_image', $settings['home_slide3_image']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                        <!-- Foto Slide 3: File Upload + URL Input -->
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <label class="block font-bold text-slate-800">Foto Background Slide 3</label>
+                                <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100/60 px-1.5 py-0.5 rounded-xs">JPG, PNG, WEBP max 5MB</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-16 h-12 rounded-xs overflow-hidden border border-slate-300 bg-slate-200 shrink-0">
+                                    <img id="thumb_s3" src="{{ $settings['home_slide3_image'] }}" class="w-full h-full object-cover" />
+                                </div>
+                                <div class="flex-1 space-y-1.5">
+                                    <input type="file" name="home_slide3_image_file" id="in_file_s3" accept="image/*" onchange="handleImageFilePreview(this, 3)" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-[#006830] file:text-white hover:file:bg-[#032c21] cursor-pointer" />
+                                    <input type="text" name="home_slide3_image" id="in_s3_img" value="{{ old('home_slide3_image', $settings['home_slide3_image']) }}" placeholder="Atau paste URL gambar di sini..." oninput="updateImageFromUrl(3)" class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                                </div>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -247,20 +283,31 @@
                     </div>
 
                     <div class="space-y-3.5 text-xs">
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1">Judul Profil <span class="text-rose-500">*</span></label>
-                                <input type="text" name="home_about_title" id="in_ab_title" value="{{ old('home_about_title', $settings['home_about_title']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
-                            </div>
-                            <div class="sm:col-span-2">
-                                <label class="block font-bold text-slate-700 mb-1">URL Foto Profil Gedung / Redaksi <span class="text-rose-500">*</span></label>
-                                <input type="url" name="home_about_image" id="in_ab_img" value="{{ old('home_about_image', $settings['home_about_image']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
-                            </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Judul Profil <span class="text-rose-500">*</span></label>
+                            <input type="text" name="home_about_title" id="in_ab_title" value="{{ old('home_about_title', $settings['home_about_title']) }}" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
                         </div>
 
                         <div>
                             <label class="block font-bold text-slate-700 mb-1">Deskripsi Singkat Profil <span class="text-rose-500">*</span></label>
                             <textarea name="home_about_desc" id="in_ab_desc" rows="2" required oninput="updateLiveHomePreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300">{{ old('home_about_desc', $settings['home_about_desc']) }}</textarea>
+                        </div>
+
+                        <!-- Foto Profil Redaksi: File Upload + URL Input -->
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <label class="block font-bold text-slate-800">Foto Profil Gedung / Kantor Redaksi</label>
+                                <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100/60 px-1.5 py-0.5 rounded-xs">JPG, PNG, WEBP max 5MB</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-16 h-12 rounded-xs overflow-hidden border border-slate-300 bg-slate-200 shrink-0">
+                                    <img id="thumb_ab" src="{{ $settings['home_about_image'] }}" class="w-full h-full object-cover" />
+                                </div>
+                                <div class="flex-1 space-y-1.5">
+                                    <input type="file" name="home_about_image_file" id="in_file_ab" accept="image/*" onchange="handleImageFilePreview(this, 'ab')" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-[#006830] file:text-white hover:file:bg-[#032c21] cursor-pointer" />
+                                    <input type="text" name="home_about_image" id="in_ab_img" value="{{ old('home_about_image', $settings['home_about_image']) }}" placeholder="Atau paste URL foto di sini..." oninput="updateImageFromUrl('ab')" class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                                </div>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
@@ -529,6 +576,43 @@
 <script>
     let currentActivePreviewSlide = 1;
 
+    function handleImageFilePreview(input, slideKey) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                if (slideKey === 'ab') {
+                    document.getElementById('thumb_ab').src = dataUrl;
+                    document.getElementById('mock_ab_img').src = dataUrl;
+                } else {
+                    document.getElementById('thumb_s' + slideKey).src = dataUrl;
+                    if (currentActivePreviewSlide === slideKey) {
+                        document.getElementById('mock_hero_img').src = dataUrl;
+                    }
+                }
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function updateImageFromUrl(slideKey) {
+        if (slideKey === 'ab') {
+            const url = document.getElementById('in_ab_img').value;
+            if (url) {
+                document.getElementById('thumb_ab').src = url;
+                document.getElementById('mock_ab_img').src = url;
+            }
+        } else {
+            const url = document.getElementById('in_s' + slideKey + '_img').value;
+            if (url) {
+                document.getElementById('thumb_s' + slideKey).src = url;
+                if (currentActivePreviewSlide === slideKey) {
+                    document.getElementById('mock_hero_img').src = url;
+                }
+            }
+        }
+    }
+
     function switchPreviewSlide(slideNum) {
         currentActivePreviewSlide = slideNum;
         [1, 2, 3].forEach(n => {
@@ -550,14 +634,14 @@
         const title = document.getElementById('in_s' + s + '_title')?.value || 'Melayani Penerbitan dan Percetakan';
         const hl = document.getElementById('in_s' + s + '_hl')?.value || 'Berkualitas';
         const desc = document.getElementById('in_s' + s + '_desc')?.value || 'Deskripsi slider hero...';
-        const img = document.getElementById('in_s' + s + '_img')?.value;
+        const thumbImg = document.getElementById('thumb_s' + s)?.src;
         const b1 = document.getElementById('in_s' + s + '_b1_t')?.value || 'LIHAT LAYANAN';
         const b2 = document.getElementById('in_s' + s + '_b2_t')?.value || 'KATALOG BUKU';
 
         document.getElementById('mock_hero_title').innerHTML = title.replace(/\n/g, '<br>');
         document.getElementById('mock_hero_hl').innerText = hl;
         document.getElementById('mock_hero_desc').innerText = desc;
-        if (img) document.getElementById('mock_hero_img').src = img;
+        if (thumbImg) document.getElementById('mock_hero_img').src = thumbImg;
         document.getElementById('mock_hero_b1').innerHTML = b1 + ' <i class="fa-solid fa-arrow-right text-[8px]"></i>';
         document.getElementById('mock_hero_b2').innerHTML = b2 + ' <i class="fa-solid fa-book-open text-[8px]"></i>';
 
@@ -574,8 +658,8 @@
         // Profil & Alur
         document.getElementById('mock_ab_title').innerText = document.getElementById('in_ab_title')?.value || 'PERSIS PERS';
         document.getElementById('mock_ab_desc').innerText = document.getElementById('in_ab_desc')?.value || 'Deskripsi profil...';
-        const abImg = document.getElementById('in_ab_img')?.value;
-        if (abImg) document.getElementById('mock_ab_img').src = abImg;
+        const abThumb = document.getElementById('thumb_ab')?.src;
+        if (abThumb) document.getElementById('mock_ab_img').src = abThumb;
         document.getElementById('mock_pr_title').innerText = document.getElementById('in_pr_title')?.value || 'Proses Produksi';
         document.getElementById('mock_pr_desc').innerText = document.getElementById('in_pr_desc')?.value || 'Catatan mutu...';
 

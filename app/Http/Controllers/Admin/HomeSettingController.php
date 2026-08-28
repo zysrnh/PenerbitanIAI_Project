@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HomeSettingController extends Controller
 {
@@ -51,7 +52,7 @@ class HomeSettingController extends Controller
             'home_feat4_title'      => SiteSetting::get('home_feat4_title', 'Berpengalaman'),
             'home_feat4_desc'       => SiteSetting::get('home_feat4_desc', 'Didukung tim berpengalaman'),
 
-            // Profil Singkat Tentang Kami di Beranda
+            // Profil Singkat
             'home_about_title'      => SiteSetting::get('home_about_title', 'PERSIS PERS'),
             'home_about_desc'       => SiteSetting::get('home_about_desc', 'Merupakan unit layanan Penerbitan dan Percetakan yang berkomitmen mendukung penyebaran ilmu pengetahuan dan karya berkualitas bagi akademisi dan masyarakat luas.'),
             'home_about_image'      => SiteSetting::get('home_about_image', 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600&auto=format&fit=crop'),
@@ -76,67 +77,91 @@ class HomeSettingController extends Controller
     {
         $validated = $request->validate([
             // Slide 1
-            'home_slide1_title'     => ['required', 'string'],
-            'home_slide1_highlight' => ['nullable', 'string', 'max:100'],
-            'home_slide1_desc'      => ['required', 'string'],
-            'home_slide1_image'     => ['required', 'string'],
-            'home_slide1_btn1_text' => ['required', 'string', 'max:100'],
-            'home_slide1_btn1_url'  => ['required', 'string', 'max:255'],
-            'home_slide1_btn2_text' => ['required', 'string', 'max:100'],
-            'home_slide1_btn2_url'  => ['required', 'string', 'max:255'],
+            'home_slide1_title'      => ['required', 'string'],
+            'home_slide1_highlight'  => ['nullable', 'string', 'max:100'],
+            'home_slide1_desc'       => ['required', 'string'],
+            'home_slide1_image'      => ['nullable', 'string'],
+            'home_slide1_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'home_slide1_btn1_text'  => ['required', 'string', 'max:100'],
+            'home_slide1_btn1_url'   => ['required', 'string', 'max:255'],
+            'home_slide1_btn2_text'  => ['required', 'string', 'max:100'],
+            'home_slide1_btn2_url'   => ['required', 'string', 'max:255'],
 
             // Slide 2
-            'home_slide2_title'     => ['required', 'string'],
-            'home_slide2_highlight' => ['nullable', 'string', 'max:100'],
-            'home_slide2_desc'      => ['required', 'string'],
-            'home_slide2_image'     => ['required', 'string'],
-            'home_slide2_btn1_text' => ['required', 'string', 'max:100'],
-            'home_slide2_btn1_url'  => ['required', 'string', 'max:255'],
-            'home_slide2_btn2_text' => ['required', 'string', 'max:100'],
-            'home_slide2_btn2_url'  => ['required', 'string', 'max:255'],
+            'home_slide2_title'      => ['required', 'string'],
+            'home_slide2_highlight'  => ['nullable', 'string', 'max:100'],
+            'home_slide2_desc'       => ['required', 'string'],
+            'home_slide2_image'      => ['nullable', 'string'],
+            'home_slide2_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'home_slide2_btn1_text'  => ['required', 'string', 'max:100'],
+            'home_slide2_btn1_url'   => ['required', 'string', 'max:255'],
+            'home_slide2_btn2_text'  => ['required', 'string', 'max:100'],
+            'home_slide2_btn2_url'   => ['required', 'string', 'max:255'],
 
             // Slide 3
-            'home_slide3_title'     => ['required', 'string'],
-            'home_slide3_highlight' => ['nullable', 'string', 'max:100'],
-            'home_slide3_desc'      => ['required', 'string'],
-            'home_slide3_image'     => ['required', 'string'],
-            'home_slide3_btn1_text' => ['required', 'string', 'max:100'],
-            'home_slide3_btn1_url'  => ['required', 'string', 'max:255'],
-            'home_slide3_btn2_text' => ['required', 'string', 'max:100'],
-            'home_slide3_btn2_url'  => ['required', 'string', 'max:255'],
+            'home_slide3_title'      => ['required', 'string'],
+            'home_slide3_highlight'  => ['nullable', 'string', 'max:100'],
+            'home_slide3_desc'       => ['required', 'string'],
+            'home_slide3_image'      => ['nullable', 'string'],
+            'home_slide3_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'home_slide3_btn1_text'  => ['required', 'string', 'max:100'],
+            'home_slide3_btn1_url'   => ['required', 'string', 'max:255'],
+            'home_slide3_btn2_text'  => ['required', 'string', 'max:100'],
+            'home_slide3_btn2_url'   => ['required', 'string', 'max:255'],
 
             // 4 Keunggulan
-            'home_feat1_title'      => ['required', 'string', 'max:150'],
-            'home_feat1_desc'       => ['required', 'string', 'max:255'],
-            'home_feat2_title'      => ['required', 'string', 'max:150'],
-            'home_feat2_desc'       => ['required', 'string', 'max:255'],
-            'home_feat3_title'      => ['required', 'string', 'max:150'],
-            'home_feat3_desc'       => ['required', 'string', 'max:255'],
-            'home_feat4_title'      => ['required', 'string', 'max:150'],
-            'home_feat4_desc'       => ['required', 'string', 'max:255'],
+            'home_feat1_title'       => ['required', 'string', 'max:150'],
+            'home_feat1_desc'        => ['required', 'string', 'max:255'],
+            'home_feat2_title'       => ['required', 'string', 'max:150'],
+            'home_feat2_desc'        => ['required', 'string', 'max:255'],
+            'home_feat3_title'       => ['required', 'string', 'max:150'],
+            'home_feat3_desc'        => ['required', 'string', 'max:255'],
+            'home_feat4_title'       => ['required', 'string', 'max:150'],
+            'home_feat4_desc'        => ['required', 'string', 'max:255'],
 
             // Profil Singkat
-            'home_about_title'      => ['required', 'string', 'max:150'],
-            'home_about_desc'       => ['required', 'string'],
-            'home_about_image'      => ['required', 'string'],
+            'home_about_title'       => ['required', 'string', 'max:150'],
+            'home_about_desc'        => ['required', 'string'],
+            'home_about_image'       => ['nullable', 'string'],
+            'home_about_image_file'  => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
 
             // Proses Produksi
-            'home_process_title'    => ['required', 'string', 'max:150'],
-            'home_process_desc'     => ['required', 'string', 'max:255'],
+            'home_process_title'     => ['required', 'string', 'max:150'],
+            'home_process_desc'      => ['required', 'string', 'max:255'],
 
             // Section Layanan & CTA
-            'home_services_badge'   => ['required', 'string', 'max:100'],
-            'home_services_title'   => ['required', 'string', 'max:255'],
-            'home_cta_title'        => ['required', 'string', 'max:255'],
-            'home_cta_desc'         => ['required', 'string'],
-            'home_cta_btn_text'     => ['required', 'string', 'max:100'],
-            'home_cta_wa_number'    => ['required', 'string', 'max:50'],
+            'home_services_badge'    => ['required', 'string', 'max:100'],
+            'home_services_title'    => ['required', 'string', 'max:255'],
+            'home_cta_title'         => ['required', 'string', 'max:255'],
+            'home_cta_desc'          => ['required', 'string'],
+            'home_cta_btn_text'      => ['required', 'string', 'max:100'],
+            'home_cta_wa_number'     => ['required', 'string', 'max:50'],
         ]);
 
-        foreach ($validated as $key => $val) {
-            SiteSetting::set($key, $val);
+        // Handle File Uploads for Slide 1, 2, 3 and About
+        $imageSlots = [
+            'home_slide1_image' => 'home_slide1_image_file',
+            'home_slide2_image' => 'home_slide2_image_file',
+            'home_slide3_image' => 'home_slide3_image_file',
+            'home_about_image'  => 'home_about_image_file',
+        ];
+
+        foreach ($imageSlots as $settingKey => $fileInputName) {
+            if ($request->hasFile($fileInputName)) {
+                $path = $request->file($fileInputName)->store('banners', 'public');
+                $validated[$settingKey] = '/storage/' . $path;
+            } elseif (!empty($request->input($settingKey))) {
+                $validated[$settingKey] = $request->input($settingKey);
+            }
+            unset($validated[$fileInputName]);
         }
 
-        return back()->with('success', 'Semua konten dan banner halaman beranda berhasil diperbarui!');
+        foreach ($validated as $key => $val) {
+            if ($val !== null) {
+                SiteSetting::set($key, $val);
+            }
+        }
+
+        return back()->with('success', 'Semua konten, banner, dan file foto slide berhasil diperbarui!');
     }
 }
