@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Mail\ShippingNotificationCustomerMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -71,7 +74,16 @@ class OrderController extends Controller
 
         $order->update($validated);
 
-        return back()->with('success', 'Status pengiriman pesanan #' . $order->order_number . ' berhasil diperbarui.');
+        // Send Shipping Notification Email to Customer when status is 'dikirim' or tracking number is provided
+        if (!empty($order->customer_email) && filter_var($order->customer_email, FILTER_VALIDATE_EMAIL)) {
+            try {
+                Mail::to($order->customer_email)->send(new ShippingNotificationCustomerMail($order));
+            } catch (\Throwable $e) {
+                Log::warning('Failed sending shipping notification email: ' . $e->getMessage());
+            }
+        }
+
+        return back()->with('success', 'Status pengiriman pesanan #' . $order->order_number . ' berhasil diperbarui dan notifikasi email telah dikirimkan ke pembeli.');
     }
 
     public function updatePaymentStatus(Request $request, $id)

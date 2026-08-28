@@ -100,7 +100,7 @@
                     </div>
                 @endif
                 <div class="min-w-0 flex-1">
-                    <p class="text-xs font-bold text-white truncate leading-snug">{{ Auth::user()->name }}</p>
+                    <p class="text-xs font-bold text-white truncate leading-snug">{{ str_replace(["IAI Persis", "IAI"], ["PERSIS PERS", "PERSIS PERS"], Auth::user()->name) }}</p>
                     <p class="text-[10px] text-emerald-300/80 uppercase font-mono tracking-wider">Superadmin</p>
                 </div>
             </div>
