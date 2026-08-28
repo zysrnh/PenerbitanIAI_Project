@@ -510,20 +510,25 @@
     
 
     <!-- ========================================================================= -->
-    <!-- GLOBAL SHOPPING CART DRAWER (SLIDE-OVER) -->
+    <!-- GLOBAL SHOPPING CART (BOTTOM-SHEET ON MOBILE, SIDE-DRAWER ON DESKTOP) -->
     <!-- ========================================================================= -->
-    <div id="globalCartDrawer" class="fixed inset-0 z-[9999] hidden" style="display: none;">
+    <div id="globalCartDrawer" class="fixed inset-0 z-[9999] hidden items-end sm:items-stretch sm:justify-end" style="display: none;">
         <!-- Backdrop -->
-        <div id="cartDrawerBackdrop" onclick="window.closeCartDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0"></div>
+        <div id="cartDrawerBackdrop" onclick="window.closeCartDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 cursor-pointer"></div>
 
-        <!-- Slide-over Panel -->
-        <div id="cartDrawerPanel" class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl z-10 flex flex-col transform translate-x-full transition-transform duration-300 ease-out">
+        <!-- Panel (Mobile: Bottom Sheet with rounded top, Desktop: Right Sidebar) -->
+        <div id="cartDrawerPanel" class="relative z-10 w-full sm:max-w-md bg-white shadow-2xl rounded-t-2xl sm:rounded-none flex flex-col max-h-[85vh] sm:max-h-full sm:h-full transform translate-y-full sm:translate-y-0 sm:translate-x-full transition-transform duration-300 ease-out border-t sm:border-t-0 sm:border-l border-slate-200">
             
+            <!-- Mobile Pull Handle -->
+            <div class="sm:hidden w-full pt-3 pb-1 flex justify-center cursor-pointer select-none" onclick="window.closeCartDrawer()">
+                <div class="w-10 h-1 bg-slate-300 rounded-full"></div>
+            </div>
+
             <!-- Drawer Header -->
-            <div class="px-5 py-3.5 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-900 select-none">
+            <div class="px-5 py-3.5 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xs bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-xs">
-                        <i class="fa-solid fa-cart-shopping"></i>
+                    <div class="w-8 h-8 rounded-sm bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-bag-shopping"></i>
                     </div>
                     <div>
                         <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
@@ -533,45 +538,45 @@
                         <p class="text-[10px] text-emerald-200/70">Koleksi Terbitan PERSIS PERS</p>
                     </div>
                 </div>
-                <button type="button" onclick="window.closeCartDrawer()" class="w-7 h-7 rounded-xs text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Keranjang">
+                <button type="button" onclick="window.closeCartDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Keranjang">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <!-- Drawer Body: Items List -->
             <div id="cartDrawerItemsList" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
-                <!-- Skeleton / Empty state injected via JS -->
+                <!-- Items Injected by renderCartDrawerUI -->
             </div>
 
-            <!-- Drawer Footer: Subtotal & Checkout -->
-            <div id="cartDrawerFooter" class="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 space-y-3.5">
+            <!-- Drawer Footer: Subtotal & Professional Actions -->
+            <div id="cartDrawerFooter" class="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 space-y-3">
                 <div class="space-y-1.5 text-xs">
                     <div class="flex justify-between text-slate-500">
                         <span>Total Jumlah Item:</span>
                         <span id="cartDrawerTotalItemsText" class="font-bold text-slate-800">0 Eksemplar</span>
                     </div>
-                    <div class="flex justify-between text-slate-900 text-sm font-bold pt-1 border-t border-slate-200/80">
+                    <div class="flex justify-between text-slate-900 text-sm font-bold pt-1.5 border-t border-slate-200">
                         <span>Total Pembayaran:</span>
-                        <span id="cartDrawerSubtotal" class="font-mono font-black text-emerald-700 text-base">Rp 0</span>
+                        <span id="cartDrawerSubtotal" class="font-mono font-black text-emerald-800 text-base">Rp 0</span>
                     </div>
                 </div>
 
-                <!-- Drawer Actions (QRIS Auto & WhatsApp) -->
+                <!-- Professional Action Buttons -->
                 <div class="space-y-2 select-none">
-                    <!-- Tombol 1: Bayar Otomatis QRIS -->
+                    <!-- Tombol 1: Checkout & Pembayaran Resmi -->
                     <button type="button" 
                             onclick="window.openCheckoutModal()"
                             class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs sm:text-sm font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-solid fa-qrcode text-sm text-lime-300"></i>
-                        <span>Bayar Otomatis (QRIS Realtime)</span>
+                        <i class="fa-solid fa-shield-check text-sm text-lime-300"></i>
+                        <span>Lanjut ke Pembayaran</span>
                     </button>
 
-                    <!-- Tombol 2: Pesan Manual via WhatsApp -->
+                    <!-- Tombol 2: Konsultasi via WhatsApp -->
                     <button type="button" 
                             onclick="window.checkoutCartViaWhatsApp()"
                             class="w-full py-2 px-4 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs">
                         <i class="fa-brands fa-whatsapp text-sm text-emerald-600"></i>
-                        <span>Pesan Manual via WhatsApp</span>
+                        <span>Pesan via WhatsApp</span>
                     </button>
 
                     <div class="flex items-center justify-between pt-1">
@@ -579,12 +584,12 @@
                                 onclick="window.clearCart()" 
                                 class="text-[11px] text-red-600 hover:text-red-800 font-medium flex items-center gap-1 cursor-pointer">
                             <i class="fa-solid fa-trash-can text-[9px]"></i>
-                            <span>Kosongkan</span>
+                            <span>Kosongkan Keranjang</span>
                         </button>
 
                         <button type="button" 
                                 onclick="window.closeCartDrawer()" 
-                                class="text-[11px] text-slate-500 hover:text-slate-800 font-medium cursor-pointer">
+                                class="text-[11px] text-slate-500 hover:text-emerald-800 font-medium cursor-pointer">
                             Lanjut Pilih Buku &rarr;
                         </button>
                     </div>
@@ -699,17 +704,18 @@
             }
         };
 
-        // Open & Close Cart Drawer
+        // Open & Close Cart Drawer (Bottom-sheet on mobile, Side-drawer on desktop)
         window.openCartDrawer = function() {
             const drawer = document.getElementById('globalCartDrawer');
             const backdrop = document.getElementById('cartDrawerBackdrop');
             const panel = document.getElementById('cartDrawerPanel');
             if (drawer && backdrop && panel) {
-                drawer.style.display = 'block';
+                drawer.style.display = 'flex';
                 drawer.classList.remove('hidden');
                 setTimeout(() => {
                     backdrop.classList.remove('opacity-0');
-                    panel.classList.remove('translate-x-full');
+                    panel.classList.remove('translate-y-full', 'sm:translate-x-full');
+                    panel.classList.add('translate-y-0', 'sm:translate-x-0');
                 }, 10);
                 if (window.PERSIS_CART.isLoggedIn) {
                     window.fetchCartData();
@@ -725,7 +731,8 @@
             const panel = document.getElementById('cartDrawerPanel');
             if (drawer && backdrop && panel) {
                 backdrop.classList.add('opacity-0');
-                panel.classList.add('translate-x-full');
+                panel.classList.add('translate-y-full', 'sm:translate-x-full');
+                panel.classList.remove('translate-y-0', 'sm:translate-x-0');
                 setTimeout(() => {
                     drawer.style.display = 'none';
                     drawer.classList.add('hidden');
@@ -803,32 +810,47 @@
 
         // Render Cart Drawer HTML UI
         window.renderCartDrawerUI = function(data) {
-            const itemsContainer = document.getElementById('cartDrawerItemsContainer');
-            const emptyContainer = document.getElementById('cartDrawerEmptyContainer');
+            const listContainer = document.getElementById('cartDrawerItemsList');
             const footerContainer = document.getElementById('cartDrawerFooter');
-            const totalText = document.getElementById('cartDrawerTotalText');
+            const subtotalText = document.getElementById('cartDrawerSubtotal');
+            const totalItemsText = document.getElementById('cartDrawerTotalItemsText');
             const countBadge = document.getElementById('cartDrawerCountBadge');
 
-            if (!itemsContainer || !emptyContainer || !footerContainer) return;
+            if (!listContainer) return;
 
             if (countBadge) {
                 countBadge.textContent = data.count > 0 ? `(${data.count})` : '';
             }
+            if (totalItemsText) {
+                totalItemsText.textContent = `${data.count || 0} Eksemplar`;
+            }
+            if (subtotalText) {
+                subtotalText.textContent = data.formatted_total || 'Rp 0';
+            }
 
             if (!data.items || data.items.length === 0) {
-                itemsContainer.classList.add('hidden');
-                emptyContainer.classList.remove('hidden');
-                footerContainer.classList.add('hidden');
+                listContainer.innerHTML = `
+                    <div class="py-12 px-4 text-center space-y-3">
+                        <div class="w-14 h-14 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-2xs border border-emerald-100">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Keranjang Belanja Masih Kosong</h4>
+                            <p class="text-xs text-slate-500 mt-1">Temukan buku terbitan terbaik PERSIS PERS di katalog.</p>
+                        </div>
+                        <div class="pt-2">
+                            <a href="{{ route('katalog') }}" onclick="window.closeCartDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition shadow-xs">
+                                <i class="fa-solid fa-book-open text-xs text-emerald-300"></i>
+                                <span>Lihat Katalog Buku</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                if (footerContainer) footerContainer.classList.add('hidden');
                 return;
             }
 
-            itemsContainer.classList.remove('hidden');
-            emptyContainer.classList.add('hidden');
-            footerContainer.classList.remove('hidden');
-
-            if (totalText) {
-                totalText.textContent = data.formatted_total;
-            }
+            if (footerContainer) footerContainer.classList.remove('hidden');
 
             let html = '';
             data.items.forEach(item => {
