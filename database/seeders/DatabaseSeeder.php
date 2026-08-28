@@ -11,29 +11,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Super Admin
-        User::updateOrCreate(
-            ['email' => 'superadmin@penerbitpersis.com'],
-            [
-                'name' => 'Super Admin PERSIS PERS',
-                'role' => 'super_admin',
-                'phone' => '082116116133',
-                'is_active' => true,
-                'password' => Hash::make('password'),
-            ]
-        );
-
-        // 2. Admin Biasa
-        User::updateOrCreate(
-            ['email' => 'admin@penerbitpersis.com'],
-            [
-                'name' => 'Admin Penerbitan',
-                'role' => 'admin',
-                'phone' => '081234567890',
-                'is_active' => true,
-                'password' => Hash::make('password'),
-            ]
-        );
+        // 1. Seed All Specialized Admin Roles
+        $this->call(AdminSeeder::class);
 
         // 3. Default Contact & About Settings
         $settings = [
