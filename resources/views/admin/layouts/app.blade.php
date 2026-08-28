@@ -235,7 +235,7 @@
                 <div class="relative" id="notifDropdownContainer">
                     <button 
                         type="button" 
-                        onclick="toggleNotifDropdown()" 
+                        onclick="window.toggleNotifDropdown(event)" 
                         id="adminBellBtn"
                         class="relative p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 hover:bg-emerald-50 active:bg-emerald-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer select-none"
                         title="Pusat Notifikasi Masuk"
@@ -247,7 +247,7 @@
                     </button>
 
                     <!-- Rich Dropdown Content -->
-                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden z-50 animate-fade-in select-none">
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden z-[1100] animate-fade-in select-none" style="display: none;">
                         
                         <!-- Header -->
                         <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
@@ -494,18 +494,28 @@
 
     <script>
         // Notification Dropdown Toggle
-        function toggleNotifDropdown() {
-            const notifDropdown = document.getElementById('notifDropdown');
-            if (notifDropdown) {
-                notifDropdown.classList.toggle('hidden');
+        window.toggleNotifDropdown = function(e) {
+            if (e) {
+                try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
             }
-        }
+            const notifDropdown = document.getElementById('notifDropdown');
+            if (!notifDropdown) return;
+            const isClosed = notifDropdown.classList.contains('hidden') || notifDropdown.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(notifDropdown).display === 'none');
+            if (isClosed) {
+                notifDropdown.style.display = 'block';
+                notifDropdown.classList.remove('hidden');
+            } else {
+                notifDropdown.style.display = 'none';
+                notifDropdown.classList.add('hidden');
+            }
+        };
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             const notifDropdown = document.getElementById('notifDropdown');
             const notifContainer = document.getElementById('notifDropdownContainer');
             if (notifDropdown && notifContainer && !notifContainer.contains(e.target)) {
+                notifDropdown.style.display = 'none';
                 notifDropdown.classList.add('hidden');
             }
         });
