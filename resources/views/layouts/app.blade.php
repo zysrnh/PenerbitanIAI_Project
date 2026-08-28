@@ -935,6 +935,211 @@
         };
 
         // Checkout via WhatsApp
+        
+        // ==========================================
+        // CHECKOUT & PAKASIR QRIS REALTIME ENGINE
+        // ==========================================
+        let currentOrderNumber = null;
+        let qrisPollInterval = null;
+        let qrisTimerInterval = null;
+
+        window.openCheckoutModal = function() {
+            if (!window.PERSIS_CART.isLoggedIn) {
+                window.closeCartDrawer();
+                window.openLoginPromptModal();
+                return;
+            }
+
+            if (!window.PERSIS_CART.data || !window.PERSIS_CART.data.items || window.PERSIS_CART.data.items.length === 0) {
+                window.showCartToast('Keranjang belanja Anda masih kosong.', false);
+                return;
+            }
+
+            window.closeCartDrawer();
+
+            // Set Total Summary
+            const sumEl = document.getElementById('chkTotalSummaryText');
+            if (sumEl) sumEl.textContent = window.PERSIS_CART.data.formatted_total;
+
+            // Reset to Step 1 (Form)
+            document.getElementById('checkoutStepForm').classList.remove('hidden');
+            document.getElementById('checkoutStepQris').classList.add('hidden');
+            document.getElementById('checkoutModalTitle').textContent = 'Checkout & Pengiriman';
+
+            const modal = document.getElementById('checkoutQrisModal');
+            const card = document.getElementById('checkoutQrisModalCard');
+            if (modal && card) {
+                modal.classList.remove('hidden', 'pointer-events-none');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.classList.add('opacity-100');
+                    card.classList.remove('scale-95', 'translate-y-4', 'opacity-0');
+                    card.classList.add('scale-100', 'translate-y-0', 'opacity-100');
+                }, 10);
+            }
+        };
+
+        window.closeCheckoutModal = function() {
+            clearInterval(qrisPollInterval);
+            clearInterval(qrisTimerInterval);
+
+            const modal = document.getElementById('checkoutQrisModal');
+            const card = document.getElementById('checkoutQrisModalCard');
+            if (modal && card) {
+                modal.classList.remove('opacity-100');
+                modal.classList.add('opacity-0');
+                card.classList.remove('scale-100', 'translate-y-0', 'opacity-100');
+                card.classList.add('scale-95', 'translate-y-4', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden', 'pointer-events-none');
+                    modal.classList.remove('flex');
+                }, 280);
+            }
+        };
+
+        window.submitCheckoutQris = function() {
+            const name = document.getElementById('chkCustomerName')?.value.trim();
+            const phone = document.getElementById('chkCustomerPhone')?.value.trim();
+            const address = document.getElementById('chkCustomerAddress')?.value.trim();
+            const email = document.getElementById('chkCustomerEmail')?.value.trim();
+            const notes = document.getElementById('chkCustomerNotes')?.value.trim();
+
+            if (!name || !phone || !address) {
+                alert('Mohon lengkapi Nama, Nomor WhatsApp, dan Alamat Pengiriman.');
+                return;
+            }
+
+            const btn = document.getElementById('btnProcessQris');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Menghubungkan ke QRIS Pakasir...</span>';
+            }
+
+            fetch('{{ route('cart.checkout.qris') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    customer_name: name,
+                    customer_phone: phone,
+                    customer_address: address,
+                    customer_email: email,
+                    notes: notes
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-qrcode text-base text-lime-300"></i><span>Lanjut ke Pembayaran QRIS &rarr;</span>';
+                }
+
+                if (data.success) {
+                    currentOrderNumber = data.order_number;
+                    
+                    // Render Step 2 (QRIS)
+                    document.getElementById('qrisImageDisplay').src = data.qr_image_url;
+                    document.getElementById('qrisOrderNumber').textContent = data.order_number;
+                    document.getElementById('qrisSubtotalText').textContent = data.formatted_amount;
+                    document.getElementById('qrisFeeText').textContent = data.formatted_fee;
+                    document.getElementById('qrisTotalPaymentText').textContent = data.formatted_total;
+                    document.getElementById('qrisInvoiceDirectBtn').href = data.invoice_url;
+
+                    document.getElementById('checkoutStepForm').classList.add('hidden');
+                    document.getElementById('checkoutStepQris').classList.remove('hidden');
+                    document.getElementById('checkoutModalTitle').textContent = 'Scan QRIS untuk Bayar';
+
+                    // Refresh cart badges
+                    window.PERSIS_CART.data = { items: [], count: 0, total: 0, formatted_total: 'Rp 0' };
+                    window.updateCartBadges(0);
+                    window.renderCartDrawerUI(window.PERSIS_CART.data);
+
+                    // Start Live Polling & Timer
+                    window.startQrisPolling(data.order_number, data.invoice_url);
+                    window.startQrisTimer(15 * 60);
+
+                } else {
+                    alert(data.message || 'Gagal memproses QRIS. Silakan coba lagi.');
+                }
+            })
+            .catch(err => {
+                console.error('Checkout error:', err);
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-qrcode text-base text-lime-300"></i><span>Lanjut ke Pembayaran QRIS &rarr;</span>';
+                }
+                alert('Terjadi kendala jaringan saat menghubungi payment gateway.');
+            });
+        };
+
+        // Real-time Status Polling
+        window.startQrisPolling = function(orderNumber, invoiceUrl) {
+            clearInterval(qrisPollInterval);
+
+            qrisPollInterval = setInterval(() => {
+                fetch('/order/status/' + orderNumber)
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success && res.payment_status === 'completed') {
+                            clearInterval(qrisPollInterval);
+                            clearInterval(qrisTimerInterval);
+
+                            const banner = document.getElementById('qrisStatusBanner');
+                            if (banner) {
+                                banner.className = 'p-3 bg-emerald-500 text-white rounded-2xl flex items-center justify-center gap-2 text-xs font-black shadow-md animate-bounce';
+                                banner.innerHTML = '<i class="fa-solid fa-circle-check text-base"></i><span>PEMBAYARAN BERHASIL! Mengalihkan ke Invoice...</span>';
+                            }
+
+                            setTimeout(() => {
+                                window.location.href = invoiceUrl || res.invoice_url;
+                            }, 1200);
+                        }
+                    })
+                    .catch(err => console.log('Polling status check:', err));
+            }, 2500);
+        };
+
+        // Manual status check trigger
+        window.manualCheckPaymentStatus = function() {
+            if (!currentOrderNumber) return;
+            fetch('/order/status/' + currentOrderNumber)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success && res.payment_status === 'completed') {
+                        alert('Pembayaran berhasil dikonfirmasi! Mengalihkan ke invoice...');
+                        window.location.href = res.invoice_url;
+                    } else {
+                        alert('Status pembayaran saat ini masih: ' + (res.payment_status || 'PENDING') + '. Silakan selesaikan scan QRIS terlebih dahulu.');
+                    }
+                });
+        };
+
+        // Countdown Timer
+        window.startQrisTimer = function(durationSeconds) {
+            clearInterval(qrisTimerInterval);
+            let timer = durationSeconds;
+            const timerEl = document.getElementById('qrisCountdownTimer');
+
+            qrisTimerInterval = setInterval(() => {
+                const minutes = parseInt(timer / 60, 10);
+                const seconds = parseInt(timer % 60, 10);
+
+                const displayMin = minutes < 10 ? '0' + minutes : minutes;
+                const displaySec = seconds < 10 ? '0' + seconds : seconds;
+
+                if (timerEl) timerEl.textContent = displayMin + ':' + displaySec;
+
+                if (--timer < 0) {
+                    clearInterval(qrisTimerInterval);
+                    clearInterval(qrisPollInterval);
+                    if (timerEl) timerEl.textContent = 'KADALUARSA';
+                }
+            }, 1000);
+        };
+
         window.checkoutCartViaWhatsApp = function() {
             const data = window.PERSIS_CART.data;
             if (!data.items || data.items.length === 0) {
@@ -968,6 +1173,152 @@
             }
         });
     </script>
+
+
+    <!-- ========================================================================= -->
+    <!-- CHECKOUT & LIVE QRIS AUTO-PAYMENT MODAL -->
+    <!-- ========================================================================= -->
+    <div id="checkoutQrisModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div id="checkoutQrisModalCard" class="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden transform scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out flex flex-col max-h-[92vh]">
+            
+            <!-- Modal Top Header -->
+            <div class="px-6 py-4 bg-[#032c21] text-white flex items-center justify-between border-b border-emerald-900/80 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h4 id="checkoutModalTitle" class="text-sm font-extrabold font-heading">Checkout & Pengiriman</h4>
+                        <p id="checkoutModalSubtitle" class="text-[10.5px] text-emerald-200/70">Penerbitan Resmi PERSIS PERS</p>
+                    </div>
+                </div>
+                <button type="button" onclick="window.closeCheckoutModal()" class="w-8 h-8 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- STEP 1: FORM DATA PEMESAN & ALAMAT -->
+            <div id="checkoutStepForm" class="p-6 overflow-y-auto space-y-4 flex-1">
+                <div>
+                    <h5 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-1">Data Penerima Buku</h5>
+                    <p class="text-[11px] text-slate-400">Pastikan nomor WhatsApp dan alamat pengiriman sudah benar.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Lengkap Penerima <span class="text-red-500">*</span></label>
+                        <input type="text" id="chkCustomerName" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="Nama lengkap Anda" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" required />
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">No. WhatsApp <span class="text-red-500">*</span></label>
+                            <input type="tel" id="chkCustomerPhone" placeholder="08xxxxxxxxxx" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" required />
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Email <span class="text-slate-400 text-[10px]">(Opsional)</span></label>
+                            <input type="email" id="chkCustomerEmail" value="{{ Auth::check() ? Auth::user()->email : '' }}" placeholder="email@contoh.com" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Alamat Lengkap Pengiriman <span class="text-red-500">*</span></label>
+                        <textarea id="chkCustomerAddress" rows="2" placeholder="Nama Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten, Kode Pos" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" required></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Catatan Tambahan <span class="text-slate-400 text-[10px]">(Opsional)</span></label>
+                        <input type="text" id="chkCustomerNotes" placeholder="Contoh: Titip di satpam / mohon tanda tangan penulis jika ada" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none transition" />
+                    </div>
+                </div>
+
+                <!-- Order Total Box -->
+                <div class="p-3.5 bg-emerald-50/80 rounded-2xl border border-emerald-200/80 flex items-center justify-between">
+                    <div>
+                        <p class="text-[10.5px] font-bold text-emerald-800 uppercase tracking-wider">Total Tagihan Buku</p>
+                        <p id="chkTotalSummaryText" class="text-sm font-black text-emerald-950 font-mono">Rp 0</p>
+                    </div>
+                    <span class="text-[10.5px] font-semibold text-emerald-700 flex items-center gap-1">
+                        <i class="fa-solid fa-bolt text-amber-500"></i> QRIS Otomatis
+                    </span>
+                </div>
+
+                <div class="pt-2">
+                    <button type="button" 
+                            id="btnProcessQris"
+                            onclick="window.submitCheckoutQris()" 
+                            class="w-full py-3 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-qrcode text-base text-lime-300"></i>
+                        <span>Lanjut ke Pembayaran QRIS &rarr;</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: LIVE DYNAMIC QRIS SCREEN WITH REALTIME AUTO-DETECTION -->
+            <div id="checkoutStepQris" class="p-6 overflow-y-auto space-y-4 flex-1 hidden text-center">
+                
+                <!-- Live Status Radar Banner -->
+                <div id="qrisStatusBanner" class="p-3 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold text-amber-800">
+                    <i class="fa-solid fa-spinner fa-spin text-amber-600"></i>
+                    <span>Menunggu Pembayaran... (Otomatis Terdeteksi)</span>
+                </div>
+
+                <!-- QRIS Box -->
+                <div class="bg-white p-4 rounded-3xl border-2 border-dashed border-emerald-400/80 shadow-md inline-block mx-auto max-w-[280px] w-full">
+                    <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-100">
+                        <span class="text-[10.5px] font-black text-slate-800 font-heading">QRIS NATIONAL</span>
+                        <span class="text-[9.5px] font-bold text-emerald-700">PERSIS PERS</span>
+                    </div>
+                    
+                    <div class="relative aspect-square w-full bg-slate-50 rounded-xl overflow-hidden flex items-center justify-center border border-slate-200">
+                        <img id="qrisImageDisplay" src="" alt="QRIS Code" class="w-full h-full object-contain" />
+                    </div>
+
+                    <div class="mt-2 text-center">
+                        <p class="text-[10px] text-slate-400">Scan dengan m-Banking / E-Wallet apapun</p>
+                        <p class="text-[9px] font-bold text-slate-600 mt-0.5">BCA • Mandiri • BRI • BNI • BSI • DANA • GoPay • OVO • ShopeePay</p>
+                    </div>
+                </div>
+
+                <!-- Amount Details -->
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/90 text-left space-y-1.5 text-xs max-w-sm mx-auto">
+                    <div class="flex justify-between text-slate-500">
+                        <span>No. Invoice:</span>
+                        <span id="qrisOrderNumber" class="font-bold font-mono text-slate-800">-</span>
+                    </div>
+                    <div class="flex justify-between text-slate-500">
+                        <span>Total Belanja:</span>
+                        <span id="qrisSubtotalText" class="font-bold font-mono text-slate-800">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between text-slate-500">
+                        <span>Biaya QRIS:</span>
+                        <span id="qrisFeeText" class="font-bold font-mono text-slate-800">Rp 0</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
+                        <span class="font-extrabold text-slate-900 text-sm">Total Bayar:</span>
+                        <span id="qrisTotalPaymentText" class="font-black font-mono text-base text-emerald-800">Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- Countdown Timer -->
+                <div class="text-center text-xs text-slate-400 font-medium">
+                    Selesaikan pembayaran dalam <span id="qrisCountdownTimer" class="font-bold font-mono text-red-600">15:00</span>
+                </div>
+
+                <!-- Simulation Sandbox Button (Only for testing) -->
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2">
+                    <button type="button" onclick="window.manualCheckPaymentStatus()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-arrows-rotate"></i> Cek Status Manual
+                    </button>
+                    <a id="qrisInvoiceDirectBtn" href="#" class="px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-file-invoice"></i> Lihat Invoice
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 
 </body>
 </html>

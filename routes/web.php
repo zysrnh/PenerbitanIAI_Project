@@ -82,6 +82,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 use App\Http\Controllers\MemberAuthController;
 use App\Http\Controllers\MemberDashboardController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PaymentController;
 
 // Guest-only member routes
 Route::middleware('guest')->prefix('member')->name('member.')->group(function () {
@@ -100,10 +101,16 @@ Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(
     Route::put('/profil',           [MemberDashboardController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profil/password',  [MemberDashboardController::class, 'updatePassword'])->name('profile.password');
 
-    // Shopping Cart Routes
+    // Shopping Cart & Payment Routes
     Route::get('/cart',               [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add',          [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/update/{id}',  [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/remove/{id}',[CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/cart/clear',      [CartController::class, 'clear'])->name('cart.clear');
+    Route::post('/cart/checkout/qris',[PaymentController::class, 'createQrisPayment'])->name('cart.checkout.qris');
+    Route::get('/order/status/{orderNumber}', [PaymentController::class, 'checkStatus'])->name('order.status');
 });
+
+// Order Invoice & Pakasir Webhook Routes
+Route::get('/order/invoice/{orderNumber}', [PaymentController::class, 'showInvoice'])->name('order.invoice');
+Route::post('/api/pakasir/webhook',        [PaymentController::class, 'handleWebhook'])->name('pakasir.webhook');
