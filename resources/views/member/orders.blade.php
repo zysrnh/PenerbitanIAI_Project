@@ -193,39 +193,50 @@
     <!-- ==================== MAIN CONTENT AREA ==================== -->
     <div id="main-content-wrapper" class="flex-1 flex flex-col min-w-0 min-h-screen transition-all duration-300 lg:pl-64">
 
-        <!-- Top Header Bar (Native Mobile Feel) -->
-        <header class="bg-white border-b border-slate-200/90 px-3.5 sm:px-8 py-2.5 sm:py-3 sticky top-0 z-30 flex items-center justify-between shadow-xs">
+                        <!-- Top Header Bar -->
+        <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-2.5 sm:py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
             
-            <div class="flex items-center gap-2.5">
-                <!-- Hamburger Button -->
-                <button type="button" onclick="toggleSidebar()" class="w-9 h-9 text-slate-700 hover:text-emerald-800 hover:bg-slate-100 active:bg-slate-200 rounded-sm border border-slate-200 flex items-center justify-center transition cursor-pointer" title="Menu Sidebar">
+            <!-- Left Header: Toggle & Branding -->
+            <div class="flex items-center gap-3">
+                <!-- Desktop Sidebar Toggle Button (Hidden on Mobile) -->
+                <button type="button" onclick="toggleSidebar()" class="hidden lg:flex p-2 text-slate-600 hover:text-emerald-800 hover:bg-slate-100 rounded-sm border border-slate-200 transition items-center justify-center cursor-pointer" title="Buka / Tutup Menu Sidebar">
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
                 </button>
 
-                <!-- Mobile Header Title Brand -->
-                <div class="flex items-center gap-1.5 lg:hidden">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="Logo" class="w-6 h-6 object-contain" />
-                    <span class="font-extrabold text-xs text-slate-900 font-heading tracking-tight">Portal Member</span>
-                </div>
+                <!-- Mobile Official Logo Brand -->
+                <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2 lg:hidden transition hover:opacity-90">
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="Logo" class="w-7 h-7 object-contain" />
+                    <div>
+                        <span class="font-black text-xs text-slate-900 tracking-tight block font-heading leading-none">PENERBIT PERSIS</span>
+                        <span class="text-[9.5px] text-emerald-700 font-bold block leading-none mt-0.5">Portal Member</span>
+                    </div>
+                </a>
 
-                <!-- Desktop Breadcrumb -->
+                <!-- Desktop Breadcrumb Title -->
                 <div class="hidden lg:flex items-center gap-2 text-xs">
-                    <a href="{{ route('member.dashboard') }}" class="text-slate-500 hover:text-emerald-700 transition">Portal Member</a>
+                    <a href="{{ route('member.dashboard') }}" class="text-slate-400 hover:text-emerald-700 transition">Portal Member</a>
                     <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
-                    <span class="font-bold text-slate-800">Pesanan &amp; Transaksi Buku</span>
+                    <span class="font-bold text-slate-800">Pesanan & Transaksi Saya</span>
                 </div>
             </div>
 
-            <!-- Top Header Right Actions -->
-            <div class="flex items-center gap-2">
-                <a href="{{ route('katalog') }}" 
-                    class="h-8.5 px-3 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold transition shadow-2xs flex items-center gap-1.5">
-                    <i class="fa-solid fa-book-open text-[10px]"></i>
-                    <span class="hidden sm:inline">Katalog</span>
+            <!-- Right Header Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="{{ url('/') }}" 
+                    class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-slate-200 hover:border-emerald-600 text-xs font-bold text-slate-600 hover:text-emerald-800 hover:bg-emerald-50/50 transition">
+                    <i class="fa-solid fa-house text-[10px] text-emerald-700"></i>
+                    <span>Website Utama</span>
                 </a>
 
+                <a href="{{ route('katalog') }}" 
+                    class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold transition shadow-2xs">
+                    <i class="fa-solid fa-book-open text-[10px]"></i>
+                    <span>Katalog</span>
+                </a>
+
+                <!-- User Profile Pill -->
                 <a href="{{ route('member.profile') }}" 
-                    class="h-8.5 flex items-center gap-1.5 pl-1 pr-2 rounded-sm bg-slate-100 hover:bg-slate-200 border border-slate-200 transition">
+                    class="flex items-center gap-2 pl-1 sm:pl-1.5 pr-2 sm:pr-2.5 py-1 rounded-sm bg-slate-100 hover:bg-slate-200 border border-slate-200 transition">
                     @if($user->avatar_url)
                         <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-6 h-6 rounded-sm object-cover" />
                     @else
@@ -233,7 +244,7 @@
                             {{ $user->initials }}
                         </div>
                     @endif
-                    <span class="text-xs font-bold text-slate-700 max-w-[80px] truncate hidden sm:inline">{{ explode(' ', $user->name)[0] }}</span>
+                    <span class="text-xs font-bold text-slate-700 max-w-[90px] truncate hidden sm:inline">{{ explode(' ', $user->name)[0] }}</span>
                 </a>
             </div>
         </header>
