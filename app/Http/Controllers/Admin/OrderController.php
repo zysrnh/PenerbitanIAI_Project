@@ -12,6 +12,7 @@ class OrderController extends Controller
     {
         $status = $request->query('status');
         $search = $request->query('q');
+        $search = $search ? str_replace(['%', '_'], ['\%', '\_'], $search) : null;
 
         $query = Order::latest();
 

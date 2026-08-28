@@ -25,6 +25,7 @@ class UserController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
+            $search = $search ? str_replace(['%', '_'], ['\%', '\_'], $search) : null;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")

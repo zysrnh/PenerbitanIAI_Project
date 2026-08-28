@@ -12,8 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Global web security headers on every response
+        // Global web security: threat detection first, then security headers
         $middleware->web(append: [
+            \App\Http\Middleware\ThreatShieldMiddleware::class,
             \App\Http\Middleware\SecurityHeadersMiddleware::class,
         ]);
 
