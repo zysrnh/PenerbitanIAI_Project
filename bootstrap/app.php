@@ -12,18 +12,24 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global web security headers on every response
         $middleware->web(append: [
             \App\Http\Middleware\SecurityHeadersMiddleware::class,
         ]);
+
+        // Role-based route middleware aliases
         $middleware->alias([
             'member' => \App\Http\Middleware\MemberMiddleware::class,
-            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'admin'  => \App\Http\Middleware\AdminMiddleware::class,
         ]);
+
+        // CSRF token validation exceptions (webhook only)
         $middleware->validateCsrfTokens(except: [
             'api/pakasir/webhook',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        // Return JSON for API requests, prevent stack trace leaks in production
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );

@@ -5,8 +5,18 @@
 
     RewriteEngine On
 
-    # Block access to hidden files and directories (except .well-known for SSL certificates)
+    # Force HTTPS redirect (production)
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^localhost [NC]
+    RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Block access to hidden files and directories (except .well-known for SSL)
     RewriteRule (^|/)\.(?!well-known/) - [F,L]
+
+    # Block common hacking probe paths
+    RewriteRule ^(wp-admin|wp-login|xmlrpc|wp-content|wp-includes|cgi-bin) - [F,L,NC]
+    RewriteRule ^(phpmyadmin|pma|myadmin|mysql|dbadmin) - [F,L,NC]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -28,10 +38,33 @@
 </IfModule>
 
 # Block direct access to sensitive file types
-<FilesMatch "(^\.env|\.(sql|log|sh|yml|yaml|lock|blade\.php|bak|config|json))$">
-    Order allow,deny
-    Deny from all
+<FilesMatch "(^\.env|^\.git|\.(sql|log|sh|yml|yaml|lock|blade\.php|bak|config|ini|dist|swp|old|orig|tmp))$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
 </FilesMatch>
 
-# Disable Server Signature
+# Block PHP execution in upload directories
+<Directory "storage">
+    <FilesMatch "\.php$">
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+    </FilesMatch>
+</Directory>
+
+# Disable Server Signature & ETag (prevents inode info leak)
 ServerSignature Off
+FileETag None
+
+# Prevent hotlinking of images
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_REFERER} !^$ [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?penerbitpersis\.com [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?google\. [NC]
+    RewriteRule \.(jpg|jpeg|png|gif|webp|svg)$ - [F,NC,L]
+</IfModule>

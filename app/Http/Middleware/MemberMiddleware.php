@@ -11,17 +11,26 @@ class MemberMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::check()) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
             return redirect()->route('member.login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        if (Auth::user()->role !== 'member') {
+        // Allow admins to also access member routes (they're supersets)
+        $allowedRoles = ['member', 'admin', 'super_admin'];
+        if (!in_array(Auth::user()->role, $allowedRoles)) {
             Auth::logout();
-            return redirect()->route('member.login')->with('error', 'Akses hanya untuk member.');
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('member.login')->with('error', 'Akses hanya untuk member terdaftar.');
         }
 
         if (!Auth::user()->is_active) {
             Auth::logout();
-            return redirect()->route('member.login')->with('error', 'Akun Anda tidak aktif.');
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('member.login')->with('error', 'Akun Anda telah dinonaktifkan oleh administrator.');
         }
 
         return $next($request);

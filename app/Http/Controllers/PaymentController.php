@@ -230,16 +230,35 @@ class PaymentController extends Controller
     public function handleWebhook(Request $request)
     {
         $payload = $request->all();
-        Log::info('Pakasir Webhook Received', $payload);
+        Log::info('Pakasir Webhook Received', [
+            'ip'      => $request->ip(),
+            'payload' => $payload,
+        ]);
+
+        // Webhook signature / API key verification
+        $webhookSecret = config('services.pakasir.webhook_secret', env('PAKASIR_WEBHOOK_SECRET'));
+        if ($webhookSecret) {
+            $providedKey = $request->input('api_key') ?? $request->header('X-Webhook-Secret');
+            if (!$providedKey || !hash_equals($webhookSecret, $providedKey)) {
+                Log::warning('Pakasir Webhook: Invalid signature/key', ['ip' => $request->ip()]);
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+        }
 
         $orderNumber = $request->input('order_id');
         $status = $request->input('status');
         $amount = $request->input('amount');
         $project = $request->input('project');
 
-        $expectedProject = env('PAKASIR_PROJECT', 'payment-gateway-penerbit-pers');
+        // Validate required fields
+        if (empty($orderNumber) || empty($status)) {
+            return response()->json(['message' => 'Missing required fields'], 400);
+        }
+
+        $expectedProject = config('services.pakasir.project', env('PAKASIR_PROJECT', 'payment-gateway-penerbit-pers'));
 
         if ($project && $project !== $expectedProject) {
+            Log::warning("Pakasir Webhook: Project mismatch", ['received' => $project, 'expected' => $expectedProject]);
             return response()->json(['message' => 'Invalid project'], 400);
         }
 
@@ -247,6 +266,27 @@ class PaymentController extends Controller
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        // Prevent re-processing already completed orders
+        if ($order->payment_status === 'completed') {
+            return response()->json(['status' => 'already_processed']);
+        }
+
+        // Amount verification – reject if amount doesn't match
+        if ($amount && abs((float)$amount - (float)$order->total_amount) > 1) {
+            Log::warning("Pakasir Webhook: Amount mismatch", [
+                'order'    => $orderNumber,
+                'expected' => $order->total_amount,
+                'received' => $amount,
+            ]);
+            return response()->json(['message' => 'Amount mismatch'], 400);
+        }
+
+        // Only accept known valid status transitions
+        $validStatuses = ['completed', 'success', 'failed', 'expired'];
+        if (!in_array($status, $validStatuses)) {
+            return response()->json(['message' => 'Invalid status'], 400);
         }
 
         if ($status === 'completed' || $status === 'success') {

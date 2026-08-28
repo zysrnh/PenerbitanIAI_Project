@@ -22,11 +22,15 @@ class AdminMiddleware
         // Must be admin or super_admin
         if (!in_array(Auth::user()->role, ['admin', 'super_admin'])) {
             Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
             return redirect()->route('admin.login')->with('error', 'Akses ditolak: Anda tidak memiliki hak akses administrator.');
         }
 
         if (!Auth::user()->is_active) {
             Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
             return redirect()->route('admin.login')->with('error', 'Akun administrator Anda telah dinonaktifkan.');
         }
 
