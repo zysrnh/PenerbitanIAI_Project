@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v=2">
     <link rel="manifest" href="{{ asset('site.webmanifest') }}?v=2">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
-    <title>@yield('title', 'PERSIS PERS | Penerbitan & Percetakan Kampus')</title>
+    <title>@yield('title', 'PENERBIT PERSIS | Penerbitan & Percetakan IAI Persis Bandung')</title>
 
     <!-- Google Fonts Plus Jakarta Sans & Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -377,7 +377,7 @@
             </div>
 
             <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-                <p>&copy; {{ date('Y') }} PERSIS PERS. All Rights Reserved.</p>
+                <p>&copy; {{ date('Y') }} PENERBIT PERSIS - Penerbitan &amp; Percetakan IAI PERSIS Bandung. All rights reserved.</p>
                 <div class="flex items-center gap-4">
                     <a href="{{ route('admin.login') }}" class="hover:text-emerald-400 transition flex items-center gap-1">
                         <i class="fa-solid fa-lock text-[10px]"></i> Login Admin

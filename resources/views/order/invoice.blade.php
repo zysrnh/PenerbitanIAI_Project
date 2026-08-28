@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Invoice #' . $order->order_number . ' | PERSIS PERS')
+@section('title', 'Invoice #' . $order->order_number . ' | PENERBIT PERSIS')
 
 @section('content')
 <div class="bg-slate-100/70 min-h-[85vh] py-8 sm:py-12">
@@ -24,7 +24,7 @@
             <!-- Document Header -->
             <div class="p-6 sm:p-7 bg-[#032c21] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-emerald-950">
                 <div class="flex items-center gap-4">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PERSIS PERS" class="h-10 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-10 w-auto object-contain" />
                     <div class="border-l border-emerald-800/80 pl-3.5">
                         <h2 class="text-sm sm:text-base font-bold tracking-tight font-heading">BUKTI TRANSAKSI RESMI</h2>
                         <p class="text-xs text-emerald-200/90 font-mono mt-0.5">{{ $order->order_number }}</p>
@@ -145,11 +145,11 @@
             <!-- Document Footer -->
             <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <div class="text-[11px] text-slate-500 text-center sm:text-left">
-                    <p class="font-medium text-slate-700">Penerbitan & Percetakan Resmi PERSIS PERS (IAI Persis Bandung)</p>
+                    <p class="font-medium text-slate-700">Penerbitan & Percetakan Resmi PENERBIT PERSIS (IAI Persis Bandung)</p>
                     <p>Layanan Pelanggan WhatsApp: <strong class="text-slate-800">0821-1611-6133</strong></p>
                 </div>
                 @php
-                    $waMsg = "Halo Redaksi PERSIS PERS, saya telah melakukan pemesanan buku dengan No. Invoice *{$order->order_number}* atas nama *{$order->customer_name}* (Total {$order->formatted_payment}). Mohon info konfirmasi pengiriman naskah/buku ya kak. Terima kasih!";
+                    $waMsg = "Halo Redaksi PENERBIT PERSIS, saya telah melakukan pemesanan buku dengan No. Invoice *{$order->order_number}* atas nama *{$order->customer_name}* (Total {$order->formatted_payment}). Mohon info konfirmasi pengiriman naskah/buku ya kak. Terima kasih!";
                     $waShareUrl = "https://wa.me/6282116116133?text=" . urlencode($waMsg);
                 @endphp
                 <a href="{{ $waShareUrl }}" target="_blank" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">

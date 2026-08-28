@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Saya | PERSIS PERS</title>
+    <title>Profil Saya | PENERBIT PERSIS</title>
         <!-- Favicons & App Icons (Forced & Canonical) -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v=2">
@@ -62,7 +62,7 @@
         
         <!-- Sidebar Brand Logo -->
         <div class="px-6 py-5 border-b border-white/10 flex items-center justify-center">
-            <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PERSIS PERS">
+            <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
                 <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-13 sm:h-14 w-auto object-contain" />
             </a>
         </div>
@@ -146,7 +146,7 @@
         <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
             <div class="flex items-center gap-3 lg:hidden">
                 <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-11 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
             </div>
 

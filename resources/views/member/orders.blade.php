@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesanan & Transaksi Saya | Portal Member PERSIS PERS</title>
+    <title>Pesanan & Transaksi Saya | Portal Member PENERBIT PERSIS</title>
     <!-- Favicons & App Icons (Forced & Canonical) -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v=2">
@@ -62,7 +62,7 @@
         <div class="p-5 space-y-6">
             <!-- Brand Logo -->
             <a href="{{ url('/') }}" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-12 w-auto object-contain" />
+                <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
             </a>
 
             <!-- User Brief -->
@@ -109,7 +109,7 @@
                     <span>Profil Saya</span>
                 </a>
 
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PERSIS PERS, saya member ' . $user->name . ' ingin berkonsultasi mengenai pesanan buku.') }}" 
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya member ' . $user->name . ' ingin berkonsultasi mengenai pesanan buku.') }}" 
                     target="_blank"
                     class="flex items-center gap-2.5 px-3 py-2 rounded-sm text-xs font-semibold text-emerald-100 hover:bg-emerald-800 hover:text-white transition">
                     <i class="fa-brands fa-whatsapp text-xs w-4"></i>
@@ -142,7 +142,7 @@
         <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-3 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
             <div class="flex items-center gap-3 lg:hidden">
                 <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-11 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
             </div>
 
@@ -347,7 +347,7 @@
                                     </a>
 
                                     <!-- Tombol WhatsApp Redaksi -->
-                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin menanyakan pesanan #' . $ord->order_number . ' (' . $ord->customer_name . ').') }}" target="_blank" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-medium transition flex items-center gap-1">
+                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya ingin menanyakan pesanan #' . $ord->order_number . ' (' . $ord->customer_name . ').') }}" target="_blank" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-medium transition flex items-center gap-1">
                                         <i class="fa-brands fa-whatsapp text-emerald-600"></i>
                                         <span class="hidden sm:inline">Hubungi Redaksi</span>
                                     </a>
@@ -375,7 +375,7 @@
                             @if($statusFilter)
                                 Tidak ada transaksi buku dengan filter status yang Anda pilih.
                             @else
-                                Anda belum memiliki riwayat pembelian buku di PERSIS PERS.
+                                Anda belum memiliki riwayat pembelian buku di PENERBIT PERSIS.
                             @endif
                         </p>
                     </div>

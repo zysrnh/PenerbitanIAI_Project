@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Member | PERSIS PERS</title>
+    <title>Dashboard Member | PENERBIT PERSIS</title>
         <!-- Favicons & App Icons (Forced & Canonical) -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}?v=2">
@@ -116,7 +116,7 @@
         
         <!-- Sidebar Brand Logo -->
         <div class="px-6 py-5 border-b border-white/10 flex items-center justify-center">
-            <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PERSIS PERS">
+            <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
                 <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-13 sm:h-14 w-auto object-contain" />
             </a>
         </div>
@@ -196,7 +196,7 @@
             <!-- Mobile Brand Toggle -->
             <div class="flex items-center gap-3 lg:hidden">
                 <a href="{{ url('/') }}" class="flex items-center">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PERSIS PERS" class="h-11 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
             </div>
 
@@ -215,7 +215,7 @@
                     <span>Website Utama</span>
                 </a>
 
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PERSIS PERS, saya member ' . $user->name . ' ingin berkonsultasi.') }}" 
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya member ' . $user->name . ' ingin berkonsultasi.') }}" 
                     target="_blank"
                     class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-200 text-xs font-bold text-emerald-800 transition">
                     <i class="fa-brands fa-whatsapp text-emerald-600"></i>
@@ -263,7 +263,7 @@
                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
                     <div class="max-w-xl space-y-1.5">
                         <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm bg-white/10 border border-white/15 text-[10.5px] font-bold text-emerald-300 tracking-wide uppercase">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i> Member Resmi PERSIS PERS
+                            <i class="fa-solid fa-circle-check text-emerald-400"></i> Member Resmi PENERBIT PERSIS
                         </div>
                         <h1 class="text-xl sm:text-2xl font-black font-heading text-white tracking-tight">
                             Selamat Datang, {{ $user->name }}!
@@ -382,7 +382,7 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 pb-3 border-b border-slate-100">
                         <div>
                             <h3 class="text-sm font-extrabold text-slate-900 font-heading">Koleksi Terbitan Terbaru (2026)</h3>
-                            <p class="text-[11px] text-slate-500 mt-0.5">Buku ajar dan karya ilmiah terbitan resmi PERSIS PERS</p>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Buku ajar dan karya ilmiah terbitan resmi PENERBIT PERSIS</p>
                         </div>
                         <a href="{{ route('katalog') }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline flex items-center gap-1.5">
                             <span>Lihat Semua Katalog</span>
@@ -513,12 +513,12 @@
                         </div>
                         <h3 class="font-extrabold text-slate-900 text-xs font-heading">Butuh Bantuan Penerbitan?</h3>
                         <p class="text-[11px] text-slate-600 mt-1 leading-relaxed">
-                            Tim redaksi PERSIS PERS siap membantu konsultasi penerbitan buku, konversi naskah, hingga distribusi.
+                            Tim redaksi PENERBIT PERSIS siap membantu konsultasi penerbitan buku, konversi naskah, hingga distribusi.
                         </p>
                     </div>
 
                     <div class="mt-4 pt-3 border-t border-emerald-200 space-y-2">
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PERSIS PERS, saya ingin konsultasi penerbitan naskah.') }}" 
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya ingin konsultasi penerbitan naskah.') }}" 
                             target="_blank"
                             class="w-full py-2 px-3 bg-emerald-700 hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
                             <i class="fa-brands fa-whatsapp text-sm"></i>
