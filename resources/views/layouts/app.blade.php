@@ -123,27 +123,22 @@
 </head>
 <body class="antialiased text-slate-800 bg-white selection:bg-brand-800 selection:text-white flex flex-col min-h-screen">
 <script>
-    window.toggleMobileMenu = function(e) {
-        if (e) {
-            try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
-        }
+    window.toggleMobileMenu = function() {
         const drawer = document.getElementById('mobile-drawer');
         const icon = document.getElementById('mobileMenuIcon');
         if (!drawer) return;
 
-        const isCurrentlyHidden = drawer.style.display === 'none' || drawer.classList.contains('hidden') || (window.getComputedStyle && window.getComputedStyle(drawer).display === 'none');
+        const isClosed = drawer.classList.contains('hidden') || drawer.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(drawer).display === 'none');
 
-        if (isCurrentlyHidden) {
+        if (isClosed) {
             drawer.style.display = 'block';
-            drawer.style.display = 'block';
-                drawer.classList.remove('hidden');
+            drawer.classList.remove('hidden');
             if (icon) {
                 icon.className = 'fa-solid fa-xmark text-lg pointer-events-none';
             }
         } else {
             drawer.style.display = 'none';
-            drawer.style.display = 'none';
-                drawer.classList.add('hidden');
+            drawer.classList.add('hidden');
             if (icon) {
                 icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
             }
@@ -155,20 +150,12 @@
         const icon = document.getElementById('mobileMenuIcon');
         if (drawer) {
             drawer.style.display = 'none';
-            drawer.style.display = 'none';
-                drawer.classList.add('hidden');
+            drawer.classList.add('hidden');
         }
         if (icon) {
             icon.className = 'fa-solid fa-bars text-lg pointer-events-none';
         }
     };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const btn = document.getElementById('mobile-menu-btn');
-        if (btn) {
-            btn.onclick = window.toggleMobileMenu;
-        }
-    });
 </script>
 
 @php
@@ -195,7 +182,7 @@
 
 
     <!-- Top Sticky Header -->
-    <header class="sticky top-0 z-[100] bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300">
+    <header class="sticky top-0 z-[1000] bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 sm:h-20">
                 
@@ -314,10 +301,10 @@
                     <!-- Mobile Menu Button (Hamburger - Standard 44x44 Touch Target) -->
                     <button id="mobile-menu-btn" 
                             type="button"
-                            onclick="window.toggleMobileMenu(event)" 
-                            class="lg:hidden w-11 h-11 rounded-sm border border-slate-200 bg-white text-slate-800 hover:bg-emerald-50 active:bg-emerald-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition-all duration-150 cursor-pointer shadow-2xs shrink-0 touch-manipulation select-none"
+                            onclick="window.toggleMobileMenu()" 
+                            class="lg:hidden w-11 h-11 rounded-sm border border-slate-300 bg-white text-slate-800 hover:bg-emerald-50 active:bg-emerald-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition-colors cursor-pointer shadow-xs shrink-0 select-none"
                             aria-label="Buka Menu Navigasi">
-                        <i id="mobileMenuIcon" class="fa-solid fa-bars text-lg pointer-events-none transition-transform duration-200"></i>
+                        <i id="mobileMenuIcon" class="fa-solid fa-bars text-lg pointer-events-none"></i>
                     </button>
                 </div>
             </div>
@@ -604,15 +591,15 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- CART TOAST NOTIFICATION -->
+    <!-- CART TOAST NOTIFICATION (Clean bottom placement, never blocks header) -->
     <!-- ========================================================================= -->
-    <div id="cartToastNotification" class="fixed top-20 right-6 z-[170] transform translate-y-[-150%] transition-all duration-300 opacity-0 pointer-events-none max-w-sm w-full">
+    <div id="cartToastNotification" class="fixed bottom-6 left-4 right-4 sm:left-auto sm:right-6 z-[999] transform translate-y-8 transition-all duration-300 opacity-0 pointer-events-none max-w-sm hidden" style="display: none;">
         <div class="p-3.5 bg-slate-900 text-white rounded-sm shadow-2xl border-l-4 border-emerald-500 flex items-center justify-between gap-3 pointer-events-auto">
             <div class="flex items-center gap-2.5 min-w-0">
                 <i id="cartToastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
                 <p id="cartToastMsg" class="text-xs font-semibold text-slate-100 truncate">Buku berhasil ditambahkan!</p>
             </div>
-            <button type="button" onclick="window.openCartDrawer()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10.5px] rounded-xs shrink-0 transition">
+            <button type="button" onclick="window.openCartDrawer()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10.5px] rounded-xs shrink-0 transition cursor-pointer">
                 Lihat
             </button>
         </div>
