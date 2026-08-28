@@ -51,6 +51,15 @@ class HomeSettingController extends Controller
             'home_feat4_title'      => SiteSetting::get('home_feat4_title', 'Berpengalaman'),
             'home_feat4_desc'       => SiteSetting::get('home_feat4_desc', 'Didukung tim berpengalaman'),
 
+            // Profil Singkat Tentang Kami di Beranda
+            'home_about_title'      => SiteSetting::get('home_about_title', 'PERSIS PERS'),
+            'home_about_desc'       => SiteSetting::get('home_about_desc', 'Merupakan unit layanan Penerbitan dan Percetakan yang berkomitmen mendukung penyebaran ilmu pengetahuan dan karya berkualitas bagi akademisi dan masyarakat luas.'),
+            'home_about_image'      => SiteSetting::get('home_about_image', 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600&auto=format&fit=crop'),
+
+            // Proses Produksi
+            'home_process_title'    => SiteSetting::get('home_process_title', 'Proses Produksi Profesional'),
+            'home_process_desc'     => SiteSetting::get('home_process_desc', 'Didukung peralatan modern & pengawasan mutu di setiap tahap produksi.'),
+
             // Section Layanan & CTA
             'home_services_badge'   => SiteSetting::get('home_services_badge', 'LAYANAN KAMI'),
             'home_services_title'   => SiteSetting::get('home_services_title', 'Solusi Lengkap Untuk Kebutuhan Anda'),
@@ -105,6 +114,15 @@ class HomeSettingController extends Controller
             'home_feat3_desc'       => ['required', 'string', 'max:255'],
             'home_feat4_title'      => ['required', 'string', 'max:150'],
             'home_feat4_desc'       => ['required', 'string', 'max:255'],
+
+            // Profil Singkat
+            'home_about_title'      => ['required', 'string', 'max:150'],
+            'home_about_desc'       => ['required', 'string'],
+            'home_about_image'      => ['required', 'string'],
+
+            // Proses Produksi
+            'home_process_title'    => ['required', 'string', 'max:150'],
+            'home_process_desc'     => ['required', 'string', 'max:255'],
 
             // Section Layanan & CTA
             'home_services_badge'   => ['required', 'string', 'max:100'],

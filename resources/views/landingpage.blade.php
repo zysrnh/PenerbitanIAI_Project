@@ -330,45 +330,46 @@ Harga Bersahabat")) !!}<br>
         </div>
     </section>
 
-    <!-- Section 3 Kolom: Tentang Kami, Proses Kami, Produk Terbaru -->
+    <!-- Section 3 Kolom: Tentang Kami, Proses Kami, Produk Terbaru dari Katalog -->
     <section class="py-12 bg-slate-50 border-t border-slate-200/70">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                 
-                <!-- Kolom 1: Tentang Kami -->
-                <div id="tentang" class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex flex-col justify-between">
+                <!-- Kolom 1: Tentang Kami (Dynamic dari Settings) -->
+                <div id="tentang" class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
                     <div>
                         <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block mb-1">TENTANG KAMI</span>
-                        <h4 class="font-extrabold text-base text-slate-900 mb-3">Persis Pers</h4>
+                        <h4 class="font-extrabold text-base text-slate-900 mb-3">{{ $settings['home_about_title'] ?? 'PERSIS PERS' }}</h4>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center mb-4">
                             <div class="sm:col-span-7 text-xs text-slate-600 leading-relaxed">
-                                Merupakan unit layanan Penerbitan dan Percetakan di lingkungan IAI Persis Bandung yang berkomitmen mendukung penyebaran ilmu pengetahuan dan karya berkualitas bagi akademisi dan masyarakat.
+                                {{ $settings['home_about_desc'] ?? 'Merupakan unit layanan Penerbitan dan Percetakan yang berkomitmen mendukung penyebaran ilmu pengetahuan dan karya berkualitas bagi akademisi dan masyarakat.' }}
                             </div>
-                            <div class="sm:col-span-5 h-28 rounded-md overflow-hidden bg-slate-100 border border-slate-200">
+                            <div class="sm:col-span-5 h-28 rounded-sm overflow-hidden bg-slate-100 border border-slate-200">
                                 <img 
-                                    src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop" 
-                                    alt="Gedung Kampus IAI Persis" 
-                                    class="w-full h-full object-cover grayscale contrast-125"
+                                    src="{{ $settings['home_about_image'] ?? 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop' }}" 
+                                    alt="Kantor Redaksi Persis Pers" 
+                                    class="w-full h-full object-cover"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <a href="#kontak" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-brand-900 hover:bg-brand-950 text-white rounded-md text-xs font-bold transition w-fit">
-                        Selengkapnya <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    <a href="{{ route('tentang') }}" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition w-fit shadow-2xs">
+                        <span>Selengkapnya</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
                     </a>
                 </div>
 
-                <!-- Kolom 2: Proses Kami -->
-                <div class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex flex-col justify-between">
+                <!-- Kolom 2: Proses Kami (Dynamic dari Settings) -->
+                <div class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
                     <div>
                         <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block mb-1">PROSES KAMI</span>
-                        <h4 class="font-extrabold text-base text-slate-900 mb-4">Proses Produksi Profesional</h4>
+                        <h4 class="font-extrabold text-base text-slate-900 mb-4">{{ $settings['home_process_title'] ?? 'Proses Produksi Profesional' }}</h4>
                         
                         <div class="flex items-center justify-between gap-1 py-2">
                             <div class="flex flex-col items-center text-center">
-                                <div class="w-8 h-8 rounded-full bg-emerald-800 text-white flex items-center justify-center text-xs mb-1.5 shadow-sm">
+                                <div class="w-8 h-8 rounded-sm bg-emerald-800 text-white flex items-center justify-center text-xs mb-1.5 shadow-2xs">
                                     <i class="fa-solid fa-comments text-[11px]"></i>
                                 </div>
                                 <span class="text-[9px] font-semibold text-slate-700">Konsultasi</span>
@@ -377,7 +378,7 @@ Harga Bersahabat")) !!}<br>
                             <i class="fa-solid fa-arrow-right text-[8px] text-slate-400 mb-3"></i>
 
                             <div class="flex flex-col items-center text-center">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
+                                <div class="w-8 h-8 rounded-sm bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
                                     <i class="fa-solid fa-pen-nib text-[11px]"></i>
                                 </div>
                                 <span class="text-[9px] font-semibold text-slate-700">Desain</span>
@@ -386,7 +387,7 @@ Harga Bersahabat")) !!}<br>
                             <i class="fa-solid fa-arrow-right text-[8px] text-slate-400 mb-3"></i>
 
                             <div class="flex flex-col items-center text-center">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
+                                <div class="w-8 h-8 rounded-sm bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
                                     <i class="fa-solid fa-desktop text-[11px]"></i>
                                 </div>
                                 <span class="text-[9px] font-semibold text-slate-700">Prepress</span>
@@ -395,7 +396,7 @@ Harga Bersahabat")) !!}<br>
                             <i class="fa-solid fa-arrow-right text-[8px] text-slate-400 mb-3"></i>
 
                             <div class="flex flex-col items-center text-center">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
+                                <div class="w-8 h-8 rounded-sm bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
                                     <i class="fa-solid fa-gear text-[11px]"></i>
                                 </div>
                                 <span class="text-[9px] font-semibold text-slate-700">Produksi</span>
@@ -404,7 +405,7 @@ Harga Bersahabat")) !!}<br>
                             <i class="fa-solid fa-arrow-right text-[8px] text-slate-400 mb-3"></i>
 
                             <div class="flex flex-col items-center text-center">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
+                                <div class="w-8 h-8 rounded-sm bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
                                     <i class="fa-regular fa-file-lines text-[11px]"></i>
                                 </div>
                                 <span class="text-[9px] font-semibold text-slate-700">Finishing</span>
@@ -413,7 +414,7 @@ Harga Bersahabat")) !!}<br>
                             <i class="fa-solid fa-arrow-right text-[8px] text-slate-400 mb-3"></i>
 
                             <div class="flex flex-col items-center text-center">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
+                                <div class="w-8 h-8 rounded-sm bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1.5">
                                     <i class="fa-solid fa-truck-fast text-[11px]"></i>
                                 </div>
                                 <span class="text-[9px] font-semibold text-slate-700">Pengiriman</span>
@@ -422,54 +423,46 @@ Harga Bersahabat")) !!}<br>
                     </div>
 
                     <div class="pt-4 border-t border-slate-100 text-[11px] text-slate-500">
-                        Didukung peralatan modern & pengawasan mutu di setiap tahap produksi.
+                        {{ $settings['home_process_desc'] ?? 'Didukung peralatan modern & pengawasan mutu di setiap tahap produksi.' }}
                     </div>
                 </div>
 
-                <!-- Kolom 3: Katalog Buku Terbaru -->
-                <div id="katalog" class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-sm flex flex-col justify-between">
+                <!-- Kolom 3: Katalog Buku Terbaru (REAL DATABASE INTEGRATION) -->
+                <div id="katalog" class="lg:col-span-4 bg-white p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
                     <div>
-                        <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block mb-1">PRODUK TERBARU</span>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-brand-800 font-bold text-[10px] uppercase tracking-widest block">PRODUK TERBARU</span>
+                            <span class="text-[9px] text-emerald-700 font-mono font-bold">Koleksi Terkini</span>
+                        </div>
                         <h4 class="font-extrabold text-base text-slate-900 mb-3">Katalog Buku Terbaru</h4>
                         
                         <div class="grid grid-cols-4 gap-2 mb-3">
-                            <div class="aspect-[3/4] bg-emerald-900 rounded-sm p-1.5 text-white flex flex-col justify-between shadow-sm border border-emerald-800/80 hover:scale-105 transition-transform">
-                                <div class="text-[7px] text-lime-300 uppercase tracking-tighter">Buku Ajar</div>
-                                <div class="text-center my-auto">
-                                    <span class="text-[9px] font-bold leading-none block">PENDIDIKAN ISLAM</span>
+                            @forelse($featuredBooks as $fb)
+                                <a href="{{ route('katalog') }}" class="group aspect-[3/4.15] bg-slate-900 rounded-xs overflow-hidden shadow-2xs border border-slate-300 relative block hover:scale-105 hover:shadow-md transition-all duration-200" title="{{ $fb->title }}">
+                                    @if($fb->cover_image && (file_exists(public_path('storage/' . $fb->cover_image)) || file_exists(public_path('images/' . $fb->cover_image))))
+                                        <img src="{{ file_exists(public_path('storage/' . $fb->cover_image)) ? asset('storage/' . $fb->cover_image) : asset('images/' . $fb->cover_image) }}" alt="{{ $fb->title }}" class="w-full h-full object-cover" />
+                                    @else
+                                        <div class="w-full h-full bg-[#032c21] p-1.5 flex flex-col justify-between text-white select-none">
+                                            <span class="text-[6px] text-emerald-300 font-bold truncate">PERSIS</span>
+                                            <span class="font-black line-clamp-3 leading-none text-[6.5px] text-slate-100">{{ $fb->title }}</span>
+                                            <span class="text-[5.5px] text-slate-400 truncate">{{ $fb->author }}</span>
+                                        </div>
+                                    @endif
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-white text-xs"></i>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="col-span-4 py-4 text-center text-slate-400 text-xs">
+                                    Belum ada buku terbit.
                                 </div>
-                                <div class="text-[6px] text-slate-300 text-center">Persis Press</div>
-                            </div>
-
-                            <div class="aspect-[3/4] bg-emerald-950 rounded-sm p-1.5 text-white flex flex-col justify-between shadow-sm border border-emerald-900 hover:scale-105 transition-transform">
-                                <div class="text-[7px] text-lime-300 uppercase tracking-tighter">Referensi</div>
-                                <div class="text-center my-auto">
-                                    <span class="text-[9px] font-bold leading-none block">ILMU HADIS</span>
-                                    <span class="text-[6px] text-slate-300 block">Teori & Metode</span>
-                                </div>
-                                <div class="text-[6px] text-slate-300 text-center">Persis Press</div>
-                            </div>
-
-                            <div class="aspect-[3/4] bg-slate-900 rounded-sm p-1.5 text-white flex flex-col justify-between shadow-sm border border-slate-800 hover:scale-105 transition-transform">
-                                <div class="text-[7px] text-lime-300 uppercase tracking-tighter">Monograf</div>
-                                <div class="text-center my-auto">
-                                    <span class="text-[9px] font-bold leading-none block">KOMUNIKASI ISLAM</span>
-                                </div>
-                                <div class="text-[6px] text-slate-300 text-center">Persis Press</div>
-                            </div>
-
-                            <div class="aspect-[3/4] bg-amber-950 rounded-sm p-1.5 text-white flex flex-col justify-between shadow-sm border border-amber-900 hover:scale-105 transition-transform">
-                                <div class="text-[7px] text-amber-300 uppercase tracking-tighter">Buku Teks</div>
-                                <div class="text-center my-auto">
-                                    <span class="text-[9px] font-bold leading-none block">FIQH IBADAH</span>
-                                </div>
-                                <div class="text-[6px] text-slate-300 text-center">Persis Press</div>
-                            </div>
+                            @endforelse
                         </div>
                     </div>
 
-                    <a href="#katalog" class="text-[11px] font-bold text-brand-800 hover:text-brand-950 inline-flex items-center gap-1 mt-2">
-                        Lihat Katalog <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    <a href="{{ route('katalog') }}" class="text-[11px] font-bold text-emerald-800 hover:text-emerald-950 inline-flex items-center gap-1 mt-2">
+                        <span>Buka Katalog Lengkap</span>
+                        <i class="fa-solid fa-arrow-right text-[9px]"></i>
                     </a>
                 </div>
             </div>
@@ -491,7 +484,7 @@ Harga Bersahabat")) !!}<br>
                             <p class="text-[11px] text-slate-300 mt-0.5">Tim kami siap membantu Anda.</p>
                         </div>
                     </div>
-                    <a href="https://wa.me/6282116116133?text=Halo%20Admin%20IAI%20Persis%20Press,%20saya%20ingin%20berkonsultasi%20terkait%20layanan%20penerbitan/percetakan." target="_blank" class="px-4 py-2 border border-white/40 hover:border-white rounded-md text-xs font-bold text-white transition flex items-center gap-1.5 whitespace-nowrap">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['home_cta_wa_number'] ?? '082116116133') }}?text=Halo%20Redaksi%20PERSIS%20PERS,%20saya%20ingin%20berkonsultasi%20terkait%20layanan%20penerbitan/percetakan." target="_blank" class="px-4 py-2 border border-white/40 hover:border-white rounded-md text-xs font-bold text-white transition flex items-center gap-1.5 whitespace-nowrap">
                         <i class="fa-brands fa-whatsapp text-lime-400"></i> HUBUNGI KAMI
                     </a>
                 </div>
@@ -506,7 +499,7 @@ Harga Bersahabat")) !!}<br>
                             <p class="text-[11px] text-slate-300 mt-0.5">dan wujudkan karya terbaik Anda bersama kami.</p>
                         </div>
                     </div>
-                    <a href="https://wa.me/6282116116133?text=Halo%20Admin%20IAI%20Persis%20Press,%20saya%20ingin%20mengirimkan%20file/naskah%20untuk%20penerbitan/cetak." target="_blank" class="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-brand-950 rounded-md text-xs font-extrabold transition flex items-center gap-1.5 whitespace-nowrap shadow-sm">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['home_cta_wa_number'] ?? '082116116133') }}?text=Halo%20Redaksi%20PERSIS%20PERS,%20saya%20ingin%20mengirimkan%20file/naskah%20buku%20untuk%20diterbitkan." target="_blank" class="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-brand-950 rounded-md text-xs font-extrabold transition flex items-center gap-1.5 whitespace-nowrap shadow-sm">
                         <i class="fa-solid fa-cloud-arrow-up text-brand-950"></i> KIRIM FILE SEKARANG
                     </a>
                 </div>

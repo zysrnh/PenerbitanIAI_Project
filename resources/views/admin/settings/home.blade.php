@@ -234,7 +234,49 @@
                     </div>
                 </div>
 
-                <!-- 5. BANNER CTA KONSULTASI -->
+                <!-- 5. PROFIL SINGKAT & ALUR PRODUKSI (3 Kolom Beranda) -->
+                <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-4 sm:p-5 space-y-3.5">
+                    <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
+                        <div class="w-7 h-7 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
+                            5
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading">Profil Singkat &amp; Alur Produksi</h3>
+                            <p class="text-[10.5px] text-slate-400">Konten kartu tengah beranda (Katalog otomatis mengambil 4 buku terbaru dari database).</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Judul Profil <span class="text-rose-500">*</span></label>
+                                <input type="text" name="home_about_title" value="{{ old('home_about_title', $settings['home_about_title']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block font-bold text-slate-700 mb-1">URL Foto Profil Gedung / Redaksi <span class="text-rose-500">*</span></label>
+                                <input type="url" name="home_about_image" value="{{ old('home_about_image', $settings['home_about_image']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Deskripsi Singkat Profil <span class="text-rose-500">*</span></label>
+                            <textarea name="home_about_desc" rows="2" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300">{{ old('home_about_desc', $settings['home_about_desc']) }}</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Judul Seksi Alur Produksi</label>
+                                <input type="text" name="home_process_title" value="{{ old('home_process_title', $settings['home_process_title']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                            </div>
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Catatan Mutu / Subteks Alur</label>
+                                <input type="text" name="home_process_desc" value="{{ old('home_process_desc', $settings['home_process_desc']) }}" required class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. BANNER CTA KONSULTASI -->
                 <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-4 sm:p-5 space-y-3.5">
                     <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
                         <div class="w-7 h-7 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
