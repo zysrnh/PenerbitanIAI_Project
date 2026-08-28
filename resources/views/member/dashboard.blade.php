@@ -428,7 +428,7 @@
                             $coverExists = $rb->cover_image && (file_exists(public_path('storage/' . $rb->cover_image)) || file_exists(public_path('images/' . $rb->cover_image)));
                             $coverSrc = $coverExists ? (file_exists(public_path('storage/' . $rb->cover_image)) ? asset('storage/' . $rb->cover_image) : asset('images/' . $rb->cover_image)) : null;
                         @endphp
-                        <a href="{{ route('katalog.detail', $rb->slug) }}" class="group flex flex-col justify-between bg-slate-50 hover:bg-slate-100/80 p-2 rounded-sm border border-slate-200/80 transition">
+                        <a href="{{ route('katalog') }}" class="group flex flex-col justify-between bg-slate-50 hover:bg-slate-100/80 p-2 rounded-sm border border-slate-200/80 transition">
                             <div class="book-stage-3d mx-auto w-full aspect-[3/4.2] mb-2">
                                 <div class="book-cover-3d relative w-full h-full bg-slate-900 rounded-xs overflow-hidden border border-slate-300">
                                     <div class="book-spine-strip"></div>
