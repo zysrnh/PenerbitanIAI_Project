@@ -593,8 +593,8 @@
             <!-- Drawer Header -->
             <div class="px-5 py-3.5 bg-[#032c21] text-white flex items-center justify-between shadow-xs border-b border-emerald-950 select-none rounded-t-xl sm:rounded-none">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-sm bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-xs">
-                        <i class="fa-solid fa-bag-shopping"></i>
+                    <div class="w-8 h-8 rounded-sm bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-xs">
+                        <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
                     </div>
                     <div>
                         <h3 class="font-bold text-sm font-heading flex items-center gap-1.5">
@@ -670,8 +670,8 @@
     <!-- ========================================================================= -->
     <div id="loginPromptModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" style="display: none;" onclick="if(event.target === this) window.closeLoginPromptModal()">
         <div id="loginPromptModalCard" class="bg-white rounded-sm border border-slate-100 shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out space-y-4">
-            <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-2xl mx-auto shadow-2xs">
-                <i class="fa-solid fa-user-lock"></i>
+            <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 p-2.5 flex items-center justify-center mx-auto shadow-2xs">
+                <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
             </div>
             <div>
                 <h3 class="font-extrabold text-slate-900 text-base font-heading">Perlu Masuk Akun Member</h3>
@@ -1342,8 +1342,8 @@
             <!-- Modal Header -->
             <div class="px-5 py-3 bg-[#032c21] text-white flex items-center justify-between border-b border-emerald-950 shrink-0 select-none">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-xs bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-xs">
-                        <i class="fa-solid fa-shield-halved"></i>
+                    <div class="w-8 h-8 rounded-sm bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-xs">
+                        <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="PERSIS PERS" class="w-full h-full object-contain" />
                     </div>
                     <div>
                         <h4 id="checkoutModalTitle" class="text-sm font-bold font-heading">Checkout Pengiriman</h4>
