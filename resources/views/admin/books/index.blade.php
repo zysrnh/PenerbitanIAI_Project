@@ -180,7 +180,7 @@
                     <input 
                         type="search" 
                         name="search_query_custom" 
-                        id="adminSearchInput" 
+                        id="adminSearchInput" autocomplete="off" 
                         autocomplete="off" 
                         autocorrect="off" 
                         autocapitalize="off" 
@@ -225,13 +225,13 @@
                         <i id="adminCustomCatChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200"></i>
                     </button>
 
-                    <div id="adminCustomCatMenu" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 z-50 max-h-60 overflow-y-auto animate-fade-in">
-                        <button type="button" data-val="" data-lbl="Semua Kategori" class="admin-cat-opt w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                    <div id="adminCustomCatMenu" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-sm shadow-2xl overflow-hidden py-1 divide-y divide-slate-100 z-[9999] max-h-64 overflow-y-auto ring-4 ring-black/5 animate-fade-in">
+                        <button type="button" data-val="" data-lbl="Semua Kategori" class="admin-cat-opt w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                             <span>Semua Kategori</span>
                             @if(!request('kategori')) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                         </button>
                         @foreach($categories as $cat)
-                            <button type="button" data-val="{{ $cat }}" data-lbl="{{ $cat }}" class="admin-cat-opt w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                            <button type="button" data-val="{{ $cat }}" data-lbl="{{ $cat }}" class="admin-cat-opt w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                                 <span>{{ $cat }}</span>
                                 @if(request('kategori') === $cat) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                             </button>
