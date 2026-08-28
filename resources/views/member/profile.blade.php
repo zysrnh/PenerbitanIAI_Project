@@ -60,87 +60,100 @@
     <!-- Backdrop Overlay for Mobile Sidebar -->
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden hidden transition-opacity duration-300"></div>
 
-    <!-- ==================== SIDEBAR (DESKTOP) ==================== -->
-    <aside id="member-sidebar" class="fixed top-0 left-0 bottom-0 w-64 brand-dark text-white flex flex-col justify-between z-50 transition-transform duration-300 ease-in-out border-r border-white/10 select-none -translate-x-full lg:translate-x-0">
+        <!-- ==================== SIDEBAR ==================== -->
+    <aside id="member-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 brand-dark text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
         
-        <!-- Sidebar Brand Logo -->
-        <div class="px-6 py-5 border-b border-white/10 flex items-center justify-center">
-            <a href="{{ url('/') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
-                <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-13 sm:h-14 w-auto object-contain" />
-            </a>
-        </div>
+        <div class="p-5">
+            <!-- Brand Header with Quick Collapse Button -->
+            <div class="flex items-center justify-between gap-3 pb-4 mb-4 border-b border-white/10">
+                <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5">
+                    <img src="{{ asset('images/logo_icon.png') }}" alt="PENERBIT PERSIS" class="w-8 h-8 object-contain shrink-0" />
+                    <div>
+                        <span class="font-extrabold text-sm text-white tracking-wide block leading-tight font-heading">PENERBIT PERSIS</span>
+                        <span class="text-[10px] text-emerald-400 font-bold block">Portal Anggota</span>
+                    </div>
+                </a>
+                <button type="button" onclick="toggleSidebar()" class="w-7 h-7 rounded-sm bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-xs transition cursor-pointer" title="Tutup Sidebar">
+                    <i class="fa-solid fa-angles-left"></i>
+                </button>
+            </div>
 
-        <!-- User Profile Card in Sidebar -->
-        <div class="px-5 py-4 border-b border-white/10 bg-black/15">
-            <div class="flex items-center gap-3">
+            <!-- User Profile Box -->
+            <div class="p-3 bg-white/5 border border-white/10 rounded-sm mb-5 flex items-center gap-3">
                 @if($user->avatar_url)
-                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-sm object-cover shrink-0 ring-1 ring-emerald-400/40" />
+                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-9 h-9 rounded-sm object-cover shrink-0 ring-1 ring-emerald-400/40" />
                 @else
-                    <div class="w-10 h-10 rounded-sm bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-sm shrink-0 shadow-xs ring-1 ring-emerald-500/30">
+                    <div class="w-9 h-9 rounded-sm bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-xs shrink-0 shadow-xs ring-1 ring-emerald-500/30">
                         {{ $user->initials }}
                     </div>
                 @endif
                 <div class="min-w-0 flex-1">
                     <p class="text-xs font-bold text-white truncate leading-snug">{{ $user->name }}</p>
-                    <p class="text-[10.5px] text-emerald-300/90 truncate mt-0.5">{{ $user->email }}</p>
+                    <p class="text-[10.5px] text-emerald-300/80 truncate mt-0.5">{{ $user->email }}</p>
                 </div>
             </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-5 text-xs">
+                
+                <!-- Section 1: Layanan Utama -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Menu Utama</span>
+                    <div class="space-y-1">
+                        <a href="{{ route('member.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('member.dashboard') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <i class="fa-solid fa-gauge-high w-4 text-center"></i>
+                            <span>Dashboard</span>
+                        </a>
+
+                        <a href="{{ route('member.orders') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('member.orders*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-receipt w-4 text-center"></i>
+                                <span>Pesanan Saya</span>
+                            </div>
+                            @php
+                                $userOrdCount = \App\Models\Order::where('user_id', Auth::id())->orWhere('customer_email', Auth::user()->email)->count();
+                            @endphp
+                            @if($userOrdCount > 0)
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-[#032c21] font-mono">{{ $userOrdCount }}</span>
+                            @endif
+                        </a>
+
+                        <a href="{{ route('katalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                            <i class="fa-solid fa-book-open w-4 text-center"></i>
+                            <span>Katalog Buku</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Section 2: Pengaturan Akun & Kontak -->
+                <div>
+                    <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Akun &amp; Bantuan</span>
+                    <div class="space-y-1">
+                        <a href="{{ route('member.profile') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('member.profile') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <i class="fa-solid fa-user-gear w-4 text-center"></i>
+                            <span>Profil Saya</span>
+                        </a>
+
+                        <a href="{{ url('/kontak') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                            <i class="fa-solid fa-headset w-4 text-center"></i>
+                            <span>Hubungi Redaksi</span>
+                        </a>
+
+                        <a href="{{ url('/') }}" class="flex items-center gap-3 px-3 py-2 rounded-sm font-medium transition hover:bg-white/10 hover:text-white text-slate-400">
+                            <i class="fa-solid fa-arrow-up-right-from-square w-4 text-center text-slate-500"></i>
+                            <span>Halaman Utama Web</span>
+                        </a>
+                    </div>
+                </div>
+
+            </nav>
         </div>
 
-        <!-- Navigation Menu -->
-        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            <a href="{{ route('member.dashboard') }}"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition {{ request()->routeIs('member.dashboard') ? 'bg-emerald-700 text-white shadow-xs' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white' }}">
-                <i class="fa-solid fa-gauge-high w-4 text-center text-emerald-400"></i>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="{{ route('member.orders') }}"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-bold transition {{ request()->routeIs('member.orders*') ? 'bg-emerald-700 text-white shadow-xs' : 'text-emerald-100/80 hover:bg-white/10 hover:text-white' }}">
-                <i class="fa-solid fa-receipt w-4 text-center text-emerald-300"></i>
-                <span>Pesanan Saya</span>
-                @php
-                    $userOrdCount = \App\Models\Order::where('user_id', Auth::id())->orWhere('customer_email', Auth::user()->email)->count();
-                @endphp
-                @if($userOrdCount > 0)
-                    <span class="ml-auto px-1.5 py-0.5 bg-emerald-500 text-[#032c21] text-[9.5px] font-black rounded-xs">{{ $userOrdCount }}</span>
-                @endif
-            </a>
-
-            <a href="{{ route('katalog') }}"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
-                <i class="fa-solid fa-book-open w-4 text-center text-emerald-400"></i>
-                <span>Katalog Buku</span>
-            </a>
-
-            <a href="{{ route('member.profile') }}"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-bold transition bg-emerald-700 text-white shadow-xs">
-                <i class="fa-solid fa-user w-4 text-center text-emerald-200"></i>
-                <span>Profil Saya</span>
-            </a>
-
-            <a href="{{ url('/kontak') }}"
-                class="flex items-center gap-3 px-3 py-2.5 rounded-sm text-xs font-semibold transition text-emerald-100/80 hover:bg-white/10 hover:text-white">
-                <i class="fa-solid fa-headset w-4 text-center text-emerald-400"></i>
-                <span>Hubungi Redaksi</span>
-            </a>
-
-            <div class="pt-3 pb-1">
-                <div class="px-3 text-[10px] font-bold text-emerald-400/60 uppercase tracking-widest">Akses Cepat</div>
-            </div>
-
-            <a href="{{ url('/') }}"
-                class="flex items-center gap-3 px-3 py-2 rounded-sm text-xs font-medium transition text-slate-300 hover:bg-white/10 hover:text-white">
-                <i class="fa-solid fa-arrow-up-right-from-square w-4 text-center text-slate-400"></i>
-                <span>Halaman Utama</span>
-            </a>
-        </nav>
-
-        <!-- Logout Area -->
-        <div class="p-3 border-t border-white/10">
+        <!-- Sidebar Footer / Logout -->
+        <div class="p-4 border-t border-white/10">
             <form method="POST" action="{{ route('member.logout') }}">
                 @csrf
-                <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-sm text-xs font-bold text-red-300 hover:bg-red-900/40 hover:text-red-100 transition border border-red-500/20">
+                <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-sm text-xs font-bold text-red-300 hover:bg-red-900/40 hover:text-red-100 transition border border-red-500/20 cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket text-xs"></i>
                     <span>Keluar Akun</span>
                 </button>
