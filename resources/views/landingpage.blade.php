@@ -15,7 +15,7 @@
                 <div class="absolute inset-0 z-0 flex justify-end">
                     <div class="w-full lg:w-3/4 h-full relative">
                         <img 
-                            src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop" 
+                            src="{{ $settings['home_slide1_image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
                             alt="Mesin Percetakan Industri" 
                             class="w-full h-full object-cover object-left"
                         />
@@ -29,13 +29,13 @@
                 <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-16 lg:py-20">
                     <div class="max-w-xl">
                         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4">
-                            Melayani Penerbitan<br>
-                            dan Percetakan<br>
-                            <span class="text-lime-400">Berkualitas</span>
+                            {!! nl2br(e($settings['home_slide1_title'] ?? "Melayani Penerbitan
+dan Percetakan")) !!}<br>
+                            <span class="text-lime-400">{{ $settings['home_slide1_highlight'] ?? 'Berkualitas' }}</span>
                         </h2>
                         
                         <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed mb-7 max-w-md">
-                            Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.
+                            {{ $settings['home_slide1_desc'] ?? 'Persis Pers hadir untuk mendukung kebutuhan penerbitan buku...' }}
                         </p>
 
                         <div class="flex items-center gap-3 mb-6">
@@ -55,7 +55,7 @@
                 <div class="absolute inset-0 z-0 flex justify-end">
                     <div class="w-full lg:w-3/4 h-full relative">
                         <img 
-                            src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop" 
+                            src="{{ $settings['home_slide2_image'] ?? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop' }}" 
                             alt="Penerbitan Buku ISBN" 
                             class="w-full h-full object-cover object-left"
                         />
@@ -67,13 +67,13 @@
                 <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-16 lg:py-20">
                     <div class="max-w-xl">
                         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4">
-                            Penerbitan Buku<br>
-                            Ber-ISBN Resmi<br>
-                            <span class="text-lime-400">& Terindeks</span>
+                            {!! nl2br(e($settings['home_slide2_title'] ?? "Penerbitan Buku
+Ber-ISBN Resmi")) !!}<br>
+                            <span class="text-lime-400">{{ $settings['home_slide2_highlight'] ?? '& Terindeks' }}</span>
                         </h2>
                         
                         <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed mb-7 max-w-md">
-                            Dukung publikasi karya ilmiah, monograf, dan buku referensi Anda dengan pendaftaran resmi ke Perpustakaan Nasional dan sertifikasi Hak Cipta.
+                            {{ $settings['home_slide2_desc'] ?? 'Dukung publikasi karya ilmiah...' }}
                         </p>
 
                         <div class="flex items-center gap-3 mb-6">
@@ -93,7 +93,7 @@
                 <div class="absolute inset-0 z-0 flex justify-end">
                     <div class="w-full lg:w-3/4 h-full relative">
                         <img 
-                            src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop" 
+                            src="{{ $settings['home_slide3_image'] ?? 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop' }}" 
                             alt="Percetakan Cepat dan Presisi" 
                             class="w-full h-full object-cover object-left"
                         />
@@ -105,13 +105,13 @@
                 <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-16 lg:py-20">
                     <div class="max-w-xl">
                         <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4">
-                            Percetakan Cepat,<br>
-                            Harga Bersahabat<br>
-                            <span class="text-lime-400">& Presisi</span>
+                            {!! nl2br(e($settings['home_slide3_title'] ?? "Percetakan Cepat,
+Harga Bersahabat")) !!}<br>
+                            <span class="text-lime-400">{{ $settings['home_slide3_highlight'] ?? '& Presisi' }}</span>
                         </h2>
                         
                         <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed mb-7 max-w-md">
-                            Mencetak majalah, prosiding, buletin, modul ajar, dan kebutuhan cetak custom institusi dengan teknologi modern dan ketepatan waktu.
+                            {{ $settings['home_slide3_desc'] ?? 'Mencetak majalah, prosiding...' }}
                         </p>
 
                         <div class="flex items-center gap-3 mb-6">
@@ -152,8 +152,8 @@
                                 <i class="fa-solid fa-book-bookmark"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">Kualitas Terbaik</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">Hasil cetak tajam, warna akurat</p>
+                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat1_title'] ?? 'Kualitas Terbaik' }}</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat1_desc'] ?? 'Hasil cetak tajam, warna akurat' }}</p>
                             </div>
                         </div>
 
@@ -162,8 +162,8 @@
                                 <i class="fa-regular fa-clock"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">Pelayanan Cepat</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">Proses produksi tepat waktu</p>
+                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat2_title'] ?? 'Pelayanan Cepat' }}</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat2_desc'] ?? 'Proses produksi tepat waktu' }}</p>
                             </div>
                         </div>
 
@@ -172,8 +172,8 @@
                                 <i class="fa-solid fa-file-invoice-dollar"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">Harga Bersahabat</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">Harga kompetitif & transparan</p>
+                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat3_title'] ?? 'Harga Bersahabat' }}</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat3_desc'] ?? 'Harga kompetitif & transparan' }}</p>
                             </div>
                         </div>
 
@@ -182,8 +182,8 @@
                                 <i class="fa-solid fa-users-gear"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">Berpengalaman</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">Didukung tim berpengalaman</p>
+                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat4_title'] ?? 'Berpengalaman' }}</h4>
+                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat4_desc'] ?? 'Didukung tim berpengalaman' }}</p>
                             </div>
                         </div>
                     </div>

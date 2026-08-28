@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AboutSettingController;
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\HomeSettingController;
 use App\Http\Controllers\Admin\CatalogSettingController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -20,9 +22,7 @@ use Illuminate\Support\Facades\Route;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return view('landingpage');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
@@ -75,6 +75,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // Settings
+    Route::get('/settings/home', [HomeSettingController::class, 'index'])->name('settings.home');
+    Route::put('/settings/home', [HomeSettingController::class, 'update'])->name('settings.home.update');
     Route::get('/settings/catalog', [CatalogSettingController::class, 'index'])->name('settings.catalog');
     Route::put('/settings/catalog', [CatalogSettingController::class, 'update'])->name('settings.catalog.update');
     Route::get('/settings/contact', [SettingController::class, 'contact'])->name('settings.contact');

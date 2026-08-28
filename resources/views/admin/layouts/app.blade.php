@@ -159,6 +159,11 @@
                 <div>
                     <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Pengaturan Web</span>
                     <div class="space-y-1">
+                        <a href="{{ route('admin.settings.home') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.settings.home') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <i class="fa-solid fa-house-chimney w-4 text-center"></i>
+                            <span>Kelola Halaman Beranda</span>
+                        </a>
+
                         <a href="{{ route('admin.settings.catalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.settings.catalog') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <i class="fa-solid fa-sliders w-4 text-center"></i>
                             <span>Kelola Halaman Katalog</span>
