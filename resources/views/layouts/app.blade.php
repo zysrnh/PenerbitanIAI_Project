@@ -248,7 +248,7 @@
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn px-3.5 py-2 bg-slate-900 hover:bg-slate-950 text-white rounded-lg font-bold text-xs tracking-wider uppercase flex items-center gap-2 shadow-xs">
+                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn px-3.5 py-2 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-2 shadow-xs">
                                 <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> Admin
                             </a>
                         @endif
@@ -262,7 +262,7 @@
                     @endauth
 
                     <!-- Mobile Menu Button (Hamburger) -->
-                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 focus:outline-none transition">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-sm border border-slate-200 text-slate-700 hover:bg-slate-100 focus:outline-none transition">
                         <i class="fa-solid fa-bars text-base"></i>
                     </button>
                 </div>
@@ -271,15 +271,15 @@
 
         <!-- Mobile Drawer Menu -->
         <div id="mobile-drawer" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 animate-fade-in-up">
-            <a href="{{ url('/') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider {{ request()->is('/') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">Beranda</a>
-            <a href="{{ route('tentang') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Tentang Kami</a>
-            <a href="{{ url('/#layanan') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Layanan Penerbitan</a>
-            <a href="{{ url('/#katalog') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Katalog Buku</a>
-            <a href="{{ url('/kontak') }}" class="block px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider {{ request()->routeIs('kontak') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">Kontak Redaksi</a>
+            <a href="{{ url('/') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->is('/') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">Beranda</a>
+            <a href="{{ route('tentang') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Tentang Kami</a>
+            <a href="{{ url('/#layanan') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Layanan Penerbitan</a>
+            <a href="{{ url('/#katalog') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">Katalog Buku</a>
+            <a href="{{ url('/kontak') }}" class="block px-3 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('kontak') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">Kontak Redaksi</a>
             <div class="pt-3 border-t border-slate-100 space-y-2">
                 @auth
                     @if(Auth::user()->role === 'member')
-                        <div class="px-1 py-2 bg-emerald-50 rounded-lg flex items-center gap-2 mb-2">
+                        <div class="px-1 py-2 bg-emerald-50 rounded-sm flex items-center gap-2 mb-2">
                             @if(Auth::user()->avatar_url)
                                 <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover border border-emerald-600 shrink-0" />
                             @else
@@ -292,25 +292,25 @@
                                 <p class="text-[10px] text-slate-500">Member Aktif</p>
                             </div>
                         </div>
-                        <a href="{{ route('member.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                        <a href="{{ route('member.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
                             <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Saya
                         </a>
                         <form method="POST" action="{{ route('member.logout') }}">
                             @csrf
-                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50">
+                            <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50">
                                 <i class="fa-solid fa-right-from-bracket text-[10px]"></i> Keluar
                             </button>
                         </form>
                     @else
-                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                        <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-slate-800 text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
                             <i class="fa-solid fa-lock text-slate-400 text-[10px]"></i> Admin Panel
                         </a>
                     @endif
                 @else
-                    <a href="{{ route('member.login') }}" class="w-full py-2.5 border border-slate-200 text-slate-700 rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-slate-50">
+                    <a href="{{ route('member.login') }}" class="w-full py-2.5 border border-slate-200 text-slate-700 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-slate-50">
                         <i class="fa-solid fa-right-to-bracket text-[10px]"></i> Masuk
                     </a>
-                    <a href="{{ route('member.register') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-lg font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                    <a href="{{ route('member.register') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2">
                         <i class="fa-solid fa-user-plus text-[10px]"></i> Daftar Member
                     </a>
                 @endauth
@@ -515,7 +515,7 @@
     <!-- LOGIN PROMPT MODAL (FOR GUEST USERS) WITH ULTRA-SMOOTH ANIMATION -->
     <!-- ========================================================================= -->
     <div id="loginPromptModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none" onclick="if(event.target === this) window.closeLoginPromptModal()">
-        <div id="loginPromptModalCard" class="bg-white rounded-2xl border border-slate-100 shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out space-y-4">
+        <div id="loginPromptModalCard" class="bg-white rounded-sm border border-slate-100 shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out space-y-4">
             <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-2xl mx-auto shadow-2xs">
                 <i class="fa-solid fa-user-lock"></i>
             </div>
@@ -527,12 +527,12 @@
             </div>
             <div class="space-y-2 pt-2">
                 <a href="{{ route('member.login') }}?redirect={{ urlencode(request()->fullUrl()) }}" 
-                   class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white font-bold text-xs rounded-xl transition shadow-xs flex items-center justify-center gap-2">
+                   class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white font-bold text-xs rounded-sm transition shadow-xs flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-to-bracket text-xs"></i>
                     <span>Masuk Akun Member</span>
                 </a>
                 <a href="{{ route('member.register') }}" 
-                   class="w-full py-2.5 px-4 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+                   class="w-full py-2.5 px-4 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-300 font-bold text-xs rounded-sm transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-user-plus text-xs text-emerald-700"></i>
                     <span>Daftar Akun Baru (Gratis)</span>
                 </a>
@@ -914,7 +914,7 @@
             if (!data.items || data.items.length === 0) {
                 list.innerHTML = `
                     <div class="h-full flex flex-col items-center justify-center text-center p-6 space-y-3.5 my-auto select-none">
-                        <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-2xl shadow-xs">
+                        <div class="w-16 h-16 rounded-sm bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-2xl shadow-xs">
                             <i class="fa-solid fa-basket-shopping"></i>
                         </div>
                         <div>
@@ -923,7 +923,7 @@
                                 Anda belum menambahkan koleksi buku ke keranjang. Jelajahi katalog sekarang!
                             </p>
                         </div>
-                        <a href="{{ route('katalog') }}" onclick="window.closeCartDrawer()" class="px-5 py-2.5 bg-[#006830] text-white text-xs font-bold rounded-xl shadow-xs hover:bg-[#032c21] transition">
+                        <a href="{{ route('katalog') }}" onclick="window.closeCartDrawer()" class="px-5 py-2.5 bg-[#006830] text-white text-xs font-bold rounded-sm shadow-xs hover:bg-[#032c21] transition">
                             Buka Katalog Buku
                         </a>
                     </div>
@@ -1131,7 +1131,7 @@
 
                             const banner = document.getElementById('qrisStatusBanner');
                             if (banner) {
-                                banner.className = 'p-3 bg-emerald-500 text-white rounded-2xl flex items-center justify-center gap-2 text-xs font-black shadow-md animate-bounce';
+                                banner.className = 'p-3 bg-emerald-500 text-white rounded-sm flex items-center justify-center gap-2 text-xs font-black shadow-md animate-bounce';
                                 banner.innerHTML = '<i class="fa-solid fa-circle-check text-base"></i><span>PEMBAYARAN BERHASIL! Mengalihkan ke Invoice...</span>';
                             }
 
