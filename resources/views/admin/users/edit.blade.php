@@ -112,4 +112,62 @@
             </div>
         </form>
     </div>
+
+<script>
+    function toggleEditRoleMenu() {
+        const m = document.getElementById('editRoleMenu');
+        const c = document.getElementById('editRoleChevron');
+        m.classList.toggle('hidden');
+        c.classList.toggle('rotate-180');
+    }
+    function selectEditRole(val, label, iconClass) {
+        document.getElementById('editRoleInput').value = val;
+        document.getElementById('editRoleDisplay').innerHTML = `<i class="${iconClass} text-xs"></i><span>${label}</span>`;
+        document.getElementById('check_edit_admin').classList.add('hidden');
+        document.getElementById('check_edit_super').classList.add('hidden');
+        document.getElementById('check_edit_member').classList.add('hidden');
+        if (val === 'super_admin') document.getElementById('check_edit_super').classList.remove('hidden');
+        else if (val === 'admin') document.getElementById('check_edit_admin').classList.remove('hidden');
+        else if (val === 'member') document.getElementById('check_edit_member').classList.remove('hidden');
+        toggleEditRoleMenu();
+    }
+
+    function toggleEditStatusMenu() {
+        const m = document.getElementById('editStatusMenu');
+        const c = document.getElementById('editStatusChevron');
+        m.classList.toggle('hidden');
+        c.classList.toggle('rotate-180');
+    }
+    function selectEditStatus(val, label, iconClass) {
+        document.getElementById('editStatusInput').value = val;
+        document.getElementById('editStatusDisplay').innerHTML = `<i class="${iconClass} text-xs"></i><span>${label}</span>`;
+        if (val === '1') {
+            document.getElementById('check_edit_status_active').classList.remove('hidden');
+            document.getElementById('check_edit_status_inactive').classList.add('hidden');
+        } else {
+            document.getElementById('check_edit_status_active').classList.add('hidden');
+            document.getElementById('check_edit_status_inactive').classList.remove('hidden');
+        }
+        toggleEditStatusMenu();
+    }
+
+    document.addEventListener('click', function(e) {
+        const c1 = document.getElementById('editRoleContainer');
+        const m1 = document.getElementById('editRoleMenu');
+        const v1 = document.getElementById('editRoleChevron');
+        if (c1 && !c1.contains(e.target) && m1 && !m1.classList.contains('hidden')) {
+            m1.classList.add('hidden');
+            v1.classList.remove('rotate-180');
+        }
+
+        const c2 = document.getElementById('editStatusContainer');
+        const m2 = document.getElementById('editStatusMenu');
+        const v2 = document.getElementById('editStatusChevron');
+        if (c2 && !c2.contains(e.target) && m2 && !m2.classList.contains('hidden')) {
+            m2.classList.add('hidden');
+            v2.classList.remove('rotate-180');
+        }
+    });
+</script>
 @endsection
+

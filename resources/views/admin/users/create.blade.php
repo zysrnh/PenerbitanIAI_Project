@@ -59,21 +59,96 @@
                 </div>
             </div>
 
-            <!-- Role & Status Grid -->
+            <!-- Role & Status Grid with Custom Enterprise Dropdowns -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Role Hak Akses <span class="text-rose-500">*</span></label>
-                    <select name="role" required class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 bg-white text-slate-700">
-                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin Biasa (Operator)</option>
-                        <option value="super_admin" {{ old('role') == 'super_admin' ? 'selected' : '' }}>Super Admin (Akses Penuh)</option>
-                    </select>
+                <!-- Custom Role Dropdown -->
+                <div class="relative" id="createRoleContainer">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Role Hak Akses <span class="text-rose-500">*</span></label>
+                    <input type="hidden" name="role" id="createRoleInput" value="{{ old('role', 'admin') }}" />
+                    <button 
+                        type="button" 
+                        onclick="toggleCreateRoleMenu()"
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-sm text-xs sm:text-sm font-semibold text-slate-800 flex items-center justify-between hover:border-emerald-600 focus:outline-none focus:border-emerald-600 transition cursor-pointer shadow-2xs"
+                    >
+                        <div class="flex items-center gap-2" id="createRoleDisplay">
+                            @if(old('role') === 'super_admin')
+                                <i class="fa-solid fa-user-shield text-amber-600 text-xs"></i>
+                                <span>Super Admin (Akses Penuh)</span>
+                            @else
+                                <i class="fa-solid fa-user-gear text-emerald-700 text-xs"></i>
+                                <span>Admin Biasa (Operator)</span>
+                            @endif
+                        </div>
+                        <i id="createRoleChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200"></i>
+                    </button>
+
+                    <div id="createRoleMenu" class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in">
+                        <button type="button" onclick="selectCreateRole('admin', 'Admin Biasa (Operator)', 'fa-solid fa-user-gear text-emerald-700')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-user-gear text-emerald-700 text-xs"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Admin Biasa (Operator)</p>
+                                    <p class="text-[10px] text-slate-400">Kelola buku, pesanan, dan pesan</p>
+                                </div>
+                            </div>
+                            <i id="check_role_admin" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') !== 'super_admin' ? '' : 'hidden' }}"></i>
+                        </button>
+                        <button type="button" onclick="selectCreateRole('super_admin', 'Super Admin (Akses Penuh)', 'fa-solid fa-user-shield text-amber-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-user-shield text-amber-600 text-xs"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Super Admin (Akses Penuh)</p>
+                                    <p class="text-[10px] text-slate-400">Hak akses mutlak seluruh sistem &amp; pengguna</p>
+                                </div>
+                            </div>
+                            <i id="check_role_super" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') === 'super_admin' ? '' : 'hidden' }}"></i>
+                        </button>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Status Akun <span class="text-rose-500">*</span></label>
-                    <select name="is_active" required class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 bg-white text-slate-700">
-                        <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Aktif (Dapat Login)</option>
-                        <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Nonaktif</option>
-                    </select>
+
+                <!-- Custom Status Dropdown -->
+                <div class="relative" id="createStatusContainer">
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Akun <span class="text-rose-500">*</span></label>
+                    <input type="hidden" name="is_active" id="createStatusInput" value="{{ old('is_active', '1') }}" />
+                    <button 
+                        type="button" 
+                        onclick="toggleCreateStatusMenu()"
+                        class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-sm text-xs sm:text-sm font-semibold text-slate-800 flex items-center justify-between hover:border-emerald-600 focus:outline-none focus:border-emerald-600 transition cursor-pointer shadow-2xs"
+                    >
+                        <div class="flex items-center gap-2" id="createStatusDisplay">
+                            @if(old('is_active', '1') == '0')
+                                <i class="fa-solid fa-circle-xmark text-rose-500 text-xs"></i>
+                                <span>Nonaktif</span>
+                            @else
+                                <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i>
+                                <span>Aktif (Dapat Login)</span>
+                            @endif
+                        </div>
+                        <i id="createStatusChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200"></i>
+                    </button>
+
+                    <div id="createStatusMenu" class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in">
+                        <button type="button" onclick="selectCreateStatus('1', 'Aktif (Dapat Login)', 'fa-solid fa-circle-check text-emerald-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Aktif (Dapat Login)</p>
+                                    <p class="text-[10px] text-slate-400">Pengguna dapat mengakses sistem</p>
+                                </div>
+                            </div>
+                            <i id="check_status_active" class="fa-solid fa-check text-xs text-emerald-600 {{ old('is_active', '1') == '1' ? '' : 'hidden' }}"></i>
+                        </button>
+                        <button type="button" onclick="selectCreateStatus('0', 'Nonaktif', 'fa-solid fa-circle-xmark text-rose-500')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-circle-xmark text-rose-500 text-xs"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Nonaktif</p>
+                                    <p class="text-[10px] text-slate-400">Akses login ditangguhkan</p>
+                                </div>
+                            </div>
+                            <i id="check_status_inactive" class="fa-solid fa-check text-xs text-emerald-600 {{ old('is_active', '1') == '0' ? '' : 'hidden' }}"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 

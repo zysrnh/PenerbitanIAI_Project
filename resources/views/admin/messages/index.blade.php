@@ -35,9 +35,9 @@
 
     <!-- Filter & Search Bar -->
     <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-3.5">
-        <form method="GET" action="{{ route('admin.messages.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-center">
+        <form method="GET" action="{{ route('admin.messages.index') }}" id="msgFilterForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-center">
             
-            <!-- Search -->
+            <!-- Search Input -->
             <div class="sm:col-span-2 lg:col-span-5 relative">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                 <input 
@@ -49,28 +49,87 @@
                 />
             </div>
 
-            <!-- Status Filter -->
-            <div class="lg:col-span-3">
-                <select name="status" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700 font-medium">
-                    <option value="">Semua Status</option>
-                    <option value="pending" {{ request("status") == "pending" ? "selected" : "" }}>Belum Dihubungi</option>
-                    <option value="contacted" {{ request("status") == "contacted" ? "selected" : "" }}>Sudah Dihubungi</option>
-                    <option value="completed" {{ request("status") == "completed" ? "selected" : "" }}>Selesai Diproses</option>
-                </select>
+            <!-- Custom Status Filter Dropdown -->
+            <div class="lg:col-span-3 relative" id="filterStatusContainer">
+                <input type="hidden" name="status" id="filterStatusInput" value="{{ request('status') }}" />
+                <button 
+                    type="button" 
+                    onclick="toggleFilterStatusMenu()"
+                    class="w-full px-3 py-2 bg-slate-50/50 border border-slate-300 rounded-sm text-xs font-semibold text-slate-800 flex items-center justify-between hover:border-emerald-600 transition cursor-pointer"
+                >
+                    <span id="filterStatusLabel">
+                        @if(request('status') === 'pending')
+                            Belum Dihubungi
+                        @elseif(request('status') === 'contacted')
+                            Sudah Dihubungi
+                        @elseif(request('status') === 'completed')
+                            Selesai Diproses
+                        @else
+                            Semua Status
+                        @endif
+                    </span>
+                    <i id="filterStatusChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200"></i>
+                </button>
+
+                <div id="filterStatusMenu" class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in">
+                    <button type="button" onclick="selectFilterStatus('', 'Semua Status')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span>Semua Status</span>
+                        @if(!request('status')) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" onclick="selectFilterStatus('pending', 'Belum Dihubungi')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span>Belum Dihubungi</span>
+                        @if(request('status') === 'pending') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" onclick="selectFilterStatus('contacted', 'Sudah Dihubungi')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span>Sudah Dihubungi</span>
+                        @if(request('status') === 'contacted') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" onclick="selectFilterStatus('completed', 'Selesai Diproses')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span>Selesai Diproses</span>
+                        @if(request('status') === 'completed') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                </div>
             </div>
 
-            <!-- Service Category -->
-            <div class="lg:col-span-2">
-                <select name="service" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-none focus:border-emerald-600 bg-slate-50/50 text-slate-700 font-medium">
-                    <option value="">Semua Layanan</option>
-                    <option value="Penerbitan Buku Ber-ISBN" {{ request('service') == 'Penerbitan Buku Ber-ISBN' ? 'selected' : '' }}>Buku Ber-ISBN</option>
-                    <option value="Percetakan Umum & Komersil" {{ request('service') == 'Percetakan Umum & Komersil' ? 'selected' : '' }}>Percetakan Umum</option>
-                    <option value="Jurnal & Prosiding Ilmiah" {{ request('service') == 'Jurnal & Prosiding Ilmiah' ? 'selected' : '' }}>Jurnal &amp; Prosiding</option>
-                    <option value="Konversi KTI ke Buku" {{ request('service') == 'Konversi KTI ke Buku' ? 'selected' : '' }}>Konversi KTI</option>
-                </select>
+            <!-- Custom Service Category Filter Dropdown -->
+            <div class="lg:col-span-2 relative" id="filterServiceContainer">
+                <input type="hidden" name="service" id="filterServiceInput" value="{{ request('service') }}" />
+                <button 
+                    type="button" 
+                    onclick="toggleFilterServiceMenu()"
+                    class="w-full px-3 py-2 bg-slate-50/50 border border-slate-300 rounded-sm text-xs font-semibold text-slate-800 flex items-center justify-between hover:border-emerald-600 transition cursor-pointer"
+                >
+                    <span id="filterServiceLabel" class="truncate">
+                        {{ request('service') ?: 'Semua Layanan' }}
+                    </span>
+                    <i id="filterServiceChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200"></i>
+                </button>
+
+                <div id="filterServiceMenu" class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in">
+                    <button type="button" onclick="selectFilterService('', 'Semua Layanan')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span class="truncate">Semua Layanan</span>
+                        @if(!request('service')) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" onclick="selectFilterService('Penerbitan Buku Ber-ISBN', 'Buku Ber-ISBN')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span class="truncate">Buku Ber-ISBN</span>
+                        @if(request('service') === 'Penerbitan Buku Ber-ISBN') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" onclick="selectFilterService('Percetakan Umum & Komersil', 'Percetakan Umum')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span class="truncate">Percetakan Umum</span>
+                        @if(request('service') === 'Percetakan Umum & Komersil') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" onclick="selectFilterService('Jurnal & Prosiding Ilmiah', 'Jurnal & Prosiding')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span class="truncate">Jurnal &amp; Prosiding</span>
+                        @if(request('service') === 'Jurnal & Prosiding Ilmiah') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                    <button type="button" onclick="selectFilterService('Konversi KTI ke Buku', 'Konversi KTI')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                        <span class="truncate">Konversi KTI</span>
+                        @if(request('service') === 'Konversi KTI ke Buku') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
+                    </button>
+                </div>
             </div>
 
-            <!-- Buttons -->
+            <!-- Action Buttons -->
             <div class="lg:col-span-2 flex gap-1.5">
                 <button type="submit" class="flex-1 py-2 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-sm transition flex items-center justify-center gap-1 shadow-2xs cursor-pointer">
                     <i class="fa-solid fa-filter text-[10px]"></i>

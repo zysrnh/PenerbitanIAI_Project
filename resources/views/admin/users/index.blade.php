@@ -164,4 +164,51 @@
             </div>
         @endif
     </div>
+
+<script>
+    function toggleUserRoleMenu() {
+        const menu = document.getElementById('userRoleMenu');
+        const chev = document.getElementById('userRoleChevron');
+        menu.classList.toggle('hidden');
+        chev.classList.toggle('rotate-180');
+    }
+    function selectUserRole(val, label) {
+        document.getElementById('userRoleInput').value = val;
+        document.getElementById('userRoleLabel').innerText = label;
+        toggleUserRoleMenu();
+        document.getElementById('userFilterForm').submit();
+    }
+
+    function toggleUserStatusMenu() {
+        const menu = document.getElementById('userStatusMenu');
+        const chev = document.getElementById('userStatusChevron');
+        menu.classList.toggle('hidden');
+        chev.classList.toggle('rotate-180');
+    }
+    function selectUserStatus(val, label) {
+        document.getElementById('userStatusInput').value = val;
+        document.getElementById('userStatusLabel').innerText = label;
+        toggleUserStatusMenu();
+        document.getElementById('userFilterForm').submit();
+    }
+
+    document.addEventListener('click', function(e) {
+        const c1 = document.getElementById('userRoleFilterContainer');
+        const m1 = document.getElementById('userRoleMenu');
+        const v1 = document.getElementById('userRoleChevron');
+        if (c1 && !c1.contains(e.target) && m1 && !m1.classList.contains('hidden')) {
+            m1.classList.add('hidden');
+            v1.classList.remove('rotate-180');
+        }
+
+        const c2 = document.getElementById('userStatusFilterContainer');
+        const m2 = document.getElementById('userStatusMenu');
+        const v2 = document.getElementById('userStatusChevron');
+        if (c2 && !c2.contains(e.target) && m2 && !m2.classList.contains('hidden')) {
+            m2.classList.add('hidden');
+            v2.classList.remove('rotate-180');
+        }
+    });
+</script>
 @endsection
+
