@@ -234,6 +234,102 @@
                     <span>Katalog</span>
                 </a>
 
+                <!-- Member Notification Bell Dropdown -->
+                <div class="relative" id="memberNotifContainer">
+                    <button 
+                        type="button" 
+                        onclick="toggleMemberNotifDropdown(event)" 
+                        id="memberBellBtn"
+                        class="relative p-1.5 sm:p-2 text-slate-600 hover:text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer select-none"
+                        title="Notifikasi Pesanan"
+                    >
+                        <i id="memberBellIcon" class="fa-regular fa-bell text-sm transition-transform duration-300"></i>
+                        <span id="memberBellBadge" class="{{ ($memberActiveNotifCount ?? 0) > 0 ? '' : 'hidden' }} absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-emerald-600 text-white text-[8.5px] font-black flex items-center justify-center font-mono shadow-xs animate-pulse">
+                            {{ $memberActiveNotifCount ?? 0 }}
+                        </span>
+                    </button>
+
+                    <!-- Dropdown Content -->
+                    <div id="memberNotifDropdown" class="hidden absolute top-full right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200/90 overflow-hidden z-[9999] animate-fade-in select-none" style="display: none;">
+                        
+                        <!-- Header -->
+                        <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                    <i class="fa-solid fa-bell text-[11px]"></i>
+                                </div>
+                                <span class="text-xs font-bold uppercase tracking-wider font-heading">Notifikasi Pesanan</span>
+                            </div>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono font-bold">
+                                {{ $memberActiveNotifCount ?? 0 }} Aktif
+                            </span>
+                        </div>
+
+                        <!-- Notification List -->
+                        <div class="max-h-80 overflow-y-auto divide-y divide-slate-100 text-xs">
+                            @if(isset($memberNotifOrders) && $memberNotifOrders->count() > 0)
+                                @foreach($memberNotifOrders as $nord)
+                                    <a href="{{ route('order.invoice', $nord->order_number) }}" class="block p-3 hover:bg-slate-50 transition">
+                                        <div class="flex items-start gap-2.5">
+                                            @if($nord->shipping_status === 'dikirim')
+                                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                                    <i class="fa-solid fa-truck-fast"></i>
+                                                </div>
+                                            @elseif($nord->payment_status === 'pending')
+                                                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                                    <i class="fa-solid fa-clock"></i>
+                                                </div>
+                                            @elseif($nord->shipping_status === 'selesai')
+                                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                                    <i class="fa-solid fa-circle-check"></i>
+                                                </div>
+                                            @else
+                                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                                    <i class="fa-solid fa-box"></i>
+                                                </div>
+                                            @endif
+
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center justify-between gap-1">
+                                                    <span class="font-bold text-slate-900 truncate">#{{ $nord->order_number }}</span>
+                                                    <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $nord->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                <p class="text-[11px] text-slate-600 truncate mt-0.5">
+                                                    @if($nord->shipping_status === 'dikirim')
+                                                        <span class="text-blue-700 font-semibold">Sedang Dikirim</span> &bull; Resi: {{ $nord->tracking_number ?: '-' }}
+                                                    @elseif($nord->payment_status === 'pending')
+                                                        <span class="text-amber-700 font-semibold">Menunggu Pembayaran QRIS</span>
+                                                    @elseif($nord->shipping_status === 'selesai')
+                                                        <span class="text-emerald-700 font-semibold">Pesanan Selesai / Diterima</span>
+                                                    @else
+                                                        <span class="text-indigo-700 font-semibold">Sedang Dipacking Redaksi</span>
+                                                    @endif
+                                                </p>
+                                                <p class="text-[10px] text-slate-400 mt-0.5">
+                                                    Total: <strong class="text-slate-700 font-mono">{{ $nord->formatted_payment }}</strong>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @else
+                                <div class="p-8 text-center text-slate-400 text-xs">
+                                    <i class="fa-regular fa-bell-slash text-3xl mb-2 text-slate-300 block"></i>
+                                    Belum ada notifikasi pesanan saat ini.
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="p-2.5 bg-slate-50 border-t border-slate-100 text-center">
+                            <a href="{{ route('member.orders') }}" class="text-xs font-bold text-emerald-800 hover:text-emerald-950 transition flex items-center justify-center gap-1">
+                                <span>Lihat Semua Riwayat Pesanan</span>
+                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- User Profile Pill -->
                 <a href="{{ route('member.profile') }}" 
                     class="flex items-center gap-2 pl-1 sm:pl-1.5 pr-2 sm:pr-2.5 py-1 rounded-sm bg-slate-100 hover:bg-slate-200 border border-slate-200 transition">
@@ -621,5 +717,31 @@
         }
     </script>
 
+    <script>
+        function toggleMemberNotifDropdown(e) {
+            if (e) {
+                try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
+            }
+            const dropdown = document.getElementById('memberNotifDropdown');
+            if (!dropdown) return;
+            const isClosed = dropdown.classList.contains('hidden') || dropdown.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(dropdown).display === 'none');
+            if (isClosed) {
+                dropdown.style.display = 'block';
+                dropdown.classList.remove('hidden');
+            } else {
+                dropdown.style.display = 'none';
+                dropdown.classList.add('hidden');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('memberNotifDropdown');
+            const container = document.getElementById('memberNotifContainer');
+            if (dropdown && container && !container.contains(e.target)) {
+                dropdown.style.display = 'none';
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>

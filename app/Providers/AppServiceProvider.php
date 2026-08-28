@@ -24,6 +24,45 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // View Composer for Member Portal (Universal Member Notification Data)
+        View::composer(['member.dashboard', 'member.orders', 'member.profile'], function ($view) {
+            try {
+                $user = auth()->user();
+                if ($user) {
+                    $memberOrders = Order::where('user_id', $user->id)
+                        ->orWhere('customer_email', $user->email)
+                        ->latest()
+                        ->take(5)
+                        ->get();
+
+                    $memberActiveNotifCount = Order::where(function ($q) use ($user) {
+                            $q->where('user_id', $user->id)
+                              ->orWhere('customer_email', $user->email);
+                        })
+                        ->where(function ($q) {
+                            $q->where('payment_status', 'pending')
+                              ->orWhereIn('shipping_status', ['menunggu_proses', 'diproses', 'dikirim']);
+                        })
+                        ->count();
+
+                    $view->with([
+                        'memberNotifOrders'      => $memberOrders,
+                        'memberActiveNotifCount' => $memberActiveNotifCount,
+                    ]);
+                } else {
+                    $view->with([
+                        'memberNotifOrders'      => collect(),
+                        'memberActiveNotifCount' => 0,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                $view->with([
+                    'memberNotifOrders'      => collect(),
+                    'memberActiveNotifCount' => 0,
+                ]);
+            }
+        });
+
         // Force HTTPS URL generation in production
         if (config('app.env') === 'production') {
             URL::forceScheme('https');
