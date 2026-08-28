@@ -780,14 +780,14 @@
                                             </span>
                                         </div>
 
-                                        <!-- Preview Pesan Terakhir -->
+                                        <!-- Preview Pesan Terakhir (Rapi & Tidak Terpotong) -->
                                         @if($latestMsg)
-                                            <p class="text-[11px] text-slate-600 line-clamp-1 mt-1.5 bg-white p-1.5 rounded-xs border border-slate-200">
-                                                <strong class="{{ $latestMsg->sender_type === 'admin' ? 'text-emerald-700' : 'text-slate-900' }}">
-                                                    {{ $latestMsg->sender_type === 'admin' ? 'Saya: ' : 'Pembeli: ' }}
-                                                </strong>
-                                                {{ $latestMsg->message }}
-                                            </p>
+                                            <div class="mt-2 p-2 bg-slate-50 border border-slate-200/90 rounded-xs text-[11px] text-slate-700 leading-snug">
+                                                <span class="font-bold {{ $latestMsg->sender_type === 'admin' ? 'text-emerald-700' : 'text-slate-900' }}">
+                                                    {{ $latestMsg->sender_type === 'admin' ? 'Saya:' : 'Pembeli:' }}
+                                                </span>
+                                                <span class="text-slate-600">"{{ \Illuminate\Support\Str::limit($latestMsg->message, 65) }}"</span>
+                                            </div>
                                         @endif
 
                                         <!-- 3. Tombol Sederhana & Jelas -->
