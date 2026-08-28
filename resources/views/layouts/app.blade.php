@@ -220,49 +220,48 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header Action Buttons (Spacious & Touch-Friendly) -->
-                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <!-- Header Action Buttons (Harmonious, Modern & Consistent) -->
+                <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
                     @auth
                         @if(Auth::user()->role === 'member')
-                            {{-- Shopping Cart Button (Hanya Muncul Jika Sudah Login Sebagai Member) --}}
+                            {{-- Shopping Cart Button (Clean Square Icon with Notification Badge) --}}
                             <button type="button" 
                                     onclick="window.openCartDrawer()" 
-                                    class="user-nav-btn relative w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition shrink-0"
+                                    class="user-nav-btn relative w-9 h-9 sm:w-10 sm:h-10 rounded-sm flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs cursor-pointer transition select-none shrink-0"
                                     title="Keranjang Belanja">
-                                <i class="fa-solid fa-cart-shopping text-sm pointer-events-none"></i>
-                                <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#006830] text-white rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs pointer-events-none">
+                                <i class="fa-solid fa-cart-shopping text-sm pointer-events-none text-emerald-800"></i>
+                                <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-[#006830] text-white rounded-full text-[9px] font-black flex items-center justify-center border border-white shadow-xs pointer-events-none">
                                     0
                                 </span>
                             </button>
 
-                            {{-- Member Profile Pill --}}
+                            {{-- Member Profile Button (Desktop: Elegant Pill, Mobile: Clean Circular Avatar) --}}
                             <div class="relative" id="memberUserDropdownContainer">
                                 <button type="button" 
                                         id="memberUserDropdownBtn"
                                         onclick="window.toggleMemberDropdown(event)" 
-                                        class="user-nav-btn flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-2 sm:pr-3 py-1 sm:py-1.5 rounded-full border border-emerald-200/90 bg-white hover:bg-emerald-50/70 hover:border-emerald-500 shadow-2xs cursor-pointer">
-                                    <div class="relative">
+                                        class="user-nav-btn flex items-center gap-2 p-0.5 sm:pl-1.5 sm:pr-2.5 sm:py-1 rounded-full sm:rounded-sm border border-emerald-600/40 sm:border-slate-200 bg-white hover:bg-emerald-50 active:bg-emerald-100 hover:border-emerald-500 shadow-2xs cursor-pointer transition select-none h-9 sm:h-10 shrink-0">
+                                    <div class="relative w-7 h-7 sm:w-7 sm:h-7 rounded-full overflow-hidden shrink-0 border border-emerald-600 shadow-2xs">
                                         @if(Auth::user()->avatar_url)
-                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-7 h-7 rounded-full object-cover shadow-xs border border-emerald-500" />
+                                            <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover" />
                                         @else
-                                            <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#032c21] to-emerald-600 flex items-center justify-center text-white text-[11px] font-black shadow-xs">
+                                            <div class="w-full h-full bg-[#006830] flex items-center justify-center text-white text-[10px] font-black">
                                                 {{ Auth::user()->initials }}
                                             </div>
                                         @endif
-                                        <span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border-2 border-white rounded-full"></span>
                                     </div>
-                                    <span class="hidden sm:inline text-xs font-bold text-slate-800 group-hover:text-emerald-800 max-w-[90px] sm:max-w-[120px] truncate transition">
+                                    <span class="hidden sm:inline text-xs font-bold text-slate-800 max-w-[100px] truncate leading-tight">
                                         {{ explode(' ', Auth::user()->name)[0] }}
                                     </span>
-                                    <i id="memberDropdownChevron" class="fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200"></i>
+                                    <i id="memberDropdownChevron" class="hidden sm:inline fa-solid fa-chevron-down text-[8px] text-slate-400 group-hover:text-emerald-700 transition-transform duration-200"></i>
                                 </button>
 
                                 <!-- Dropdown Menu -->
                                 <div id="memberUserDropdownMenu" class="absolute right-0 top-full pt-2 hidden w-56 z-50">
-                                    <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up">
+                                    <div class="auth-dropdown-panel bg-white border border-slate-200 rounded-sm shadow-2xl p-2 animate-fade-in-up select-none">
                                         <div class="px-3 py-2 border-b border-slate-100 mb-1">
                                             <p class="text-xs font-extrabold text-slate-900 truncate">{{ Auth::user()->name }}</p>
-                                            <p class="text-[10.5px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
+                                            <p class="text-[10px] text-emerald-700 font-medium truncate">{{ Auth::user()->email }}</p>
                                         </div>
                                         <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard
@@ -285,26 +284,26 @@
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
-                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn px-3 py-1.5 sm:px-3.5 sm:py-2 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 shadow-xs">
+                            <a href="{{ route('admin.dashboard') }}" class="user-nav-btn h-9 sm:h-10 px-3 sm:px-3.5 bg-slate-900 hover:bg-slate-950 text-white rounded-sm font-bold text-xs tracking-wider uppercase flex items-center gap-1.5 shadow-xs">
                                 <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> <span class="hidden sm:inline">Admin</span>
                             </a>
                         @endif
                     @else
-                        {{-- Desktop Only "Masuk" Button (Hidden on Mobile phone screen to avoid crowding) --}}
+                        {{-- Desktop Only "Masuk" Button (Hidden on Mobile phone screen) --}}
                         <a href="{{ route('member.login') }}" 
-                           class="hidden sm:flex px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition-all duration-200 items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer select-none">
+                           class="hidden sm:flex h-10 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition-all duration-200 items-center gap-1.5 shadow-xs hover:shadow-md cursor-pointer select-none">
                             <i class="fa-solid fa-right-to-bracket text-xs text-emerald-300 pointer-events-none"></i>
                             <span>Masuk</span>
                         </a>
                     @endauth
 
-                    <!-- Mobile Menu Button (Hamburger - Standard 44x44 Touch Target) -->
+                    <!-- Mobile Menu Button (Hamburger - Standard Uniform Size) -->
                     <button id="mobile-menu-btn" 
                             type="button"
                             onclick="window.toggleMobileMenu()" 
-                            class="lg:hidden w-11 h-11 rounded-sm border border-slate-300 bg-white text-slate-800 hover:bg-emerald-50 active:bg-emerald-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition-colors cursor-pointer shadow-xs shrink-0 select-none"
+                            class="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-sm border border-slate-200 bg-white text-slate-800 hover:bg-emerald-50 active:bg-emerald-100 hover:text-emerald-800 flex items-center justify-center focus:outline-none transition-colors cursor-pointer shadow-2xs shrink-0 select-none"
                             aria-label="Buka Menu Navigasi">
-                        <i id="mobileMenuIcon" class="fa-solid fa-bars text-lg pointer-events-none"></i>
+                        <i id="mobileMenuIcon" class="fa-solid fa-bars text-base pointer-events-none text-slate-800"></i>
                     </button>
                 </div>
             </div>
