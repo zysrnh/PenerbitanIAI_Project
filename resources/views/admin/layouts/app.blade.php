@@ -60,10 +60,10 @@
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden transition-opacity"></div>
 
         <!-- Sidebar (Collapsible w-64) -->
-    <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#0f172a] text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-slate-800 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
+    <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#032c21] text-slate-300 flex flex-col justify-between transform -translate-x-full lg:translate-x-0 border-r border-white/10 shadow-xl overflow-y-auto select-none transition-transform duration-300 ease-in-out">
         <div class="p-5">
             <!-- Brand Header (Clean Full Logo) -->
-            <div class="pb-4 mb-4 border-b border-slate-800 flex items-center justify-center">
+            <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-center">
                 <a href="{{ route('admin.dashboard') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
                     <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 w-auto object-contain" />
                 </a>
@@ -73,14 +73,14 @@
             <nav class="space-y-6 text-xs">
                 <!-- Section 1: Overview -->
                 <div>
-                    <span class="px-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase block mb-2">Overview</span>
+                    <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Overview</span>
                     <div class="space-y-1">
-                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <i class="fa-solid fa-gauge w-4 text-center"></i>
                             <span>Dashboard</span>
                         </a>
 
-                        <a href="{{ route('admin.messages.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.messages.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.messages.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.messages.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-inbox w-4 text-center"></i>
                                 <span>Pesan &amp; Naskah</span>
@@ -90,7 +90,7 @@
                             @endif
                         </a>
 
-                        <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.users.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.users.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <i class="fa-solid fa-user-shield w-4 text-center"></i>
                             <span>Manajemen Admin</span>
                         </a>
@@ -99,9 +99,9 @@
 
                 <!-- Section 2: Penjualan & Penerbitan -->
                 <div>
-                    <span class="px-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase block mb-2">Transaksi &amp; Katalog</span>
+                    <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Transaksi &amp; Katalog</span>
                     <div class="space-y-1">
-                        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.orders.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.orders.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <i class="fa-solid fa-receipt w-4 text-center"></i>
                             <span>Pesanan Buku</span>
                             @php
@@ -112,7 +112,7 @@
                             @endif
                         </a>
 
-                        <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <i class="fa-solid fa-book-bookmark w-4 text-center"></i>
                             <span>Katalog Buku &amp; ISBN</span>
                         </a>
@@ -121,19 +121,19 @@
 
                 <!-- Section 3: Pengaturan Web -->
                 <div>
-                    <span class="px-3 text-[10px] font-bold tracking-wider text-slate-500 uppercase block mb-2">Pengaturan</span>
+                    <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Pengaturan</span>
                     <div class="space-y-1">
-                        <a href="{{ route('admin.settings.catalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.settings.catalog') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.settings.catalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.settings.catalog') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <i class="fa-solid fa-sliders w-4 text-center"></i>
                             <span>Kelola Halaman Katalog</span>
                         </a>
 
-                        <a href="{{ route('admin.settings.about') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.settings.about') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.settings.about') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.settings.about') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <i class="fa-solid fa-circle-info w-4 text-center"></i>
                             <span>Kelola Tentang Kami</span>
                         </a>
 
-                        <a href="{{ route('admin.settings.contact') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold transition {{ request()->routeIs('admin.settings.contact') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-slate-800 hover:text-white' }}">
+                        <a href="{{ route('admin.settings.contact') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.settings.contact') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white' }}">
                             <i class="fa-solid fa-address-book w-4 text-center"></i>
                             <span>Kelola Kontak &amp; Web</span>
                         </a>
@@ -143,10 +143,10 @@
         </div>
 
         <!-- Logout Section in Sidebar -->
-        <div class="p-4 border-t border-slate-800">
+        <div class="p-4 border-t border-white/10">
             <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
-                <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl font-bold text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition border border-rose-500/20">
+                <button type="submit" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-sm font-bold text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition border border-rose-500/20">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>Keluar Sistem</span>
                 </button>
@@ -166,7 +166,7 @@
                     id="sidebarToggleBtn"
                     type="button" 
                     onclick="toggleSidebar()" 
-                    class="p-2 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition border border-slate-200 flex items-center justify-center" 
+                    class="p-2 rounded-sm bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 transition border border-slate-200 flex items-center justify-center" 
                     title="Buka / Tutup Sidebar Navigasi"
                 >
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
@@ -187,7 +187,7 @@
                     <button 
                         type="button" 
                         onclick="toggleNotifDropdown()" 
-                        class="relative p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition flex items-center justify-center"
+                        class="relative p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-sm border border-slate-200 transition flex items-center justify-center"
                         title="Notifikasi Masuk"
                     >
                         <i class="fa-regular fa-bell text-sm"></i>
@@ -199,7 +199,7 @@
                     </button>
 
                     <!-- Dropdown Content -->
-                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200/80 overflow-hidden z-50 animate-fade-in-up">
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-sm shadow-2xl border border-slate-200/80 overflow-hidden z-50 animate-fade-in-up">
                         <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-bell text-emerald-400 text-xs"></i>
@@ -249,7 +249,7 @@
                 </div>
 
                 <!-- Web Portal Link -->
-                <a href="{{ url('/') }}" target="_blank" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl border border-slate-200 transition flex items-center gap-1.5">
+                <a href="{{ url('/') }}" target="_blank" class="px-3.5 py-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-sm border border-slate-200 transition flex items-center gap-1.5">
                     <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i>
                     <span class="hidden sm:inline">Lihat Web</span>
                 </a>
