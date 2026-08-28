@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id" class="h-full bg-slate-950">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login Administrator | PERSIS PERS</title>
+    <title>Masuk Admin | PERSIS PERS</title>
 
     <!-- Favicons & App Icons -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=2">
@@ -21,74 +21,58 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style> 
         body { font-family: 'Plus Jakarta Sans', sans-serif; } 
-        .font-heading { font-family: 'Outfit', sans-serif; }
-        .input-focus:focus { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); outline: none; }
+        .input-focus:focus { border-color: #006830; box-shadow: 0 0 0 2px rgba(0,104,48,0.15); outline: none; }
     </style>
 </head>
-<body class="min-h-screen antialiased flex items-center justify-center p-4 bg-gradient-to-br from-[#032c21] via-[#043d2f] to-[#021d16] text-slate-100 selection:bg-emerald-500 selection:text-white relative overflow-hidden">
+<body class="h-full antialiased flex items-center justify-center p-4 bg-[#0a0f1d] selection:bg-emerald-500 selection:text-white">
 
-    <!-- Background Accents -->
-    <div class="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="w-full max-w-sm relative z-10 space-y-4">
-        
-        <!-- Official Logo Header -->
-        <div class="text-center space-y-2">
+    <div class="w-full max-w-sm">
+        <!-- Brand Header with Official Logo -->
+        <div class="text-center mb-6">
             <a href="{{ url('/') }}" class="inline-block transition-transform duration-200 hover:scale-105" title="PERSIS PERS">
                 <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-14 sm:h-16 w-auto mx-auto object-contain" />
             </a>
-            
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 border border-white/15 rounded-full text-[10.5px] font-extrabold uppercase tracking-wider text-emerald-300 font-mono">
-                <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-                <span>Portal Khusus Pengelola Redaksi</span>
-            </div>
+            <p class="text-xs text-slate-400 mt-2 font-medium">Panel Administrasi &amp; Redaksi</p>
         </div>
 
         <!-- Login Card -->
-        <div class="bg-white text-slate-800 rounded-sm shadow-2xl border border-white/20 p-6 sm:p-7 space-y-4">
-            
-            <div>
-                <h1 class="text-lg font-black text-slate-900 font-heading">Login Administrator</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Masukkan kredensial staf redaksi untuk mengelola transaksi &amp; katalog.</p>
-            </div>
-
+        <div class="bg-white rounded-sm shadow-xl border border-slate-200 p-6 sm:p-7">
             @if(session('success'))
-                <div class="p-3 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+                <div class="mb-4 p-3 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
                     <i class="fa-solid fa-circle-check text-emerald-600"></i>
                     <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="p-3 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+                <div class="mb-4 p-3 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
                     <i class="fa-solid fa-circle-exclamation text-rose-600"></i>
                     <span>{{ session('error') }}</span>
                 </div>
             @endif
 
             @if($errors->any())
-                <div class="p-3 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
+                <div class="mb-4 p-3 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center gap-2">
                     <i class="fa-solid fa-circle-exclamation text-rose-600"></i>
                     <span>{{ $errors->first() }}</span>
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('admin.login.submit') }}" class="space-y-3.5">
+            <form method="POST" action="{{ route('admin.login.submit') }}" class="space-y-4">
                 @csrf
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Email Administrator</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Email</label>
                     <div class="relative">
                         <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                         <input 
                             type="email" 
                             name="email" 
                             value="{{ old('email') }}" 
-                            placeholder="admin@iaipibandung.ac.id" 
+                            placeholder="admin@persispers.com" 
                             required 
                             autofocus
-                            class="input-focus w-full pl-9 pr-3 py-2.5 text-xs rounded-sm border border-slate-300 transition bg-slate-50/50"
+                            class="input-focus w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-sm border border-slate-200 transition"
                         />
                     </div>
                 </div>
@@ -101,9 +85,9 @@
                             type="password" 
                             name="password" 
                             id="adminPassword"
-                            placeholder="••••••••" 
+                            placeholder="Masukkan kata sandi" 
                             required 
-                            class="input-focus w-full pl-9 pr-10 py-2.5 text-xs rounded-sm border border-slate-300 transition bg-slate-50/50"
+                            class="input-focus w-full pl-9 pr-10 py-2 text-xs sm:text-sm rounded-sm border border-slate-200 transition"
                         />
                         <button type="button" onclick="togglePass()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                             <i id="eyeIcon" class="fa-solid fa-eye text-xs"></i>
@@ -113,37 +97,26 @@
 
                 <div class="flex items-center justify-between text-xs pt-0.5">
                     <label class="flex items-center gap-2 text-slate-600 cursor-pointer">
-                        <input type="checkbox" name="remember" class="rounded-xs border-slate-300 text-emerald-700 focus:ring-emerald-700" />
-                        <span>Ingat sesi admin</span>
+                        <input type="checkbox" name="remember" class="rounded-sm border-slate-300 text-emerald-700 focus:ring-emerald-700" />
+                        <span>Ingat saya</span>
                     </label>
                 </div>
 
                 <button 
                     type="submit" 
-                    class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold uppercase tracking-wider transition shadow-xs mt-1 flex items-center justify-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-shield-halved text-xs"></i>
-                    <span>Masuk Panel Admin</span>
+                    class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold uppercase tracking-wider transition shadow-xs mt-2 flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-right-to-bracket text-xs"></i>
+                    <span>Masuk Admin</span>
                 </button>
             </form>
 
-            <!-- Switcher to Member Portal -->
-            <div class="pt-3 border-t border-slate-100 text-center">
-                <a href="{{ route('member.login') }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 hover:underline inline-flex items-center gap-1.5">
-                    <i class="fa-solid fa-user text-[11px]"></i>
-                    <span>Bukan admin? Masuk sebagai Member / Pembaca &rarr;</span>
+            <div class="mt-4 pt-3 border-t border-slate-100 text-center">
+                <a href="{{ url('/') }}" class="text-xs text-slate-500 hover:text-slate-800 transition inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                    <span>Kembali ke Beranda</span>
                 </a>
             </div>
-
         </div>
-
-        <!-- Back to Website -->
-        <div class="text-center">
-            <a href="{{ url('/') }}" class="text-xs text-emerald-200/80 hover:text-white transition inline-flex items-center gap-1.5">
-                <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                <span>Kembali ke Beranda Utama</span>
-            </a>
-        </div>
-
     </div>
 
     <script>
