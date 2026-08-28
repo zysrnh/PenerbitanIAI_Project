@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Book;
 use App\Models\Order;
 use App\Models\SiteSetting;
+use App\Mail\OrderCompletedAdminMail;
+use App\Mail\OrderCompletedCustomerMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class MemberDashboardController extends Controller
 {
@@ -112,6 +116,25 @@ class MemberDashboardController extends Controller
         $order->update([
             'shipping_status' => 'selesai'
         ]);
+
+        // 1. Send notification email to Admin (info@penerbitpersis.com)
+        try {
+            $adminEmail = SiteSetting::get('notification_recipient_email', 'info@penerbitpersis.com');
+            if (!empty($adminEmail)) {
+                Mail::to($adminEmail)->send(new OrderCompletedAdminMail($order));
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Failed sending order completed email to admin: ' . $e->getMessage());
+        }
+
+        // 2. Send thank you email to Customer
+        try {
+            if (!empty($order->customer_email) && filter_var($order->customer_email, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($order->customer_email)->send(new OrderCompletedCustomerMail($order));
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Failed sending order completed email to customer: ' . $e->getMessage());
+        }
 
         return redirect()->route('member.orders')->with('success', 'Terima kasih! Pesanan #' . $order->order_number . ' telah dikonfirmasi diterima.');
     }
