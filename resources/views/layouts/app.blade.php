@@ -122,6 +122,28 @@
     </style>
 </head>
 <body class="antialiased text-slate-800 bg-white selection:bg-brand-800 selection:text-white flex flex-col min-h-screen">
+@php
+    $navServicesRaw = \App\Models\SiteSetting::get('home_services_json', null);
+    $navServices = $navServicesRaw ? json_decode($navServicesRaw, true) : [
+        ['icon' => 'fa-solid fa-book-open', 'title' => 'Penerbitan Buku', 'link' => url('/#layanan')],
+        ['icon' => 'fa-solid fa-copy', 'title' => 'Percetakan Umum', 'link' => url('/#layanan')],
+        ['icon' => 'fa-solid fa-newspaper', 'title' => 'Jurnal & Majalah', 'link' => url('/#layanan')],
+        ['icon' => 'fa-solid fa-graduation-cap', 'title' => 'Konversi KTI', 'link' => url('/#layanan')],
+        ['icon' => 'fa-solid fa-barcode', 'title' => 'Pengurusan ISBN', 'link' => url('/#layanan')],
+        ['icon' => 'fa-solid fa-box-open', 'title' => 'Cetak Custom', 'link' => url('/#layanan')],
+    ];
+    if (!is_array($navServices) || empty($navServices)) {
+        $navServices = [
+            ['icon' => 'fa-solid fa-book-open', 'title' => 'Penerbitan Buku', 'link' => url('/#layanan')],
+            ['icon' => 'fa-solid fa-copy', 'title' => 'Percetakan Umum', 'link' => url('/#layanan')],
+            ['icon' => 'fa-solid fa-newspaper', 'title' => 'Jurnal & Majalah', 'link' => url('/#layanan')],
+            ['icon' => 'fa-solid fa-graduation-cap', 'title' => 'Konversi KTI', 'link' => url('/#layanan')],
+            ['icon' => 'fa-solid fa-barcode', 'title' => 'Pengurusan ISBN', 'link' => url('/#layanan')],
+            ['icon' => 'fa-solid fa-box-open', 'title' => 'Cetak Custom', 'link' => url('/#layanan')],
+        ];
+    }
+@endphp
+
 
     <!-- Top Sticky Header -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all duration-300">
@@ -139,15 +161,22 @@
                     <a href="{{ route('tentang') }}" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">TENTANG KAMI</a>
                     
                     <div class="relative group">
-                        <button class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition flex items-center gap-1 py-2">
+                        <button class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition flex items-center gap-1 py-2 cursor-pointer">
                             LAYANAN <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform duration-200"></i>
                         </button>
-                        <div class="absolute left-0 top-full hidden group-hover:block w-56 bg-white border border-slate-200 rounded-lg shadow-xl py-2 z-50 animate-fade-in-up">
-                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Penerbitan Buku</a>
-                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Percetakan Umum</a>
-                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Jurnal & Majalah</a>
-                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Konversi KTI ke Buku</a>
-                            <a href="{{ url('/#layanan') }}" class="block px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-brand-900">Pengurusan ISBN</a>
+                        <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200/90 rounded-sm shadow-xl py-1.5 z-50 animate-fade-in-up select-none">
+                            @foreach($navServices as $ns)
+                                <a href="{{ !empty($ns['link']) ? (str_starts_with($ns['link'], 'http') || str_starts_with($ns['link'], '/') ? $ns['link'] : url('/' . $ns['link'])) : url('/#layanan') }}" 
+                                   class="flex items-center gap-2.5 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition">
+                                    <i class="{{ $ns['icon'] ?? 'fa-solid fa-circle-check' }} text-emerald-600 text-xs w-4 shrink-0 text-center"></i>
+                                    <span class="truncate">{{ $ns['title'] ?? 'Layanan' }}</span>
+                                </a>
+                            @endforeach
+                            <div class="border-t border-slate-100 mt-1 pt-1 px-3.5 py-1.5 bg-slate-50">
+                                <a href="{{ url('/#layanan') }}" class="text-[10.5px] font-bold text-emerald-700 hover:text-emerald-900 flex items-center justify-between">
+                                    <span>Lihat Semua Layanan &rarr;</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -343,15 +372,18 @@
                     </ul>
                 </div>
 
-                <!-- Services -->
+                <!-- Services (Dynamic from Settings) -->
                 <div class="md:col-span-3 space-y-3">
                     <h5 class="text-xs font-bold text-white uppercase tracking-wider">Layanan Utama</h5>
                     <ul class="space-y-2 text-xs text-slate-400">
-                        <li>Penerbitan Buku Ber-ISBN</li>
-                        <li>Percetakan Buku & Majalah</li>
-                        <li>Konversi Skripsi/Tesis ke Buku</li>
-                        <li>Penerbitan Jurnal & Prosiding</li>
-                        <li>Desain Cover & Layout Naskah</li>
+                        @foreach(array_slice($navServices, 0, 5) as $ns)
+                            <li>
+                                <a href="{{ !empty($ns['link']) ? (str_starts_with($ns['link'], 'http') || str_starts_with($ns['link'], '/') ? $ns['link'] : url('/' . $ns['link'])) : url('/#layanan') }}" class="hover:text-emerald-400 transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-angle-right text-[9px] text-emerald-500"></i>
+                                    <span>{{ $ns['title'] ?? 'Layanan' }}</span>
+                                </a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
 
