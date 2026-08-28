@@ -186,19 +186,19 @@
 
                 <!-- Header Action Buttons (Spacious & Touch-Friendly) -->
                 <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-                    {{-- Shopping Cart Button --}}
-                    <button type="button" 
-                            onclick="window.openCartDrawer()" 
-                            class="user-nav-btn relative w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition shrink-0"
-                            title="Keranjang Belanja">
-                        <i class="fa-solid fa-cart-shopping text-sm pointer-events-none"></i>
-                        <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#006830] text-white rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs pointer-events-none">
-                            0
-                        </span>
-                    </button>
-
                     @auth
                         @if(Auth::user()->role === 'member')
+                            {{-- Shopping Cart Button (Hanya Muncul Jika Sudah Login Sebagai Member) --}}
+                            <button type="button" 
+                                    onclick="window.openCartDrawer()" 
+                                    class="user-nav-btn relative w-10 h-10 rounded-full flex items-center justify-center bg-white hover:bg-emerald-50/80 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs hover:shadow-md cursor-pointer transition shrink-0"
+                                    title="Keranjang Belanja">
+                                <i class="fa-solid fa-cart-shopping text-sm pointer-events-none"></i>
+                                <span id="navCartBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#006830] text-white rounded-full text-[10px] font-black flex items-center justify-center border-2 border-white shadow-xs pointer-events-none">
+                                    0
+                                </span>
+                            </button>
+
                             {{-- Member Profile Pill --}}
                             <div class="relative" id="memberUserDropdownContainer">
                                 <button type="button" 
