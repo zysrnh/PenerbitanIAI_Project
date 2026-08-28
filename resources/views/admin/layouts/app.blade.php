@@ -195,41 +195,35 @@
     <div id="main-content-wrapper" class="flex-1 flex flex-col min-w-0 min-h-screen lg:pl-64">
         
         <!-- Top Navigation Header -->
-        <header class="h-14 bg-white border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
+        <header class="h-14 bg-white border-b border-slate-200 px-3 sm:px-6 lg:px-8 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
             
-            <!-- Left: Toggle Sidebar & Breadcrumb -->
-            <div class="flex items-center gap-2.5 sm:gap-4">
+            <!-- Left: Toggle Sidebar & Clean Title -->
+            <div class="flex items-center gap-2.5 sm:gap-3">
                 <button 
                     id="sidebarToggleBtn"
                     type="button" 
                     onclick="toggleSidebar()" 
-                    class="p-2 rounded-sm bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 transition border border-slate-200 flex items-center justify-center cursor-pointer" 
+                    class="p-1.5 sm:p-2 rounded-sm bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 transition border border-slate-200 flex items-center justify-center cursor-pointer" 
                     title="Buka / Tutup Sidebar Navigasi"
                 >
                     <i class="fa-solid fa-bars-staggered text-sm"></i>
                 </button>
                 
-                <!-- Desktop Breadcrumb -->
-                <div class="hidden sm:flex items-center gap-2 text-xs">
-                    <a href="{{ route('admin.dashboard') }}" class="text-slate-400 hover:text-emerald-700 transition">Admin Panel</a>
-                    <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
-                    <span class="font-bold text-slate-800">@yield('header_title', 'Dashboard')</span>
-                </div>
-
-                <!-- Mobile Header Brand -->
-                <div class="flex items-center gap-1.5 sm:hidden">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_emblem.png') }}" alt="Logo" class="w-6 h-6 object-contain" />
-                    <span class="font-extrabold text-xs text-slate-900 font-heading">Admin Panel</span>
+                <!-- Clean Title / Breadcrumb (No Redundant Emblem on mobile) -->
+                <div class="flex items-center gap-1.5 text-xs">
+                    <a href="{{ route('admin.dashboard') }}" class="text-slate-400 hover:text-emerald-700 transition hidden sm:inline">Admin</a>
+                    <i class="fa-solid fa-chevron-right text-[8px] text-slate-300 hidden sm:inline"></i>
+                    <span class="font-extrabold text-slate-900 text-xs sm:text-sm font-heading">@yield('header_title', 'Dashboard')</span>
                 </div>
             </div>
 
-            <!-- Right Actions: Web Preview, Notif & User Pill -->
-            <div class="flex items-center gap-2 sm:gap-3.5">
+            <!-- Right Actions: Web Preview (Desktop only), Notif & User Avatar -->
+            <div class="flex items-center gap-2 sm:gap-3">
                 
-                <!-- Web Portal Link -->
-                <a href="{{ url('/') }}" target="_blank" class="px-2.5 sm:px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50/50 rounded-sm border border-slate-200 transition flex items-center gap-1.5 shadow-2xs">
-                    <i class="fa-solid fa-house text-[10px] text-emerald-700"></i>
-                    <span class="hidden sm:inline">Lihat Web</span>
+                <!-- Web Portal Link (Hidden on mobile to eliminate clutter) -->
+                <a href="{{ url('/') }}" target="_blank" class="hidden sm:flex px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50/50 rounded-sm border border-slate-200 transition items-center gap-1.5 shadow-2xs">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-emerald-700"></i>
+                    <span>Lihat Web</span>
                 </a>
 
                 <!-- Notification Dropdown -->
