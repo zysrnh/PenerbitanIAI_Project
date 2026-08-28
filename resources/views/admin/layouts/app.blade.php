@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin Panel | PERSIS PERS')</title>
 
@@ -66,7 +66,7 @@
         .animate-fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
     </style>
 </head>
-<body class="min-h-screen antialiased text-slate-800 bg-slate-100 flex flex-col">
+<body class="min-h-screen antialiased text-slate-800 bg-slate-100 flex flex-col selection:bg-emerald-600 selection:text-white">
 
     @php
         $latestMessages = \App\Models\ContactMessage::latest()->take(6)->get();
@@ -195,10 +195,10 @@
     <div id="main-content-wrapper" class="flex-1 flex flex-col min-w-0 min-h-screen lg:pl-64">
         
         <!-- Top Navigation Header -->
-        <header class="h-14 bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
+        <header class="h-14 bg-white border-b border-slate-200 px-3.5 sm:px-6 lg:px-8 sticky top-0 z-30 flex items-center justify-between shadow-2xs">
             
             <!-- Left: Toggle Sidebar & Breadcrumb -->
-            <div class="flex items-center gap-3 sm:gap-4">
+            <div class="flex items-center gap-2.5 sm:gap-4">
                 <button 
                     id="sidebarToggleBtn"
                     type="button" 
@@ -224,10 +224,10 @@
             </div>
 
             <!-- Right Actions: Web Preview, Notif & User Pill -->
-            <div class="flex items-center gap-2.5 sm:gap-3.5">
+            <div class="flex items-center gap-2 sm:gap-3.5">
                 
                 <!-- Web Portal Link -->
-                <a href="{{ url('/') }}" target="_blank" class="px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50/50 rounded-sm border border-slate-200 transition flex items-center gap-1.5 shadow-2xs">
+                <a href="{{ url('/') }}" target="_blank" class="px-2.5 sm:px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50/50 rounded-sm border border-slate-200 transition flex items-center gap-1.5 shadow-2xs">
                     <i class="fa-solid fa-house text-[10px] text-emerald-700"></i>
                     <span class="hidden sm:inline">Lihat Web</span>
                 </a>
@@ -249,7 +249,7 @@
                     </button>
 
                     <!-- Dropdown Content -->
-                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-sm shadow-2xl border border-slate-200 overflow-hidden z-50 animate-fade-in">
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-72 sm:w-96 bg-white rounded-sm shadow-2xl border border-slate-200 overflow-hidden z-50 animate-fade-in">
                         <div class="p-3.5 bg-slate-900 text-white flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-bell text-emerald-400 text-xs"></i>
@@ -299,7 +299,7 @@
                 </div>
 
                 <!-- Admin Profile Pill -->
-                <div class="flex items-center gap-2 pl-1 sm:pl-1.5 pr-2 sm:pr-2.5 py-1 rounded-sm bg-slate-100 border border-slate-200">
+                <div class="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-1.5 pr-2 sm:pr-2.5 py-1 rounded-sm bg-slate-100 border border-slate-200">
                     @if(Auth::user()->avatar_url)
                         <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-6 h-6 rounded-sm object-cover" />
                     @else
@@ -314,15 +314,70 @@
         </header>
 
         <!-- Main Content Canvas (Consistent with Member Layout) -->
-        <main class="flex-1 p-4 sm:p-6 lg:p-8 animate-fade-in max-w-7xl w-full mx-auto space-y-5">
+        <main class="flex-1 p-3.5 sm:p-6 lg:p-8 pb-24 lg:pb-8 animate-fade-in max-w-7xl w-full mx-auto space-y-4 sm:space-y-5">
             @yield('content')
         </main>
 
-        <!-- Footer -->
-        <footer class="bg-white border-t border-slate-200 py-3 px-4 sm:px-8 text-center text-xs text-slate-500">
+        <!-- Footer Desktop -->
+        <footer class="hidden lg:block bg-white border-t border-slate-200 py-3 px-4 sm:px-8 text-center text-xs text-slate-500">
             &copy; {{ date('Y') }} PERSIS PERS • Sistem Manajemen Penerbitan Kampus IAI PERSIS Bandung
         </footer>
     </div>
+
+    <!-- ==================== MOBILE APP BOTTOM NAVIGATION BAR ==================== -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-2 py-1.5 flex items-center justify-around select-none">
+        
+        <!-- 1. Dashboard -->
+        <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.dashboard') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+            <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.dashboard') ? 'text-emerald-700 scale-110' : '' }}">
+                <i class="fa-solid fa-gauge-high"></i>
+            </div>
+            <span class="text-[10px] tracking-tight">Dashboard</span>
+        </a>
+
+        <!-- 2. Orders -->
+        <a href="{{ route('admin.orders.index') }}" class="relative flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.orders.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+            <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.orders.*') ? 'text-emerald-700 scale-110' : '' }}">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+            <span class="text-[10px] tracking-tight">Pesanan</span>
+            @if($pendingOrdersCount > 0)
+                <span class="absolute top-0.5 right-2 w-4 h-4 bg-emerald-600 text-white rounded-full text-[8.5px] font-bold flex items-center justify-center font-mono animate-pulse">
+                    {{ $pendingOrdersCount }}
+                </span>
+            @endif
+        </a>
+
+        <!-- 3. Books -->
+        <a href="{{ route('admin.books.index') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.books.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+            <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.books.*') ? 'text-emerald-700 scale-110' : '' }}">
+                <i class="fa-solid fa-book-bookmark"></i>
+            </div>
+            <span class="text-[10px] tracking-tight">Katalog</span>
+        </a>
+
+        <!-- 4. Messages / Naskah -->
+        <a href="{{ route('admin.messages.index') }}" class="relative flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.messages.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+            <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.messages.*') ? 'text-emerald-700 scale-110' : '' }}">
+                <i class="fa-solid fa-inbox"></i>
+            </div>
+            <span class="text-[10px] tracking-tight">Pesan</span>
+            @if($unreadMessagesCount > 0)
+                <span class="absolute top-0.5 right-2 w-4 h-4 bg-amber-500 text-slate-950 rounded-full text-[8.5px] font-bold flex items-center justify-center font-mono">
+                    {{ $unreadMessagesCount }}
+                </span>
+            @endif
+        </a>
+
+        <!-- 5. Users -->
+        <a href="{{ route('admin.users.index') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.users.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+            <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.users.*') ? 'text-emerald-700 scale-110' : '' }}">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <span class="text-[10px] tracking-tight">Pengguna</span>
+        </a>
+
+    </nav>
 
     <!-- Dropdown & Sidebar JS with Persistent Collapse Memory -->
     <script>
