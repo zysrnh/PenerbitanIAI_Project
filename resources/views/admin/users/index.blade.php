@@ -165,50 +165,75 @@
         @endif
     </div>
 
+
 <script>
-    function toggleUserRoleMenu() {
-        const menu = document.getElementById('userRoleMenu');
-        const chev = document.getElementById('userRoleChevron');
-        menu.classList.toggle('hidden');
-        chev.classList.toggle('rotate-180');
-    }
-    function selectUserRole(val, label) {
-        document.getElementById('userRoleInput').value = val;
-        document.getElementById('userRoleLabel').innerText = label;
-        toggleUserRoleMenu();
-        document.getElementById('userFilterForm').submit();
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const rBtn = document.getElementById('userRoleBtn');
+        const rMenu = document.getElementById('userRoleMenu');
+        const rChev = document.getElementById('userRoleChevron');
+        const rInput = document.getElementById('userRoleInput');
+        const rLabel = document.getElementById('userRoleLabel');
 
-    function toggleUserStatusMenu() {
-        const menu = document.getElementById('userStatusMenu');
-        const chev = document.getElementById('userStatusChevron');
-        menu.classList.toggle('hidden');
-        chev.classList.toggle('rotate-180');
-    }
-    function selectUserStatus(val, label) {
-        document.getElementById('userStatusInput').value = val;
-        document.getElementById('userStatusLabel').innerText = label;
-        toggleUserStatusMenu();
-        document.getElementById('userFilterForm').submit();
-    }
+        const sBtn = document.getElementById('userStatusBtn');
+        const sMenu = document.getElementById('userStatusMenu');
+        const sChev = document.getElementById('userStatusChevron');
+        const sInput = document.getElementById('userStatusInput');
+        const sLabel = document.getElementById('userStatusLabel');
 
-    document.addEventListener('click', function(e) {
-        const c1 = document.getElementById('userRoleFilterContainer');
-        const m1 = document.getElementById('userRoleMenu');
-        const v1 = document.getElementById('userRoleChevron');
-        if (c1 && !c1.contains(e.target) && m1 && !m1.classList.contains('hidden')) {
-            m1.classList.add('hidden');
-            v1.classList.remove('rotate-180');
+        const form = document.getElementById('userFilterForm');
+
+        if (rBtn && rMenu) {
+            rBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (sMenu) { sMenu.classList.add('hidden'); sChev.classList.remove('rotate-180'); }
+                rMenu.classList.toggle('hidden');
+                rChev.classList.toggle('rotate-180');
+            });
         }
 
-        const c2 = document.getElementById('userStatusFilterContainer');
-        const m2 = document.getElementById('userStatusMenu');
-        const v2 = document.getElementById('userStatusChevron');
-        if (c2 && !c2.contains(e.target) && m2 && !m2.classList.contains('hidden')) {
-            m2.classList.add('hidden');
-            v2.classList.remove('rotate-180');
+        document.querySelectorAll('.user-role-opt').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                rInput.value = this.getAttribute('data-val');
+                rLabel.innerText = this.getAttribute('data-lbl');
+                rMenu.classList.add('hidden');
+                rChev.classList.remove('rotate-180');
+                form.submit();
+            });
+        });
+
+        if (sBtn && sMenu) {
+            sBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (rMenu) { rMenu.classList.add('hidden'); rChev.classList.remove('rotate-180'); }
+                sMenu.classList.toggle('hidden');
+                sChev.classList.toggle('rotate-180');
+            });
         }
+
+        document.querySelectorAll('.user-status-opt').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sInput.value = this.getAttribute('data-val');
+                sLabel.innerText = this.getAttribute('data-lbl');
+                sMenu.classList.add('hidden');
+                sChev.classList.remove('rotate-180');
+                form.submit();
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (rMenu && !rMenu.contains(e.target) && rBtn && !rBtn.contains(e.target)) {
+                rMenu.classList.add('hidden');
+                if (rChev) rChev.classList.remove('rotate-180');
+            }
+            if (sMenu && !sMenu.contains(e.target) && sBtn && !sBtn.contains(e.target)) {
+                sMenu.classList.add('hidden');
+                if (sChev) sChev.classList.remove('rotate-180');
+            }
+        });
     });
 </script>
 @endsection
+
 

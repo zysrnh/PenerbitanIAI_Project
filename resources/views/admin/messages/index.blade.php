@@ -54,7 +54,7 @@
                 <input type="hidden" name="status" id="filterStatusInput" value="{{ request('status') }}" />
                 <button 
                     type="button" 
-                    onclick="toggleFilterStatusMenu()"
+                    id="filterStatusBtn"
                     class="w-full px-3 py-2 bg-slate-50/50 border border-slate-300 rounded-sm text-xs font-semibold text-slate-800 flex items-center justify-between hover:border-emerald-600 transition cursor-pointer"
                 >
                     <span id="filterStatusLabel">
@@ -72,20 +72,29 @@
                 </button>
 
                 <div id="filterStatusMenu" class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in">
-                    <button type="button" onclick="selectFilterStatus('', 'Semua Status')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                    <button type="button" data-val="" data-lbl="Semua Status" class="status-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                         <span>Semua Status</span>
                         @if(!request('status')) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
-                    <button type="button" onclick="selectFilterStatus('pending', 'Belum Dihubungi')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
-                        <span>Belum Dihubungi</span>
+                    <button type="button" data-val="pending" data-lbl="Belum Dihubungi" class="status-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-amber-500 text-xs"></i>
+                            <span>Belum Dihubungi</span>
+                        </div>
                         @if(request('status') === 'pending') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
-                    <button type="button" onclick="selectFilterStatus('contacted', 'Sudah Dihubungi')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
-                        <span>Sudah Dihubungi</span>
+                    <button type="button" data-val="contacted" data-lbl="Sudah Dihubungi" class="status-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-comments text-blue-500 text-xs"></i>
+                            <span>Sudah Dihubungi</span>
+                        </div>
                         @if(request('status') === 'contacted') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
-                    <button type="button" onclick="selectFilterStatus('completed', 'Selesai Diproses')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
-                        <span>Selesai Diproses</span>
+                    <button type="button" data-val="completed" data-lbl="Selesai Diproses" class="status-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-600 text-xs"></i>
+                            <span>Selesai Diproses</span>
+                        </div>
                         @if(request('status') === 'completed') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
                 </div>
@@ -96,7 +105,7 @@
                 <input type="hidden" name="service" id="filterServiceInput" value="{{ request('service') }}" />
                 <button 
                     type="button" 
-                    onclick="toggleFilterServiceMenu()"
+                    id="filterServiceBtn"
                     class="w-full px-3 py-2 bg-slate-50/50 border border-slate-300 rounded-sm text-xs font-semibold text-slate-800 flex items-center justify-between hover:border-emerald-600 transition cursor-pointer"
                 >
                     <span id="filterServiceLabel" class="truncate">
@@ -106,23 +115,23 @@
                 </button>
 
                 <div id="filterServiceMenu" class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in">
-                    <button type="button" onclick="selectFilterService('', 'Semua Layanan')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                    <button type="button" data-val="" data-lbl="Semua Layanan" class="service-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                         <span class="truncate">Semua Layanan</span>
                         @if(!request('service')) <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
-                    <button type="button" onclick="selectFilterService('Penerbitan Buku Ber-ISBN', 'Buku Ber-ISBN')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                    <button type="button" data-val="Penerbitan Buku Ber-ISBN" data-lbl="Buku Ber-ISBN" class="service-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                         <span class="truncate">Buku Ber-ISBN</span>
                         @if(request('service') === 'Penerbitan Buku Ber-ISBN') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
-                    <button type="button" onclick="selectFilterService('Percetakan Umum & Komersil', 'Percetakan Umum')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                    <button type="button" data-val="Percetakan Umum & Komersil" data-lbl="Percetakan Umum" class="service-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                         <span class="truncate">Percetakan Umum</span>
                         @if(request('service') === 'Percetakan Umum & Komersil') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
-                    <button type="button" onclick="selectFilterService('Jurnal & Prosiding Ilmiah', 'Jurnal & Prosiding')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                    <button type="button" data-val="Jurnal & Prosiding Ilmiah" data-lbl="Jurnal & Prosiding" class="service-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                         <span class="truncate">Jurnal &amp; Prosiding</span>
                         @if(request('service') === 'Jurnal & Prosiding Ilmiah') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
-                    <button type="button" onclick="selectFilterService('Konversi KTI ke Buku', 'Konversi KTI')" class="w-full px-3 py-1.5 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium">
+                    <button type="button" data-val="Konversi KTI ke Buku" data-lbl="Konversi KTI" class="service-opt-btn w-full px-3 py-2 text-left text-xs hover:bg-slate-50 flex items-center justify-between font-medium cursor-pointer">
                         <span class="truncate">Konversi KTI</span>
                         @if(request('service') === 'Konversi KTI ke Buku') <i class="fa-solid fa-check text-xs text-emerald-600"></i> @endif
                     </button>
@@ -146,6 +155,7 @@
 
     <!-- Messages Table Card -->
     <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs overflow-hidden w-full">
+        
         <!-- 1. MOBILE NATIVE MESSAGE CARDS (Visible on mobile < 640px) -->
         <div class="block sm:hidden divide-y divide-slate-100">
             @forelse($messages as $msg)
@@ -235,7 +245,7 @@
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap">
                                 <span class="inline-block px-1.5 py-0.2 bg-slate-100 text-slate-700 border border-slate-200 rounded-xs text-[9.5px] font-bold mb-1">
-                                    {{ $msg->service_type ?: 'Konsultasi Umum' }}
+                                    {{ $msg->service_category ?? 'Konsultasi Umum' }}
                                 </span>
                                 <p class="font-bold text-slate-800 text-xs">{{ $msg->subject ?: '-' }}</p>
                             </td>
@@ -249,7 +259,7 @@
                                     </span>
                                 @elseif($msg->status === 'contacted')
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300 uppercase">
-                                        <i class="fa-solid fa-comment-dots text-[9px]"></i> Sudah Dihubungi
+                                        <i class="fa-solid fa-comments text-[9px]"></i> Sudah Dihubungi
                                     </span>
                                 @elseif($msg->status === 'completed')
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 uppercase">
@@ -293,4 +303,74 @@
     </div>
 
 </div>
+
+<!-- Dropdown Scripts with Bulletproof Event Listeners -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sBtn = document.getElementById('filterStatusBtn');
+        const sMenu = document.getElementById('filterStatusMenu');
+        const sChev = document.getElementById('filterStatusChevron');
+        const sInput = document.getElementById('filterStatusInput');
+        const sLabel = document.getElementById('filterStatusLabel');
+
+        const vBtn = document.getElementById('filterServiceBtn');
+        const vMenu = document.getElementById('filterServiceMenu');
+        const vChev = document.getElementById('filterServiceChevron');
+        const vInput = document.getElementById('filterServiceInput');
+        const vLabel = document.getElementById('filterServiceLabel');
+
+        const form = document.getElementById('msgFilterForm');
+
+        if (sBtn && sMenu) {
+            sBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (vMenu) { vMenu.classList.add('hidden'); vChev.classList.remove('rotate-180'); }
+                sMenu.classList.toggle('hidden');
+                sChev.classList.toggle('rotate-180');
+            });
+        }
+
+        document.querySelectorAll('.status-opt-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sInput.value = this.getAttribute('data-val');
+                sLabel.innerText = this.getAttribute('data-lbl');
+                sMenu.classList.add('hidden');
+                sChev.classList.remove('rotate-180');
+                form.submit();
+            });
+        });
+
+        if (vBtn && vMenu) {
+            vBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (sMenu) { sMenu.classList.add('hidden'); sChev.classList.remove('rotate-180'); }
+                vMenu.classList.toggle('hidden');
+                vChev.classList.toggle('rotate-180');
+            });
+        }
+
+        document.querySelectorAll('.service-opt-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                vInput.value = this.getAttribute('data-val');
+                vLabel.innerText = this.getAttribute('data-lbl');
+                vMenu.classList.add('hidden');
+                vChev.classList.remove('rotate-180');
+                form.submit();
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (sMenu && !sMenu.contains(e.target) && sBtn && !sBtn.contains(e.target)) {
+                sMenu.classList.add('hidden');
+                if (sChev) sChev.classList.remove('rotate-180');
+            }
+            if (vMenu && !vMenu.contains(e.target) && vBtn && !vBtn.contains(e.target)) {
+                vMenu.classList.add('hidden');
+                if (vChev) vChev.classList.remove('rotate-180');
+            }
+        });
+    });
+</script>
 @endsection
