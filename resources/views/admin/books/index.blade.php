@@ -686,25 +686,37 @@
         </div>
     </div>
 
-    <!-- CROPPER.JS MODAL -->
-    <div id="cropperModal" class="fixed inset-0 z-60 bg-black/80 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-sm max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="bg-[#032c21] text-white px-5 py-3.5 flex items-center justify-between">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Sesuaikan Pemotongan Foto Buku</span>
-                <button type="button" onclick="closeCropperModal()" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-4 flex-1 overflow-hidden flex items-center justify-center bg-slate-900">
-                <img id="cropperImage" src="" alt="Crop Preview" class="max-h-[60vh] max-w-full" />
-            </div>
-            <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+    <!-- CROPPER.JS MODAL (HIGH Z-INDEX & BULLETPROOF OVERLAY) -->
+    <div id="cropperModal" class="fixed inset-0 z-[999999] bg-black/85 hidden items-center justify-center p-4 backdrop-blur-xs select-none" style="display: none;">
+        <div class="bg-white rounded-sm max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-slate-700">
+            <div class="bg-[#032c21] text-white px-5 py-3.5 flex items-center justify-between border-b border-emerald-950">
                 <div class="flex items-center gap-2">
-                    <button type="button" onclick="setCropRatio(3/4.15)" class="px-3 py-1.5 rounded-sm text-xs font-bold bg-white border border-slate-200 hover:bg-slate-100">UNESCO 3:4.15</button>
-                    <button type="button" onclick="setCropRatio(1/1.4)" class="px-3 py-1.5 rounded-sm text-xs font-bold bg-white border border-slate-200 hover:bg-slate-100">Isi Halaman</button>
-                    <button type="button" onclick="setCropRatio(NaN)" class="px-3 py-1.5 rounded-sm text-xs font-bold bg-white border border-slate-200 hover:bg-slate-100">Bebas</button>
+                    <i class="fa-solid fa-crop text-emerald-400 text-xs"></i>
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">Sesuaikan Pemotongan Foto Buku (Opsional)</span>
                 </div>
-                <button type="button" onclick="applyCrop()" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-sm shadow-xs">
-                    Terapkan Crop
+                <button type="button" onclick="closeCropperModal()" class="w-7 h-7 rounded-xs text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
+            </div>
+            <div class="p-4 flex-1 overflow-hidden flex items-center justify-center bg-slate-950 min-h-[300px]">
+                <img id="cropperImage" src="" alt="Crop Preview" class="max-h-[55vh] max-w-full block" />
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-1.5 text-xs">
+                    <span class="text-slate-500 font-bold text-[10.5px] uppercase mr-1">Rasio:</span>
+                    <button type="button" onclick="setCropRatio(3/4.15)" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 shadow-2xs">UNESCO (Sampul)</button>
+                    <button type="button" onclick="setCropRatio(1/1.4)" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 shadow-2xs">Isi Halaman</button>
+                    <button type="button" onclick="setCropRatio(NaN)" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 shadow-2xs">Bebas</button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeCropperModal()" class="px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xs border border-slate-300 transition shadow-2xs cursor-pointer">
+                        Gunakan Foto Asli (Tanpa Crop)
+                    </button>
+                    <button type="button" onclick="applyCrop()" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xs shadow-2xs flex items-center gap-1.5 transition cursor-pointer">
+                        <i class="fa-solid fa-check text-xs"></i>
+                        <span>Terapkan Hasil Crop</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1072,13 +1084,27 @@
             ['cover', 'back', 'inside1', 'inside2'].forEach(k => setThumbPreview(k, null));
         }
 
+        // Handle Image Selection with INSTANT PREVIEW (100% Reliable)
         function handleImageSelection(input, key) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    const dataUrl = e.target.result;
+                    
+                    // 1. Instantly set preview on thumbnail box and 3D visualizer
+                    currentPhotoObj[key] = dataUrl;
+                    setThumbPreview(key, dataUrl);
+                    switchVisualizerTab(key);
+                    updateVisualizerLive();
+
+                    // 2. Open cropper safely
                     activeCropKey = key;
-                    openCropper(e.target.result);
+                    try {
+                        openCropper(dataUrl);
+                    } catch (err) {
+                        console.warn('Cropper skipped:', err);
+                    }
                 }
                 reader.readAsDataURL(file);
             }
@@ -1087,16 +1113,29 @@
         function openCropper(imageSrc) {
             const modal = document.getElementById('cropperModal');
             const img = document.getElementById('cropperImage');
+            if (!modal || !img) return;
+
             img.src = imageSrc;
+            modal.style.display = 'flex';
             modal.classList.remove('hidden');
             modal.classList.add('flex');
 
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(img, {
-                aspectRatio: activeCropKey === 'cover' || activeCropKey === 'back' ? (3 / 4.15) : (1 / 1.4),
-                viewMode: 1,
-                autoCropArea: 1,
-            });
+            if (cropper) {
+                try { cropper.destroy(); } catch(e) {}
+                cropper = null;
+            }
+
+            if (typeof Cropper !== 'undefined') {
+                setTimeout(() => {
+                    cropper = new Cropper(img, {
+                        aspectRatio: (activeCropKey === 'cover' || activeCropKey === 'back') ? (3 / 4.15) : (1 / 1.4),
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        responsive: true,
+                        restore: false,
+                    });
+                }, 50);
+            }
         }
 
         function setCropRatio(ratio) {
@@ -1105,34 +1144,60 @@
 
         function closeCropperModal() {
             const modal = document.getElementById('cropperModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
             if (cropper) {
-                cropper.destroy();
+                try { cropper.destroy(); } catch(e) {}
                 cropper = null;
             }
         }
 
         function applyCrop() {
-            if (!cropper || !activeCropKey) return;
-            const canvas = cropper.getCroppedCanvas({ width: 800, height: 1100 });
-            canvas.toBlob(blob => {
-                const file = new File([blob], 'cropped_' + activeCropKey + '.jpg', { type: 'image/jpeg' });
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-
-                const inputId = activeCropKey === 'cover' ? 'in_cover_image'
-                              : activeCropKey === 'back' ? 'in_back_cover'
-                              : activeCropKey === 'inside1' ? 'in_inside1'
-                              : 'in_inside2';
-                document.getElementById(inputId).files = dataTransfer.files;
-
-                const url = URL.createObjectURL(blob);
-                currentPhotoObj[activeCropKey] = url;
-                setThumbPreview(activeCropKey, url);
-                switchVisualizerTab(activeCropKey);
+            if (!cropper || !activeCropKey) {
                 closeCropperModal();
-            }, 'image/jpeg', 0.92);
+                return;
+            }
+            try {
+                const canvas = cropper.getCroppedCanvas({ width: 800, height: 1100 });
+                if (!canvas) {
+                    closeCropperModal();
+                    return;
+                }
+
+                canvas.toBlob(blob => {
+                    if (blob) {
+                        const file = new File([blob], 'cropped_' + activeCropKey + '.jpg', { type: 'image/jpeg' });
+                        try {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+
+                            const inputId = activeCropKey === 'cover' ? 'in_cover_image'
+                                          : activeCropKey === 'back' ? 'in_back_cover'
+                                          : activeCropKey === 'inside1' ? 'in_inside1'
+                                          : 'in_inside2';
+                            const inputEl = document.getElementById(inputId);
+                            if (inputEl) {
+                                inputEl.files = dataTransfer.files;
+                            }
+                        } catch(err) {
+                            console.warn('DataTransfer error:', err);
+                        }
+
+                        const url = URL.createObjectURL(blob);
+                        currentPhotoObj[activeCropKey] = url;
+                        setThumbPreview(activeCropKey, url);
+                        switchVisualizerTab(activeCropKey);
+                        updateVisualizerLive();
+                    }
+                    closeCropperModal();
+                }, 'image/jpeg', 0.92);
+            } catch(e) {
+                console.error('Apply crop error:', e);
+                closeCropperModal();
+            }
         }
     
         // =======================================================
