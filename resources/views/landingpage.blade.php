@@ -3,46 +3,46 @@
 @section('title', 'PERSIS PERS | Penerbitan & Percetakan')
 
 @section('content')
-    <!-- Hero Slider Section (Mobile-First & Touch-Friendly) -->
+    <!-- Hero Slider Section (Crystal Clear Background & Refined Clean Typography) -->
     <section class="relative bg-brand-950 bg-[#032c21] text-white overflow-hidden select-none">
         
         <!-- Slider Container -->
-        <div id="hero-slider" class="relative min-h-[440px] sm:min-h-[490px] lg:min-h-[540px] flex items-center overflow-hidden">
+        <div id="hero-slider" class="relative min-h-[400px] sm:min-h-[460px] lg:min-h-[500px] flex items-center overflow-hidden">
             
             <!-- Slide 1 -->
             <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out opacity-100 z-10 block" data-index="0">
-                <!-- Background Image -->
+                <!-- Background Image (100% Crystal Clear & Vibrant) -->
                 <div class="absolute inset-0 z-0 flex justify-end">
                     <div class="w-full lg:w-3/4 h-full relative">
                         <img 
                             src="{{ $settings['home_slide1_image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
                             alt="Mesin Percetakan Industri" 
-                            class="w-full h-full object-cover object-center lg:object-left opacity-30 sm:opacity-60 lg:opacity-100"
+                            class="w-full h-full object-cover object-center lg:object-left opacity-100"
                         />
-                        <!-- Gradient overlays for maximum text legibility -->
-                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21] via-[#032c21]/90 lg:via-[#032c21]/70 to-transparent"></div>
-                        <div class="absolute inset-0 bg-gradient-to-b from-[#032c21]/80 via-transparent to-[#032c21]"></div>
+                        <!-- Subtle soft gradient only on the left for text legibility, keeping background 100% visible -->
+                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21]/95 via-[#032c21]/70 lg:via-[#032c21]/45 to-transparent"></div>
                     </div>
                 </div>
 
-                <!-- Text Content -->
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16 lg:py-20">
-                    <div class="max-w-xl pr-0 sm:pr-8">
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-4">
-                            {!! nl2br(e($settings['home_slide1_title'] ?? "Melayani Penerbitan\ndan Percetakan")) !!}<br>
-                            <span class="text-lime-400">{{ $settings['home_slide1_highlight'] ?? 'Berkualitas' }}</span>
+                <!-- Text Content (Refined & Compact, Positioned Neatly on Left) -->
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end sm:justify-center pb-12 sm:pb-16 pt-8">
+                    <div class="max-w-md lg:max-w-lg pr-0 sm:pr-4">
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight mb-2 sm:mb-3">
+                            {!! nl2br(e($settings['home_slide1_title'] ?? "Melayani Penerbitan
+dan Percetakan")) !!}<br>
+                            <span class="text-lime-400 font-black">{{ $settings['home_slide1_highlight'] ?? 'Berkualitas' }}</span>
                         </h2>
                         
-                        <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed mb-5 sm:mb-7 max-w-md line-clamp-3 sm:line-clamp-none">
+                        <p class="text-xs sm:text-sm text-slate-100/90 leading-relaxed mb-4 sm:mb-6 max-w-sm sm:max-w-md line-clamp-3">
                             {{ $settings['home_slide1_desc'] ?? 'Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.' }}
                         </p>
 
-                        <div class="flex items-center gap-2.5 sm:gap-3 mb-2 sm:mb-6">
-                            <a href="{{ $settings['home_slide1_btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-sm text-[11px] sm:text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
+                        <div class="flex items-center gap-2.5 sm:gap-3">
+                            <a href="{{ $settings['home_slide1_btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
                                 <span>{{ $settings['home_slide1_btn1_text'] ?? 'LIHAT LAYANAN' }}</span>
                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
-                            <a href="{{ $settings['home_slide1_btn2_url'] ?? '/katalog' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/30 text-[11px] sm:text-xs tracking-wider uppercase transition flex items-center gap-1.5">
+                            <a href="{{ $settings['home_slide1_btn2_url'] ?? '/katalog' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 sm:py-2.5 rounded-sm border border-white/30 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs">
                                 <span>{{ $settings['home_slide1_btn2_text'] ?? 'KATALOG BUKU' }}</span>
                                 <i class="fa-solid fa-book-open text-[10px]"></i>
                             </a>
@@ -53,35 +53,37 @@
 
             <!-- Slide 2 -->
             <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 z-0 hidden" data-index="1">
+                <!-- Background Image (100% Crystal Clear & Vibrant) -->
                 <div class="absolute inset-0 z-0 flex justify-end">
                     <div class="w-full lg:w-3/4 h-full relative">
                         <img 
                             src="{{ $settings['home_slide2_image'] ?? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop' }}" 
                             alt="Penerbitan Buku ISBN" 
-                            class="w-full h-full object-cover object-center lg:object-left opacity-30 sm:opacity-60 lg:opacity-100"
+                            class="w-full h-full object-cover object-center lg:object-left opacity-100"
                         />
-                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21] via-[#032c21]/90 lg:via-[#032c21]/70 to-transparent"></div>
-                        <div class="absolute inset-0 bg-gradient-to-b from-[#032c21]/80 via-transparent to-[#032c21]"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21]/95 via-[#032c21]/70 lg:via-[#032c21]/45 to-transparent"></div>
                     </div>
                 </div>
 
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16 lg:py-20">
-                    <div class="max-w-xl pr-0 sm:pr-8">
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-4">
-                            {!! nl2br(e($settings['home_slide2_title'] ?? "Penerbitan Buku\nBer-ISBN Resmi")) !!}<br>
-                            <span class="text-lime-400">{{ $settings['home_slide2_highlight'] ?? '& Terindeks' }}</span>
+                <!-- Text Content (Refined & Compact) -->
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end sm:justify-center pb-12 sm:pb-16 pt-8">
+                    <div class="max-w-md lg:max-w-lg pr-0 sm:pr-4">
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight mb-2 sm:mb-3">
+                            {!! nl2br(e($settings['home_slide2_title'] ?? "Penerbitan Buku
+Ber-ISBN Resmi")) !!}<br>
+                            <span class="text-lime-400 font-black">{{ $settings['home_slide2_highlight'] ?? '& Terindeks' }}</span>
                         </h2>
                         
-                        <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed mb-5 sm:mb-7 max-w-md line-clamp-3 sm:line-clamp-none">
+                        <p class="text-xs sm:text-sm text-slate-100/90 leading-relaxed mb-4 sm:mb-6 max-w-sm sm:max-w-md line-clamp-3">
                             {{ $settings['home_slide2_desc'] ?? 'Dukung publikasi karya ilmiah, monograf, dan buku referensi Anda dengan pendaftaran resmi ke Perpustakaan Nasional dan sertifikasi Hak Cipta.' }}
                         </p>
 
-                        <div class="flex items-center gap-2.5 sm:gap-3 mb-2 sm:mb-6">
-                            <a href="{{ $settings['home_slide2_btn1_url'] ?? '/kontak' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-sm text-[11px] sm:text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
+                        <div class="flex items-center gap-2.5 sm:gap-3">
+                            <a href="{{ $settings['home_slide2_btn1_url'] ?? '/kontak' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
                                 <span>{{ $settings['home_slide2_btn1_text'] ?? 'AJUKAN NASKAH' }}</span>
                                 <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i>
                             </a>
-                            <a href="{{ $settings['home_slide2_btn2_url'] ?? '#layanan' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/30 text-[11px] sm:text-xs tracking-wider uppercase transition flex items-center gap-1.5">
+                            <a href="{{ $settings['home_slide2_btn2_url'] ?? '#layanan' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 sm:py-2.5 rounded-sm border border-white/30 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs">
                                 <span>{{ $settings['home_slide2_btn2_text'] ?? 'PANDUAN PENULIS' }}</span>
                                 <i class="fa-solid fa-file-lines text-[10px]"></i>
                             </a>
@@ -92,35 +94,37 @@
 
             <!-- Slide 3 -->
             <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 z-0 hidden" data-index="2">
+                <!-- Background Image (100% Crystal Clear & Vibrant) -->
                 <div class="absolute inset-0 z-0 flex justify-end">
                     <div class="w-full lg:w-3/4 h-full relative">
                         <img 
                             src="{{ $settings['home_slide3_image'] ?? 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop' }}" 
                             alt="Percetakan Cepat dan Presisi" 
-                            class="w-full h-full object-cover object-center lg:object-left opacity-30 sm:opacity-60 lg:opacity-100"
+                            class="w-full h-full object-cover object-center lg:object-left opacity-100"
                         />
-                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21] via-[#032c21]/90 lg:via-[#032c21]/70 to-transparent"></div>
-                        <div class="absolute inset-0 bg-gradient-to-b from-[#032c21]/80 via-transparent to-[#032c21]"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21]/95 via-[#032c21]/70 lg:via-[#032c21]/45 to-transparent"></div>
                     </div>
                 </div>
 
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16 lg:py-20">
-                    <div class="max-w-xl pr-0 sm:pr-8">
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-4">
-                            {!! nl2br(e($settings['home_slide3_title'] ?? "Percetakan Cepat,\nHarga Bersahabat")) !!}<br>
-                            <span class="text-lime-400">{{ $settings['home_slide3_highlight'] ?? '& Presisi' }}</span>
+                <!-- Text Content (Refined & Compact) -->
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end sm:justify-center pb-12 sm:pb-16 pt-8">
+                    <div class="max-w-md lg:max-w-lg pr-0 sm:pr-4">
+                        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight mb-2 sm:mb-3">
+                            {!! nl2br(e($settings['home_slide3_title'] ?? "Percetakan Cepat,
+Harga Bersahabat")) !!}<br>
+                            <span class="text-lime-400 font-black">{{ $settings['home_slide3_highlight'] ?? '& Presisi' }}</span>
                         </h2>
                         
-                        <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed mb-5 sm:mb-7 max-w-md line-clamp-3 sm:line-clamp-none">
+                        <p class="text-xs sm:text-sm text-slate-100/90 leading-relaxed mb-4 sm:mb-6 max-w-sm sm:max-w-md line-clamp-3">
                             {{ $settings['home_slide3_desc'] ?? 'Mencetak majalah, prosiding, buletin, modul ajar, dan kebutuhan cetak custom institusi dengan teknologi modern dan ketepatan waktu.' }}
                         </p>
 
-                        <div class="flex items-center gap-2.5 sm:gap-3 mb-2 sm:mb-6">
-                            <a href="{{ $settings['home_slide3_btn1_url'] ?? '/katalog' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-sm text-[11px] sm:text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
+                        <div class="flex items-center gap-2.5 sm:gap-3">
+                            <a href="{{ $settings['home_slide3_btn1_url'] ?? '/katalog' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
                                 <span>{{ $settings['home_slide3_btn1_text'] ?? 'ORDER SEKARANG' }}</span>
                                 <i class="fa-solid fa-cart-shopping text-[10px]"></i>
                             </a>
-                            <a href="{{ $settings['home_slide3_btn2_url'] ?? '/kontak' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/30 text-[11px] sm:text-xs tracking-wider uppercase transition flex items-center gap-1.5">
+                            <a href="{{ $settings['home_slide3_btn2_url'] ?? '/kontak' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 sm:py-2.5 rounded-sm border border-white/30 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs">
                                 <span>{{ $settings['home_slide3_btn2_text'] ?? 'HUBUNGI KAMI' }}</span>
                                 <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>
                             </a>
@@ -129,7 +133,7 @@
                 </div>
             </div>
 
-            <!-- Left & Right Arrow Navigation (Visible on Desktop / Tablet, clean safe bounds) -->
+            <!-- Left & Right Arrow Navigation -->
             <button id="slider-prev" aria-label="Slide Sebelumnya" class="hidden sm:flex absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-9 h-9 rounded-full bg-black/60 hover:bg-black/90 text-white items-center justify-center transition border border-white/20 shadow-md cursor-pointer">
                 <i class="fa-solid fa-chevron-left text-xs"></i>
             </button>
@@ -145,99 +149,58 @@
                 <button class="dot-indicator w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300 cursor-pointer" data-slide="2" aria-label="Slide 3"></button>
             </div>
 
-            <!-- 4 Keunggulan Desktop (Floating Bottom Right Bar) -->
-            <div class="hidden lg:block absolute bottom-6 right-8 xl:right-16 z-30 max-w-3xl w-full">
-                <div class="bg-white rounded-sm border border-slate-200 shadow-md px-6 py-4 text-slate-800">
-                    <div class="grid grid-cols-4 gap-4 divide-x divide-slate-100">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
-                                <i class="fa-solid fa-book-bookmark"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat1_title'] ?? 'Kualitas Terbaik' }}</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat1_desc'] ?? 'Hasil cetak tajam, warna akurat' }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-3 pl-4">
-                            <div class="w-9 h-9 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
-                                <i class="fa-regular fa-clock"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat2_title'] ?? 'Pelayanan Cepat' }}</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat2_desc'] ?? 'Proses produksi tepat waktu' }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-3 pl-4">
-                            <div class="w-9 h-9 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
-                                <i class="fa-solid fa-file-invoice-dollar"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat3_title'] ?? 'Harga Bersahabat' }}</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat3_desc'] ?? 'Harga kompetitif & transparan' }}</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-3 pl-4">
-                            <div class="w-9 h-9 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0">
-                                <i class="fa-solid fa-users-gear"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-xs text-slate-900 leading-tight">{{ $settings['home_feat4_title'] ?? 'Berpengalaman' }}</h4>
-                                <p class="text-[10px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat4_desc'] ?? 'Didukung tim berpengalaman' }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </section>
 
-    <!-- 4 Keunggulan Mobile & Tablet (Dedicated Clean Section, No Overlap) -->
-    <section class="lg:hidden bg-slate-50 border-b border-slate-200/90 py-4 sm:py-5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div class="grid grid-cols-2 gap-2.5 sm:gap-3">
-                <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs shrink-0">
+    <!-- 4 Keunggulan Section (Clean Unified Strip Below Slider, No Overlap on Photos) -->
+    <section class="bg-white border-b border-slate-200/90 py-5 sm:py-6 select-none shadow-2xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+                
+                <!-- 1. Kualitas Terbaik -->
+                <div class="flex items-center gap-3 pt-2 sm:pt-0">
+                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
                         <i class="fa-solid fa-book-bookmark"></i>
                     </div>
-                    <div class="min-w-0">
-                        <h4 class="font-bold text-[11px] text-slate-900 leading-tight truncate">{{ $settings['home_feat1_title'] ?? 'Kualitas Terbaik' }}</h4>
-                        <p class="text-[9px] text-slate-500 mt-0.5 truncate">{{ $settings['home_feat1_desc'] ?? 'Hasil cetak tajam' }}</p>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat1_title'] ?? 'Kualitas Terbaik' }}</h4>
+                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat1_desc'] ?? 'Hasil cetak tajam, warna akurat' }}</p>
                     </div>
                 </div>
 
-                <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs shrink-0">
+                <!-- 2. Pelayanan Cepat -->
+                <div class="flex items-center gap-3 pt-2 sm:pt-0 sm:pl-4">
+                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
                         <i class="fa-regular fa-clock"></i>
                     </div>
-                    <div class="min-w-0">
-                        <h4 class="font-bold text-[11px] text-slate-900 leading-tight truncate">{{ $settings['home_feat2_title'] ?? 'Pelayanan Cepat' }}</h4>
-                        <p class="text-[9px] text-slate-500 mt-0.5 truncate">{{ $settings['home_feat2_desc'] ?? 'Proses tepat waktu' }}</p>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat2_title'] ?? 'Pelayanan Cepat' }}</h4>
+                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat2_desc'] ?? 'Proses produksi tepat waktu' }}</p>
                     </div>
                 </div>
 
-                <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs shrink-0">
+                <!-- 3. Harga Bersahabat -->
+                <div class="flex items-center gap-3 pt-2 sm:pt-0 sm:pl-4">
+                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                     </div>
-                    <div class="min-w-0">
-                        <h4 class="font-bold text-[11px] text-slate-900 leading-tight truncate">{{ $settings['home_feat3_title'] ?? 'Harga Bersahabat' }}</h4>
-                        <p class="text-[9px] text-slate-500 mt-0.5 truncate">{{ $settings['home_feat3_desc'] ?? 'Harga transparan' }}</p>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat3_title'] ?? 'Harga Bersahabat' }}</h4>
+                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat3_desc'] ?? 'Harga kompetitif & transparan' }}</p>
                     </div>
                 </div>
 
-                <div class="bg-white p-3 rounded-sm border border-slate-200 shadow-2xs flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs shrink-0">
+                <!-- 4. Berpengalaman -->
+                <div class="flex items-center gap-3 pt-2 sm:pt-0 sm:pl-4">
+                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
                         <i class="fa-solid fa-users-gear"></i>
                     </div>
-                    <div class="min-w-0">
-                        <h4 class="font-bold text-[11px] text-slate-900 leading-tight truncate">{{ $settings['home_feat4_title'] ?? 'Berpengalaman' }}</h4>
-                        <p class="text-[9px] text-slate-500 mt-0.5 truncate">{{ $settings['home_feat4_desc'] ?? 'Tim profesional' }}</p>
+                    <div>
+                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat4_title'] ?? 'Berpengalaman' }}</h4>
+                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat4_desc'] ?? 'Didukung tim berpengalaman' }}</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
