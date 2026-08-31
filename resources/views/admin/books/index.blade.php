@@ -6,7 +6,28 @@
 @section('content')
     <!-- Include Cropper.js for Interactive Image Cropping -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js">
+        // Auto Open Modal if Navigated with open_create or open_edit Query Parameters
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(request('open_create'))
+                setTimeout(function() {
+                    openCreateModal();
+                }, 100);
+            @endif
+
+            @if(request('open_edit'))
+                @php
+                    $directEditBook = \App\Models\Book::find(request('open_edit'));
+                @endphp
+                @if($directEditBook)
+                    setTimeout(function() {
+                        openEditModal(@json($directEditBook));
+                    }, 100);
+                @endif
+            @endif
+        });
+    </script>
+
 
     <style>
         /* 1. Realistic 3D Perspective Hover Tilt */
@@ -1240,5 +1261,26 @@
             }
         });
 
+    
+        // Auto Open Modal if Navigated with open_create or open_edit Query Parameters
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(request('open_create'))
+                setTimeout(function() {
+                    openCreateModal();
+                }, 100);
+            @endif
+
+            @if(request('open_edit'))
+                @php
+                    $directEditBook = \App\Models\Book::find(request('open_edit'));
+                @endphp
+                @if($directEditBook)
+                    setTimeout(function() {
+                        openEditModal(@json($directEditBook));
+                    }, 100);
+                @endif
+            @endif
+        });
     </script>
+
 @endsection

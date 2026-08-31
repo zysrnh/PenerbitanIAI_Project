@@ -38,6 +38,22 @@ class BookController extends Controller
         return view('admin.books.index', compact('books', 'totalBooks', 'newReleasesCount', 'bestSellersCount', 'categories'));
     }
 
+    
+    public function create()
+    {
+        return redirect()->route('admin.books.index', ['open_create' => 1]);
+    }
+
+    public function show(Book $book)
+    {
+        return redirect()->route('admin.books.index', ['search' => $book->title]);
+    }
+
+    public function edit(Book $book)
+    {
+        return redirect()->route('admin.books.index', ['open_edit' => $book->id]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
