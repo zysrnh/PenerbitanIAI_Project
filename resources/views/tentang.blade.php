@@ -114,42 +114,138 @@
 
     
 
-    <!-- Struktur Tim Pengelola / Dewan Redaksi -->
+    <!-- Struktur Pengelola Resmi Penerbit Persis -->
     <section class="py-16 sm:py-20 bg-slate-50 border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
             <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-1">Struktur Pengelola</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight">Dewan Redaksi & Tim Produksi</h2>
-                <p class="text-xs sm:text-sm text-slate-500 mt-1">Dikelola oleh tenaga profesional dan akademisi berdedikasi tinggi.</p>
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-1">STRUKTUR PENGELOLA</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight">Struktur Organisasi Penerbit Persis</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Dikelola oleh jajaran pimpinan, dewan pengawas, dan tim profesional berdedikasi tinggi.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <!-- Person 1: Director -->
-                <div class="bg-white p-6 rounded-sm border border-slate-200 shadow-sm reveal-card text-center">
-                    <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
-                        {{ strtoupper(substr($about['about_director_name'] ?? ($about['about_director_name'] ?? ($about['director_name'] ?? '') ?? 'A'), 0, 1)) }}
+            <div class="space-y-8">
+                
+                <!-- 1. PENANGGUNG JAWAB -->
+                <div class="max-w-md mx-auto">
+                    <div class="text-center mb-2.5">
+                        <span class="px-3 py-1 bg-amber-50 text-amber-900 border border-amber-300/80 rounded-full text-[11px] font-black uppercase tracking-wider shadow-2xs inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-crown text-amber-600 text-xs"></i> Penanggung Jawab
+                        </span>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['about_director_name'] ?? ($about['director_name'] ?? '') ?? '' }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['about_director_title'] ?? ($about['director_title'] ?? '') ?? '' }}</span>
+                    <div class="bg-white p-6 rounded-sm border-2 border-amber-400 shadow-sm text-center hover:shadow-md transition group">
+                        <div class="w-16 h-16 rounded-full bg-[#032c21] text-amber-400 font-bold text-xl flex items-center justify-center mx-auto mb-3 border-2 border-amber-400 shadow-2xs font-heading group-hover:scale-105 transition">
+                            JZ
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black text-slate-900 font-heading leading-snug">Dr. Jeje Zaenudin</h3>
+                        <span class="text-xs font-bold text-emerald-800 block mt-1">Ketua Umum PP PERSIS</span>
+                    </div>
                 </div>
 
-                <!-- Person 2: Editor Chief -->
-                <div class="bg-white p-6 rounded-sm border border-slate-200 shadow-sm reveal-card text-center">
-                    <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
-                        {{ strtoupper(substr($about['about_editor_chief'] ?? ($about['about_editor_chief'] ?? ($about['editor_chief'] ?? '') ?? 'E'), 0, 1)) }}
+                <!-- 2. DEWAN PENGAWAS -->
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-3">
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-900 border border-emerald-300 rounded-full text-[11px] font-black uppercase tracking-wider shadow-2xs inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-emerald-700 text-xs"></i> Dewan Pengawas
+                        </span>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['about_editor_chief'] ?? ($about['editor_chief'] ?? '') ?? '' }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['about_editor_chief_title'] ?? ($about['editor_chief_title'] ?? '') ?? '' }}</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <!-- Pengawas 1 -->
+                        <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-2xs text-center hover:border-emerald-500 hover:shadow-md transition">
+                            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-800 font-bold text-sm flex items-center justify-center mx-auto mb-2.5 border border-emerald-200">
+                                IL
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-900 leading-snug">Dr. Ihsan Setiadi Latief</h4>
+                            <span class="text-[11px] text-emerald-700 font-semibold block mt-1">Pengawas</span>
+                        </div>
+
+                        <!-- Pengawas 2 -->
+                        <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-2xs text-center hover:border-emerald-500 hover:shadow-md transition">
+                            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-800 font-bold text-sm flex items-center justify-center mx-auto mb-2.5 border border-emerald-200">
+                                JJ
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-900 leading-snug">Jejen Jaenudin, M.Pd</h4>
+                            <span class="text-[11px] text-emerald-700 font-semibold block mt-1">Pengawas</span>
+                        </div>
+
+                        <!-- Pengawas 3 -->
+                        <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-2xs text-center hover:border-emerald-500 hover:shadow-md transition">
+                            <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-800 font-bold text-sm flex items-center justify-center mx-auto mb-2.5 border border-emerald-200">
+                                GN
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-900 leading-snug">Ginanjar Nugraha, M.Sy</h4>
+                            <span class="text-[11px] text-emerald-700 font-semibold block mt-1">Pengawas</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Person 3: Production Lead -->
-                <div class="bg-white p-6 rounded-sm border border-slate-200 shadow-sm reveal-card text-center">
-                    <div class="w-16 h-16 rounded-full bg-brand-900 text-emerald-400 font-bold text-xl flex items-center justify-center mx-auto mb-4 border-2 border-emerald-500/40">
-                        {{ strtoupper(substr($about['about_production_lead'] ?? ($about['about_production_lead'] ?? ($about['production_lead'] ?? '') ?? 'P'), 0, 1)) }}
+                <!-- 3. DIREKSI & MANAJEMEN OPERASIONAL -->
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-3">
+                        <span class="px-3 py-1 bg-blue-50 text-blue-900 border border-blue-300 rounded-full text-[11px] font-black uppercase tracking-wider shadow-2xs inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-briefcase text-blue-700 text-xs"></i> Direksi &amp; Manajemen
+                        </span>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900">{{ $about['about_production_lead'] ?? ($about['production_lead'] ?? '') ?? '' }}</h3>
-                    <span class="text-xs text-emerald-700 font-semibold block mt-0.5">{{ $about['about_production_lead_title'] ?? ($about['production_lead_title'] ?? '') ?? '' }}</span>
+
+                    <!-- Direktur -->
+                    <div class="max-w-sm mx-auto mb-4">
+                        <div class="bg-white p-5 rounded-sm border-2 border-emerald-600 shadow-2xs text-center hover:shadow-md transition">
+                            <div class="w-14 h-14 rounded-full bg-[#006830] text-white font-bold text-base flex items-center justify-center mx-auto mb-2.5 shadow-2xs font-heading">
+                                AN
+                            </div>
+                            <h4 class="text-base font-black text-slate-900 font-heading leading-snug">A Nurjaman</h4>
+                            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider block mt-0.5">Direktur</span>
+                        </div>
+                    </div>
+
+                    <!-- Divisi: Marketing, Keuangan, Umum -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <!-- Marketing -->
+                        <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs text-center hover:border-emerald-500 hover:shadow-md transition">
+                            <div class="w-11 h-11 rounded-full bg-slate-100 text-slate-800 font-bold text-xs flex items-center justify-center mx-auto mb-2 border border-slate-200">
+                                IM
+                            </div>
+                            <h5 class="text-sm font-bold text-slate-900 leading-snug">Iban Muhiban</h5>
+                            <span class="text-[11px] text-emerald-700 font-semibold block mt-1">Marketing</span>
+                        </div>
+
+                        <!-- Keuangan -->
+                        <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs text-center hover:border-emerald-500 hover:shadow-md transition">
+                            <div class="w-11 h-11 rounded-full bg-slate-100 text-slate-800 font-bold text-xs flex items-center justify-center mx-auto mb-2 border border-slate-200">
+                                DK
+                            </div>
+                            <h5 class="text-sm font-bold text-slate-900 leading-snug">Dewi Kurmiati</h5>
+                            <span class="text-[11px] text-emerald-700 font-semibold block mt-1">Keuangan</span>
+                        </div>
+
+                        <!-- Umum -->
+                        <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs text-center hover:border-emerald-500 hover:shadow-md transition">
+                            <div class="w-11 h-11 rounded-full bg-slate-100 text-slate-800 font-bold text-xs flex items-center justify-center mx-auto mb-2 border border-slate-200">
+                                DS
+                            </div>
+                            <h5 class="text-sm font-bold text-slate-900 leading-snug">Dedi Setiadi</h5>
+                            <span class="text-[11px] text-emerald-700 font-semibold block mt-1">Umum</span>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- 4. TEKNOLOGI & PENGEMBANGAN SISTEM -->
+                <div class="max-w-md mx-auto pt-2">
+                    <div class="text-center mb-2.5">
+                        <span class="px-3 py-1 bg-purple-50 text-purple-900 border border-purple-300 rounded-full text-[11px] font-black uppercase tracking-wider shadow-2xs inline-flex items-center gap-1.5">
+                            <i class="fa-solid fa-code text-purple-700 text-xs"></i> Teknologi &amp; Sistem Informasi
+                        </span>
+                    </div>
+                    <div class="bg-white p-5 rounded-sm border border-purple-200 shadow-2xs text-center hover:border-purple-500 hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-full bg-purple-900 text-purple-200 font-bold text-sm flex items-center justify-center mx-auto mb-2.5 border border-purple-300">
+                            ZY
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 leading-snug">Zaki Yusron Hasyimi</h4>
+                        <span class="text-[11px] text-purple-800 font-semibold block mt-1">Web Development</span>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
