@@ -510,7 +510,7 @@
                                         <i class="fa-solid fa-expand"></i>
                                     </div>
 
-                                    <img id="visImg" src="" alt="Cover" class="w-full h-full object-cover hidden showcase-transition" />
+                                    <img id="visImg" src="" alt="" class="w-full h-full object-cover hidden showcase-transition" onerror="this.classList.add('hidden'); if(activeTab==='cover'||activeTab==='back'){document.getElementById('visFrontVec').classList.remove('hidden');}else{document.getElementById('visInsideVec').classList.remove('hidden');}" />
 
                                     <div id="visFrontVec" class="w-full h-full bg-[#032c21] p-3.5 pl-4 flex flex-col justify-between text-white border-l-4 border-emerald-400">
                                         <div class="flex justify-between items-center border-b border-white/20 pb-1">
@@ -991,6 +991,21 @@
             modal.classList.add('flex');
         }
 
+        function resolvePhotoUrl(path) {
+            if (!path) return null;
+            if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:image/')) {
+                return path;
+            }
+            let clean = path.replace(/^\/+/, '');
+            if (clean.startsWith('storage/')) {
+                return '/' + clean;
+            }
+            if (clean.startsWith('images/')) {
+                return '/' + clean;
+            }
+            return '/storage/' + clean;
+        }
+
         function openEditModal(book) {
             document.getElementById('bookForm').action = "/admin/books/" + book.id;
             document.getElementById('formMethod').value = 'PUT';
@@ -1010,10 +1025,10 @@
             document.getElementById('in_best_seller').checked = Boolean(book.is_best_seller);
 
             currentPhotoObj = {
-                cover: book.cover_image ? ('/storage/' + book.cover_image) : null,
-                back: book.back_cover_image ? ('/storage/' + book.back_cover_image) : null,
-                inside1: book.inside_preview_image ? ('/storage/' + book.inside_preview_image) : null,
-                inside2: book.additional_image ? ('/storage/' + book.additional_image) : null,
+                cover: resolvePhotoUrl(book.cover_image),
+                back: resolvePhotoUrl(book.back_cover_image),
+                inside1: resolvePhotoUrl(book.inside_preview_image),
+                inside2: resolvePhotoUrl(book.additional_image),
             };
 
             setThumbPreview('cover', currentPhotoObj.cover);
