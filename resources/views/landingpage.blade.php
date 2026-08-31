@@ -239,77 +239,86 @@
                     </a>
                 </div>
 
-                <!-- Kolom 2: Cara Pemesanan & Alur Transaksi Buku -->
+                <!-- Kolom 2: Cara Pemesanan & Alur Transaksi Buku (Balanced & Clean) -->
                 <div class="lg:col-span-4 bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-1">
                             <span class="text-brand-800 font-bold text-[9.5px] sm:text-[10px] uppercase tracking-widest block">CARA PEMESANAN</span>
                             <span class="text-[9px] text-emerald-800 font-mono font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200">6 Langkah Mudah</span>
                         </div>
-                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-3 sm:mb-4">{{ $settings['home_process_title'] ?? 'Cara Pemesanan & Transaksi Buku' }}</h4>
+                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-2.5 sm:mb-3">
+                            Alur Pemesanan &amp; Transaksi Buku
+                        </h4>
                         
-                        <!-- 6 Steps Ordering Workflow -->
-                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-1 py-1 sm:py-2 items-center text-center">
+                        <!-- 6 Steps (Clean 2 Rows x 3 Cols Grid, Balanced Proportions) -->
+                        <div class="grid grid-cols-3 gap-2 sm:gap-2.5 mb-3 sm:mb-4">
                             
                             <!-- 1. Pilih Buku -->
-                            <div class="flex flex-col items-center group">
-                                <div class="w-8 h-8 rounded-xs bg-emerald-800 text-white flex items-center justify-center text-xs mb-1 shadow-2xs group-hover:scale-105 transition">
-                                    <i class="fa-solid fa-book-open"></i>
+                            <div class="p-2 sm:p-2.5 rounded-xs bg-slate-50 border border-slate-200/80 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex flex-col items-center text-center group shadow-2xs">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-[#006830] text-white flex items-center justify-center text-xs mb-1 shadow-2xs group-hover:scale-105 transition">
+                                    <i class="fa-solid fa-book-open text-lime-300"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">1. Pilih Buku</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Lihat Katalog</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 leading-tight">1. Pilih Buku</span>
+                                <span class="text-[8px] sm:text-[9px] text-slate-500 leading-none mt-0.5">Lihat Katalog</span>
                             </div>
 
                             <!-- 2. Keranjang -->
-                            <div class="flex flex-col items-center group">
-                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                            <div class="p-2 sm:p-2.5 rounded-xs bg-slate-50 border border-slate-200/80 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex flex-col items-center text-center group shadow-2xs">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-cart-shopping"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">2. Keranjang</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Atur Jumlah</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 leading-tight">2. Keranjang</span>
+                                <span class="text-[8px] sm:text-[9px] text-slate-500 leading-none mt-0.5">Atur Jumlah</span>
                             </div>
 
                             <!-- 3. Checkout -->
-                            <div class="flex flex-col items-center group">
-                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                            <div class="p-2 sm:p-2.5 rounded-xs bg-slate-50 border border-slate-200/80 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex flex-col items-center text-center group shadow-2xs">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-file-invoice"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">3. Checkout</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Isi Alamat</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 leading-tight">3. Checkout</span>
+                                <span class="text-[8px] sm:text-[9px] text-slate-500 leading-none mt-0.5">Isi Alamat</span>
                             </div>
 
                             <!-- 4. Bayar QRIS -->
-                            <div class="flex flex-col items-center group">
-                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                            <div class="p-2 sm:p-2.5 rounded-xs bg-slate-50 border border-slate-200/80 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex flex-col items-center text-center group shadow-2xs">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-qrcode"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">4. Bayar</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">QRIS Instan</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 leading-tight">4. Bayar</span>
+                                <span class="text-[8px] sm:text-[9px] text-slate-500 leading-none mt-0.5">QRIS Instan</span>
                             </div>
 
-                            <!-- 5. Dipacking -->
-                            <div class="flex flex-col items-center group">
-                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                            <!-- 5. Packing -->
+                            <div class="p-2 sm:p-2.5 rounded-xs bg-slate-50 border border-slate-200/80 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex flex-col items-center text-center group shadow-2xs">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-box-archive"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">5. Packing</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Kemas Rapi</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 leading-tight">5. Packing</span>
+                                <span class="text-[8px] sm:text-[9px] text-slate-500 leading-none mt-0.5">Kemas Rapi</span>
                             </div>
 
-                            <!-- 6. Kirim & Terima -->
-                            <div class="flex flex-col items-center group">
-                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                            <!-- 6. Kirim -->
+                            <div class="p-2 sm:p-2.5 rounded-xs bg-slate-50 border border-slate-200/80 hover:border-emerald-500 hover:bg-emerald-50/50 transition flex flex-col items-center text-center group shadow-2xs">
+                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-truck-fast"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">6. Kirim</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Resi Terlacak</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-slate-900 leading-tight">6. Kirim</span>
+                                <span class="text-[8px] sm:text-[9px] text-slate-500 leading-none mt-0.5">Resi Terlacak</span>
                             </div>
 
                         </div>
                     </div>
 
-                    <div class="pt-3 sm:pt-4 border-t border-slate-100 text-[10.5px] sm:text-[11px] text-slate-500 leading-relaxed">
-                        {{ $settings['home_process_desc'] ?? 'Pemesanan buku praktis & aman dengan sistem checkout terpadu, konfirmasi bayar otomatis, dan pengiriman tepat waktu.' }}
+                    <!-- Bottom Action & Info (Symmetrical with Kolom 1 & 3) -->
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <span class="text-[10.5px] text-slate-500 leading-tight">
+                            Pesan buku praktis &amp; bayar via QRIS.
+                        </span>
+                        <a href="{{ route('katalog') }}" class="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition shrink-0 shadow-2xs">
+                            <span>Pesan Buku</span>
+                            <i class="fa-solid fa-cart-shopping text-[9px] text-lime-300"></i>
+                        </a>
                     </div>
                 </div>
 
