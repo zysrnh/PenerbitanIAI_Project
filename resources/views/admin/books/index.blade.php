@@ -755,10 +755,15 @@
                 <img id="cropperImage" src="" alt="Crop Preview" class="max-h-[55vh] max-w-full block" />
             </div>
             <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-1.5 text-xs">
-                    <span class="text-slate-500 font-bold text-[10.5px] uppercase mr-1">Rasio:</span>
-                    <button type="button" onclick="setCropRatio(3/4.15)" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 shadow-2xs">UNESCO (Sampul)</button>
-                    <button type="button" onclick="setCropRatio(1/1.4)" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 shadow-2xs">Isi Halaman</button>
+                <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                    <span class="text-slate-500 font-bold text-[10.5px] uppercase mr-1">Potong Bentang Cover:</span>
+                    <button type="button" onclick="cropPresetSpread('right')" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 shadow-2xs flex items-center gap-1" title="Potong sisi kanan untuk Sampul Depan">
+                        <i class="fa-solid fa-book-open"></i> 📖 Sisi Kanan (Depan)
+                    </button>
+                    <button type="button" onclick="cropPresetSpread('left')" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-indigo-50 text-indigo-800 border border-indigo-300 hover:bg-indigo-100 shadow-2xs flex items-center gap-1" title="Potong sisi kiri untuk Sampul Belakang">
+                        <i class="fa-solid fa-book"></i> 📘 Sisi Kiri (Belakang)
+                    </button>
+                    <button type="button" onclick="setCropRatio(3/4.15)" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 shadow-2xs">Rasio UNESCO</button>
                     <button type="button" onclick="setCropRatio(NaN)" class="px-2.5 py-1.5 rounded-xs text-xs font-bold bg-white border border-slate-300 hover:bg-slate-100 shadow-2xs">Bebas</button>
                 </div>
                 <div class="flex items-center gap-2">
@@ -1208,6 +1213,37 @@
 
         function setCropRatio(ratio) {
             if (cropper) cropper.setAspectRatio(ratio);
+        }
+
+        // Quick Preset for Landscape Full Spread Covers (Back + Spine + Front in One Image)
+        function cropPresetSpread(side) {
+            if (!cropper) return;
+            cropper.setAspectRatio(3 / 4.15);
+            try {
+                const canvasData = cropper.getCanvasData();
+                const cropBoxWidth = canvasData.width * 0.46;
+                const cropBoxHeight = cropBoxWidth * (4.15 / 3);
+
+                if (side === 'right') {
+                    // Crop Right Side for Front Cover
+                    cropper.setCropBoxData({
+                        left: canvasData.left + (canvasData.width - cropBoxWidth),
+                        top: canvasData.top,
+                        width: cropBoxWidth,
+                        height: Math.min(cropBoxHeight, canvasData.height)
+                    });
+                } else if (side === 'left') {
+                    // Crop Left Side for Back Cover
+                    cropper.setCropBoxData({
+                        left: canvasData.left,
+                        top: canvasData.top,
+                        width: cropBoxWidth,
+                        height: Math.min(cropBoxHeight, canvasData.height)
+                    });
+                }
+            } catch(e) {
+                console.warn('Preset spread crop error:', e);
+            }
         }
 
         function closeCropperModal() {

@@ -239,60 +239,75 @@
                     </a>
                 </div>
 
-                <!-- Kolom 2: Proses Kami -->
+                <!-- Kolom 2: Alur Penerbitan & Pemesanan Buku Asli -->
                 <div class="lg:col-span-4 bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
                     <div>
-                        <span class="text-brand-800 font-bold text-[9.5px] sm:text-[10px] uppercase tracking-widest block mb-1">PROSES KAMI</span>
-                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-3 sm:mb-4">{{ $settings['home_process_title'] ?? 'Proses Produksi Profesional' }}</h4>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-brand-800 font-bold text-[9.5px] sm:text-[10px] uppercase tracking-widest block">ALUR RESMI</span>
+                            <span class="text-[9px] text-emerald-800 font-mono font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200">6 Tahap Mudah</span>
+                        </div>
+                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-3 sm:mb-4">{{ $settings['home_process_title'] ?? 'Alur Penerbitan & Pemesanan Buku' }}</h4>
                         
-                        <!-- Responsive Process Stepper -->
-                        <div class="grid grid-cols-6 gap-1 py-1 sm:py-2 items-center text-center">
-                            <div class="flex flex-col items-center">
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-800 text-white flex items-center justify-center text-[10px] sm:text-xs mb-1 shadow-2xs">
-                                    <i class="fa-solid fa-comments"></i>
+                        <!-- 6 Steps Workflow -->
+                        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-1 py-1 sm:py-2 items-center text-center">
+                            <!-- 1. Naskah -->
+                            <div class="flex flex-col items-center group">
+                                <div class="w-8 h-8 rounded-xs bg-emerald-800 text-white flex items-center justify-center text-xs mb-1 shadow-2xs group-hover:scale-105 transition">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
                                 </div>
-                                <span class="text-[8px] sm:text-[9px] font-semibold text-slate-700 leading-tight">Konsultasi</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">1. Naskah</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Kirim Draf</span>
                             </div>
 
-                            <div class="flex flex-col items-center">
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] sm:text-xs mb-1">
-                                    <i class="fa-solid fa-pen-nib"></i>
+                            <!-- 2. Editing -->
+                            <div class="flex flex-col items-center group">
+                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                                    <i class="fa-solid fa-pen-ruler"></i>
                                 </div>
-                                <span class="text-[8px] sm:text-[9px] font-semibold text-slate-700 leading-tight">Desain</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">2. Editing</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Tata Letak</span>
                             </div>
 
-                            <div class="flex flex-col items-center">
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] sm:text-xs mb-1">
-                                    <i class="fa-solid fa-desktop"></i>
+                            <!-- 3. ISBN -->
+                            <div class="flex flex-col items-center group">
+                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                                    <i class="fa-solid fa-barcode"></i>
                                 </div>
-                                <span class="text-[8px] sm:text-[9px] font-semibold text-slate-700 leading-tight">Prepress</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">3. ISBN</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Perpusnas</span>
                             </div>
 
-                            <div class="flex flex-col items-center">
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] sm:text-xs mb-1">
-                                    <i class="fa-solid fa-gear"></i>
+                            <!-- 4. Cetak -->
+                            <div class="flex flex-col items-center group">
+                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                                    <i class="fa-solid fa-print"></i>
                                 </div>
-                                <span class="text-[8px] sm:text-[9px] font-semibold text-slate-700 leading-tight">Produksi</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">4. Cetak</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Produksi</span>
                             </div>
 
-                            <div class="flex flex-col items-center">
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] sm:text-xs mb-1">
-                                    <i class="fa-regular fa-file-lines"></i>
+                            <!-- 5. Bayar -->
+                            <div class="flex flex-col items-center group">
+                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                                    <i class="fa-solid fa-qrcode"></i>
                                 </div>
-                                <span class="text-[8px] sm:text-[9px] font-semibold text-slate-700 leading-tight">Finishing</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">5. Bayar</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">QRIS Instan</span>
                             </div>
 
-                            <div class="flex flex-col items-center">
-                                <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] sm:text-xs mb-1">
+                            <!-- 6. Kirim -->
+                            <div class="flex flex-col items-center group">
+                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-truck-fast"></i>
                                 </div>
-                                <span class="text-[8px] sm:text-[9px] font-semibold text-slate-700 leading-tight">Kirim</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">6. Kirim</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Ekspedisi</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="pt-3 sm:pt-4 border-t border-slate-100 text-[10.5px] sm:text-[11px] text-slate-500">
-                        {{ $settings['home_process_desc'] ?? 'Didukung peralatan modern & pengawasan mutu di setiap tahap produksi.' }}
+                    <div class="pt-3 sm:pt-4 border-t border-slate-100 text-[10.5px] sm:text-[11px] text-slate-500 leading-relaxed">
+                        {{ $settings['home_process_desc'] ?? 'Layanan terintegrasi mulai dari pendampingan naskah, legalitas ISBN resmi, hingga pencetakan dan pengiriman buku.' }}
                     </div>
                 </div>
 
