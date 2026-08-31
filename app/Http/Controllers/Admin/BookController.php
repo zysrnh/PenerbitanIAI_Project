@@ -95,6 +95,7 @@ class BookController extends Controller
 
                 $filename = Str::random(30) . '.' . $ext;
                 $file->move($photoDir, $filename);
+                @chmod($photoDir . '/' . $filename, 0644);
                 $validated[$slot] = 'books/photos/' . $filename;
             }
         }
@@ -167,6 +168,7 @@ class BookController extends Controller
 
                 $filename = Str::random(30) . '.' . $ext;
                 $file->move($photoDir, $filename);
+                @chmod($photoDir . '/' . $filename, 0644);
                 $validated[$slot] = 'books/photos/' . $filename;
             }
         }

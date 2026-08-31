@@ -275,15 +275,31 @@
                         <!-- Book Cover 3D Stage Thumbnail -->
                         <div class="w-16 h-22 shrink-0 cursor-pointer" onclick="openEditModal({{ json_encode($book) }})">
                             <div class="relative w-full h-full rounded-xs overflow-hidden shadow-xs border border-slate-300 bg-slate-900">
-                                @if($book->cover_image && (file_exists(public_path('storage/' . $book->cover_image)) || file_exists(public_path('images/' . $book->cover_image))))
-                                    <img src="{{ file_exists(public_path('storage/' . $book->cover_image)) ? asset('storage/' . $book->cover_image) : asset('images/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover" />
-                                @else
-                                    <div class="w-full h-full bg-[#032c21] p-1.5 flex flex-col justify-between text-[7px] text-white">
-                                        <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
-                                        <span class="font-black line-clamp-3 leading-tight text-[7.5px]">{{ $book->title }}</span>
-                                        <span class="text-slate-300 truncate text-[6px]">{{ $book->author }}</span>
-                                    </div>
+                                @php
+                                    $mobCoverUrl = null;
+                                    if (!empty($book->cover_image)) {
+                                        $cImg = ltrim($book->cover_image, '/');
+                                        if (str_starts_with($cImg, 'http')) {
+                                            $mobCoverUrl = $cImg;
+                                        } elseif (file_exists(public_path('storage/' . $cImg))) {
+                                            $mobCoverUrl = asset('storage/' . $cImg);
+                                        } elseif (file_exists(public_path($cImg))) {
+                                            $mobCoverUrl = asset($cImg);
+                                        } elseif (file_exists(public_path('images/' . $cImg))) {
+                                            $mobCoverUrl = asset('images/' . $cImg);
+                                        } else {
+                                            $mobCoverUrl = asset('storage/' . $cImg);
+                                        }
+                                    }
+                                @endphp
+                                @if($mobCoverUrl)
+                                    <img src="{{ $mobCoverUrl }}" alt="" class="w-full h-full object-cover relative z-0" onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}" />
                                 @endif
+                                <div class="w-full h-full bg-[#032c21] p-1.5 flex flex-col justify-between text-[7px] text-white" style="{{ $mobCoverUrl ? 'display: none;' : '' }}">
+                                    <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
+                                    <span class="font-black line-clamp-3 leading-tight text-[7.5px]">{{ $book->title }}</span>
+                                    <span class="text-slate-300 truncate text-[6px]">{{ $book->author }}</span>
+                                </div>
                             </div>
                         </div>
 
@@ -371,15 +387,31 @@
                                         <div class="book-paper-edge"></div>
                                         <div class="book-shine-layer absolute inset-0 pointer-events-none z-10"></div>
 
-                                        @if($book->cover_image && (file_exists(public_path('storage/' . $book->cover_image)) || file_exists(public_path('images/' . $book->cover_image))))
-                                            <img src="{{ file_exists(public_path('storage/' . $book->cover_image)) ? asset('storage/' . $book->cover_image) : asset('images/' . $book->cover_image) }}" alt="{{ $book->title }}" class="w-full h-full object-cover" />
-                                        @else
-                                            <div class="w-full h-full bg-[#032c21] p-2 pl-3 flex flex-col justify-between text-[7px] text-white">
-                                                <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
-                                                <span class="font-black line-clamp-3 leading-tight text-[8px]">{{ $book->title }}</span>
-                                                <span class="text-slate-300 truncate text-[6.5px]">{{ $book->author }}</span>
-                                            </div>
+                                        @php
+                                            $deskCoverUrl = null;
+                                            if (!empty($book->cover_image)) {
+                                                $cImg = ltrim($book->cover_image, '/');
+                                                if (str_starts_with($cImg, 'http')) {
+                                                    $deskCoverUrl = $cImg;
+                                                } elseif (file_exists(public_path('storage/' . $cImg))) {
+                                                    $deskCoverUrl = asset('storage/' . $cImg);
+                                                } elseif (file_exists(public_path($cImg))) {
+                                                    $deskCoverUrl = asset($cImg);
+                                                } elseif (file_exists(public_path('images/' . $cImg))) {
+                                                    $deskCoverUrl = asset('images/' . $cImg);
+                                                } else {
+                                                    $deskCoverUrl = asset('storage/' . $cImg);
+                                                }
+                                            }
+                                        @endphp
+                                        @if($deskCoverUrl)
+                                            <img src="{{ $deskCoverUrl }}" alt="" class="w-full h-full object-cover relative z-0" onerror="this.style.display='none'; if(this.nextElementSibling){this.nextElementSibling.style.display='flex';}" />
                                         @endif
+                                        <div class="w-full h-full bg-[#032c21] p-2 pl-3 flex flex-col justify-between text-[7px] text-white" style="{{ $deskCoverUrl ? 'display: none;' : '' }}">
+                                            <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
+                                            <span class="font-black line-clamp-3 leading-tight text-[8px]">{{ $book->title }}</span>
+                                            <span class="text-slate-300 truncate text-[6.5px]">{{ $book->author }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </td>
