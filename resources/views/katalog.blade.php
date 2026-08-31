@@ -786,12 +786,16 @@
                                 <span id="modalIsbn" class="font-mono font-bold text-slate-800 text-[11px] block mt-0.5">978-623-xxxx</span>
                             </div>
                             <div>
-                                <span class="text-[10px] text-slate-400 block font-medium">Format &amp; Kertas</span>
-                                <span id="modalFormat" class="font-semibold text-slate-800 text-[11px] block mt-0.5">UNESCO B5</span>
+                                <span class="text-[10px] text-slate-400 block font-medium">Ukuran Buku</span>
+                                <span id="modalSize" class="font-semibold text-emerald-800 font-mono text-[11px] block mt-0.5">17,6 x 25 cm</span>
                             </div>
                             <div>
                                 <span class="text-[10px] text-slate-400 block font-medium">Tebal Halaman</span>
                                 <span id="modalPages" class="font-semibold text-slate-800 text-[11px] block mt-0.5">240 hlm</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-400 block font-medium">Format &amp; Kertas</span>
+                                <span id="modalFormat" class="font-semibold text-slate-800 text-[11px] block mt-0.5">UNESCO B5</span>
                             </div>
                             <div>
                                 <span class="text-[10px] text-slate-400 block font-medium">Tahun Terbit</span>

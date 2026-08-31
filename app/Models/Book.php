@@ -20,6 +20,7 @@ class Book extends Model
         'kdt',
         'year',
         'pages',
+        'size',
         'format',
         'price',
         'synopsis',

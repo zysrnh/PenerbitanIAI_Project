@@ -443,7 +443,8 @@
 
                             <td class="py-3.5 px-4">
                                 <span class="font-bold text-slate-800 block text-xs">{{ $book->pages ? $book->pages . ' hlm' : '-' }}</span>
-                                <span class="text-[11px] text-slate-400 block">{{ $book->format ?: 'UNESCO B5' }}</span>
+                                <span class="text-[11px] text-emerald-700 font-mono block font-semibold">{{ $book->size ?: '17,6 x 25 cm' }}</span>
+                                <span class="text-[10px] text-slate-400 block">{{ $book->format ?: 'UNESCO B5' }}</span>
                             </td>
 
                             <td class="py-3.5 px-4">
@@ -1024,6 +1025,7 @@
             document.getElementById('formMethod').value = 'POST';
             document.getElementById('modalHeaderTitle').innerText = 'Tambah Master Buku & Foto Naskah';
             document.getElementById('bookForm').reset();
+            document.getElementById('in_size').value = '17,6 x 25 cm';
             currentPhotoObj = { cover: null, back: null, inside1: null, inside2: null };
             resetThumbnails();
             switchVisualizerTab('cover');
@@ -1061,6 +1063,7 @@
             document.getElementById('in_price').value = book.price || '';
             document.getElementById('in_year').value = book.year || '2026';
             document.getElementById('in_pages').value = book.pages || '';
+            document.getElementById('in_size').value = book.size || '17,6 x 25 cm';
             document.getElementById('in_status').value = book.status || 'published';
             document.getElementById('in_format').value = book.format || 'UNESCO B5 (Bookpaper)';
             document.getElementById('in_synopsis').value = book.synopsis || '';
