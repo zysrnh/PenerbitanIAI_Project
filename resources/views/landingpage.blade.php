@@ -239,75 +239,77 @@
                     </a>
                 </div>
 
-                <!-- Kolom 2: Alur Penerbitan & Pemesanan Buku Asli -->
+                <!-- Kolom 2: Cara Pemesanan & Alur Transaksi Buku -->
                 <div class="lg:col-span-4 bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-1">
-                            <span class="text-brand-800 font-bold text-[9.5px] sm:text-[10px] uppercase tracking-widest block">ALUR RESMI</span>
-                            <span class="text-[9px] text-emerald-800 font-mono font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200">6 Tahap Mudah</span>
+                            <span class="text-brand-800 font-bold text-[9.5px] sm:text-[10px] uppercase tracking-widest block">CARA PEMESANAN</span>
+                            <span class="text-[9px] text-emerald-800 font-mono font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200">6 Langkah Mudah</span>
                         </div>
-                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-3 sm:mb-4">{{ $settings['home_process_title'] ?? 'Alur Penerbitan & Pemesanan Buku' }}</h4>
+                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-3 sm:mb-4">{{ $settings['home_process_title'] ?? 'Cara Pemesanan & Transaksi Buku' }}</h4>
                         
-                        <!-- 6 Steps Workflow -->
+                        <!-- 6 Steps Ordering Workflow -->
                         <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-1 py-1 sm:py-2 items-center text-center">
-                            <!-- 1. Naskah -->
+                            
+                            <!-- 1. Pilih Buku -->
                             <div class="flex flex-col items-center group">
                                 <div class="w-8 h-8 rounded-xs bg-emerald-800 text-white flex items-center justify-center text-xs mb-1 shadow-2xs group-hover:scale-105 transition">
-                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                    <i class="fa-solid fa-book-open"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">1. Naskah</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Kirim Draf</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">1. Pilih Buku</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Lihat Katalog</span>
                             </div>
 
-                            <!-- 2. Editing -->
+                            <!-- 2. Keranjang -->
                             <div class="flex flex-col items-center group">
                                 <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
-                                    <i class="fa-solid fa-pen-ruler"></i>
+                                    <i class="fa-solid fa-cart-shopping"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">2. Editing</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Tata Letak</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">2. Keranjang</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Atur Jumlah</span>
                             </div>
 
-                            <!-- 3. ISBN -->
+                            <!-- 3. Checkout -->
                             <div class="flex flex-col items-center group">
                                 <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
-                                    <i class="fa-solid fa-barcode"></i>
+                                    <i class="fa-solid fa-file-invoice"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">3. ISBN</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Perpusnas</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">3. Checkout</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Isi Alamat</span>
                             </div>
 
-                            <!-- 4. Cetak -->
-                            <div class="flex flex-col items-center group">
-                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
-                                    <i class="fa-solid fa-print"></i>
-                                </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">4. Cetak</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Produksi</span>
-                            </div>
-
-                            <!-- 5. Bayar -->
+                            <!-- 4. Bayar QRIS -->
                             <div class="flex flex-col items-center group">
                                 <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-qrcode"></i>
                                 </div>
-                                <span class="text-[9px] font-bold text-slate-800 leading-tight">5. Bayar</span>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">4. Bayar</span>
                                 <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">QRIS Instan</span>
                             </div>
 
-                            <!-- 6. Kirim -->
+                            <!-- 5. Dipacking -->
+                            <div class="flex flex-col items-center group">
+                                <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
+                                    <i class="fa-solid fa-box-archive"></i>
+                                </div>
+                                <span class="text-[9px] font-bold text-slate-800 leading-tight">5. Packing</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Kemas Rapi</span>
+                            </div>
+
+                            <!-- 6. Kirim & Terima -->
                             <div class="flex flex-col items-center group">
                                 <div class="w-8 h-8 rounded-xs bg-emerald-100 text-emerald-800 flex items-center justify-center text-xs mb-1 group-hover:bg-emerald-700 group-hover:text-white transition">
                                     <i class="fa-solid fa-truck-fast"></i>
                                 </div>
                                 <span class="text-[9px] font-bold text-slate-800 leading-tight">6. Kirim</span>
-                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Ekspedisi</span>
+                                <span class="text-[7.5px] text-slate-400 leading-none mt-0.5">Resi Terlacak</span>
                             </div>
+
                         </div>
                     </div>
 
                     <div class="pt-3 sm:pt-4 border-t border-slate-100 text-[10.5px] sm:text-[11px] text-slate-500 leading-relaxed">
-                        {{ $settings['home_process_desc'] ?? 'Layanan terintegrasi mulai dari pendampingan naskah, legalitas ISBN resmi, hingga pencetakan dan pengiriman buku.' }}
+                        {{ $settings['home_process_desc'] ?? 'Pemesanan buku praktis & aman dengan sistem checkout terpadu, konfirmasi bayar otomatis, dan pengiriman tepat waktu.' }}
                     </div>
                 </div>
 
