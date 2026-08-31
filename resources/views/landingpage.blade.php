@@ -3,134 +3,150 @@
 @section('title', 'PERSIS PERS | Penerbitan & Percetakan')
 
 @section('content')
-    <!-- Hero Slider Section (Crystal Clear Background & Refined Clean Typography) -->
+    <!-- Hero Slider Section (100% Full Width, Uncropped Image Banner) -->
     <section class="relative bg-brand-950 bg-[#032c21] text-white overflow-hidden select-none">
         
-        <!-- Slider Container -->
-        <div id="hero-slider" class="relative min-h-[400px] sm:min-h-[460px] lg:min-h-[500px] flex items-center overflow-hidden">
+        <!-- Slider Container (Full Responsive Height matching Widescreen Banners) -->
+        <div id="hero-slider" class="relative w-full min-h-[320px] sm:min-h-[420px] md:min-h-[480px] lg:min-h-[540px] xl:min-h-[580px] flex items-center overflow-hidden">
             
             <!-- Slide 1 -->
             <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out opacity-100 z-10 block" data-index="0">
-                <!-- Background Image (100% Crystal Clear & Vibrant) -->
-                <div class="absolute inset-0 z-0 flex justify-end">
-                    <div class="w-full lg:w-3/4 h-full relative">
-                        <img 
-                            src="{{ $settings['home_slide1_image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
-                            alt="Mesin Percetakan Industri" 
-                            class="w-full h-full object-cover object-center lg:object-left opacity-100"
-                        />
-                        <!-- Subtle soft gradient only on the left for text legibility, keeping background 100% visible -->
-                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21]/95 via-[#032c21]/70 lg:via-[#032c21]/45 to-transparent"></div>
-                    </div>
+                <!-- 100% Full Width & Full Height Banner Image (No Crop on Left/Right) -->
+                <div class="absolute inset-0 z-0 w-full h-full">
+                    <img 
+                        src="{{ $settings['home_slide1_image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
+                        alt="Banner Slide 1" 
+                        class="w-full h-full object-cover object-center"
+                    />
                 </div>
 
-                <!-- Text Content (Refined & Compact, Positioned Neatly on Left) -->
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end sm:justify-center pb-12 sm:pb-16 pt-8">
-                    <div class="max-w-md lg:max-w-lg pr-0 sm:pr-4">
-                        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight mb-2 sm:mb-3">
-                            {!! nl2br(e($settings['home_slide1_title'] ?? "Melayani Penerbitan
-dan Percetakan")) !!}<br>
-                            <span class="text-lime-400 font-black">{{ $settings['home_slide1_highlight'] ?? 'Berkualitas' }}</span>
+                <!-- Optional Compact Glass Overlay on Bottom-Left -->
+                @if(!empty($settings['home_slide1_title']) && trim($settings['home_slide1_title']) !== '')
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
+                    <div class="max-w-sm sm:max-w-md bg-[#032c21]/80 backdrop-blur-md p-4 sm:p-5 rounded-sm border border-white/20 shadow-2xl pointer-events-auto">
+                        <h2 class="text-base sm:text-lg md:text-xl font-extrabold text-white leading-tight tracking-tight mb-1.5">
+                            {!! nl2br(e($settings['home_slide1_title'])) !!}<br>
+                            @if(!empty($settings['home_slide1_highlight']))
+                                <span class="text-lime-400 font-black">{{ $settings['home_slide1_highlight'] }}</span>
+                            @endif
                         </h2>
                         
-                        <p class="text-xs sm:text-sm text-slate-100/90 leading-relaxed mb-4 sm:mb-6 max-w-sm sm:max-w-md line-clamp-3">
-                            {{ $settings['home_slide1_desc'] ?? 'Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.' }}
-                        </p>
+                        @if(!empty($settings['home_slide1_desc']))
+                            <p class="text-[11px] sm:text-xs text-slate-200 leading-relaxed mb-3 line-clamp-2">
+                                {{ $settings['home_slide1_desc'] }}
+                            </p>
+                        @endif
 
-                        <div class="flex items-center gap-2.5 sm:gap-3">
-                            <a href="{{ $settings['home_slide1_btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
-                                <span>{{ $settings['home_slide1_btn1_text'] ?? 'LIHAT LAYANAN' }}</span>
-                                <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                            </a>
-                            <a href="{{ $settings['home_slide1_btn2_url'] ?? '/katalog' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 sm:py-2.5 rounded-sm border border-white/30 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs">
-                                <span>{{ $settings['home_slide1_btn2_text'] ?? 'KATALOG BUKU' }}</span>
-                                <i class="fa-solid fa-book-open text-[10px]"></i>
-                            </a>
+                        <div class="flex items-center gap-2">
+                            @if(!empty($settings['home_slide1_btn1_text']))
+                                <a href="{{ $settings['home_slide1_btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-3.5 py-1.5 rounded-sm text-[11px] uppercase tracking-wider transition flex items-center gap-1 shadow-xs">
+                                    <span>{{ $settings['home_slide1_btn1_text'] }}</span>
+                                    <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                                </a>
+                            @endif
+                            @if(!empty($settings['home_slide1_btn2_text']))
+                                <a href="{{ $settings['home_slide1_btn2_url'] ?? '/katalog' }}" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3.5 py-1.5 rounded-sm border border-white/40 text-[11px] uppercase tracking-wider transition flex items-center gap-1 backdrop-blur-xs">
+                                    <span>{{ $settings['home_slide1_btn2_text'] }}</span>
+                                    <i class="fa-solid fa-book-open text-[9px]"></i>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- Slide 2 -->
             <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 z-0 hidden" data-index="1">
-                <!-- Background Image (100% Crystal Clear & Vibrant) -->
-                <div class="absolute inset-0 z-0 flex justify-end">
-                    <div class="w-full lg:w-3/4 h-full relative">
-                        <img 
-                            src="{{ $settings['home_slide2_image'] ?? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop' }}" 
-                            alt="Penerbitan Buku ISBN" 
-                            class="w-full h-full object-cover object-center lg:object-left opacity-100"
-                        />
-                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21]/95 via-[#032c21]/70 lg:via-[#032c21]/45 to-transparent"></div>
-                    </div>
+                <!-- 100% Full Width & Full Height Banner Image -->
+                <div class="absolute inset-0 z-0 w-full h-full">
+                    <img 
+                        src="{{ $settings['home_slide2_image'] ?? 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop' }}" 
+                        alt="Banner Slide 2" 
+                        class="w-full h-full object-cover object-center"
+                    />
                 </div>
 
-                <!-- Text Content (Refined & Compact) -->
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end sm:justify-center pb-12 sm:pb-16 pt-8">
-                    <div class="max-w-md lg:max-w-lg pr-0 sm:pr-4">
-                        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight mb-2 sm:mb-3">
-                            {!! nl2br(e($settings['home_slide2_title'] ?? "Penerbitan Buku
-Ber-ISBN Resmi")) !!}<br>
-                            <span class="text-lime-400 font-black">{{ $settings['home_slide2_highlight'] ?? '& Terindeks' }}</span>
+                <!-- Optional Compact Glass Overlay on Bottom-Left -->
+                @if(!empty($settings['home_slide2_title']) && trim($settings['home_slide2_title']) !== '')
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
+                    <div class="max-w-sm sm:max-w-md bg-[#032c21]/80 backdrop-blur-md p-4 sm:p-5 rounded-sm border border-white/20 shadow-2xl pointer-events-auto">
+                        <h2 class="text-base sm:text-lg md:text-xl font-extrabold text-white leading-tight tracking-tight mb-1.5">
+                            {!! nl2br(e($settings['home_slide2_title'])) !!}<br>
+                            @if(!empty($settings['home_slide2_highlight']))
+                                <span class="text-lime-400 font-black">{{ $settings['home_slide2_highlight'] }}</span>
+                            @endif
                         </h2>
                         
-                        <p class="text-xs sm:text-sm text-slate-100/90 leading-relaxed mb-4 sm:mb-6 max-w-sm sm:max-w-md line-clamp-3">
-                            {{ $settings['home_slide2_desc'] ?? 'Dukung publikasi karya ilmiah, monograf, dan buku referensi Anda dengan pendaftaran resmi ke Perpustakaan Nasional dan sertifikasi Hak Cipta.' }}
-                        </p>
+                        @if(!empty($settings['home_slide2_desc']))
+                            <p class="text-[11px] sm:text-xs text-slate-200 leading-relaxed mb-3 line-clamp-2">
+                                {{ $settings['home_slide2_desc'] }}
+                            </p>
+                        @endif
 
-                        <div class="flex items-center gap-2.5 sm:gap-3">
-                            <a href="{{ $settings['home_slide2_btn1_url'] ?? '/kontak' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
-                                <span>{{ $settings['home_slide2_btn1_text'] ?? 'AJUKAN NASKAH' }}</span>
-                                <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i>
-                            </a>
-                            <a href="{{ $settings['home_slide2_btn2_url'] ?? '#layanan' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 sm:py-2.5 rounded-sm border border-white/30 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs">
-                                <span>{{ $settings['home_slide2_btn2_text'] ?? 'PANDUAN PENULIS' }}</span>
-                                <i class="fa-solid fa-file-lines text-[10px]"></i>
-                            </a>
+                        <div class="flex items-center gap-2">
+                            @if(!empty($settings['home_slide2_btn1_text']))
+                                <a href="{{ $settings['home_slide2_btn1_url'] ?? '/kontak' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-3.5 py-1.5 rounded-sm text-[11px] uppercase tracking-wider transition flex items-center gap-1 shadow-xs">
+                                    <span>{{ $settings['home_slide2_btn1_text'] }}</span>
+                                    <i class="fa-solid fa-cloud-arrow-up text-[9px]"></i>
+                                </a>
+                            @endif
+                            @if(!empty($settings['home_slide2_btn2_text']))
+                                <a href="{{ $settings['home_slide2_btn2_url'] ?? '#layanan' }}" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3.5 py-1.5 rounded-sm border border-white/40 text-[11px] uppercase tracking-wider transition flex items-center gap-1 backdrop-blur-xs">
+                                    <span>{{ $settings['home_slide2_btn2_text'] }}</span>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- Slide 3 -->
             <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out opacity-0 z-0 hidden" data-index="2">
-                <!-- Background Image (100% Crystal Clear & Vibrant) -->
-                <div class="absolute inset-0 z-0 flex justify-end">
-                    <div class="w-full lg:w-3/4 h-full relative">
-                        <img 
-                            src="{{ $settings['home_slide3_image'] ?? 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop' }}" 
-                            alt="Percetakan Cepat dan Presisi" 
-                            class="w-full h-full object-cover object-center lg:object-left opacity-100"
-                        />
-                        <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#032c21]/95 via-[#032c21]/70 lg:via-[#032c21]/45 to-transparent"></div>
-                    </div>
+                <!-- 100% Full Width & Full Height Banner Image -->
+                <div class="absolute inset-0 z-0 w-full h-full">
+                    <img 
+                        src="{{ $settings['home_slide3_image'] ?? 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop' }}" 
+                        alt="Banner Slide 3" 
+                        class="w-full h-full object-cover object-center"
+                    />
                 </div>
 
-                <!-- Text Content (Refined & Compact) -->
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end sm:justify-center pb-12 sm:pb-16 pt-8">
-                    <div class="max-w-md lg:max-w-lg pr-0 sm:pr-4">
-                        <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white leading-tight tracking-tight mb-2 sm:mb-3">
-                            {!! nl2br(e($settings['home_slide3_title'] ?? "Percetakan Cepat,
-Harga Bersahabat")) !!}<br>
-                            <span class="text-lime-400 font-black">{{ $settings['home_slide3_highlight'] ?? '& Presisi' }}</span>
+                <!-- Optional Compact Glass Overlay on Bottom-Left -->
+                @if(!empty($settings['home_slide3_title']) && trim($settings['home_slide3_title']) !== '')
+                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
+                    <div class="max-w-sm sm:max-w-md bg-[#032c21]/80 backdrop-blur-md p-4 sm:p-5 rounded-sm border border-white/20 shadow-2xl pointer-events-auto">
+                        <h2 class="text-base sm:text-lg md:text-xl font-extrabold text-white leading-tight tracking-tight mb-1.5">
+                            {!! nl2br(e($settings['home_slide3_title'])) !!}<br>
+                            @if(!empty($settings['home_slide3_highlight']))
+                                <span class="text-lime-400 font-black">{{ $settings['home_slide3_highlight'] }}</span>
+                            @endif
                         </h2>
                         
-                        <p class="text-xs sm:text-sm text-slate-100/90 leading-relaxed mb-4 sm:mb-6 max-w-sm sm:max-w-md line-clamp-3">
-                            {{ $settings['home_slide3_desc'] ?? 'Mencetak majalah, prosiding, buletin, modul ajar, dan kebutuhan cetak custom institusi dengan teknologi modern dan ketepatan waktu.' }}
-                        </p>
+                        @if(!empty($settings['home_slide3_desc']))
+                            <p class="text-[11px] sm:text-xs text-slate-200 leading-relaxed mb-3 line-clamp-2">
+                                {{ $settings['home_slide3_desc'] }}
+                            </p>
+                        @endif
 
-                        <div class="flex items-center gap-2.5 sm:gap-3">
-                            <a href="{{ $settings['home_slide3_btn1_url'] ?? '/katalog' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xs">
-                                <span>{{ $settings['home_slide3_btn1_text'] ?? 'ORDER SEKARANG' }}</span>
-                                <i class="fa-solid fa-cart-shopping text-[10px]"></i>
-                            </a>
-                            <a href="{{ $settings['home_slide3_btn2_url'] ?? '/kontak' }}" class="bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2 sm:py-2.5 rounded-sm border border-white/30 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs">
-                                <span>{{ $settings['home_slide3_btn2_text'] ?? 'HUBUNGI KAMI' }}</span>
-                                <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>
-                            </a>
+                        <div class="flex items-center gap-2">
+                            @if(!empty($settings['home_slide3_btn1_text']))
+                                <a href="{{ $settings['home_slide3_btn1_url'] ?? '/katalog' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-3.5 py-1.5 rounded-sm text-[11px] uppercase tracking-wider transition flex items-center gap-1 shadow-xs">
+                                    <span>{{ $settings['home_slide3_btn1_text'] }}</span>
+                                    <i class="fa-solid fa-cart-shopping text-[9px]"></i>
+                                </a>
+                            @endif
+                            @if(!empty($settings['home_slide3_btn2_text']))
+                                <a href="{{ $settings['home_slide3_btn2_url'] ?? '/kontak' }}" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3.5 py-1.5 rounded-sm border border-white/40 text-[11px] uppercase tracking-wider transition flex items-center gap-1 backdrop-blur-xs">
+                                    <span>{{ $settings['home_slide3_btn2_text'] }}</span>
+                                    <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- Left & Right Arrow Navigation -->
@@ -142,8 +158,8 @@ Harga Bersahabat")) !!}<br>
                 <i class="fa-solid fa-chevron-right text-xs"></i>
             </button>
 
-            <!-- Slide Dots Indicators (Clean Position at Bottom Left) -->
-            <div class="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 lg:left-8 z-30 max-w-7xl mx-auto flex items-center gap-2">
+            <!-- Slide Dots Indicators (Clean Position at Bottom Center/Left) -->
+            <div class="absolute bottom-3 left-4 sm:left-6 z-30 flex items-center gap-2">
                 <button class="dot-indicator w-6 h-2 rounded-full bg-lime-400 transition-all duration-300 cursor-pointer" data-slide="0" aria-label="Slide 1"></button>
                 <button class="dot-indicator w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300 cursor-pointer" data-slide="1" aria-label="Slide 2"></button>
                 <button class="dot-indicator w-2 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300 cursor-pointer" data-slide="2" aria-label="Slide 3"></button>
