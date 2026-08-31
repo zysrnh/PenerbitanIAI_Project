@@ -152,59 +152,6 @@ Harga Bersahabat")) !!}<br>
         </div>
     </section>
 
-    <!-- 4 Keunggulan Section (Clean Unified Strip Below Slider, No Overlap on Photos) -->
-    <section class="bg-white border-b border-slate-200/90 py-5 sm:py-6 select-none shadow-2xs">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
-                
-                <!-- 1. Kualitas Terbaik -->
-                <div class="flex items-center gap-3 pt-2 sm:pt-0">
-                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
-                        <i class="fa-solid fa-book-bookmark"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat1_title'] ?? 'Kualitas Terbaik' }}</h4>
-                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat1_desc'] ?? 'Hasil cetak tajam, warna akurat' }}</p>
-                    </div>
-                </div>
-
-                <!-- 2. Pelayanan Cepat -->
-                <div class="flex items-center gap-3 pt-2 sm:pt-0 sm:pl-4">
-                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
-                        <i class="fa-regular fa-clock"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat2_title'] ?? 'Pelayanan Cepat' }}</h4>
-                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat2_desc'] ?? 'Proses produksi tepat waktu' }}</p>
-                    </div>
-                </div>
-
-                <!-- 3. Harga Bersahabat -->
-                <div class="flex items-center gap-3 pt-2 sm:pt-0 sm:pl-4">
-                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat3_title'] ?? 'Harga Bersahabat' }}</h4>
-                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat3_desc'] ?? 'Harga kompetitif & transparan' }}</p>
-                    </div>
-                </div>
-
-                <!-- 4. Berpengalaman -->
-                <div class="flex items-center gap-3 pt-2 sm:pt-0 sm:pl-4">
-                    <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center text-lg shrink-0 shadow-2xs">
-                        <i class="fa-solid fa-users-gear"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-tight">{{ $settings['home_feat4_title'] ?? 'Berpengalaman' }}</h4>
-                        <p class="text-[10.5px] text-slate-500 mt-0.5 leading-tight">{{ $settings['home_feat4_desc'] ?? 'Didukung tim berpengalaman' }}</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
     <!-- Section: Layanan Kami (Dynamic, Mobile-Optimized Grid) -->
     <section id="layanan" class="py-10 sm:py-14 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
