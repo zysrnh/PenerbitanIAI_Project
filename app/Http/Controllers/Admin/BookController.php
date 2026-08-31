@@ -226,6 +226,38 @@ class BookController extends Controller
         return back()->with('success', 'Data & foto buku "' . $book->title . '" berhasil diperbarui.');
     }
 
+        public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (empty($ids) && $request->filled('ids_json')) {
+            $ids = json_decode($request->input('ids_json'), true) ?: [];
+        }
+
+        if (empty($ids) || !is_array($ids)) {
+            return back()->with('error', 'Tidak ada buku yang dipilih untuk dihapus.');
+        }
+
+        $books = Book::whereIn('id', $ids)->get();
+        $count = $books->count();
+        $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image', 'sample_pdf'];
+
+        foreach ($books as $book) {
+            foreach ($imageSlots as $slot) {
+                if ($book->$slot) {
+                    if (file_exists(public_path('storage/' . $book->$slot))) {
+                        @unlink(public_path('storage/' . $book->$slot));
+                    }
+                    if (file_exists(storage_path('app/public/' . $book->$slot))) {
+                        @unlink(storage_path('app/public/' . $book->$slot));
+                    }
+                }
+            }
+            $book->delete();
+        }
+
+        return back()->with('success', "Berhasil menghapus {$count} buku terpilih secara massal beserta seluruh file fotonya.");
+    }
+
     public function destroy(Book $book)
     {
         $title = $book->title;

@@ -103,6 +103,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
     // Books & Catalog Collection
+    Route::post('/books/bulk-destroy', [BookController::class, 'bulkDestroy'])->name('books.bulk_destroy');
     Route::resource('books', BookController::class);
 
     // Admin Users Management

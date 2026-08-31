@@ -367,7 +367,10 @@
             <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
                     <tr>
-                        <th class="py-3 px-5 w-28">Sampul Buku</th>
+                        <th class="py-3 px-3 w-10 text-center">
+                            <input type="checkbox" id="selectAllBooks" onchange="toggleSelectAllBooks(this)" class="w-4 h-4 rounded-xs text-emerald-700 focus:ring-emerald-500 cursor-pointer" title="Pilih Semua Buku di Halaman Ini" />
+                        </th>
+                        <th class="py-3 px-4 w-28">Sampul Buku</th>
                         <th class="py-3 px-4">Judul &amp; Penulis</th>
                         <th class="py-3 px-4">Kategori &amp; ISBN</th>
                         <th class="py-3 px-4">Format &amp; Hlm</th>
@@ -378,9 +381,12 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
                     @forelse($books as $book)
-                        <tr class="hover:bg-slate-50/70 transition book-table-row" data-title="{{ strtolower($book->title) }}" data-author="{{ strtolower($book->author) }}" data-category="{{ $book->category }}" data-isbn="{{ strtolower($book->isbn) }}" data-json="{{ htmlspecialchars(json_encode($book), ENT_QUOTES, 'UTF-8') }}">
+                        <tr class="hover:bg-slate-50/70 transition book-table-row" data-book-id="{{ $book->id }}" data-title="{{ strtolower($book->title) }}" data-author="{{ strtolower($book->author) }}" data-category="{{ $book->category }}" data-isbn="{{ strtolower($book->isbn) }}" data-json="{{ htmlspecialchars(json_encode($book), ENT_QUOTES, 'UTF-8') }}">
                             
-                            <td class="py-3.5 px-5">
+                            <td class="py-3.5 px-3 text-center">
+                                <input type="checkbox" value="{{ $book->id }}" onchange="updateBulkBarState()" class="book-row-chk w-4 h-4 rounded-xs text-emerald-700 focus:ring-emerald-500 cursor-pointer" />
+                            </td>
+                            <td class="py-3.5 px-4">
                                 <div class="book-stage-3d w-20 h-28 cursor-pointer" onclick="openEditModal({{ json_encode($book) }})" title="Klik untuk Pratinjau 3D & Edit">
                                     <div class="book-hover-3d relative w-full h-full rounded-xs overflow-hidden shadow-xs border border-slate-300 bg-slate-900 select-none">
                                         <div class="book-spine-strip"></div>
@@ -1364,6 +1370,101 @@
                 @endif
             @endif
         });
+    </script>
+
+
+    <!-- FLOATING BULK DELETE ACTION BAR -->
+    <div id="bulkActionBar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#032c21] text-white px-5 py-3 rounded-full shadow-2xl border border-emerald-700/60 flex items-center justify-between gap-4 sm:gap-6 transition-all duration-300 transform translate-y-28 opacity-0 pointer-events-none select-none max-w-[92vw]">
+        <div class="flex items-center gap-2.5 text-xs font-bold font-heading">
+            <span id="selectedCountBadge" class="min-w-[24px] h-6 px-1.5 rounded-full bg-lime-400 text-brand-950 flex items-center justify-center font-mono font-black text-xs shadow-xs">
+                0
+            </span>
+            <span class="text-emerald-100 hidden sm:inline">Buku Dipilih</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="cancelBulkSelection()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white text-xs font-semibold transition cursor-pointer border border-white/20">
+                Batal
+            </button>
+            <form id="bulkDeleteForm" method="POST" action="{{ route('admin.books.bulk_destroy') }}" onsubmit="return confirmBulkDelete(event)">
+                @csrf
+                <input type="hidden" name="ids_json" id="bulkDeleteIdsInput" value="[]">
+                <button type="submit" class="px-4 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md cursor-pointer hover:scale-105">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                    <span>Hapus Terpilih</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleSelectAllBooks(masterChk) {
+            const rowCheckboxes = document.querySelectorAll('.book-row-chk');
+            rowCheckboxes.forEach(chk => {
+                chk.checked = masterChk.checked;
+            });
+            updateBulkBarState();
+        }
+
+        function updateBulkBarState() {
+            const checkedBoxes = document.querySelectorAll('.book-row-chk:checked');
+            const totalBoxes = document.querySelectorAll('.book-row-chk');
+            const count = checkedBoxes.length;
+            
+            const bulkBar = document.getElementById('bulkActionBar');
+            const countBadge = document.getElementById('selectedCountBadge');
+            const idsInput = document.getElementById('bulkDeleteIdsInput');
+            const masterChk = document.getElementById('selectAllBooks');
+
+            if (masterChk) {
+                masterChk.checked = totalBoxes.length > 0 && count === totalBoxes.length;
+                masterChk.indeterminate = count > 0 && count < totalBoxes.length;
+            }
+
+            if (count > 0) {
+                const selectedIds = Array.from(checkedBoxes).map(c => c.value);
+                if (idsInput) idsInput.value = JSON.stringify(selectedIds);
+                if (countBadge) countBadge.innerText = count;
+
+                if (bulkBar) {
+                    bulkBar.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+                    bulkBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+                }
+            } else {
+                if (idsInput) idsInput.value = '[]';
+                if (bulkBar) {
+                    bulkBar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+                    bulkBar.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
+                }
+            }
+        }
+
+        function cancelBulkSelection() {
+            const rowCheckboxes = document.querySelectorAll('.book-row-chk');
+            rowCheckboxes.forEach(chk => chk.checked = false);
+            const masterChk = document.getElementById('selectAllBooks');
+            if (masterChk) {
+                masterChk.checked = false;
+                masterChk.indeterminate = false;
+            }
+            updateBulkBarState();
+        }
+
+        function confirmBulkDelete(e) {
+            const checkedBoxes = document.querySelectorAll('.book-row-chk:checked');
+            const count = checkedBoxes.length;
+            if (count === 0) {
+                alert('Silakan pilih setidaknya satu buku untuk dihapus.');
+                e.preventDefault();
+                return false;
+            }
+
+            const isConfirmed = confirm('Apakah Anda yakin ingin menghapus ' + count + ' buku yang dipilih sekaligus?\n\nSemua data beserta foto buku yang dipilih akan dihapus secara permanen.');
+            if (!isConfirmed) {
+                e.preventDefault();
+                return false;
+            }
+            return true;
+        }
     </script>
 
 @endsection
