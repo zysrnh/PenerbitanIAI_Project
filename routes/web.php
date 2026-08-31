@@ -22,6 +22,39 @@ use Illuminate\Support\Facades\Route;
 | Public Routes
 |--------------------------------------------------------------------------
 */
+/*
+|--------------------------------------------------------------------------
+| Storage Asset File Delivery Route (Universal Fallback for Shared Hosting / cPanel)
+|--------------------------------------------------------------------------
+*/
+Route::get('/storage/{path}', function ($path) {
+    // 1. Check in public/storage/$path
+    $publicStorage = public_path('storage/' . $path);
+    if (file_exists($publicStorage) && !is_dir($publicStorage)) {
+        return response()->file($publicStorage);
+    }
+
+    // 2. Check in storage/app/public/$path
+    $storageApp = storage_path('app/public/' . $path);
+    if (file_exists($storageApp) && !is_dir($storageApp)) {
+        return response()->file($storageApp);
+    }
+
+    // 3. Check in public/$path directly
+    $publicDirect = public_path($path);
+    if (file_exists($publicDirect) && !is_dir($publicDirect)) {
+        return response()->file($publicDirect);
+    }
+
+    // 4. Check in public/images/$path
+    $publicImages = public_path('images/' . $path);
+    if (file_exists($publicImages) && !is_dir($publicImages)) {
+        return response()->file($publicImages);
+    }
+
+    abort(404);
+})->where('path', '.*')->name('storage.file_serve');
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');

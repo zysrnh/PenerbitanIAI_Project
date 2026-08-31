@@ -79,9 +79,13 @@ class BookController extends Controller
         $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
 
-        $photoDir = public_path('storage/books/photos');
-        if (!file_exists($photoDir)) {
-            @mkdir($photoDir, 0755, true);
+        $photoDir1 = public_path('storage/books/photos');
+        $photoDir2 = storage_path('app/public/books/photos');
+        if (!file_exists($photoDir1)) {
+            @mkdir($photoDir1, 0777, true);
+        }
+        if (!file_exists($photoDir2)) {
+            @mkdir($photoDir2, 0777, true);
         }
 
         foreach ($imageSlots as $slot) {
@@ -94,8 +98,14 @@ class BookController extends Controller
                 }
 
                 $filename = Str::random(30) . '.' . $ext;
-                $file->move($photoDir, $filename);
-                @chmod($photoDir . '/' . $filename, 0644);
+                $dest1 = $photoDir1 . '/' . $filename;
+                $dest2 = $photoDir2 . '/' . $filename;
+
+                $file->move($photoDir1, $filename);
+                @copy($dest1, $dest2);
+                @chmod($dest1, 0644);
+                @chmod($dest2, 0644);
+
                 $validated[$slot] = 'books/photos/' . $filename;
             }
         }
@@ -148,9 +158,13 @@ class BookController extends Controller
         $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
 
-        $photoDir = public_path('storage/books/photos');
-        if (!file_exists($photoDir)) {
-            @mkdir($photoDir, 0755, true);
+        $photoDir1 = public_path('storage/books/photos');
+        $photoDir2 = storage_path('app/public/books/photos');
+        if (!file_exists($photoDir1)) {
+            @mkdir($photoDir1, 0777, true);
+        }
+        if (!file_exists($photoDir2)) {
+            @mkdir($photoDir2, 0777, true);
         }
 
         foreach ($imageSlots as $slot) {
@@ -162,13 +176,24 @@ class BookController extends Controller
                     return back()->withErrors([$slot => 'File foto harus berekstensi JPG, PNG, atau WebP.'])->withInput();
                 }
 
-                if ($book->$slot && file_exists(public_path('storage/' . $book->$slot))) {
-                    @unlink(public_path('storage/' . $book->$slot));
+                if ($book->$slot) {
+                    if (file_exists(public_path('storage/' . $book->$slot))) {
+                        @unlink(public_path('storage/' . $book->$slot));
+                    }
+                    if (file_exists(storage_path('app/public/' . $book->$slot))) {
+                        @unlink(storage_path('app/public/' . $book->$slot));
+                    }
                 }
 
                 $filename = Str::random(30) . '.' . $ext;
-                $file->move($photoDir, $filename);
-                @chmod($photoDir . '/' . $filename, 0644);
+                $dest1 = $photoDir1 . '/' . $filename;
+                $dest2 = $photoDir2 . '/' . $filename;
+
+                $file->move($photoDir1, $filename);
+                @copy($dest1, $dest2);
+                @chmod($dest1, 0644);
+                @chmod($dest2, 0644);
+
                 $validated[$slot] = 'books/photos/' . $filename;
             }
         }
