@@ -134,7 +134,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Statistik 2 (Penulis / Dosen) <span class="text-rose-500">*</span></label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Statistik 2 (Penulis Penerbit Persis) <span class="text-rose-500">*</span></label>
                             <input 
                                 type="text" 
                                 name="catalog_stat_authors" 

@@ -642,7 +642,7 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Penulis / Dosen <span class="text-rose-500">*</span></label>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Penulis <span class="text-rose-500">*</span></label>
                                 <input type="text" name="author" id="in_author" required oninput="updateVisualizerLive()" class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Contoh: Dr. H. Ahmad Fauzi, M.Ag." />
                             </div>
 

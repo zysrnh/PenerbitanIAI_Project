@@ -184,7 +184,7 @@
                     <i class="fa-solid fa-user-graduate"></i>
                 </div>
                 <div>
-                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Penulis / Dosen</h3>
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Penulis Penerbit Persis</h3>
                     <p class="text-xs text-slate-600 mt-0.5 font-semibold">{{ $settings['catalog_stat_authors'] ?? 'Karya Dosen & Peneliti' }}</p>
                     <span class="text-[11px] text-slate-400 block">Riset dan kepakaran</span>
                 </div>
