@@ -14,7 +14,7 @@
                 Buat Halaman Layanan Baru
             </h1>
             <p class="text-xs text-slate-500 mt-0.5">
-                Isi detail, cakupan layanan, alur tahapan, dan FAQ. Pratinjau visual di sebelah kanan akan ter-update langsung.
+                Sesuaikan informasi, cakupan, alur tahapan kerja, dan FAQ layanan. Pratinjau di sebelah kanan akan ter-update secara real-time.
             </p>
         </div>
         <button type="submit" form="serviceForm" class="px-5 py-2.5 bg-[#006830] hover:bg-[#024a23] text-white text-xs font-bold rounded-sm shadow-sm transition flex items-center gap-2 cursor-pointer self-start sm:self-auto">
@@ -27,19 +27,19 @@
     <form id="serviceForm" action="{{ route('admin.services.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         @csrf
 
-        <!-- LEFT COLUMN: Content Builder (col-span-7) -->
+        <!-- LEFT COLUMN: Form Editor (col-span-7) -->
         <div class="lg:col-span-7 space-y-6">
             
             <!-- 1. INFORMASI UTAMA & KARTU BERANDA -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-2 border-b border-slate-100 pb-3">
                     <i class="fa-solid fa-address-card text-emerald-600"></i>
                     <span>1. Informasi Utama &amp; Kartu Beranda</span>
                 </h3>
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Judul Layanan <span class="text-red-500">*</span></label>
-                    <input type="text" name="title" id="inputTitle" value="{{ old('title') }}" required placeholder="Contoh: Pengurusan ISBN" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 font-medium" oninput="updateLivePreview()" />
+                    <input type="text" name="title" id="inputTitle" value="{{ old('title') }}" required placeholder="Contoh: Pengurusan ISBN" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 font-medium" oninput="updateLivePreview()" />
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -81,7 +81,7 @@
 
             <!-- 2. HERO BANNER HALAMAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-2 border-b border-slate-100 pb-3">
                     <i class="fa-solid fa-image text-emerald-600"></i>
                     <span>2. Hero Banner Halaman</span>
                 </h3>
@@ -108,7 +108,7 @@
 
             <!-- 3. PENJELASAN LENGKAP & CAKUPAN LAYANAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-2 border-b border-slate-100 pb-3">
                     <i class="fa-solid fa-paragraph text-emerald-600"></i>
                     <span>3. Penjelasan Lengkap &amp; Cakupan Layanan</span>
                 </h3>
@@ -129,7 +129,7 @@
             <!-- 4. ALUR & TAHAPAN PELAKSANAAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-2">
                         <i class="fa-solid fa-arrows-spin text-emerald-600"></i>
                         <span>4. Alur &amp; Tahapan Pelaksanaan</span>
                     </h3>
@@ -156,7 +156,7 @@
 
             <!-- 5. KEUNTUNGAN LAYANAN & CATATAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-2 border-b border-slate-100 pb-3">
                     <i class="fa-solid fa-award text-emerald-600"></i>
                     <span>5. Keuntungan Layanan &amp; Catatan Penting</span>
                 </h3>
@@ -175,7 +175,7 @@
             <!-- 6. TANYA JAWAB (FAQ) -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading flex items-center gap-2">
                         <i class="fa-solid fa-circle-question text-emerald-600"></i>
                         <span>6. Tanya Jawab (FAQ Layanan)</span>
                     </h3>
@@ -200,43 +200,43 @@
 
         </div>
 
-        <!-- RIGHT COLUMN: FULL-PAGE LIVE VISUAL PREVIEW SIMULATOR (col-span-5) -->
+        <!-- RIGHT COLUMN: EXACT REPLICA OF HOME PREVIEW SIMULATOR (col-span-5) -->
         <div class="lg:col-span-5 space-y-4 sticky top-20">
             
-            <!-- Mockup Browser Header -->
-            <div class="bg-slate-900 rounded-t-sm p-3 border border-slate-800 shadow-lg flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="flex items-center gap-1">
-                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <!-- Mockup Window Header -->
+            <div class="bg-slate-900 rounded-t-sm px-4 py-3 border border-slate-800 shadow-lg flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
                     </div>
-                    <span class="text-xs font-bold tracking-wide text-white flex items-center gap-1.5">
-                        <span>Pratinjau Layanan</span>
-                        <span class="text-[10px] text-slate-400 font-mono">penerbitpersis.com</span>
+                    <span class="text-xs font-bold tracking-wide text-white flex items-center gap-2">
+                        <span>Pratinjau Halaman</span>
+                        <span class="text-[10px] text-slate-400 font-mono font-normal">penerbitpersis.com</span>
                     </span>
                 </div>
 
                 <!-- Tabs Switcher -->
-                <div class="flex items-center gap-1 bg-slate-800 p-0.5 rounded-xs border border-slate-700">
-                    <button type="button" onclick="switchPreviewTab('detail')" id="tabBtnDetail" class="px-2 py-0.5 text-[10px] font-bold rounded-xs bg-emerald-600 text-white transition">Halaman Web</button>
-                    <button type="button" onclick="switchPreviewTab('card')" id="tabBtnCard" class="px-2 py-0.5 text-[10px] font-bold rounded-xs text-slate-300 hover:text-white transition">Kartu Beranda</button>
+                <div class="flex items-center gap-1 bg-slate-800 p-0.5 rounded-sm border border-slate-700 shrink-0">
+                    <button type="button" onclick="switchPreviewTab('detail')" id="tabBtnDetail" class="px-2.5 py-1 text-[10px] font-bold rounded-xs bg-emerald-600 text-white transition cursor-pointer">Halaman Detail</button>
+                    <button type="button" onclick="switchPreviewTab('card')" id="tabBtnCard" class="px-2.5 py-1 text-[10px] font-bold rounded-xs text-slate-300 hover:text-white transition cursor-pointer">Kartu Beranda</button>
                 </div>
             </div>
 
             <!-- Visual Preview Canvas (Exact Page Representation) -->
-            <div class="bg-slate-100 rounded-b-sm border-x border-b border-slate-300 shadow-md text-slate-800 space-y-4 p-3.5 max-h-[82vh] overflow-y-auto">
+            <div class="bg-slate-100 rounded-b-sm border border-slate-200/90 shadow-md overflow-hidden text-slate-800 space-y-3.5 p-3 sm:p-4 max-h-[82vh] overflow-y-auto">
                 
                 <!-- TAB 1: FULL DETAIL PAGE MOCKUP -->
-                <div id="previewDetailTab" class="space-y-4">
+                <div id="previewDetailTab" class="space-y-3.5">
                     
                     <!-- 1. Hero Banner Mockup -->
-                    <div class="relative bg-brand-950 bg-[#032c21] rounded-xs overflow-hidden border border-slate-800 text-white p-4.5 shadow-inner">
+                    <div class="relative bg-brand-950 bg-[#032c21] rounded-sm overflow-hidden border border-slate-800 text-white min-h-[220px] p-4 sm:p-5 flex flex-col justify-between shadow-inner">
                         <div class="relative z-10 space-y-2">
                             <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-widest block">
-                                <i id="mockHeroIcon" class="fa-solid fa-barcode text-lime-300 mr-1"></i> LAYANAN RESMI
+                                <i id="mockHeroIcon" class="fa-solid fa-barcode text-lime-300 mr-1"></i> LAYANAN RESMI PENERBIT PERSIS
                             </span>
-                            <h4 id="mockHeroTitle" class="text-base font-extrabold text-white leading-tight">
+                            <h4 id="mockHeroTitle" class="text-base sm:text-lg font-extrabold text-white leading-tight">
                                 Judul Layanan
                             </h4>
                             <p id="mockHeroTagline" class="text-[11px] text-emerald-200 italic font-medium">
@@ -246,11 +246,11 @@
                                 Deskripsi ringkas layanan akan tampil di sini secara dinamis...
                             </p>
                             <div class="flex items-center gap-2 pt-2">
-                                <span id="mockHeroCta" class="px-3 py-1.5 bg-[#006830] text-white font-bold text-[9px] rounded-xs uppercase tracking-wider flex items-center gap-1 shadow-2xs border border-emerald-600">
+                                <span id="mockHeroCta" class="px-3 py-1.5 bg-[#006830] text-white font-bold text-[9.5px] rounded-xs uppercase tracking-wider flex items-center gap-1 shadow-xs border border-emerald-600">
                                     <i class="fa-brands fa-whatsapp text-lime-300 text-xs"></i>
                                     <span>Konsultasi Sekarang</span>
                                 </span>
-                                <span class="px-2.5 py-1.5 bg-white/10 text-slate-200 font-semibold text-[9px] rounded-xs border border-white/20">
+                                <span class="px-3 py-1.5 bg-white/10 text-white font-semibold text-[9.5px] rounded-xs border border-white/20 uppercase tracking-wider">
                                     Kirim Draf
                                 </span>
                             </div>
@@ -258,49 +258,51 @@
                     </div>
 
                     <!-- 2. 4 Overlapping Stats Mockup -->
-                    <div class="grid grid-cols-4 gap-1.5 -mt-2 relative z-20">
-                        <div class="bg-white p-2 rounded-xs border border-slate-200 shadow-xs text-center">
-                            <span class="block text-xs font-black text-emerald-700">100%</span>
-                            <span class="text-[8px] text-slate-500 font-semibold uppercase block">ISBN</span>
-                        </div>
-                        <div class="bg-white p-2 rounded-xs border border-slate-200 shadow-xs text-center">
-                            <span class="block text-xs font-black text-slate-900">Standar</span>
-                            <span class="text-[8px] text-slate-500 font-semibold uppercase block">KUM</span>
-                        </div>
-                        <div class="bg-white p-2 rounded-xs border border-slate-200 shadow-xs text-center">
-                            <span class="block text-xs font-black text-emerald-700">Terarah</span>
-                            <span class="text-[8px] text-slate-500 font-semibold uppercase block">Redaksi</span>
-                        </div>
-                        <div class="bg-white p-2 rounded-xs border border-slate-200 shadow-xs text-center">
-                            <span class="block text-xs font-black text-slate-900">Nasional</span>
-                            <span class="text-[8px] text-slate-500 font-semibold uppercase block">Cetak</span>
+                    <div class="bg-white rounded-sm border border-slate-200 shadow-2xs p-2.5 text-slate-800">
+                        <div class="grid grid-cols-4 gap-1.5 divide-x divide-slate-100 text-center">
+                            <div class="p-1">
+                                <span class="block text-xs font-black text-emerald-700">100%</span>
+                                <span class="text-[8px] text-slate-500 font-semibold uppercase block">ISBN Resmi</span>
+                            </div>
+                            <div class="p-1">
+                                <span class="block text-xs font-black text-slate-900">Standar</span>
+                                <span class="text-[8px] text-slate-500 font-semibold uppercase block">KUM</span>
+                            </div>
+                            <div class="p-1">
+                                <span class="block text-xs font-black text-emerald-700">Terarah</span>
+                                <span class="text-[8px] text-slate-500 font-semibold uppercase block">Redaksi</span>
+                            </div>
+                            <div class="p-1">
+                                <span class="block text-xs font-black text-slate-900">Nasional</span>
+                                <span class="text-[8px] text-slate-500 font-semibold uppercase block">Distribusi</span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- 3. Overview Mockup -->
-                    <div class="bg-white p-3.5 rounded-xs border border-slate-200 shadow-2xs space-y-1.5">
-                        <span class="text-[9px] font-bold text-emerald-700 uppercase tracking-wider block">Mengenal Layanan</span>
-                        <p id="mockOverview" class="text-[11px] text-slate-600 leading-relaxed line-clamp-3">
+                    <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-2xs space-y-1">
+                        <span class="text-brand-800 font-bold text-[8.5px] uppercase tracking-widest block">MENGENAL LAYANAN</span>
+                        <p id="mockOverview" class="text-[10.5px] text-slate-600 leading-relaxed line-clamp-3">
                             Jelaskan secara mendalam tentang layanan ini pada form di sebelah kiri...
                         </p>
                     </div>
 
                     <!-- 4. Features Grid Mockup -->
-                    <div class="bg-white p-3.5 rounded-xs border border-slate-200 shadow-2xs space-y-2">
-                        <span class="text-[9px] font-bold text-emerald-700 uppercase tracking-wider block">Cakupan Fasilitas</span>
+                    <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-2xs space-y-2">
+                        <span class="text-brand-800 font-bold text-[8.5px] uppercase tracking-widest block">CAKUPAN FASILITAS</span>
                         <div id="mockFeaturesContainer" class="grid grid-cols-2 gap-1.5">
                             <div class="p-2 rounded-xs bg-slate-50 border border-slate-200 text-[10px] font-semibold text-slate-700 flex items-center gap-1.5">
-                                <i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> Poin Layanan 1
+                                <i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> <span class="truncate">Poin Fasilitas 1</span>
                             </div>
                             <div class="p-2 rounded-xs bg-slate-50 border border-slate-200 text-[10px] font-semibold text-slate-700 flex items-center gap-1.5">
-                                <i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> Poin Layanan 2
+                                <i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> <span class="truncate">Poin Fasilitas 2</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- 5. Workflow Steps Mockup -->
-                    <div class="bg-white p-3.5 rounded-xs border border-slate-200 shadow-2xs space-y-2">
-                        <span class="text-[9px] font-bold text-emerald-700 uppercase tracking-wider block">Alur &amp; Tahapan Kerja</span>
+                    <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-2xs space-y-2">
+                        <span class="text-brand-800 font-bold text-[8.5px] uppercase tracking-widest block">ALUR &amp; TAHAPAN KERJA</span>
                         <div id="mockStepsContainer" class="space-y-1.5">
                             <div class="p-2 rounded-xs bg-slate-50 border border-slate-200 text-[10.5px] flex items-center gap-2">
                                 <span class="w-5 h-5 rounded-xs bg-[#006830] text-white text-[9px] font-bold flex items-center justify-center shrink-0">1</span>
@@ -310,8 +312,8 @@
                     </div>
 
                     <!-- 6. Benefits Matrix Mockup -->
-                    <div class="bg-gradient-to-br from-[#032c21] to-[#006830] text-white p-3.5 rounded-xs space-y-1">
-                        <span class="text-[9px] font-bold text-lime-300 uppercase tracking-wider block">Keunggulan Lembaga</span>
+                    <div class="bg-gradient-to-br from-[#032c21] to-[#006830] text-white p-3.5 rounded-sm shadow-2xs space-y-1">
+                        <span class="text-[8.5px] font-bold text-lime-300 uppercase tracking-wider block">KEUNGGULAN LEMBAGA</span>
                         <p id="mockBenefits" class="text-[10.5px] text-emerald-100 leading-relaxed line-clamp-2">
                             Mudah • Terarah • Profesional • Terintegrasi
                         </p>
@@ -321,7 +323,7 @@
 
                 <!-- TAB 2: HOMEPAGE CARD MOCKUP -->
                 <div id="previewCardTab" class="hidden space-y-3">
-                    <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-md text-slate-900">
+                    <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-sm text-slate-900">
                         <div id="mockCardIconBox" class="w-11 h-11 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xl mb-3 shadow-2xs">
                             <i id="mockCardIcon" class="fa-solid fa-barcode"></i>
                         </div>
@@ -355,13 +357,13 @@
         if (tab === 'detail') {
             detailTab.classList.remove('hidden');
             cardTab.classList.add('hidden');
-            btnDetail.className = 'px-2 py-0.5 text-[10px] font-bold rounded-xs bg-emerald-600 text-white transition';
-            btnCard.className = 'px-2 py-0.5 text-[10px] font-bold rounded-xs text-slate-300 hover:text-white transition';
+            btnDetail.className = 'px-2.5 py-1 text-[10px] font-bold rounded-xs bg-emerald-600 text-white transition cursor-pointer';
+            btnCard.className = 'px-2.5 py-1 text-[10px] font-bold rounded-xs text-slate-300 hover:text-white transition cursor-pointer';
         } else {
             detailTab.classList.add('hidden');
             cardTab.classList.remove('hidden');
-            btnCard.className = 'px-2 py-0.5 text-[10px] font-bold rounded-xs bg-emerald-600 text-white transition';
-            btnDetail.className = 'px-2 py-0.5 text-[10px] font-bold rounded-xs text-slate-300 hover:text-white transition';
+            btnCard.className = 'px-2.5 py-1 text-[10px] font-bold rounded-xs bg-emerald-600 text-white transition cursor-pointer';
+            btnDetail.className = 'px-2.5 py-1 text-[10px] font-bold rounded-xs text-slate-300 hover:text-white transition cursor-pointer';
         }
     }
 
@@ -412,7 +414,10 @@
         } else {
             featContainer.innerHTML = `
                 <div class="p-2 rounded-xs bg-slate-50 border border-slate-200 text-[10px] font-semibold text-slate-700 flex items-center gap-1.5">
-                    <i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> Poin Layanan 1
+                    <i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> <span class="truncate">Poin Fasilitas 1</span>
+                </div>
+                <div class="p-2 rounded-xs bg-slate-50 border border-slate-200 text-[10px] font-semibold text-slate-700 flex items-center gap-1.5">
+                    <i class="fa-solid fa-check text-emerald-600 text-[9px]"></i> <span class="truncate">Poin Fasilitas 2</span>
                 </div>
             `;
         }
