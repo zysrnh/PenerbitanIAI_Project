@@ -188,17 +188,26 @@
             <!-- Dynamic Services Cards: 2-Cols on Mobile, 3-Cols on Tablet, 6-Cols on Desktop -->
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-{{ count($services) <= 4 ? count($services) : (count($services) == 5 ? '5' : '6') }} gap-3 sm:gap-4">
                 @foreach($services as $srv)
+                    @php
+                        $srvTitle = is_object($srv) ? $srv->title : ($srv['title'] ?? 'Layanan');
+                        $srvIcon = is_object($srv) ? $srv->icon : ($srv['icon'] ?? 'fa-solid fa-circle-check');
+                        $srvDesc = is_object($srv) ? $srv->short_desc : ($srv['desc'] ?? ($srv['short_desc'] ?? ''));
+                        $srvSlug = is_object($srv) ? $srv->slug : ($srv['slug'] ?? null);
+                        $srvUrl = $srvSlug ? route('layanan.show', $srvSlug) : ($srv['link'] ?? route('kontak'));
+                    @endphp
                     <div class="bg-white p-3.5 sm:p-5 rounded-sm border border-slate-200 hover:border-emerald-700 hover:shadow-md transition-all duration-200 flex flex-col justify-between shadow-2xs group">
                         <div>
                             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-base sm:text-xl mb-2.5 sm:mb-3.5 group-hover:bg-emerald-700 group-hover:text-white transition-colors duration-200">
-                                <i class="{{ $srv['icon'] ?? 'fa-solid fa-circle-check' }}"></i>
+                                <i class="{{ $srvIcon }}"></i>
                             </div>
-                            <h4 class="font-bold text-xs sm:text-sm text-slate-900 mb-1 sm:mb-1.5 leading-snug group-hover:text-emerald-800 transition-colors">{{ $srv['title'] ?? 'Layanan' }}</h4>
+                            <h4 class="font-bold text-xs sm:text-sm text-slate-900 mb-1 sm:mb-1.5 leading-snug group-hover:text-emerald-800 transition-colors">
+                                <a href="{{ $srvUrl }}" class="hover:underline">{{ $srvTitle }}</a>
+                            </h4>
                             <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">
-                                {{ $srv['desc'] ?? '' }}
+                                {{ $srvDesc }}
                             </p>
                         </div>
-                        <a href="{{ $srv['link'] ?? '/kontak' }}" class="text-[10px] sm:text-[11px] font-bold text-emerald-700 hover:text-emerald-950 inline-flex items-center gap-1 mt-auto pt-2 border-t border-slate-100">
+                        <a href="{{ $srvUrl }}" class="text-[10px] sm:text-[11px] font-bold text-emerald-700 hover:text-emerald-950 inline-flex items-center gap-1 mt-auto pt-2 border-t border-slate-100">
                             <span>Selengkapnya</span>
                             <i class="fa-solid fa-arrow-right text-[8px] sm:text-[9px] group-hover:translate-x-1 transition-transform"></i>
                         </a>

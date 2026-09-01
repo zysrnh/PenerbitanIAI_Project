@@ -57,6 +57,7 @@ Route::get('/storage/{path}', function ($path) {
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('/layanan/{slug}', [\App\Http\Controllers\ServiceController::class, 'show'])->name('layanan.show');
 Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
@@ -103,6 +104,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
 
     // Books & Catalog Collection
+    Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
     Route::post('/books/bulk-destroy', [BookController::class, 'bulkDestroy'])->name('books.bulk_destroy');
     Route::resource('books', BookController::class);
 

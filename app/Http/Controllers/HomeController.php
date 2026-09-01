@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Service;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
@@ -52,9 +53,14 @@ class HomeController extends Controller
 
     public function index()
     {
-        $rawServices = SiteSetting::get('home_services_json', null);
-        $services = $rawServices ? json_decode($rawServices, true) : $this->getDefaultServices();
-        if (!is_array($services)) {
+        // Fetch Dynamic Services from Database
+        try {
+            $services = Service::where('status', 'published')->orderBy('order')->get();
+            if ($services->isEmpty()) {
+                $rawServices = SiteSetting::get('home_services_json', null);
+                $services = $rawServices ? json_decode($rawServices, true) : $this->getDefaultServices();
+            }
+        } catch (\Throwable $e) {
             $services = $this->getDefaultServices();
         }
 

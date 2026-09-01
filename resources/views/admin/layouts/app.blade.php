@@ -148,7 +148,13 @@
                             @endif
                         </a>
 
-                        <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                                        <a href="{{ route('admin.services.index') }}" 
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold text-xs transition {{ request()->routeIs('admin.services.*') ? 'bg-brand-800 text-lime-300 shadow-2xs font-bold' : 'text-slate-300 hover:bg-brand-900 hover:text-white' }}">
+                    <i class="fa-solid fa-layer-group w-4 text-center"></i>
+                    <span>Kelola Layanan Web</span>
+                </a>
+
+                <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <i class="fa-solid fa-book-bookmark w-4 text-center"></i>
                             <span>Katalog Buku &amp; ISBN</span>
                         </a>
@@ -412,7 +418,13 @@
         </a>
 
         <!-- 3. Books -->
-        <a href="{{ route('admin.books.index') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.books.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+                        <a href="{{ route('admin.services.index') }}" 
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold text-xs transition {{ request()->routeIs('admin.services.*') ? 'bg-brand-800 text-lime-300 shadow-2xs font-bold' : 'text-slate-300 hover:bg-brand-900 hover:text-white' }}">
+                    <i class="fa-solid fa-layer-group w-4 text-center"></i>
+                    <span>Kelola Layanan Web</span>
+                </a>
+
+                <a href="{{ route('admin.books.index') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.books.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
             <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.books.*') ? 'text-emerald-700 scale-110' : '' }}">
                 <i class="fa-solid fa-book-bookmark"></i>
             </div>
