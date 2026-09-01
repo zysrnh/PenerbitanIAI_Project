@@ -13,40 +13,25 @@ class HomeController extends Controller
     {
         return [
             [
-                'icon'  => 'fa-solid fa-book-open',
-                'title' => 'Penerbitan Buku',
-                'desc'  => 'Menerbitkan buku referensi, buku ajar, monograf, dan berbagai karya ilmiah.',
-                'link'  => '/kontak',
+                'icon'       => 'fa-solid fa-book-open',
+                'title'      => 'Penerbitan Buku',
+                'short_desc' => 'Mewujudkan karya tulis akademisi, pendidik, mahasiswa, dan masyarakat menjadi buku berkualitas, ber-ISBN, dan siap edar.',
+                'slug'       => 'penerbitan-buku',
+                'link'       => '/layanan/penerbitan-buku',
             ],
             [
-                'icon'  => 'fa-solid fa-copy',
-                'title' => 'Percetakan Umum',
-                'desc'  => 'Cetak brosur, flyer, poster, katalog, majalah, dan berbagai kebutuhan cetak lainnya.',
-                'link'  => '/kontak',
+                'icon'       => 'fa-solid fa-graduation-cap',
+                'title'      => 'Konversi KTI',
+                'short_desc' => 'Ubah karya ilmiah seperti skripsi, tesis, disertasi, dan laporan riset menjadi buku yang komunikatif dan bernilai tinggi.',
+                'slug'       => 'konversi-kti',
+                'link'       => '/layanan/konversi-kti',
             ],
             [
-                'icon'  => 'fa-solid fa-newspaper',
-                'title' => 'Jurnal & Majalah',
-                'desc'  => 'Pengelolaan dan pencetakan jurnal, prosiding, buletin, dan majalah berkala.',
-                'link'  => '/kontak',
-            ],
-            [
-                'icon'  => 'fa-solid fa-graduation-cap',
-                'title' => 'Konversi KTI',
-                'desc'  => 'Ubah skripsi, tesis, disertasi menjadi buku berkualitas siap terbit.',
-                'link'  => '/kontak',
-            ],
-            [
-                'icon'  => 'fa-solid fa-barcode',
-                'title' => 'Pengurusan ISBN',
-                'desc'  => 'Bantu pengurusan ISBN untuk buku dan terbitan Anda.',
-                'link'  => '/kontak',
-            ],
-            [
-                'icon'  => 'fa-solid fa-box-open',
-                'title' => 'Cetak Custom',
-                'desc'  => 'Cetak sesuai kebutuhan dengan ukuran dan bahan yang beragam.',
-                'link'  => '/kontak',
+                'icon'       => 'fa-solid fa-barcode',
+                'title'      => 'Pengurusan ISBN',
+                'short_desc' => 'Bantu pengurusan ISBN resmi Perpustakaan Nasional untuk buku dan terbitan Anda.',
+                'slug'       => 'pengurusan-isbn',
+                'link'       => '/layanan/pengurusan-isbn',
             ],
         ];
     }
