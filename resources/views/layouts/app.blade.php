@@ -220,23 +220,28 @@
 
 
 @php
-    $navServicesRaw = \App\Models\SiteSetting::get('home_services_json', null);
-    $navServices = $navServicesRaw ? json_decode($navServicesRaw, true) : [
-        ['icon' => 'fa-solid fa-book-open', 'title' => 'Penerbitan Buku', 'link' => url('/#layanan')],
-        ['icon' => 'fa-solid fa-copy', 'title' => 'Percetakan Umum', 'link' => url('/#layanan')],
-        ['icon' => 'fa-solid fa-newspaper', 'title' => 'Jurnal & Majalah', 'link' => url('/#layanan')],
-        ['icon' => 'fa-solid fa-graduation-cap', 'title' => 'Konversi KTI', 'link' => url('/#layanan')],
-        ['icon' => 'fa-solid fa-barcode', 'title' => 'Pengurusan ISBN', 'link' => url('/#layanan')],
-        ['icon' => 'fa-solid fa-box-open', 'title' => 'Cetak Custom', 'link' => url('/#layanan')],
-    ];
-    if (!is_array($navServices) || empty($navServices)) {
+    try {
+        $dbNavServices = \App\Models\Service::where('status', 'published')->orderBy('order')->get();
+        if ($dbNavServices->isNotEmpty()) {
+            $navServices = $dbNavServices->map(function($srv) {
+                return [
+                    'icon'  => $srv->icon,
+                    'title' => $srv->title,
+                    'link'  => route('layanan.show', $srv->slug),
+                ];
+            })->toArray();
+        } else {
+            $navServices = [
+                ['icon' => 'fa-solid fa-book-open', 'title' => 'Penerbitan Buku', 'link' => url('/layanan/penerbitan-buku')],
+                ['icon' => 'fa-solid fa-graduation-cap', 'title' => 'Konversi KTI', 'link' => url('/layanan/konversi-kti')],
+                ['icon' => 'fa-solid fa-barcode', 'title' => 'Pengurusan ISBN', 'link' => url('/layanan/pengurusan-isbn')],
+            ];
+        }
+    } catch (\Throwable $e) {
         $navServices = [
-            ['icon' => 'fa-solid fa-book-open', 'title' => 'Penerbitan Buku', 'link' => url('/#layanan')],
-            ['icon' => 'fa-solid fa-copy', 'title' => 'Percetakan Umum', 'link' => url('/#layanan')],
-            ['icon' => 'fa-solid fa-newspaper', 'title' => 'Jurnal & Majalah', 'link' => url('/#layanan')],
-            ['icon' => 'fa-solid fa-graduation-cap', 'title' => 'Konversi KTI', 'link' => url('/#layanan')],
-            ['icon' => 'fa-solid fa-barcode', 'title' => 'Pengurusan ISBN', 'link' => url('/#layanan')],
-            ['icon' => 'fa-solid fa-box-open', 'title' => 'Cetak Custom', 'link' => url('/#layanan')],
+            ['icon' => 'fa-solid fa-book-open', 'title' => 'Penerbitan Buku', 'link' => url('/layanan/penerbitan-buku')],
+            ['icon' => 'fa-solid fa-graduation-cap', 'title' => 'Konversi KTI', 'link' => url('/layanan/konversi-kti')],
+            ['icon' => 'fa-solid fa-barcode', 'title' => 'Pengurusan ISBN', 'link' => url('/layanan/pengurusan-isbn')],
         ];
     }
 @endphp
