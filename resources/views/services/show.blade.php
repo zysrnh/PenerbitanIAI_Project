@@ -3,136 +3,82 @@
 @section('title', $service->title . ' - Penerbit Persis')
 
 @section('content')
-    <!-- 1. ULTRA-PREMIUM EXECUTIVE HERO BANNER -->
-    <section class="relative bg-gradient-to-br from-[#02231a] via-[#032c21] to-[#043d2e] text-white pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden">
-        <!-- Ambient Decorative Glows -->
-        <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-24 right-0 w-96 h-96 bg-lime-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        
-        <!-- Subtle Pattern & Background Texture -->
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:20px_20px]"></div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- 1. HERO BANNER (IDENTICAL STYLE TO TENTANG KAMI) -->
+    <section class="bg-brand-950 text-white py-14 sm:py-20 relative overflow-hidden border-b border-brand-900">
+        <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
             
             <!-- Breadcrumbs -->
-            <nav class="flex items-center gap-2 text-xs text-emerald-300/80 mb-4 sm:mb-5 font-medium" aria-label="Breadcrumb">
-                <a href="{{ route('home') }}" class="hover:text-white transition flex items-center gap-1.5">
+            <nav class="flex items-center gap-2 text-xs text-emerald-400 mb-3 font-medium" aria-label="Breadcrumb">
+                <a href="{{ route('home') }}" class="hover:text-white transition flex items-center gap-1">
                     <i class="fa-solid fa-house text-[10px]"></i> Beranda
                 </a>
-                <span class="text-emerald-500/60">/</span>
-                <a href="{{ route('home') }}#layanan" class="hover:text-white transition text-emerald-300">
+                <span class="text-slate-500">/</span>
+                <a href="{{ route('home') }}#layanan" class="hover:text-white transition">
                     Layanan
                 </a>
-                <span class="text-emerald-500/60">/</span>
+                <span class="text-slate-500">/</span>
                 <span class="text-white font-bold truncate max-w-xs">{{ $service->title }}</span>
             </nav>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-                
-                <!-- Left: Headline & Core Pitch -->
-                <div class="lg:col-span-7 space-y-3.5 sm:space-y-4">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-xs bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase shadow-2xs">
-                        <i class="{{ $service->icon }} text-lime-300"></i>
-                        <span>Layanan Resmi Penerbit Persis</span>
-                    </div>
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
+                <i class="{{ $service->icon }} mr-1.5 text-lime-300"></i> LAYANAN RESMI PENERBIT PERSIS
+            </span>
+            
+            <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold font-heading tracking-tight leading-tight max-w-4xl text-white">
+                {{ $service->title }}
+            </h1>
 
-                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black font-heading text-white tracking-tight leading-[1.15]">
-                        {{ $service->title }}
-                    </h1>
+            @if($service->tagline)
+                <p class="text-sm sm:text-base text-emerald-200 font-medium italic mt-2">
+                    {{ $service->tagline }}
+                </p>
+            @endif
 
-                    @if($service->tagline)
-                        <div class="p-2.5 sm:p-3 rounded-xs bg-white/5 border-l-3 border-lime-400 backdrop-blur-xs">
-                            <p class="text-xs sm:text-sm text-emerald-100 font-medium italic">
-                                {{ $service->tagline }}
-                            </p>
-                        </div>
-                    @endif
+            <p class="text-xs sm:text-sm text-slate-300 mt-3 max-w-3xl leading-relaxed">
+                {{ $service->short_desc }}
+            </p>
 
-                    <p class="text-xs sm:text-[13px] text-slate-200 leading-relaxed max-w-2xl font-sans">
-                        {{ $service->short_desc }}
-                    </p>
+            <!-- Action Buttons -->
+            <div class="pt-5 flex flex-wrap items-center gap-3">
+                <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Redaksi Penerbit Persis, saya ingin konsultasi mengenai ' . $service->title) }}" target="_blank" class="px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-2 shadow-2xs border border-emerald-600 cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-sm text-lime-300"></i>
+                    <span>{{ $service->cta_text ?: 'Konsultasi Sekarang' }}</span>
+                </a>
 
-                    <!-- Interactive Action CTAs -->
-                    <div class="pt-1 flex flex-wrap items-center gap-3">
-                        <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Halo Redaksi Penerbit Persis, saya ingin konsultasi mengenai ' . $service->title) }}" target="_blank" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-[#006830] hover:from-emerald-500 hover:to-[#024a23] text-white rounded-xs text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-md hover:shadow-emerald-900/50 border border-emerald-400/40 cursor-pointer">
-                            <i class="fa-brands fa-whatsapp text-base text-lime-300"></i>
-                            <span>{{ $service->cta_text ?: 'Konsultasi Sekarang' }}</span>
-                        </a>
-
-                        <a href="{{ route('kontak') }}" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xs text-xs sm:text-sm font-bold transition flex items-center gap-2 border border-white/25 backdrop-blur-xs cursor-pointer">
-                            <i class="fa-regular fa-envelope text-xs"></i>
-                            <span>Kirim Draf Naskah</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Right: Compact Showcase Card -->
-                <div class="lg:col-span-5">
-                    <div class="relative bg-white/10 border border-white/20 rounded-sm p-5 sm:p-6 backdrop-blur-md shadow-xl">
-                        
-                        <!-- Top Service Badge Header -->
-                        <div class="flex items-center gap-3.5 pb-4 border-b border-white/10">
-                            <div class="w-11 h-11 rounded-xs bg-gradient-to-br from-lime-400 to-emerald-600 text-brand-950 flex items-center justify-center text-xl font-black shrink-0 shadow-md">
-                                <i class="{{ $service->icon }}"></i>
-                            </div>
-                            <div>
-                                <span class="text-[9px] font-bold text-emerald-300 uppercase tracking-widest block">Unit Layanan Publikasi</span>
-                                <h3 class="text-base font-bold text-white leading-snug">{{ $service->title }}</h3>
-                            </div>
-                        </div>
-
-                        <!-- 3 Core Institutional Guarantees -->
-                        <div class="mt-4 space-y-2.5">
-                            <div class="flex items-start gap-2.5 p-2.5 rounded-xs bg-white/5 border border-white/10">
-                                <div class="w-5 h-5 rounded-xs bg-emerald-500/30 text-lime-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                                    <i class="fa-solid fa-shield-halved text-[10px]"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white">Standar Mutu Resmi</h4>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-300 leading-snug mt-0.5">Dikelola langsung oleh tim editorial dan penerbitan resmi Penerbit Persis.</p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-start gap-2.5 p-2.5 rounded-xs bg-white/5 border border-white/10">
-                                <div class="w-5 h-5 rounded-xs bg-emerald-500/30 text-lime-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                                    <i class="fa-solid fa-barcode text-[10px]"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white">ISBN &amp; Legalitas Lengkap</h4>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-300 leading-snug mt-0.5">Terdaftar resmi di Perpustakaan Nasional RI dan bernilai angka kredit (KUM).</p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-start gap-2.5 p-2.5 rounded-xs bg-white/5 border border-white/10">
-                                <div class="w-5 h-5 rounded-xs bg-emerald-500/30 text-lime-300 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                                    <i class="fa-solid fa-headset text-[10px]"></i>
-                                </div>
-                                <div>
-                                    <h4 class="text-xs font-bold text-white">Pendampingan Sampai Tuntas</h4>
-                                    <p class="text-[10px] sm:text-[11px] text-slate-300 leading-snug mt-0.5">Didampingi dari penyerahan draf hingga buku siap terbit dan cetak.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Mini Footer Indicator -->
-                        <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[10px] text-emerald-200/90 font-medium">
-                            <span class="flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse"></span>
-                                Redaksi Siap Melayani
-                            </span>
-                            <span>Konsultasi Gratis</span>
-                        </div>
-
-                    </div>
-                </div>
-
+                <a href="{{ route('kontak') }}" class="px-4 py-2.5 bg-brand-900/60 hover:bg-brand-900 text-slate-200 hover:text-white rounded-sm text-xs font-bold transition flex items-center gap-2 border border-slate-700 cursor-pointer">
+                    <i class="fa-regular fa-envelope text-xs"></i>
+                    <span>Kirim Naskah / Form</span>
+                </a>
             </div>
 
         </div>
     </section>
 
-    <!-- 2. MAIN DETAILS & WORKFLOW SECTION -->
-    <section class="py-10 sm:py-14 bg-slate-50 border-t border-slate-200/80">
+    <!-- 2. STATS & HIGHLIGHT BAR (OVERLAPPING CARDS) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-md text-center">
+                <span class="block text-xl sm:text-2xl font-extrabold text-emerald-700 font-heading">100%</span>
+                <span class="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Legalitas ISBN Resmi</span>
+            </div>
+            <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-md text-center">
+                <span class="block text-xl sm:text-2xl font-extrabold text-brand-950 font-heading">Standar</span>
+                <span class="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">KUM &amp; Akademik</span>
+            </div>
+            <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-md text-center">
+                <span class="block text-xl sm:text-2xl font-extrabold text-emerald-700 font-heading">Terarah</span>
+                <span class="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Didampingi Redaksi</span>
+            </div>
+            <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-md text-center">
+                <span class="block text-xl sm:text-2xl font-extrabold text-brand-950 font-heading">Nasional</span>
+                <span class="text-[10px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1 block">Cetak &amp; Distribusi</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. MAIN DETAILS & CONTENT SECTION -->
+    <section class="py-12 sm:py-16 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
                 
