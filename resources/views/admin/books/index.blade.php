@@ -664,22 +664,27 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1.5">Tahun Terbit <span class="text-rose-500">*</span></label>
-                                <input type="text" name="year" id="in_year" value="2026" required class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono text-center font-bold" />
+                                <input type="text" name="year" id="in_year" value="2026" required class="w-full px-3 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono text-center font-bold" />
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Jumlah Halaman <span class="text-rose-500">*</span></label>
-                                <input type="text" name="pages" id="in_pages" placeholder="240" required class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 text-center font-bold" />
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Halaman <span class="text-rose-500">*</span></label>
+                                <input type="text" name="pages" id="in_pages" placeholder="280" required class="w-full px-3 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 text-center font-bold" />
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Publikasi</label>
-                                <select name="status" id="in_status" class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 bg-white font-medium">
-                                    <option value="published">Tayang (Published)</option>
-                                    <option value="draft">Draf (Draft)</option>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Ukuran Buku</label>
+                                <input type="text" name="size" id="in_size" value="17,6 x 25 cm" class="w-full px-3 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 text-center font-bold font-mono" placeholder="17,6 x 25 cm" />
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1.5">Status</label>
+                                <select name="status" id="in_status" class="w-full px-3 py-2 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 bg-white font-medium">
+                                    <option value="published">Tayang</option>
+                                    <option value="draft">Draf</option>
                                 </select>
                             </div>
                         </div>
@@ -1001,19 +1006,30 @@
         }
 
         function openCreateModal() {
-            document.getElementById('bookForm').action = "{{ route('admin.books.store') }}";
-            document.getElementById('formMethod').value = 'POST';
-            document.getElementById('modalHeaderTitle').innerText = 'Tambah Master Buku & Foto Naskah';
-            document.getElementById('bookForm').reset();
-            document.getElementById('in_size').value = '17,6 x 25 cm';
+            const form = document.getElementById('bookForm');
+            if (form) {
+                form.action = "{{ route('admin.books.store') }}";
+                form.reset();
+            }
+            const method = document.getElementById('formMethod');
+            if (method) method.value = 'POST';
+            
+            const title = document.getElementById('modalHeaderTitle');
+            if (title) title.innerText = 'Tambah Master Buku & Foto Naskah';
+
+            const sizeIn = document.getElementById('in_size');
+            if (sizeIn) sizeIn.value = '17,6 x 25 cm';
+
             currentPhotoObj = { cover: null, back: null, inside1: null, inside2: null };
             resetThumbnails();
             switchVisualizerTab('cover');
             updateVisualizerLive();
 
             const modal = document.getElementById('bookModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
         }
 
         function resolvePhotoUrl(path) {
@@ -1032,23 +1048,36 @@
         }
 
         function openEditModal(book) {
-            document.getElementById('bookForm').action = "/admin/books/" + book.id;
-            document.getElementById('formMethod').value = 'PUT';
-            document.getElementById('modalHeaderTitle').innerText = 'Edit Data & Foto Buku: ' + book.title;
+            const form = document.getElementById('bookForm');
+            if (form) form.action = "/admin/books/" + book.id;
+            
+            const method = document.getElementById('formMethod');
+            if (method) method.value = 'PUT';
 
-            document.getElementById('in_title').value = book.title || '';
-            document.getElementById('in_author').value = book.author || '';
-            document.getElementById('in_category').value = book.category || '';
-            document.getElementById('in_isbn').value = book.isbn || '';
-            document.getElementById('in_price').value = book.price || '';
-            document.getElementById('in_year').value = book.year || '2026';
-            document.getElementById('in_pages').value = book.pages || '';
-            document.getElementById('in_size').value = book.size || '17,6 x 25 cm';
-            document.getElementById('in_status').value = book.status || 'published';
-            document.getElementById('in_format').value = book.format || 'UNESCO B5 (Bookpaper)';
-            document.getElementById('in_synopsis').value = book.synopsis || '';
-            document.getElementById('in_new_release').checked = Boolean(book.is_new_release);
-            document.getElementById('in_best_seller').checked = Boolean(book.is_best_seller);
+            const headerTitle = document.getElementById('modalHeaderTitle');
+            if (headerTitle) headerTitle.innerText = 'Edit Data & Foto Buku: ' + (book.title || '');
+
+            const setVal = (id, val) => {
+                const el = document.getElementById(id);
+                if (el) el.value = val;
+            };
+
+            setVal('in_title', book.title || '');
+            setVal('in_author', book.author || '');
+            setVal('in_category', book.category || '');
+            setVal('in_isbn', book.isbn || '');
+            setVal('in_price', book.price || '');
+            setVal('in_year', book.year || '2026');
+            setVal('in_pages', book.pages || '');
+            setVal('in_size', book.size || '17,6 x 25 cm');
+            setVal('in_status', book.status || 'published');
+            setVal('in_format', book.format || 'UNESCO B5 (Bookpaper)');
+            setVal('in_synopsis', book.synopsis || '');
+
+            const nr = document.getElementById('in_new_release');
+            if (nr) nr.checked = Boolean(book.is_new_release);
+            const bs = document.getElementById('in_best_seller');
+            if (bs) bs.checked = Boolean(book.is_best_seller);
 
             currentPhotoObj = {
                 cover: resolvePhotoUrl(book.cover_image),
@@ -1066,8 +1095,10 @@
             updateVisualizerLive();
 
             const modal = document.getElementById('bookModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
         }
 
         function closeBookModal() {
