@@ -79,6 +79,209 @@
                     </div>
                 </div>
 
+                <!-- TOPBAR & MEDIA SOSIAL (DI ATAS NAVBAR) -->
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7 space-y-5">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-sm bg-indigo-50 text-indigo-700 flex items-center justify-center text-sm font-bold">
+                                <i class="fa-solid fa-share-nodes"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-base font-bold text-slate-900">Informasi Media Sosial &amp; Topbar Navbar</h4>
+                                <span class="text-xs text-slate-400">Muncul tepat di atas navigasi utama &amp; footer</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Toggle Active Checkbox -->
+                        <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                            <input 
+                                type="checkbox" 
+                                name="topbar_is_active" 
+                                value="1" 
+                                id="in_topbar_active"
+                                {{ old('topbar_is_active', $settings['topbar_is_active'] ?? '1') == '1' ? 'checked' : '' }} 
+                                onchange="updatePreview()"
+                                class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                            />
+                            <span class="text-xs font-bold text-slate-700">Aktifkan Topbar</span>
+                        </label>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-slate-700 mb-1.5">Teks Tagline / Pengumuman Topbar <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                            <input 
+                                type="text" 
+                                name="topbar_tagline" 
+                                id="in_topbar_tagline"
+                                value="{{ old('topbar_tagline', $settings['topbar_tagline'] ?? '') }}" 
+                                placeholder="Contoh: Penerbitan &amp; Percetakan Resmi PERSIS PERS Bandung"
+                                oninput="updatePreview()"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                            />
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-4">
+                            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-3">Tautan Akun Media Sosial Resmi</span>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                                <!-- Facebook -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-[#1877F2] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-facebook-f"></i></span>
+                                        <span>Facebook</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_facebook" 
+                                        id="in_soc_facebook"
+                                        value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}" 
+                                        placeholder="https://facebook.com/nama_halaman"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- Twitter / X -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-black text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-x-twitter"></i></span>
+                                        <span>Twitter / X</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_twitter" 
+                                        id="in_soc_twitter"
+                                        value="{{ old('social_twitter', $settings['social_twitter'] ?? '') }}" 
+                                        placeholder="https://x.com/akun_resmi"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- Pinterest -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-[#E60023] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-pinterest-p"></i></span>
+                                        <span>Pinterest</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_pinterest" 
+                                        id="in_soc_pinterest"
+                                        value="{{ old('social_pinterest', $settings['social_pinterest'] ?? '') }}" 
+                                        placeholder="https://pinterest.com/akun"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- WhatsApp -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-[#25D366] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-whatsapp"></i></span>
+                                        <span>WhatsApp Chat / Channel</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_whatsapp" 
+                                        id="in_soc_whatsapp"
+                                        value="{{ old('social_whatsapp', $settings['social_whatsapp'] ?? '') }}" 
+                                        placeholder="https://wa.me/6282116116133"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- Telegram -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-[#229ED9] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-telegram"></i></span>
+                                        <span>Telegram</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_telegram" 
+                                        id="in_soc_telegram"
+                                        value="{{ old('social_telegram', $settings['social_telegram'] ?? '') }}" 
+                                        placeholder="https://t.me/akun_persis"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- Instagram -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-instagram"></i></span>
+                                        <span>Instagram</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_instagram" 
+                                        id="in_soc_instagram"
+                                        value="{{ old('social_instagram', $settings['social_instagram'] ?? '') }}" 
+                                        placeholder="https://instagram.com/penerbitpersis"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- TikTok -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-black text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-tiktok"></i></span>
+                                        <span>TikTok</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_tiktok" 
+                                        id="in_soc_tiktok"
+                                        value="{{ old('social_tiktok', $settings['social_tiktok'] ?? '') }}" 
+                                        placeholder="https://tiktok.com/@penerbitpersis"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- YouTube -->
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-[#FF0000] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-youtube"></i></span>
+                                        <span>YouTube</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_youtube" 
+                                        id="in_soc_youtube"
+                                        value="{{ old('social_youtube', $settings['social_youtube'] ?? '') }}" 
+                                        placeholder="https://youtube.com/@penerbitpersis"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+
+                                <!-- LinkedIn (Opsional) -->
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
+                                        <span class="w-5 h-5 rounded-xs bg-[#0A66C2] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-linkedin-in"></i></span>
+                                        <span>LinkedIn <span class="text-slate-400 font-normal">(Opsional)</span></span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="social_linkedin" 
+                                        id="in_soc_linkedin"
+                                        value="{{ old('social_linkedin', $settings['social_linkedin'] ?? '') }}" 
+                                        placeholder="https://linkedin.com/company/penerbitpersis"
+                                        oninput="updatePreview()"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 1. Header Banner -->
                 <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-6 sm:p-7">
                     <div class="flex items-center gap-3 pb-4 border-b border-slate-100 mb-5">
@@ -402,6 +605,56 @@
             <!-- Visual Preview Canvas -->
             <div class="bg-white rounded-sm border border-slate-200/80 shadow-md overflow-hidden text-slate-800 space-y-5 p-6">
                 
+                <!-- Mockup 0: Realtime Topbar & Social Media Bar -->
+                <div id="prev_topbar_container" class="bg-slate-50 border border-slate-200 rounded-sm p-3 transition-all duration-200">
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5">
+                        <div class="flex items-center gap-2 text-[11px] text-slate-600 truncate max-w-full">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                            <span id="prev_topbar_tagline" class="font-medium truncate">{{ $settings['topbar_tagline'] ?? 'Penerbitan & Percetakan Resmi PERSIS PERS Bandung' }}</span>
+                        </div>
+
+                        <!-- Real-time Social Buttons Row (Matches Public View Design) -->
+                        <div id="prev_social_buttons_row" class="flex items-center gap-1.5 flex-wrap justify-center shrink-0">
+                            <!-- Facebook -->
+                            <a id="prev_soc_facebook" href="{{ $settings['social_facebook'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#1877F2] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_facebook']) ? 'hidden' : '' }}" title="Facebook">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                            <!-- Twitter / X -->
+                            <a id="prev_soc_twitter" href="{{ $settings['social_twitter'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_twitter']) ? 'hidden' : '' }}" title="Twitter / X">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
+                            <!-- Pinterest -->
+                            <a id="prev_soc_pinterest" href="{{ $settings['social_pinterest'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#E60023] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_pinterest']) ? 'hidden' : '' }}" title="Pinterest">
+                                <i class="fa-brands fa-pinterest-p"></i>
+                            </a>
+                            <!-- WhatsApp -->
+                            <a id="prev_soc_whatsapp" href="{{ $settings['social_whatsapp'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#25D366] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_whatsapp']) ? 'hidden' : '' }}" title="WhatsApp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                            <!-- Telegram -->
+                            <a id="prev_soc_telegram" href="{{ $settings['social_telegram'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#229ED9] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_telegram']) ? 'hidden' : '' }}" title="Telegram">
+                                <i class="fa-brands fa-telegram"></i>
+                            </a>
+                            <!-- Instagram -->
+                            <a id="prev_soc_instagram" href="{{ $settings['social_instagram'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_instagram']) ? 'hidden' : '' }}" title="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <!-- TikTok -->
+                            <a id="prev_soc_tiktok" href="{{ $settings['social_tiktok'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_tiktok']) ? 'hidden' : '' }}" title="TikTok">
+                                <i class="fa-brands fa-tiktok"></i>
+                            </a>
+                            <!-- YouTube -->
+                            <a id="prev_soc_youtube" href="{{ $settings['social_youtube'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#FF0000] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_youtube']) ? 'hidden' : '' }}" title="YouTube">
+                                <i class="fa-brands fa-youtube"></i>
+                            </a>
+                            <!-- LinkedIn -->
+                            <a id="prev_soc_linkedin" href="{{ $settings['social_linkedin'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#0A66C2] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_linkedin']) ? 'hidden' : '' }}" title="LinkedIn">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Mockup 1: Dark Header Banner -->
                 <div class="bg-[#032c21] text-white p-6 rounded-sm shadow-sm">
                     <span id="prev_badge" class="text-xs font-extrabold text-emerald-400 uppercase tracking-widest block mb-1.5">
@@ -502,6 +755,51 @@
     <!-- Live Synchronizer JS -->
     <script>
         function updatePreview() {
+            // Topbar & Tagline
+            const topbarActive = document.getElementById('in_topbar_active') ? document.getElementById('in_topbar_active').checked : true;
+            const topbarContainer = document.getElementById('prev_topbar_container');
+            if (topbarContainer) {
+                if (topbarActive) {
+                    topbarContainer.style.opacity = '1';
+                    topbarContainer.classList.remove('grayscale', 'opacity-40');
+                } else {
+                    topbarContainer.classList.add('grayscale', 'opacity-40');
+                }
+            }
+
+            const inTagline = document.getElementById('in_topbar_tagline');
+            if (inTagline) {
+                document.getElementById('prev_topbar_tagline').textContent = inTagline.value || 'Penerbitan & Percetakan Resmi PERSIS PERS Bandung';
+            }
+
+            // Social Buttons Sync
+            const socialMap = [
+                { input: 'in_soc_facebook', prev: 'prev_soc_facebook' },
+                { input: 'in_soc_twitter', prev: 'prev_soc_twitter' },
+                { input: 'in_soc_pinterest', prev: 'prev_soc_pinterest' },
+                { input: 'in_soc_whatsapp', prev: 'prev_soc_whatsapp' },
+                { input: 'in_soc_telegram', prev: 'prev_soc_telegram' },
+                { input: 'in_soc_instagram', prev: 'prev_soc_instagram' },
+                { input: 'in_soc_tiktok', prev: 'prev_soc_tiktok' },
+                { input: 'in_soc_youtube', prev: 'prev_soc_youtube' },
+                { input: 'in_soc_linkedin', prev: 'prev_soc_linkedin' },
+            ];
+
+            socialMap.forEach(item => {
+                const inEl = document.getElementById(item.input);
+                const prevEl = document.getElementById(item.prev);
+                if (inEl && prevEl) {
+                    const val = inEl.value.trim();
+                    if (val) {
+                        prevEl.classList.remove('hidden');
+                        prevEl.href = val;
+                    } else {
+                        prevEl.classList.add('hidden');
+                    }
+                }
+            });
+
+            // Contact Banner & Cards Sync
             document.getElementById('prev_badge').textContent = document.getElementById('in_banner_badge').value || 'Badge';
             document.getElementById('prev_title').textContent = document.getElementById('in_banner_title').value || 'Judul Banner';
             document.getElementById('prev_desc').textContent = document.getElementById('in_banner_desc').value || 'Deskripsi banner...';
