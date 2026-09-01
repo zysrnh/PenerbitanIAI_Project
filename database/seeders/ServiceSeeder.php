@@ -2,137 +2,129 @@
 
 namespace Database\Seeders;
 
-use App\Models\Service;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Service;
 
 class ServiceSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        // 1. Auto-create table if not exists (fail-safe protection)
-        if (!Schema::hasTable('services')) {
-            Schema::create('services', function (Blueprint $table) {
-                $table->id();
-                $table->string('title');
-                $table->string('slug')->unique();
-                $table->string('icon')->default('fa-solid fa-book');
-                $table->text('short_desc')->nullable();
-                $table->string('tagline')->nullable();
-                $table->string('banner_image')->nullable();
-                $table->longText('overview')->nullable();
-                $table->json('features')->nullable();
-                $table->json('workflow_steps')->nullable();
-                $table->text('benefits')->nullable();
-                $table->text('notes')->nullable();
-                $table->json('pricing_packages')->nullable();
-                $table->json('faqs')->nullable();
-                $table->string('cta_text')->nullable()->default('Konsultasi Sekarang');
-                $table->string('cta_url')->nullable();
-                $table->integer('order')->default(0);
-                $table->enum('status', ['published', 'draft'])->default('published');
-                $table->timestamps();
-            });
-        }
-
-        // 2. Bersihkan tabel agar bersih dan hanya berisi 3 Layanan Utama Resmi
+        // Truncate to ensure pristine clean data
         Service::truncate();
 
-        // 3. Masukkan 3 Layanan Utama Resmi Penerbit Persis
         $officialServices = [
             // LAYANAN 1: PENERBITAN BUKU
             [
                 'title' => 'Penerbitan Buku',
                 'slug' => 'penerbitan-buku',
                 'icon' => 'fa-solid fa-book-open',
-                'short_desc' => 'Mewujudkan karya tulis akademisi, pendidik, mahasiswa, dan masyarakat menjadi buku berkualitas, ber-ISBN, dan siap edar.',
-                'tagline' => '“Mewujudkan Karya Tulis Menjadi Buku Berkualitas, Profesional, dan Bernilai Manfaat.”',
-                'banner_image' => 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600&auto=format&fit=crop',
-                'overview' => "Penerbit Persis hadir untuk membantu penulis, akademisi, pendidik, mahasiswa, lembaga, dan masyarakat dalam mewujudkan karya tulis menjadi buku yang berkualitas, profesional, dan bernilai manfaat.\n\nLayanan penerbitan buku mencakup proses menyeluruh mulai dari pemeriksaan naskah, penyuntingan bahasa, desain sampul, tata letak interior, pengurusan legalitas ISBN, pencetakan hingga distribusi dan publikasi buku ke khalayak luas.",
+                'short_desc' => 'Layanan penerbitan buku secara profesional, mulai dari penelaahan naskah, penyuntingan, tata letak, hingga terbit ber-ISBN resmi.',
+                'tagline' => '“Mewujudkan Gagasan Menjadi Karya Monumental yang Menginspirasi Umat.”',
+                'banner_image' => 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1600&auto=format&fit=crop',
+                'overview' => "Penerbit Persis melayani penerbitan berbagai jenis buku, baik karya perorangan, karya bersama (bunga rampai), maupun penerbitan institusi/organisasi.
+
+Kami membantu penulis dalam seluruh rangkaian proses penerbitan secara profesional, mulai dari penelaahan naskah, penyuntingan (editing), penataan letak (layout), desain sampul, pengurusan ISBN, hingga pencetakan dan distribusi.",
                 'features' => [
-                    '1. Penerimaan dan Seleksi Naskah — Naskah diperiksa untuk memastikan kesesuaian tema, kelayakan isi, dan standar penerbitan.',
-                    '2. Editing & Penyuntingan — Memperbaiki struktur tulisan, bahasa, ejaan, dan konsistensi isi agar buku mudah dibaca dan dipahami.',
-                    '3. Desain Cover & Tata Letak — Desain sampul menarik serta tata letak isi buku yang rapi dan profesional standar industri.',
-                    '4. Konversi KTI Menjadi Buku — Mengubah skripsi, tesis, disertasi, dan artikel ilmiah menjadi buku yang komunikatif dan layak terbit.',
-                    '5. Pengurusan ISBN — Pengurusan legalitas resmi ISBN dan barcode Perpustakaan Nasional RI.',
-                    '6. Pencetakan Buku — Pilihan ukuran buku (UNESCO B5/A5), jenis kertas berkualitas, finishing rapi, dan jumlah oplag fleksibel.',
-                    '7. Distribusi & Publikasi — Mendukung penyebarluasan buku agar karya dapat menjangkau pembaca yang lebih luas.',
+                    'Penerbitan Buku Ber-ISBN Resmi Perpustakaan Nasional RI',
+                    'Penerbitan Buku Fisik (Cetak) & Buku Digital (E-Book)',
+                    'Penyuntingan Naskah (Tata Bahasa, Ejaan, dan Substansi)',
+                    'Tata Letak Isi (Layout Interior) Standar Buku Nasional & UNESCO',
+                    'Desain Sampul (Cover) Eksklusif dan Profesional',
+                    'Pencetakan Buku Berkualitas (Softcover & Hardcover)',
+                    'Bantuan Distribusi & Promosi Karya',
                 ],
                 'workflow_steps' => [
                     [
                         'step' => 1,
-                        'title' => 'Naskah Masuk',
-                        'desc' => 'Penulis mengirimkan draf naskah buku lengkap beserta data kepenulisan kepada redaksi.',
+                        'title' => 'Penyerahan & Telaah Naskah',
+                        'desc' => 'Penulis mengirimkan draf naskah lengkap. Tim redaksi melakukan telaah awal terkait tema, kelayakan, dan kesesuaian naskah.',
                     ],
                     [
                         'step' => 2,
-                        'title' => 'Editing & Penyuntingan',
-                        'desc' => 'Editor melakukan telaah isi, perbaikan tata bahasa, ejaan (PUEBI), dan konsistensi istilah.',
+                        'title' => 'Editing & Proofreading',
+                        'desc' => 'Penyuntingan bahasa, tata kalimat, ejaan, konsistensi istilah, dan keterbacaan naskah oleh editor profesional.',
                     ],
                     [
                         'step' => 3,
-                        'title' => 'Desain Cover & Layout',
-                        'desc' => 'Pembuatan konsep sampul depan-belakang eksklusif dan tata letak interior naskah buku.',
+                        'title' => 'Layout & Desain Sampul',
+                        'desc' => 'Penataan halaman isi buku sesuai standar penerbitan serta perancangan desain sampul (cover) yang menarik dan representatif.',
                     ],
                     [
                         'step' => 4,
-                        'title' => 'Pengurusan ISBN',
-                        'desc' => 'Pendaftaran nomor ISBN dan barcode resmi ke sistem Perpustakaan Nasional RI.',
+                        'title' => 'Pengurusan Legalitas & ISBN',
+                        'desc' => 'Pengajuan nomor ISBN resmi dan pencatatan Katalog Dalam Terbitan (KDT) melalui sistem Perpustakaan Nasional RI.',
                     ],
                     [
                         'step' => 5,
-                        'title' => 'Pencetakan Buku',
-                        'desc' => 'Proses cetak dengan mesin modern, pemotongan presisi, dan jilid rapi berkualitas tinggi.',
+                        'title' => 'Persetujuan Cetak (Proofing)',
+                        'desc' => 'Pemeriksaan draf akhir (dummy) oleh penulis sebelum naik cetak untuk memastikan tidak ada kesalahan.',
                     ],
                     [
                         'step' => 6,
-                        'title' => 'Terbit & Distribusi',
-                        'desc' => 'Buku resmi terbit dan siap didistribusikan ke jaringan pembaca, perpustakaan, dan toko buku.',
+                        'title' => 'Pencetakan & Distribusi',
+                        'desc' => 'Buku dicetak dengan spesifikasi yang disepakati dan didistribusikan kepada penulis maupun jaringan pembaca.',
                     ],
                 ],
-                'benefits' => "Jenis Buku yang Diterbitkan Penerbit Persis:\n• 📚 Buku Keislaman\n• 🎓 Buku Akademik & Referensi\n• 📝 Buku Hasil Penelitian\n• 🏫 Buku Pendidikan\n• 📖 Buku Ajar Perguruan Tinggi\n• 👨‍👩‍👧 Buku Anak & Keluarga\n• 🌱 Buku Sosial & Dakwah\n• 📕 Buku Organisasi & Kelembagaan\n• 🔬 Buku Ilmiah Populer",
-                'notes' => "Alur Penerbitan: Naskah → Editing → Desain → ISBN → Cetak → Terbit & Distribusi.\nDidukung tim profesional, proses transparan, dan jaminan kualitas cetak terbaik.",
+                'benefits' => "Jenis Buku yang Diterbitkan Penerbit Persis:
+• Buku Keislaman & Dakwah
+• Buku Akademik & Referensi Dosen
+• Buku Hasil Penelitian Ilmiah
+• Buku Pendidikan & Modul Ajar
+• Buku Ajar Perguruan Tinggi
+• Buku Anak & Keluarga Islami
+• Buku Sosial, Humaniora & Pemikiran
+• Buku Organisasi & Kelembagaan Jamiyyah",
+                'notes' => 'Catatan: Setiap naskah yang masuk akan melalui proses telaah etik dan kesesuaian nilai keilmuan oleh Dewan Redaksi Penerbit Persis.',
                 'faqs' => [
                     [
-                        'q' => 'Apakah naskah yang belum selesai 100% bisa dikonsultasikan?',
-                        'a' => 'Tentu bisa. Anda dapat mengirimkan draf kasar atau outline bab naskah untuk ditelaah dan diarahkan oleh tim editor kami.',
+                        'q' => 'Apakah penulis luar (umum) bisa menerbitkan buku di Penerbit Persis?',
+                        'a' => 'Bisa. Penerbit Persis terbuka untuk dosen, guru, peneliti, akademisi, aktivis, dai, mahasiswa, dan masyarakat umum yang memiliki karya tulis berkualitas.',
                     ],
                     [
-                        'q' => 'Berapa minimal jumlah cetak buku?',
-                        'a' => 'Kami melayani cetak satuan (Print On Demand mulai dari 10-50 eks) hingga cetak massal (Offset ratusan hingga ribuan eksemplar).',
+                        'q' => 'Berapa minimal jumlah eksemplar untuk cetak buku?',
+                        'a' => 'Kami melayani sistem Print on Demand (POD) mulai dari jumlah terbatas (puluhan eksemplar) hingga cetak massal (ribuan eksemplar) sesuai kebutuhan penulis.',
+                    ],
+                    [
+                        'q' => 'Berapa lama proses penerbitan dari naskah masuk hingga terbit?',
+                        'a' => 'Rata-rata proses penerbitan memakan waktu 2 hingga 4 minggu tergantung kesiapan naskah dan antrean verifikasi ISBN Perpusnas.',
                     ],
                 ],
-                'cta_text' => 'Ajukan Naskah Buku Sekarang',
+                'cta_text' => 'Konsultasi Penerbitan Buku',
                 'order' => 1,
                 'status' => 'published',
             ],
 
-            // LAYANAN 2: KONVERSI KTI
+            // LAYANAN 2: KONVERSI KARYA ILMIAH MENJADI BUKU
             [
-                'title' => 'Konversi KTI',
+                'title' => 'Konversi KTI Menjadi Buku',
                 'slug' => 'konversi-kti',
                 'icon' => 'fa-solid fa-graduation-cap',
-                'short_desc' => 'Ubah karya ilmiah seperti skripsi, tesis, disertasi, dan laporan riset menjadi buku yang komunikatif dan bernilai tinggi.',
-                'tagline' => '“Dari Karya Ilmiah Menjadi Buku yang Bernilai dan Bermanfaat.”',
+                'short_desc' => 'Ubah skripsi, tesis, disertasi, atau laporan penelitian menjadi buku referensi/monograf yang populer dan ber-ISBN.',
+                'tagline' => '“Transformasi Riset Akademik Menjadi Buku Bernilai Tambah dan Luas Manfaatnya.”',
                 'banner_image' => 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1600&auto=format&fit=crop',
-                'overview' => "Konversi KTI (Karya Tulis Ilmiah) adalah layanan untuk mengubah karya ilmiah seperti skripsi, tesis, disertasi, laporan penelitian, dan artikel ilmiah menjadi naskah buku yang lebih komunikatif, sistematis, dan menarik untuk dibaca oleh masyarakat luas.\n\nMelalui proses adaptasi dan restrukturisasi yang profesional, karya riset Anda tidak hanya tersimpan di perpustakaan kampus, namun bertransformasi menjadi buku referensi atau buku populer yang ber-ISBN dan bernilai akademik tinggi.",
+                'overview' => "Banyak karya ilmiah seperti skripsi, tesis, disertasi, dan laporan riset hanya tersimpan di perpustakaan kampus atau repositori digital. Melalui layanan ini, kami membantu mengonversi laporan ilmiah kaku menjadi buku monograf, buku referensi, atau buku populer yang nyaman dibaca publik luas tanpa menghilangkan substansi keilmuannya.",
                 'features' => [
-                    '📘 Konversi Skripsi Menjadi Buku — Mengolah skripsi menjadi buku dengan penyajian yang lebih ringkas dan mudah dipahami.',
-                    '📗 Konversi Tesis & Disertasi — Mengadaptasi karya akademik menjadi buku referensi atau buku ilmiah yang layak diterbitkan.',
-                    '📙 Konversi Hasil Penelitian — Mengembangkan laporan riset menjadi buku ilmiah maupun buku populer.',
-                    '📕 Konversi Artikel/Kumpulan KTI — Menghimpun dan mengembangkan beberapa karya ilmiah menjadi satu buku yang utuh.',
+                    'Restrukturisasi format laporan riset kaku (Bab I-V) menjadi bab tematik buku',
+                    'Penyuntingan bahasa ilmiah agar lebih komunikatif dan mengalir enak dibaca',
+                    'Penataan ulang tinjauan pustaka, metodologi, dan data riset',
+                    'Pengayaan konteks bacaan untuk jangkauan pembaca yang lebih luas',
+                    'Tata letak interior buku standar penerbitan nasional',
+                    'Perancangan desain cover profesional dan representatif',
+                    'Pengurusan ISBN dan penerbitan resmi bernilai KUM bagi akademisi',
                 ],
                 'workflow_steps' => [
                     [
                         'step' => 1,
-                        'title' => 'Analisis Naskah',
-                        'desc' => 'Menelaah substansi, tema, dan kelayakan naskah karya ilmiah asli.',
+                        'title' => 'Analisis Naskah Riset',
+                        'desc' => 'Menelaah substansi, tema utama, dan kelayakan naskah karya ilmiah asli.',
                     ],
                     [
                         'step' => 2,
                         'title' => 'Penyusunan Struktur Buku',
-                        'desc' => 'Menyusun kembali kerangka naskah dari format laporan kaku (Bab I-V) menjadi bab buku tematik yang sistematis.',
+                        'desc' => 'Menyusun kembali kerangka naskah dari format laporan kaku menjadi bab buku tematik yang sistematis.',
                     ],
                     [
                         'step' => 3,
@@ -141,25 +133,30 @@ class ServiceSeeder extends Seeder
                     ],
                     [
                         'step' => 4,
-                        'title' => 'Penyesuaian Isi',
+                        'title' => 'Penyesuaian Isi & Konteks',
                         'desc' => 'Penyelarasan referensi, pengayaan konteks, dan penyesuaian materi dengan target pembaca luas.',
                     ],
                     [
                         'step' => 5,
-                        'title' => 'Desain & Layout',
+                        'title' => 'Desain & Layout Standar',
                         'desc' => 'Tata letak interior buku standar penerbitan nasional dan perancangan desain sampul (cover) menarik.',
                     ],
                     [
                         'step' => 6,
-                        'title' => 'ISBN & Penerbitan',
+                        'title' => 'ISBN & Publikasi Resmi',
                         'desc' => 'Pengurusan nomor legalitas ISBN resmi Perpustakaan Nasional RI dan penerbitan buku fisik maupun digital.',
                     ],
                 ],
-                'benefits' => "• Tetap mempertahankan substansi dan nilai ilmiah karya\n• Bahasa dibuat lebih komunikatif dan mudah dipahami\n• Struktur disesuaikan dengan format buku standar penerbitan\n• Membantu menghasilkan buku yang lebih menarik bagi pembaca dan sivitas akademika\n• Dapat dilanjutkan dengan layanan ISBN, cetak, dan distribusi resmi",
+                'benefits' => "Keunggulan Konversi KTI di Penerbit Persis:
+• Tetap mempertahankan substansi dan nilai ilmiah orisinal karya
+• Bahasa dibuat lebih komunikatif, komunikatif, dan mudah dipahami
+• Struktur disesuaikan dengan format buku standar penerbitan ilmiah
+• Membantu menghasilkan buku yang bernilai angka kredit (KUM) bagi dosen
+• Dapat dilanjutkan dengan layanan ISBN, cetak, dan distribusi resmi",
                 'notes' => 'Catatan: Hak cipta dan keaslian isi riset sepenuhnya tetap menjadi milik penulis. Penerbit membantu dalam aspek teknis penulisan buku dan legalitas terbitan.',
                 'faqs' => [
                     [
-                        'q' => 'Apakah format laporan skripsi/tesis saya harus diubah sebelum diserahkan?',
+                        'q' => 'Apakah format laporan skripsi/tesis saya harus diubah sendiri sebelum diserahkan?',
                         'a' => 'Tidak perlu. Anda cukup menyerahkan file dokumen naskah lengkap, dan tim editor kami yang akan membantu merekonstruksinya menjadi format buku.',
                     ],
                     [
@@ -180,54 +177,60 @@ class ServiceSeeder extends Seeder
                 'short_desc' => 'Bantu pengurusan ISBN resmi Perpustakaan Nasional untuk buku dan terbitan Anda.',
                 'tagline' => '“Satu Karya, Satu Identitas, Siap Diterbitkan.”',
                 'banner_image' => 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop',
-                'overview' => "Penerbit Persis menyediakan layanan pengurusan ISBN (International Standard Book Number) untuk membantu penulis dan lembaga memperoleh identitas resmi bagi buku yang akan diterbitkan.\n\nISBN menjadi identitas unik internasional yang memudahkan pendataan, identifikasi, distribusi, dan pengelolaan bibliografis sebuah buku di kancah nasional maupun global.",
+                'overview' => "Penerbit Persis menyediakan layanan pengurusan ISBN (International Standard Book Number) untuk membantu penulis dan lembaga memperoleh identitas resmi bagi buku yang akan diterbitkan.
+
+ISBN menjadi identitas unik internasional yang memudahkan pendataan, identifikasi, distribusi, dan pengelolaan bibliografis sebuah buku di kancah nasional maupun global.",
                 'features' => [
-                    '• Pengajuan ISBN untuk buku yang diterbitkan',
-                    '• Pemeriksaan kelengkapan data dan naskah',
-                    '• Penyiapan metadata buku sesuai standar Perpusnas',
-                    '• Pendampingan proses pengajuan ISBN hingga tuntas',
-                    '• Penyesuaian informasi penerbitan dan KDT',
-                    '• Penempatan barcode dan nomor ISBN pada sampul & halaman naskah',
-                    '• Pendampingan sampai proses penerbitan selesai',
+                    'Pengajuan ISBN resmi untuk buku yang diterbitkan',
+                    'Pemeriksaan kelengkapan data dan keabsahan naskah',
+                    'Penyiapan metadata buku sesuai standar Perpusnas RI',
+                    'Pendampingan proses pengajuan ISBN hingga tuntas',
+                    'Penyesuaian informasi penerbitan dan Katalog Dalam Terbitan (KDT)',
+                    'Penempatan barcode dan nomor ISBN pada sampul & halaman naskah',
+                    'Pendampingan sampai proses penerbitan selesai',
                 ],
                 'workflow_steps' => [
                     [
                         'step' => 1,
-                        'title' => 'Pengajuan Naskah',
+                        'title' => 'Pengajuan Naskah & Data',
                         'desc' => 'Penulis menyerahkan naskah dan data buku kepada Penerbit Persis.',
                     ],
                     [
                         'step' => 2,
-                        'title' => 'Pemeriksaan Naskah & Kelengkapan Data',
+                        'title' => 'Pemeriksaan Kelengkapan',
                         'desc' => 'Tim memeriksa naskah, identitas penulis, judul, dan informasi penerbitan.',
                     ],
                     [
                         'step' => 3,
-                        'title' => 'Penyusunan Metadata',
+                        'title' => 'Penyusunan Metadata Standar',
                         'desc' => 'Data bibliografis buku disiapkan sesuai kebutuhan pengajuan ISBN Perpusnas.',
                     ],
                     [
                         'step' => 4,
-                        'title' => 'Pengajuan ISBN',
-                        'desc' => 'Penerbit mengajukan permohonan ISBN melalui sistem yang ditetapkan oleh Perpustakaan Nasional RI.',
+                        'title' => 'Pengajuan ke Perpusnas RI',
+                        'desc' => 'Penerbit mengajukan permohonan ISBN melalui sistem resmi Perpustakaan Nasional RI.',
                     ],
                     [
                         'step' => 5,
-                        'title' => 'Verifikasi & Proses Penerbitan',
+                        'title' => 'Verifikasi & Validasi',
                         'desc' => 'Data pengajuan diproses dan diverifikasi sesuai ketentuan yang berlaku.',
                     ],
                     [
                         'step' => 6,
-                        'title' => 'ISBN Diterima',
-                        'desc' => 'Nomor ISBN yang diterbitkan kemudian dicantumkan pada bagian buku yang sesuai.',
+                        'title' => 'Penerbitan ISBN & Barcode',
+                        'desc' => 'Nomor ISBN yang diterbitkan dicantumkan pada bagian buku yang sesuai beserta barcode.',
                     ],
                     [
                         'step' => 7,
-                        'title' => 'Buku Siap Diterbitkan',
+                        'title' => 'Buku Siap Didistribusikan',
                         'desc' => 'Buku dapat dilanjutkan ke tahap cetak, publikasi, dan distribusi.',
                     ],
                 ],
-                'benefits' => "Mudah • Terarah • Profesional • Terintegrasi\n\nPenulis tidak perlu mengurus seluruh proses birokrasi sendiri. Penerbit Persis mendampingi dari persiapan data bibliografi hingga nomor ISBN dan barcode siap digunakan dalam penerbitan buku fisik maupun digital.",
+                'benefits' => "Nilai Tambah Pengurusan ISBN di Penerbit Persis:
+• Mudah & Tanpa Ribet Birokrasi
+• Terarah dengan Pendampingan Redaksi
+• Profesional Sesuai Standar Perpusnas RI
+• Terintegrasi dengan Layanan Cetak & Distribusi",
                 'notes' => 'Catatan: ISBN bukan sertifikasi mutu atau hak cipta buku. ISBN berfungsi sebagai identitas unik publikasi buku yang terdaftar resmi di Perpustakaan Nasional RI.',
                 'faqs' => [
                     [
@@ -236,7 +239,7 @@ class ServiceSeeder extends Seeder
                     ],
                     [
                         'q' => 'Apa saja syarat yang diperlukan untuk pengajuan ISBN?',
-                        'a' => 'Draf naskah lengkap (Judul, Daftar Isi, Kata Pengantar, Sinopsis/Blurb belakang), identitas penulis, dan spesifikasi buku (ukuran & jumlah halaman).',
+                        'a' => 'Draf naskah lengkap (Judul, Daftar Isi, Kata Pengantar, Sinopsis/Blurb belakang), identitas penulis, dan spesifikasi buku (ukuran & estimasi jumlah halaman).',
                     ],
                 ],
                 'cta_text' => 'Konsultasi Pengurusan ISBN',

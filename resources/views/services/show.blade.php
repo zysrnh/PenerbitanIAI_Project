@@ -110,16 +110,20 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                     @foreach($service->features as $feat)
+                        @php
+                            // Clean leading bullet markers if present
+                            $cleanFeat = preg_replace('/^[•\-\*]\s*/u', '', trim($feat));
+                        @endphp
                         <div class="bg-white p-5 rounded-sm border border-slate-200 hover:border-emerald-600 shadow-2xs hover:shadow-md transition-all duration-200 flex items-start gap-4 group">
                             <div class="w-10 h-10 rounded-sm bg-emerald-50 text-[#006830] group-hover:bg-[#006830] group-hover:text-white flex items-center justify-center text-sm shrink-0 transition shadow-2xs">
                                 <i class="fa-solid fa-check"></i>
                             </div>
                             <div class="space-y-1">
                                 <h3 class="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition leading-snug">
-                                    {{ $feat }}
+                                    {{ $cleanFeat }}
                                 </h3>
                                 <p class="text-[11px] text-slate-500 leading-relaxed">
-                                    Dikelola dan didampingi secara profesional oleh tim redaksi Penerbit Persis.
+                                    Dikelola secara profesional sesuai standar pedoman penerbitan nasional.
                                 </p>
                             </div>
                         </div>
@@ -129,33 +133,33 @@
         </section>
     @endif
 
-    <!-- 5. ALUR & TAHAPAN PELAKSANAAN (BAGAN VISUAL PROSES ROADMAP) -->
+    <!-- 5. ALUR & TAHAPAN PELAKSANAAN -->
     @if(!empty($service->workflow_steps) && count($service->workflow_steps) > 0)
-        <section class="py-14 sm:py-20 bg-white border-t border-slate-200/80">
+        <section class="py-14 sm:py-18 bg-white border-t border-slate-200/80">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center max-w-3xl mx-auto mb-12">
-                    <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-1">Alur &amp; Prosedur Kerja</span>
+                    <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-1">Alur Kerja</span>
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight">
                         Tahapan Pelaksanaan Layanan
                     </h2>
                     <p class="text-xs sm:text-sm text-slate-500 mt-2">
-                        Proses terstruktur, transparan, dan mudah dipantau dari penyerahan draf awal hingga terbit.
+                        Proses sistematis, transparan, dan terarah dari awal naskah masuk hingga tuntas.
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     @foreach($service->workflow_steps as $step)
-                        <div class="bg-slate-50 p-6 rounded-sm border border-slate-200 hover:border-emerald-600 hover:bg-white hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
-                            <div>
-                                <div class="flex items-center justify-between mb-4">
-                                    <div class="w-9 h-9 rounded-sm bg-[#006830] text-white flex items-center justify-center text-xs font-black font-mono shadow-2xs group-hover:scale-105 transition">
+                        <div class="bg-slate-50/70 p-6 rounded-sm border border-slate-200 hover:border-emerald-500 shadow-2xs hover:shadow-sm transition-all duration-200 flex flex-col justify-between group">
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="w-8 h-8 rounded-xs bg-[#006830] text-white flex items-center justify-center text-xs font-black font-heading shadow-2xs">
                                         {{ $step['step'] ?? $loop->iteration }}
                                     </div>
-                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                                         Tahap {{ $step['step'] ?? $loop->iteration }}
                                     </span>
                                 </div>
-                                <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition mb-2">
+                                <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition">
                                     {{ $step['title'] ?? '' }}
                                 </h3>
                                 @if(!empty($step['desc']))
@@ -175,36 +179,86 @@
         </section>
     @endif
 
-    <!-- 6. KEUNGGULAN & MANFAAT (GRID 4 NILAI UTAMA) -->
+    <!-- 6. KEUNGGULAN & NILAI TAMBAH LAYANAN (MODERN EXECUTIVE CARDS GRID) -->
     @if($service->benefits)
-        <section class="py-14 sm:py-18 bg-gradient-to-br from-[#032c21] via-[#023828] to-[#006830] text-white">
+        @php
+            // Parse benefits into lines & clean up
+            $rawBenefits = str_replace(["\r\n", "\r"], "\n", $service->benefits);
+            $rawLines = array_filter(array_map('trim', explode("\n", $rawBenefits)));
+            
+            $introTitle = '';
+            $benefitCards = [];
+            
+            foreach ($rawLines as $line) {
+                // If line ends with ':' or doesn't have bullet markers, it might be the intro heading
+                if (str_ends_with($line, ':') && empty($introTitle)) {
+                    $introTitle = rtrim($line, ':');
+                } else {
+                    // Clean bullets / dashes / emojis
+                    $cleaned = preg_replace('/^[•\-\*\–]\s*/u', '', $line);
+                    if (!empty($cleaned)) {
+                        $benefitCards[] = $cleaned;
+                    }
+                }
+            }
+        @endphp
+
+        <section class="py-14 sm:py-18 bg-slate-50 border-t border-slate-200/80">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Section Header -->
                 <div class="text-center max-w-3xl mx-auto mb-10">
-                    <span class="text-xs font-bold text-lime-300 uppercase tracking-widest block mb-1">Keunggulan Lembaga</span>
-                    <h2 class="text-2xl sm:text-3xl font-black font-heading text-white tracking-tight">
-                        Keuntungan Menggunakan Layanan Kami
+                    <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-1">Keunggulan Lembaga</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight">
+                        {{ $introTitle ?: 'Keuntungan Menggunakan Layanan Kami' }}
                     </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-2">
+                        Standar kelembagaan resmi, mutu terjamin, dan pendampingan profesional dari tim redaksi Penerbit Persis.
+                    </p>
                 </div>
 
-                <div class="max-w-4xl mx-auto bg-white/10 border border-white/15 p-6 sm:p-8 rounded-sm backdrop-blur-xs text-xs sm:text-sm text-emerald-100 leading-relaxed whitespace-pre-line space-y-2">
-                    {!! nl2br(e($service->benefits)) !!}
-                </div>
+                <!-- Structured Modern Cards Grid -->
+                @if(count($benefitCards) > 0)
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                        @foreach($benefitCards as $item)
+                            <div class="bg-white p-5 rounded-sm border border-slate-200/90 hover:border-emerald-600 shadow-2xs hover:shadow-md transition-all duration-200 flex items-start gap-3.5 group">
+                                <div class="w-9 h-9 rounded-xs bg-emerald-50 text-[#006830] group-hover:bg-[#006830] group-hover:text-white flex items-center justify-center text-sm shrink-0 transition-colors shadow-2xs border border-emerald-100/80">
+                                    <i class="fa-solid fa-circle-check text-emerald-600 group-hover:text-white"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <h4 class="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-emerald-800 transition leading-snug">
+                                        {{ $item }}
+                                    </h4>
+                                    <span class="text-[10px] text-slate-400 font-medium block">Standar Penerbit Persis</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="max-w-4xl mx-auto bg-white border border-slate-200 p-6 rounded-sm shadow-2xs text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+                        {!! nl2br(e($service->benefits)) !!}
+                    </div>
+                @endif
 
+                <!-- Notes / Disclaimer Callout Box -->
                 @if($service->notes)
-                    <div class="max-w-4xl mx-auto mt-4 bg-amber-400/15 border border-amber-400/30 p-4 rounded-sm text-amber-200 text-xs flex items-start gap-3">
-                        <i class="fa-solid fa-triangle-exclamation text-amber-300 text-base shrink-0 mt-0.5"></i>
-                        <div>
-                            <span class="font-bold uppercase tracking-wider block text-amber-300 text-[10px]">Catatan Penting</span>
-                            <div class="mt-0.5">{!! nl2br(e($service->notes)) !!}</div>
+                    <div class="max-w-4xl mx-auto mt-8 bg-amber-50/80 border border-amber-200/80 p-4 sm:p-5 rounded-sm text-amber-900 flex items-start gap-3.5 shadow-2xs">
+                        <div class="w-8 h-8 rounded-xs bg-amber-100 text-amber-700 flex items-center justify-center text-sm shrink-0 mt-0.5">
+                            <i class="fa-solid fa-circle-info"></i>
+                        </div>
+                        <div class="space-y-0.5">
+                            <span class="font-extrabold uppercase tracking-wider block text-amber-800 text-[10px]">Catatan Penting Redaksi</span>
+                            <div class="text-xs text-amber-950/85 leading-relaxed">{!! nl2br(e($service->notes)) !!}</div>
                         </div>
                     </div>
                 @endif
+
             </div>
         </section>
     @endif
 
     <!-- 7. FAQ & KONSULTASI LANGSUNG REDAKSI -->
-    <section class="py-14 sm:py-18 bg-slate-50 border-t border-slate-200/80">
+    <section class="py-14 sm:py-18 bg-white border-t border-slate-200/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
@@ -220,10 +274,10 @@
                     @if(!empty($service->faqs) && count($service->faqs) > 0)
                         <div class="space-y-3 pt-2">
                             @foreach($service->faqs as $faq)
-                                <details class="group bg-white border border-slate-200 rounded-sm p-4 transition shadow-2xs open:border-emerald-600 [&_summary::-webkit-details-marker]:hidden">
+                                <details class="group bg-slate-50 border border-slate-200 rounded-sm p-4 transition shadow-2xs open:bg-white open:border-emerald-600 [&_summary::-webkit-details-marker]:hidden">
                                     <summary class="flex items-center justify-between cursor-pointer font-bold text-xs sm:text-sm text-slate-900 list-none select-none">
                                         <span>{{ $faq['q'] ?? '' }}</span>
-                                        <span class="ml-2 w-5 h-5 rounded-xs bg-slate-100 group-open:bg-[#006830] group-open:text-white text-slate-600 flex items-center justify-center text-xs shrink-0 transition">
+                                        <span class="ml-2 w-5 h-5 rounded-xs bg-slate-200 group-open:bg-[#006830] group-open:text-white text-slate-700 flex items-center justify-center text-xs shrink-0 transition">
                                             <i class="fa-solid fa-chevron-down group-open:rotate-180 transition-transform"></i>
                                         </span>
                                     </summary>
@@ -234,15 +288,15 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="bg-white p-5 rounded-sm border border-slate-200 text-xs text-slate-500">
+                        <div class="bg-slate-50 p-5 rounded-sm border border-slate-200 text-xs text-slate-500">
                             Belum ada FAQ khusus untuk layanan ini. Anda dapat langsung bertanya kepada tim redaksi melalui kontak WhatsApp kami.
                         </div>
                     @endif
                 </div>
 
                 <!-- Right: Contact CTA Box (col-span-5) -->
-                <div class="lg:col-span-5 bg-white p-6 sm:p-7 rounded-sm border border-slate-200 shadow-sm space-y-4">
-                    <div class="w-12 h-12 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xl shadow-2xs">
+                <div class="lg:col-span-5 bg-slate-50 p-6 sm:p-7 rounded-sm border border-slate-200 shadow-sm space-y-4">
+                    <div class="w-12 h-12 rounded-sm bg-emerald-50 text-[#006830] flex items-center justify-center text-xl shadow-2xs border border-emerald-100">
                         <i class="fa-solid fa-comments"></i>
                     </div>
                     <div>
@@ -261,7 +315,7 @@
                             <span>Chat WhatsApp Redaksi</span>
                         </a>
 
-                        <a href="{{ route('kontak') }}" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-sm text-xs font-bold transition flex items-center justify-center gap-2 border border-slate-200 cursor-pointer">
+                        <a href="{{ route('kontak') }}" class="w-full py-2.5 bg-white hover:bg-slate-100 text-slate-700 rounded-sm text-xs font-bold transition flex items-center justify-center gap-2 border border-slate-200 cursor-pointer">
                             <i class="fa-regular fa-envelope text-xs"></i>
                             <span>Kirim Draf Naskah via Form</span>
                         </a>
@@ -269,11 +323,11 @@
 
                     <!-- Directory of Other Services -->
                     @if(isset($otherServices) && count($otherServices) > 0)
-                        <div class="pt-4 border-t border-slate-100 space-y-2">
+                        <div class="pt-4 border-t border-slate-200 space-y-2">
                             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Layanan Lainnya:</span>
                             <div class="flex flex-wrap gap-2">
                                 @foreach($otherServices as $oth)
-                                    <a href="{{ route('layanan.show', $oth->slug) }}" class="px-2.5 py-1 rounded-xs bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 text-xs font-semibold border border-slate-200 transition">
+                                    <a href="{{ route('layanan.show', $oth->slug) }}" class="px-2.5 py-1 rounded-xs bg-white hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 text-xs font-semibold border border-slate-200 transition">
                                         {{ $oth->title }} &rarr;
                                     </a>
                                 @endforeach

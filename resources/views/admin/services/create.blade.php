@@ -397,9 +397,31 @@
         document.getElementById('mockCardIcon').className = icon;
         document.getElementById('iconPreview').innerHTML = '<i class="' + icon + '"></i>';
 
-        // Overview & Benefits
+        // Overview
         document.getElementById('mockOverview').innerText = overview;
-        document.getElementById('mockBenefits').innerText = benefits;
+
+        // Benefits Grid Preview
+        const benText = document.getElementById('inputBenefits')?.value || '';
+        const benLines = benText.split('\n').map(l => l.replace(/^[•\-\*\–]\s*/, '').trim()).filter(l => l.length > 0 && !l.endsWith(':'));
+        const benContainer = document.getElementById('mockBenefitsContainer');
+        if (benContainer) {
+            if (benLines.length > 0) {
+                benContainer.innerHTML = benLines.slice(0, 4).map(l => `
+                    <div class="p-1.5 rounded-xs bg-slate-50 border border-slate-200 text-[10px] font-semibold text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-[9px]"></i> <span class="truncate">${l}</span>
+                    </div>
+                `).join('');
+            } else {
+                benContainer.innerHTML = `
+                    <div class="p-1.5 rounded-xs bg-slate-50 border border-slate-200 text-[10px] font-semibold text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-[9px]"></i> <span class="truncate">Keunggulan 1</span>
+                    </div>
+                    <div class="p-1.5 rounded-xs bg-slate-50 border border-slate-200 text-[10px] font-semibold text-slate-700 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-[9px]"></i> <span class="truncate">Keunggulan 2</span>
+                    </div>
+                `;
+            }
+        }
 
         // Features Preview
         const featText = document.getElementById('inputFeatures')?.value || '';
