@@ -1,229 +1,254 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Layanan Baru')
-@section('header_title', 'Page Builder Layanan Baru')
+@section('title', 'Buat Halaman Layanan Baru')
 
 @section('content')
-<form method="POST" action="{{ route('admin.services.store') }}" enctype="multipart/form-data" class="space-y-6">
-    @csrf
-
-    <!-- Top Action Bar -->
-    <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="max-w-6xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-            <a href="{{ route('admin.services.index') }}" class="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1 mb-1">
-                <i class="fa-solid fa-arrow-left text-[10px]"></i> Kembali ke Daftar Layanan
+            <a href="{{ route('admin.services.index') }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1.5 mb-1.5">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Layanan
             </a>
-            <h3 class="text-lg font-black text-slate-900 font-heading">Buat Halaman Layanan Baru</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Isi detail, cakupan layanan, alur tahapan, dan FAQ untuk membuat halaman layanan.</p>
+            <h1 class="text-xl sm:text-2xl font-black text-slate-900 font-heading">
+                Buat Halaman Layanan Baru
+            </h1>
+            <p class="text-xs text-slate-500 mt-0.5">
+                Isi detail, cakupan layanan, alur tahapan, dan FAQ untuk membuat halaman layanan yang dinamis.
+            </p>
         </div>
-
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-            <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
-                <i class="fa-solid fa-floppy-disk text-xs"></i>
-                <span>Simpan &amp; Publikasikan</span>
-            </button>
-        </div>
+        <button type="submit" form="serviceForm" class="px-5 py-2.5 bg-[#006830] hover:bg-[#024a23] text-white text-xs font-bold rounded-sm shadow-sm transition flex items-center gap-2 cursor-pointer self-start sm:self-auto">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Simpan &amp; Publikasikan</span>
+        </button>
     </div>
 
-    @if($errors->any())
-        <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold rounded-sm space-y-1">
-            @foreach($errors->all() as $err)
-                <div>• {{ $err }}</div>
-            @endforeach
-        </div>
-    @endif
+    <!-- Main Form Grid -->
+    <form id="serviceForm" action="{{ route('admin.services.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        @csrf
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        <!-- LEFT: 1. Main Info & Card (col-span-8) -->
+        <!-- LEFT COLUMN: Content Builder (col-span-8) -->
         <div class="lg:col-span-8 space-y-6">
             
-            <!-- SECTION 1: INFORMASI UTAMA & KARTU BERANDA -->
+            <!-- 1. INFORMASI UTAMA & KARTU BERANDA -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-id-card text-emerald-700"></i>
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-address-card text-emerald-600"></i>
                     <span>1. Informasi Utama &amp; Kartu Beranda</span>
-                </h4>
+                </h3>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Judul Layanan <span class="text-rose-500">*</span></label>
-                    <input type="text" name="title" id="srv_title" value="{{ old('title') }}" required class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-bold" placeholder="Contoh: Pengurusan ISBN" oninput="autoSlug(this.value)" />
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Judul Layanan <span class="text-red-500">*</span></label>
+                    <input type="text" name="title" id="inputTitle" value="{{ old('title') }}" required placeholder="Contoh: Pengurusan ISBN" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 font-medium" />
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">URL Slug</label>
-                        <input type="text" name="slug" id="srv_slug" value="{{ old('slug') }}" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono text-emerald-800" placeholder="pengurusan-isbn" />
+                        <label class="block text-xs font-bold text-slate-700 mb-1">URL Slug</label>
+                        <input type="text" name="slug" id="inputSlug" value="{{ old('slug') }}" placeholder="pengurusan-isbn (otomatis jika kosong)" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 font-mono text-slate-600" />
                     </div>
-
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Icon FontAwesome <span class="text-rose-500">*</span></label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Icon FontAwesome <span class="text-red-500">*</span></label>
                         <div class="flex items-center gap-2">
-                            <div id="iconPreviewBox" class="w-10 h-10 rounded-xs bg-emerald-50 text-emerald-800 flex items-center justify-center text-base border border-emerald-200 shrink-0">
-                                <i id="iconPreview" class="{{ old('icon', 'fa-solid fa-barcode') }}"></i>
+                            <div id="iconPreview" class="w-9 h-9 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-base shrink-0 border border-emerald-200">
+                                <i class="fa-solid fa-book-open"></i>
                             </div>
-                            <input type="text" name="icon" id="srv_icon" value="{{ old('icon', 'fa-solid fa-barcode') }}" required class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono" placeholder="fa-solid fa-barcode" oninput="updateIconPreview(this.value)" />
+                            <input type="text" name="icon" id="inputIcon" value="{{ old('icon', 'fa-solid fa-book-open') }}" required placeholder="fa-solid fa-barcode" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 font-mono" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Icon Quick Presets -->
+                <!-- Quick Icon Selectors -->
                 <div>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block mb-1.5">Pilihan Cepat Icon:</span>
-                    <div class="flex flex-wrap items-center gap-1.5">
-                        <button type="button" onclick="selectIcon('fa-solid fa-barcode')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-barcode mr-1"></i> barcode</button>
-                        <button type="button" onclick="selectIcon('fa-solid fa-book-open')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-book-open mr-1"></i> book-open</button>
-                        <button type="button" onclick="selectIcon('fa-solid fa-graduation-cap')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-graduation-cap mr-1"></i> graduation</button>
-                        <button type="button" onclick="selectIcon('fa-solid fa-copy')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-copy mr-1"></i> copy</button>
-                        <button type="button" onclick="selectIcon('fa-solid fa-newspaper')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-newspaper mr-1"></i> newspaper</button>
-                        <button type="button" onclick="selectIcon('fa-solid fa-box-open')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-box-open mr-1"></i> box-open</button>
-                        <button type="button" onclick="selectIcon('fa-solid fa-certificate')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-certificate mr-1"></i> certificate</button>
-                        <button type="button" onclick="selectIcon('fa-solid fa-pen-nib')" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-mono border border-slate-200 transition"><i class="fa-solid fa-pen-nib mr-1"></i> pen-nib</button>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Pilihan Cepat Icon:</label>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button type="button" onclick="selectIcon('fa-solid fa-book-open')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-book-open"></i> book-open</button>
+                        <button type="button" onclick="selectIcon('fa-solid fa-graduation-cap')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-graduation-cap"></i> graduation</button>
+                        <button type="button" onclick="selectIcon('fa-solid fa-barcode')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-barcode"></i> barcode</button>
+                        <button type="button" onclick="selectIcon('fa-solid fa-pen-nib')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-pen-nib"></i> pen-nib</button>
+                        <button type="button" onclick="selectIcon('fa-solid fa-certificate')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-certificate"></i> certificate</button>
+                        <button type="button" onclick="selectIcon('fa-solid fa-copy')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-copy"></i> copy</button>
+                        <button type="button" onclick="selectIcon('fa-solid fa-newspaper')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-newspaper"></i> newspaper</button>
+                        <button type="button" onclick="selectIcon('fa-solid fa-box-open')" class="px-2.5 py-1 text-[11px] rounded-xs bg-slate-100 hover:bg-emerald-100 text-slate-700 font-medium transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-box-open"></i> box-open</button>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Deskripsi Ringkas (Tampil pada Kartu Beranda &amp; Navbar) <span class="text-rose-500">*</span></label>
-                    <textarea name="short_desc" required rows="2" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed" placeholder="Bantu pengurusan ISBN resmi untuk buku dan terbitan Anda...">{{ old('short_desc') }}</textarea>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi Ringkas (Tampil pada Kartu Beranda &amp; Navbar) <span class="text-red-500">*</span></label>
+                    <textarea name="short_desc" id="inputShortDesc" rows="2" required placeholder="Bantu pengurusan ISBN resmi untuk buku dan terbitan Anda..." class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600">{{ old('short_desc') }}</textarea>
                 </div>
             </div>
 
-            <!-- SECTION 2: HERO BANNER & TAGLINE -->
+            <!-- 2. HERO BANNER HALAMAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-image text-emerald-700"></i>
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-image text-emerald-600"></i>
                     <span>2. Hero Banner Halaman</span>
-                </h4>
+                </h3>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Slogan / Tagline Layanan</label>
-                    <input type="text" name="tagline" value="{{ old('tagline') }}" class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 italic" placeholder="Contoh: “Satu Karya, Satu Identitas, Siap Diterbitkan.”" />
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Slogan / Tagline Layanan</label>
+                    <input type="text" name="tagline" value="{{ old('tagline') }}" placeholder='Contoh: “Satu Karya, Satu Identitas, Siap Diterbitkan.”' class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600" />
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Foto Banner Hero (Opsional)</label>
-                    <input type="file" name="banner_image" accept="image/*" class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
-                    <span class="text-[11px] text-slate-400 block mt-1">Format: JPG, PNG, atau WebP (Maks 5MB). Banner otomatis diberi overlay gelap elegan khas PERSIS PERS.</span>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Gambar Banner Hero (Opsional)</label>
+                    <input type="file" name="banner_image" accept="image/*" class="w-full text-xs p-2 border border-slate-300 rounded-sm file:mr-3 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
                 </div>
             </div>
 
-            <!-- SECTION 3: PENJELASAN LENGKAP & CAKUPAN LAYANAN -->
+            <!-- 3. PENJELASAN LENGKAP & CAKUPAN LAYANAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-align-left text-emerald-700"></i>
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-paragraph text-emerald-600"></i>
                     <span>3. Penjelasan Lengkap &amp; Cakupan Layanan</span>
-                </h4>
+                </h3>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Deskripsi Lengkap / Pengantar Layanan</label>
-                    <textarea name="overview" rows="4" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed" placeholder="Penerbit Persis menyediakan layanan pengurusan ISBN untuk membantu penulis dan lembaga memperoleh identitas resmi bagi buku yang akan diterbitkan...">{{ old('overview') }}</textarea>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi Pengantar Layanan</label>
+                    <textarea name="overview" rows="4" placeholder="Jelaskan secara mendalam tentang layanan ini..." class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600">{{ old('overview') }}</textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">📚 Cakupan / Poin-Poin Layanan yang Disediakan (1 Baris = 1 Poin)</label>
-                    <textarea name="features_list" rows="6" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed font-mono" placeholder="Pengajuan ISBN untuk buku yang diterbitkan&#10;Pemeriksaan kelengkapan data dan naskah&#10;Penyiapan metadata buku&#10;Pendampingan proses pengajuan ISBN&#10;Penyesuaian informasi penerbitan&#10;Penempatan ISBN pada buku&#10;Pendampingan sampai proses penerbitan selesai">{{ old('features_list') }}</textarea>
-                    <span class="text-[11px] text-slate-400 block mt-1">Ketikkan tiap poin cakupan layanan pada baris baru (Enter).</span>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">
+                        Cakupan Layanan / Fasilitas yang Disediakan <span class="text-[10px] text-slate-400 font-normal">(1 baris = 1 poin layanan)</span>
+                    </label>
+                    <textarea name="features" rows="5" placeholder="• Pengajuan ISBN untuk buku yang diterbitkan&#10;• Pemeriksaan kelengkapan data dan naskah&#10;• Penyiapan metadata buku sesuai standar Perpusnas" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 font-mono">{{ old('features') }}</textarea>
                 </div>
             </div>
 
-            <!-- SECTION 4: ALUR & TAHAPAN KERJA -->
+            <!-- 4. ALUR & TAHAPAN PELAKSANAAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-arrows-spin text-emerald-700"></i>
-                        <span>4. 🔄 Alur &amp; Tahapan Pelaksanaan</span>
-                    </h4>
-                    <button type="button" onclick="addWorkflowRow()" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-xs border border-emerald-200 flex items-center gap-1 transition">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-spin text-emerald-600"></i>
+                        <span>4. Alur &amp; Tahapan Pelaksanaan</span>
+                    </h3>
+                    <button type="button" onclick="addWorkflowStep()" class="px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-xs text-xs font-bold transition flex items-center gap-1 cursor-pointer">
                         <i class="fa-solid fa-plus text-[10px]"></i> Tambah Langkah
                     </button>
                 </div>
 
                 <div id="workflowContainer" class="space-y-3">
-                    <!-- Default Initial Step Rows -->
-                    <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-xs border border-slate-200 workflow-row">
-                        <span class="w-6 h-6 rounded-full bg-[#006830] text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-1 step-num">1</span>
-                        <div class="flex-1 space-y-2">
-                            <input type="text" name="step_titles[]" placeholder="Nama Tahap (Contoh: Pengajuan Naskah)" class="w-full px-3 py-1.5 text-xs font-bold rounded-xs border border-slate-300" />
-                            <textarea name="step_descs[]" rows="2" placeholder="Penjelasan singkat tahap ini..." class="w-full px-3 py-1.5 text-xs rounded-xs border border-slate-300"></textarea>
+                    <div class="workflow-item p-3.5 bg-slate-50 rounded-xs border border-slate-200 relative">
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                            <div class="sm:col-span-4">
+                                <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Judul Langkah 1</label>
+                                <input type="text" name="step_titles[]" placeholder="Contoh: Pengajuan Naskah" class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white" />
+                            </div>
+                            <div class="sm:col-span-8">
+                                <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Penjelasan Singkat</label>
+                                <input type="text" name="step_descs[]" placeholder="Contoh: Penulis menyerahkan naskah dan data buku kepada tim redaksi." class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white" />
+                            </div>
                         </div>
-                        <button type="button" onclick="this.closest('.workflow-row').remove(); reindexSteps();" class="text-slate-400 hover:text-rose-600 p-1 text-xs"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
             </div>
 
-            <!-- SECTION 5: KEUNTUNGAN & CATATAN PENTING -->
+            <!-- 5. KEUNTUNGAN LAYANAN & CATATAN -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-award text-emerald-700"></i>
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-award text-emerald-600"></i>
                     <span>5. Keuntungan Layanan &amp; Catatan Penting</span>
-                </h4>
+                </h3>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">🎯 Keuntungan Menggunakan Layanan</label>
-                    <textarea name="benefits" rows="3" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed" placeholder="Mudah • Terarah • Profesional • Terintegrasi&#10;Penulis tidak perlu mengurus seluruh proses sendiri. Penerbit Persis membantu dari persiapan data hingga ISBN siap digunakan.">{{ old('benefits') }}</textarea>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Keuntungan / Keunggulan Layanan</label>
+                    <textarea name="benefits" rows="3" placeholder="Contoh: Mudah • Terarah • Profesional • Terintegrasi" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600">{{ old('benefits') }}</textarea>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">⚠️ Catatan Penting / Disclaimer</label>
-                    <textarea name="notes" rows="2" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 leading-relaxed" placeholder="Catatan: ISBN bukan sertifikasi mutu atau hak cipta buku. ISBN berfungsi sebagai identitas unik publikasi buku.">{{ old('notes') }}</textarea>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Catatan Penting / Disclaimer</label>
+                    <textarea name="notes" rows="2" placeholder="Catatan: ISBN bukan sertifikasi mutu buku, melainkan identitas unik publikasi resmi." class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600">{{ old('notes') }}</textarea>
                 </div>
             </div>
 
-            <!-- SECTION 6: FAQ (TANYA JAWAB) -->
+            <!-- 6. TANYA JAWAB (FAQ) -->
             <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                        <i class="fa-solid fa-circle-question text-emerald-700"></i>
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-circle-question text-emerald-600"></i>
                         <span>6. Tanya Jawab (FAQ Layanan)</span>
-                    </h4>
-                    <button type="button" onclick="addFaqRow()" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold rounded-xs border border-emerald-200 flex items-center gap-1 transition">
+                    </h3>
+                    <button type="button" onclick="addFaqItem()" class="px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-xs text-xs font-bold transition flex items-center gap-1 cursor-pointer">
                         <i class="fa-solid fa-plus text-[10px]"></i> Tambah FAQ
                     </button>
                 </div>
 
                 <div id="faqContainer" class="space-y-3">
-                    <div class="flex items-start gap-2 bg-slate-50 p-3 rounded-xs border border-slate-200 faq-row">
-                        <div class="flex-1 space-y-2">
-                            <input type="text" name="faq_questions[]" placeholder="Pertanyaan (Contoh: Berapa lama proses pengurusan ISBN?)" class="w-full px-3 py-1.5 text-xs font-bold rounded-xs border border-slate-300" />
-                            <textarea name="faq_answers[]" rows="2" placeholder="Jawaban..." class="w-full px-3 py-1.5 text-xs rounded-xs border border-slate-300"></textarea>
+                    <div class="faq-item p-3.5 bg-slate-50 rounded-xs border border-slate-200 space-y-2">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Pertanyaan 1</label>
+                            <input type="text" name="faq_questions[]" placeholder="Contoh: Berapa lama proses pengurusan ISBN?" class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white" />
                         </div>
-                        <button type="button" onclick="this.closest('.faq-row').remove();" class="text-slate-400 hover:text-rose-600 p-1 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Jawaban</label>
+                            <textarea name="faq_answers[]" rows="2" placeholder="Contoh: Proses pengurusan ISBN biasanya membutuhkan waktu 3-7 hari kerja..." class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- RIGHT: Meta Settings & Status (col-span-4) -->
+        <!-- RIGHT COLUMN: Publishing Settings & LIVE VISUAL SIMULATOR (col-span-4) -->
         <div class="lg:col-span-4 space-y-6 sticky top-24">
             
-            <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs space-y-4">
-                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider pb-2 border-b border-slate-100">
+            <!-- LIVE VISUAL SIMULATOR CARD -->
+            <div class="bg-gradient-to-br from-brand-950 to-emerald-950 text-white p-5 rounded-sm shadow-md border border-emerald-700/60">
+                <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/15">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-lime-300 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                        Simulasi Tampilan Kartu Beranda
+                    </span>
+                </div>
+
+                <!-- Simulated Live Card -->
+                <div class="bg-white p-4 rounded-sm border border-slate-200 text-slate-900 shadow-sm">
+                    <div id="simIconBox" class="w-9 h-9 rounded-xs bg-emerald-50 text-[#006830] flex items-center justify-center text-lg mb-2.5">
+                        <i id="simIcon" class="fa-solid fa-book-open"></i>
+                    </div>
+                    <h4 id="simTitle" class="font-bold text-xs text-slate-900 mb-1 leading-snug">
+                        Judul Layanan
+                    </h4>
+                    <p id="simDesc" class="text-[10px] text-slate-500 leading-relaxed mb-3">
+                        Deskripsi ringkas layanan akan muncul di kartu beranda pengunjung...
+                    </p>
+                    <div class="text-[10px] font-bold text-[#006830] inline-flex items-center gap-1 pt-2 border-t border-slate-100 w-full">
+                        <span>Selengkapnya</span>
+                        <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PUBLISHING SETTINGS -->
+            <div class="bg-white p-5 rounded-sm border border-slate-200 shadow-2xs space-y-4">
+                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2.5">
                     Pengaturan Publikasi
-                </h4>
+                </h3>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Status Layanan</label>
-                    <select name="status" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 bg-white font-semibold">
-                        <option value="published" {{ old('status') === 'published' ? 'selected' : '' }}>Tayang (Published)</option>
-                        <option value="draft" {{ old('status') === 'draft' ? 'selected' : '' }}>Draf (Draft)</option>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Status Layanan</label>
+                    <select name="status" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 bg-white font-medium">
+                        <option value="published" selected>Tayang (Published)</option>
+                        <option value="draft">Draf (Disembunyikan)</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Urutan Tampil (Order)</label>
-                    <input type="number" name="order" value="{{ old('order', 1) }}" min="0" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-mono font-bold" />
-                    <span class="text-[11px] text-slate-400 block mt-1">Angka lebih kecil tampil lebih awal.</span>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Urutan Tampil (Order)</label>
+                    <input type="number" name="order" value="{{ old('order', 0) }}" class="w-full text-xs p-2.5 rounded-sm border border-slate-300" />
+                    <span class="text-[10px] text-slate-400 mt-1 block">Angka lebih kecil tampil lebih awal.</span>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Teks Tombol Aksi (CTA)</label>
-                    <input type="text" name="cta_text" value="{{ old('cta_text', 'Konsultasi Sekarang') }}" class="w-full px-3.5 py-2.5 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Konsultasi Sekarang" />
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Teks Tombol Aksi (CTA)</label>
+                    <input type="text" name="cta_text" value="{{ old('cta_text', 'Konsultasi Sekarang') }}" class="w-full text-xs p-2.5 rounded-sm border border-slate-300" />
                 </div>
 
-                <div class="pt-3 border-t border-slate-100">
-                    <button type="submit" class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
-                        <i class="fa-solid fa-floppy-disk text-xs"></i>
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-2.5 bg-[#006830] hover:bg-[#024a23] text-white text-xs font-bold rounded-sm shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-floppy-disk"></i>
                         <span>Simpan Layanan</span>
                     </button>
                 </div>
@@ -231,69 +256,87 @@
 
         </div>
 
-    </div>
-</form>
+    </form>
+</div>
 
 <script>
-    function autoSlug(text) {
-        const slug = text.toLowerCase()
-            .replace(/[^a-z0-9 -]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
-        const slugInput = document.getElementById('srv_slug');
-        if (slugInput && !slugInput.dataset.manual) {
-            slugInput.value = slug;
+    // Live Simulator Sync
+    const inputTitle = document.getElementById('inputTitle');
+    const inputIcon = document.getElementById('inputIcon');
+    const inputShortDesc = document.getElementById('inputShortDesc');
+    const iconPreview = document.getElementById('iconPreview');
+
+    const simTitle = document.getElementById('simTitle');
+    const simIcon = document.getElementById('simIcon');
+    const simDesc = document.getElementById('simDesc');
+
+    function syncPreview() {
+        if (inputTitle && simTitle) {
+            simTitle.innerText = inputTitle.value.trim() || 'Judul Layanan';
+        }
+        if (inputShortDesc && simDesc) {
+            simDesc.innerText = inputShortDesc.value.trim() || 'Deskripsi ringkas layanan akan muncul di kartu beranda pengunjung...';
+        }
+        if (inputIcon && simIcon) {
+            const iconClass = inputIcon.value.trim() || 'fa-solid fa-book-open';
+            simIcon.className = iconClass;
+            if (iconPreview) {
+                iconPreview.innerHTML = '<i class="' + iconClass + '"></i>';
+            }
         }
     }
+
+    if (inputTitle) inputTitle.addEventListener('input', syncPreview);
+    if (inputIcon) inputIcon.addEventListener('input', syncPreview);
+    if (inputShortDesc) inputShortDesc.addEventListener('input', syncPreview);
 
     function selectIcon(iconClass) {
-        document.getElementById('srv_icon').value = iconClass;
-        updateIconPreview(iconClass);
-    }
-
-    function updateIconPreview(iconClass) {
-        const preview = document.getElementById('iconPreview');
-        if (preview) {
-            preview.className = iconClass;
+        if (inputIcon) {
+            inputIcon.value = iconClass;
+            syncPreview();
         }
     }
 
-    function addWorkflowRow() {
+    let stepCount = 1;
+    function addWorkflowStep() {
+        stepCount++;
         const container = document.getElementById('workflowContainer');
-        const count = container.querySelectorAll('.workflow-row').length + 1;
-        const div = document.createElement('div');
-        div.className = 'flex items-start gap-2 bg-slate-50 p-3 rounded-xs border border-slate-200 workflow-row';
-        div.innerHTML = `
-            <span class="w-6 h-6 rounded-full bg-[#006830] text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-1 step-num">${count}</span>
-            <div class="flex-1 space-y-2">
-                <input type="text" name="step_titles[]" placeholder="Nama Tahap (Contoh: Tahap ${count})" class="w-full px-3 py-1.5 text-xs font-bold rounded-xs border border-slate-300" />
-                <textarea name="step_descs[]" rows="2" placeholder="Penjelasan singkat tahap ini..." class="w-full px-3 py-1.5 text-xs rounded-xs border border-slate-300"></textarea>
+        const html = `
+            <div class="workflow-item p-3.5 bg-slate-50 rounded-xs border border-slate-200 relative">
+                <button type="button" onclick="this.closest('.workflow-item').remove()" class="absolute top-2 right-2 text-slate-400 hover:text-red-600 text-xs cursor-pointer"><i class="fa-solid fa-times"></i></button>
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                    <div class="sm:col-span-4">
+                        <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Judul Langkah ${stepCount}</label>
+                        <input type="text" name="step_titles[]" placeholder="Contoh: Review Naskah" class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white" />
+                    </div>
+                    <div class="sm:col-span-8">
+                        <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Penjelasan Singkat</label>
+                        <input type="text" name="step_descs[]" placeholder="Penjelasan proses..." class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white" />
+                    </div>
+                </div>
             </div>
-            <button type="button" onclick="this.closest('.workflow-row').remove(); reindexSteps();" class="text-slate-400 hover:text-rose-600 p-1 text-xs"><i class="fa-solid fa-xmark"></i></button>
         `;
-        container.appendChild(div);
+        container.insertAdjacentHTML('beforeend', html);
     }
 
-    function reindexSteps() {
-        const rows = document.querySelectorAll('#workflowContainer .workflow-row');
-        rows.forEach((r, idx) => {
-            const num = r.querySelector('.step-num');
-            if (num) num.innerText = idx + 1;
-        });
-    }
-
-    function addFaqRow() {
+    let faqCount = 1;
+    function addFaqItem() {
+        faqCount++;
         const container = document.getElementById('faqContainer');
-        const div = document.createElement('div');
-        div.className = 'flex items-start gap-2 bg-slate-50 p-3 rounded-xs border border-slate-200 faq-row';
-        div.innerHTML = `
-            <div class="flex-1 space-y-2">
-                <input type="text" name="faq_questions[]" placeholder="Pertanyaan..." class="w-full px-3 py-1.5 text-xs font-bold rounded-xs border border-slate-300" />
-                <textarea name="faq_answers[]" rows="2" placeholder="Jawaban..." class="w-full px-3 py-1.5 text-xs rounded-xs border border-slate-300"></textarea>
+        const html = `
+            <div class="faq-item p-3.5 bg-slate-50 rounded-xs border border-slate-200 space-y-2 relative">
+                <button type="button" onclick="this.closest('.faq-item').remove()" class="absolute top-2 right-2 text-slate-400 hover:text-red-600 text-xs cursor-pointer"><i class="fa-solid fa-times"></i></button>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Pertanyaan ${faqCount}</label>
+                    <input type="text" name="faq_questions[]" placeholder="Pertanyaan..." class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white" />
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-600 uppercase mb-1">Jawaban</label>
+                    <textarea name="faq_answers[]" rows="2" placeholder="Jawaban..." class="w-full text-xs p-2 rounded-xs border border-slate-300 bg-white"></textarea>
+                </div>
             </div>
-            <button type="button" onclick="this.closest('.faq-row').remove();" class="text-slate-400 hover:text-rose-600 p-1 text-xs"><i class="fa-solid fa-xmark"></i></button>
         `;
-        container.appendChild(div);
+        container.insertAdjacentHTML('beforeend', html);
     }
 </script>
 @endsection

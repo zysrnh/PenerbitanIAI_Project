@@ -77,8 +77,55 @@
         </div>
     </section>
 
-    <!-- 3. MAIN DETAILS & CONTENT SECTION -->
-    <section class="py-12 sm:py-16 bg-slate-50">
+    <!-- 3. VISUAL WORKFLOW INFOGRAPHIC BAR (ALUR VISUAL PROSES HORIZONTAL) -->
+    @if(!empty($service->workflow_steps) && count($service->workflow_steps) > 0)
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+            <div class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-sm">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                        <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 uppercase tracking-wider font-heading">
+                            Alur Visual Proses Layanan (Step-by-Step)
+                        </h3>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden sm:inline-block">
+                        {{ count($service->workflow_steps) }} Tahapan Kerja
+                    </span>
+                </div>
+
+                <!-- Horizontal Step Flow -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-{{ min(count($service->workflow_steps), 6) }} gap-3 relative">
+                    @foreach($service->workflow_steps as $step)
+                        <div class="bg-slate-50 p-3.5 rounded-sm border border-slate-200/90 hover:border-emerald-600 hover:bg-emerald-50/40 transition group flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="w-6 h-6 rounded-xs bg-[#006830] text-white text-[11px] font-black font-mono flex items-center justify-center shadow-2xs group-hover:scale-105 transition">
+                                        {{ $step['step'] ?? $loop->iteration }}
+                                    </span>
+                                    @if(!$loop->last)
+                                        <i class="fa-solid fa-arrow-right text-[10px] text-slate-300 group-hover:text-emerald-600 transition hidden md:block"></i>
+                                    @else
+                                        <i class="fa-solid fa-circle-check text-xs text-emerald-600"></i>
+                                    @endif
+                                </div>
+                                <h4 class="text-xs font-bold text-slate-900 group-hover:text-emerald-800 transition line-clamp-2">
+                                    {{ $step['title'] ?? '' }}
+                                </h4>
+                            </div>
+                            @if(!empty($step['desc']))
+                                <p class="text-[10px] text-slate-500 mt-2 line-clamp-3 leading-snug">
+                                    {{ $step['desc'] }}
+                                </p>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- 4. MAIN DETAILS & CONTENT SECTION -->
+    <section class="py-8 sm:py-12 bg-slate-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
                 
@@ -106,33 +153,33 @@
                         </div>
                     @endif
 
-                    <!-- 2. Cakupan Layanan / Fitur yang Disediakan -->
+                    <!-- 2. Cakupan Layanan / Visual Grid Cards -->
                     @if(!empty($service->features) && count($service->features) > 0)
                         <div class="bg-white p-5 sm:p-7 rounded-sm border border-slate-200 shadow-2xs">
                             <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-slate-100">
                                 <div class="flex items-center gap-2.5">
                                     <div class="w-7 h-7 rounded-xs bg-emerald-50 text-[#006830] flex items-center justify-center text-sm shrink-0">
-                                        <i class="fa-solid fa-list-check"></i>
+                                        <i class="fa-solid fa-layer-group"></i>
                                     </div>
                                     <div>
                                         <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Cakupan &amp; Fasilitas</span>
                                         <h2 class="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
-                                            Layanan yang Kami Sediakan
+                                            Apa yang Kami Layani?
                                         </h2>
                                     </div>
                                 </div>
                                 <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-xs border border-emerald-200 shrink-0">
-                                    {{ count($service->features) }} Poin Layanan
+                                    {{ count($service->features) }} Fasilitas
                                 </span>
                             </div>
 
-                            <div class="grid grid-cols-1 gap-2.5">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 @foreach($service->features as $feat)
-                                    <div class="flex items-start gap-3 p-3 rounded-xs bg-slate-50/80 border border-slate-200/80 hover:border-emerald-500 hover:bg-emerald-50/40 transition">
-                                        <div class="w-5 h-5 rounded-xs bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5 text-[10px] shadow-2xs">
-                                            <i class="fa-solid fa-check"></i>
+                                    <div class="p-3.5 rounded-xs bg-slate-50/90 border border-slate-200 hover:border-emerald-600 hover:bg-emerald-50/30 transition duration-200 flex items-start gap-3 group shadow-2xs">
+                                        <div class="w-6 h-6 rounded-xs bg-emerald-100 text-[#006830] flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold group-hover:bg-[#006830] group-hover:text-white transition">
+                                            <i class="fa-solid fa-check text-[10px]"></i>
                                         </div>
-                                        <div class="text-xs sm:text-[13px] font-semibold text-slate-800 leading-snug">
+                                        <div class="text-xs sm:text-[13px] font-medium text-slate-800 leading-snug">
                                             {{ $feat }}
                                         </div>
                                     </div>
@@ -141,73 +188,28 @@
                         </div>
                     @endif
 
-                    <!-- 3. Alur & Tahapan Kerja (Roadmap) -->
-                    @if(!empty($service->workflow_steps) && count($service->workflow_steps) > 0)
-                        <div class="bg-white p-5 sm:p-7 rounded-sm border border-slate-200 shadow-2xs">
-                            <div class="flex items-center gap-2.5 mb-5 pb-2.5 border-b border-slate-100">
-                                <div class="w-7 h-7 rounded-xs bg-emerald-50 text-[#006830] flex items-center justify-center text-sm shrink-0">
-                                    <i class="fa-solid fa-arrows-spin"></i>
-                                </div>
-                                <div>
-                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">Proses &amp; Alur Kerja</span>
-                                    <h2 class="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
-                                        Tahapan Pelaksanaan Layanan
-                                    </h2>
-                                </div>
-                            </div>
-
-                            <div class="relative pl-5 sm:pl-7 space-y-4 before:absolute before:left-2.5 sm:before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-200">
-                                @foreach($service->workflow_steps as $step)
-                                    <div class="relative group">
-                                        <!-- Step Pin -->
-                                        <div class="absolute -left-5 sm:-left-7 top-0 w-5 h-5 sm:w-7 sm:h-7 rounded-xs bg-[#006830] text-white font-mono font-bold text-[10px] sm:text-xs flex items-center justify-center border border-white shadow-xs group-hover:scale-105 transition">
-                                            {{ $step['step'] ?? ($loop->iteration) }}
-                                        </div>
-
-                                        <!-- Step Box -->
-                                        <div class="bg-slate-50 p-3.5 sm:p-4 rounded-xs border border-slate-200 group-hover:border-emerald-500 group-hover:bg-emerald-50/30 transition">
-                                            <div class="flex items-center justify-between gap-2">
-                                                <h3 class="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-emerald-800 transition">
-                                                    {{ $step['title'] ?? '' }}
-                                                </h3>
-                                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-mono">
-                                                    Tahap {{ $step['step'] ?? ($loop->iteration) }}
-                                                </span>
-                                            </div>
-                                            @if(!empty($step['desc']))
-                                                <p class="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
-                                                    {{ $step['desc'] }}
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- 4. Keuntungan Layanan -->
+                    <!-- 3. Keuntungan Layanan / Visual Matrix -->
                     @if($service->benefits)
                         <div class="bg-gradient-to-br from-[#032c21] via-[#023828] to-[#006830] text-white p-5 sm:p-7 rounded-sm shadow-sm border border-emerald-700/60">
-                            <div class="flex items-center gap-2.5 mb-3">
+                            <div class="flex items-center gap-2.5 mb-3.5 pb-2.5 border-b border-white/10">
                                 <div class="w-8 h-8 rounded-xs bg-amber-400/20 text-amber-300 flex items-center justify-center text-base shrink-0 border border-amber-400/30">
                                     <i class="fa-solid fa-award"></i>
                                 </div>
                                 <div>
                                     <span class="text-[9px] font-bold text-lime-300 uppercase tracking-widest block">Keunggulan &amp; Manfaat</span>
                                     <h2 class="text-base sm:text-lg font-black font-heading text-white">
-                                        Keuntungan Menggunakan Layanan Penerbit Persis
+                                        Keuntungan &amp; Keunggulan Layanan
                                     </h2>
                                 </div>
                             </div>
 
-                            <div class="text-xs sm:text-[13px] text-emerald-100 leading-relaxed whitespace-pre-line font-medium space-y-1.5 pt-1">
+                            <div class="text-xs sm:text-[13px] text-emerald-100 leading-relaxed whitespace-pre-line font-medium space-y-1.5">
                                 {!! nl2br(e($service->benefits)) !!}
                             </div>
                         </div>
                     @endif
 
-                    <!-- 5. Catatan Penting / Disclaimer -->
+                    <!-- 4. Catatan Penting / Disclaimer -->
                     @if($service->notes)
                         <div class="bg-amber-50 border-l-3 border-amber-500 p-4 rounded-r-xs text-amber-950 text-xs sm:text-[13px] leading-relaxed flex items-start gap-3 shadow-2xs">
                             <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base shrink-0 mt-0.5"></i>
@@ -218,7 +220,7 @@
                         </div>
                     @endif
 
-                    <!-- 6. FAQ Accordion -->
+                    <!-- 5. FAQ Accordion -->
                     @if(!empty($service->faqs) && count($service->faqs) > 0)
                         <div class="bg-white p-5 sm:p-7 rounded-sm border border-slate-200 shadow-2xs">
                             <div class="flex items-center gap-2.5 mb-4 pb-2.5 border-b border-slate-100">
