@@ -9,6 +9,30 @@ class ServiceSeeder extends Seeder
 {
     public function run(): void
     {
+        // Auto-create table if not exists (fail-safe protection)
+        if (!\Illuminate\Support\Facades\Schema::hasTable('services')) {
+            \Illuminate\Support\Facades\Schema::create('services', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->string('slug')->unique();
+                $table->string('icon')->default('fa-solid fa-book');
+                $table->text('short_desc')->nullable();
+                $table->string('tagline')->nullable();
+                $table->string('banner_image')->nullable();
+                $table->longText('overview')->nullable();
+                $table->json('features')->nullable();
+                $table->json('workflow_steps')->nullable();
+                $table->text('benefits')->nullable();
+                $table->text('notes')->nullable();
+                $table->json('pricing_packages')->nullable();
+                $table->json('faqs')->nullable();
+                $table->string('cta_text')->nullable()->default('Konsultasi Sekarang');
+                $table->string('cta_url')->nullable();
+                $table->integer('order')->default(0);
+                $table->enum('status', ['published', 'draft'])->default('published');
+                $table->timestamps();
+            });
+        }
         $defaultServices = [
             [
                 'title' => 'Pengurusan ISBN',
