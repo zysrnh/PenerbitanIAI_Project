@@ -114,105 +114,196 @@
 
     
 
-    <!-- Struktur Organisasi Resmi Penerbit Persis (Bagan Institusional Bersih & Alami) -->
-    <section class="py-16 sm:py-20 bg-slate-50 border-t border-slate-200/80">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Struktur Organisasi Resmi Penerbit Persis (Desain Eksekutif & Elegan Human-Crafted) -->
+    <section class="py-16 sm:py-24 bg-slate-50 border-t border-slate-200/90 relative overflow-hidden">
+        <!-- Background subtle accent decoration -->
+        <div class="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-emerald-50/50 to-transparent pointer-events-none"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
             <!-- Section Header -->
-            <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
-                <span class="text-xs font-bold text-emerald-800 uppercase tracking-widest block mb-1">STRUKTUR PENGELOLA</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 font-heading tracking-tight">Struktur Organisasi Penerbit Persis</h2>
-                <div class="w-12 h-1 bg-[#006830] mx-auto mt-2.5 rounded-full"></div>
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/70 border border-emerald-300 text-[#006830] text-xs font-bold uppercase tracking-wider mb-3 shadow-2xs">
+                    <i class="fa-solid fa-sitemap text-emerald-700 text-xs"></i> Tata Kelola Lembaga
+                </div>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 font-heading tracking-tight">
+                    Struktur Organisasi Penerbit Persis
+                </h2>
+                <div class="w-16 h-1 bg-[#006830] mx-auto mt-3 rounded-full"></div>
+                <p class="text-xs sm:text-sm text-slate-600 mt-3 max-w-xl mx-auto leading-relaxed">
+                    Susunan dewan pengawas, kepemimpinan direksi, dan jajaran manajemen operasional Penerbitan Persatuan Islam (PERSIS PERS).
+                </p>
             </div>
 
-            <!-- ORGANIZATIONAL CHART CONTAINER -->
-            <div class="bg-white border border-slate-200 rounded-sm shadow-xs p-6 sm:p-10 space-y-8">
+            <!-- ORGANIZATIONAL HIERARCHY -->
+            <div class="space-y-10 sm:space-y-12">
                 
-                <!-- 1. PENANGGUNG JAWAB -->
-                <div class="relative text-center">
-                    <div class="inline-block max-w-md w-full bg-slate-50 hover:bg-emerald-50/40 border border-slate-300 hover:border-[#006830] rounded-sm p-4 sm:p-5 transition shadow-2xs">
-                        <span class="text-[10px] font-bold tracking-widest text-[#006830] uppercase block">PENANGGUNG JAWAB</span>
-                        <h3 class="text-base sm:text-lg font-extrabold text-slate-900 font-heading mt-1">Dr. Jeje Zaenudin</h3>
-                        <p class="text-xs text-slate-600 font-medium mt-0.5">Ketua Umum PP PERSIS</p>
-                    </div>
-                    <!-- Connector Line -->
-                    <div class="w-px h-6 bg-slate-300 mx-auto mt-2"></div>
-                </div>
-
-                <!-- 2. DEWAN PENGAWAS -->
-                <div class="relative">
-                    <div class="text-center mb-3">
-                        <span class="text-[11px] font-bold tracking-widest text-slate-400 uppercase bg-white px-3 relative z-10">
-                            DEWAN PENGAWAS
-                        </span>
-                        <div class="w-full h-px bg-slate-200 -mt-2"></div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                        <div class="bg-slate-50 border border-slate-200/80 rounded-sm p-3.5 text-center hover:border-emerald-600 transition shadow-2xs">
-                            <h4 class="text-sm font-bold text-slate-900">Dr. Ihsan Setiadi Latief</h4>
-                            <span class="text-[11px] text-slate-500 font-medium block mt-0.5">Pengawas</span>
+                <!-- TIER 1: PENANGGUNG JAWAB -->
+                <div class="flex flex-col items-center">
+                    <div class="w-full max-w-md bg-white rounded-sm border-2 border-emerald-700/80 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group">
+                        <!-- Card Header Ribbon -->
+                        <div class="bg-[#006830] px-4 py-2 flex items-center justify-between text-white">
+                            <span class="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-emerald-100 flex items-center gap-1.5">
+                                <i class="fa-solid fa-landmark text-amber-300 text-xs"></i> Penanggung Jawab
+                            </span>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 bg-white/15 rounded-xs text-white">
+                                Pimpinan Pusat PERSIS
+                            </span>
                         </div>
-                        <div class="bg-slate-50 border border-slate-200/80 rounded-sm p-3.5 text-center hover:border-emerald-600 transition shadow-2xs">
-                            <h4 class="text-sm font-bold text-slate-900">Jejen Jaenudin, M.Pd</h4>
-                            <span class="text-[11px] text-slate-500 font-medium block mt-0.5">Pengawas</span>
-                        </div>
-                        <div class="bg-slate-50 border border-slate-200/80 rounded-sm p-3.5 text-center hover:border-emerald-600 transition shadow-2xs">
-                            <h4 class="text-sm font-bold text-slate-900">Ginanjar Nugraha, M.Sy</h4>
-                            <span class="text-[11px] text-slate-500 font-medium block mt-0.5">Pengawas</span>
-                        </div>
-                    </div>
-                    <!-- Connector Line -->
-                    <div class="w-px h-6 bg-slate-300 mx-auto mt-4"></div>
-                </div>
-
-                <!-- 3. DIREKSI & MANAJEMEN OPERASIONAL -->
-                <div class="relative">
-                    <div class="text-center mb-3">
-                        <span class="text-[11px] font-bold tracking-widest text-slate-400 uppercase bg-white px-3 relative z-10">
-                            DIREKSI &amp; MANAJEMEN OPERASIONAL
-                        </span>
-                        <div class="w-full h-px bg-slate-200 -mt-2"></div>
-                    </div>
-
-                    <!-- Direktur -->
-                    <div class="max-w-sm mx-auto mb-4 text-center">
-                        <div class="bg-[#006830] text-white rounded-sm p-4 shadow-2xs border border-[#032c21]">
-                            <span class="text-[10px] font-bold tracking-wider text-emerald-200 uppercase block">DIREKTUR</span>
-                            <h4 class="text-base font-extrabold font-heading mt-0.5">A Nurjaman</h4>
-                            <p class="text-xs text-emerald-100 mt-0.5">Direktur Penerbit Persis</p>
-                        </div>
-                        <!-- Connector Line -->
-                        <div class="w-px h-5 bg-slate-300 mx-auto mt-2"></div>
-                    </div>
-
-                    <!-- Divisi: Marketing, Keuangan, Umum -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                        <div class="bg-slate-50 border border-slate-200 rounded-sm p-3.5 text-center hover:border-emerald-600 transition shadow-2xs">
-                            <span class="text-[10px] font-bold text-[#006830] uppercase tracking-wider block">MARKETING</span>
-                            <h5 class="text-sm font-bold text-slate-900 mt-0.5">Iban Muhiban</h5>
-                            <span class="text-[11px] text-slate-500 block mt-0.5">Pemasaran &amp; Distribusi</span>
-                        </div>
-                        <div class="bg-slate-50 border border-slate-200 rounded-sm p-3.5 text-center hover:border-emerald-600 transition shadow-2xs">
-                            <span class="text-[10px] font-bold text-[#006830] uppercase tracking-wider block">KEUANGAN</span>
-                            <h5 class="text-sm font-bold text-slate-900 mt-0.5">Dewi Kurmiati</h5>
-                            <span class="text-[11px] text-slate-500 block mt-0.5">Keuangan &amp; Administrasi</span>
-                        </div>
-                        <div class="bg-slate-50 border border-slate-200 rounded-sm p-3.5 text-center hover:border-emerald-600 transition shadow-2xs">
-                            <span class="text-[10px] font-bold text-[#006830] uppercase tracking-wider block">UMUM</span>
-                            <h5 class="text-sm font-bold text-slate-900 mt-0.5">Dedi Setiadi</h5>
-                            <span class="text-[11px] text-slate-500 block mt-0.5">Operasional &amp; Logistik</span>
+                        <!-- Card Body -->
+                        <div class="p-5 sm:p-6 text-center bg-gradient-to-b from-white to-slate-50/60">
+                            <div class="w-14 h-14 rounded-full bg-emerald-50 border-2 border-emerald-200 text-[#006830] flex items-center justify-center text-xl mx-auto mb-3.5 shadow-2xs group-hover:scale-105 transition-transform duration-200">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <h3 class="text-base sm:text-lg font-extrabold text-slate-900 font-heading">
+                                Dr. Jeje Zaenudin
+                            </h3>
+                            <div class="inline-block mt-1.5 px-3 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-semibold">
+                                Ketua Umum PP PERSIS
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 4. PENGEMBANGAN TEKNOLOGI -->
-                <div class="pt-4 border-t border-slate-100">
-                    <div class="max-w-sm mx-auto text-center">
-                        <div class="bg-slate-50 border border-slate-200 rounded-sm p-3.5 hover:border-emerald-600 transition shadow-2xs">
-                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">TEKNOLOGI &amp; SISTEM INFORMASI</span>
-                            <h5 class="text-sm font-bold text-slate-900 mt-0.5">Zaki Yusron Hasyimi</h5>
-                            <span class="text-[11px] text-emerald-800 font-semibold block mt-0.5">Web Development</span>
+                <!-- TIER 2: DEWAN PENGAWAS -->
+                <div>
+                    <!-- Category Title Divider -->
+                    <div class="flex items-center gap-4 mb-6 max-w-4xl mx-auto">
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                        <div class="flex items-center gap-2 px-3 py-1 rounded-sm bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border border-slate-200/90">
+                            <i class="fa-solid fa-shield-halved text-emerald-700"></i> Dewan Pengawas
+                        </div>
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                    </div>
+
+                    <!-- 3 Pengawas Cards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-4xl mx-auto">
+                        <!-- Pengawas 1 -->
+                        <div class="bg-white rounded-sm border border-slate-200/90 hover:border-emerald-600 p-5 text-center transition-all duration-200 shadow-2xs hover:shadow-sm group">
+                            <div class="w-11 h-11 rounded-full bg-slate-100 border border-slate-200 text-slate-600 group-hover:bg-emerald-50 group-hover:text-[#006830] group-hover:border-emerald-200 flex items-center justify-center text-base mx-auto mb-3 transition-colors">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block mb-1">Pengawas</span>
+                            <h4 class="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                                Dr. Ihsan Setiadi Latief
+                            </h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Dewan Pengawas Penerbit Persis</p>
+                        </div>
+
+                        <!-- Pengawas 2 -->
+                        <div class="bg-white rounded-sm border border-slate-200/90 hover:border-emerald-600 p-5 text-center transition-all duration-200 shadow-2xs hover:shadow-sm group">
+                            <div class="w-11 h-11 rounded-full bg-slate-100 border border-slate-200 text-slate-600 group-hover:bg-emerald-50 group-hover:text-[#006830] group-hover:border-emerald-200 flex items-center justify-center text-base mx-auto mb-3 transition-colors">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block mb-1">Pengawas</span>
+                            <h4 class="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                                Jejen Jaenudin, M.Pd
+                            </h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Dewan Pengawas Penerbit Persis</p>
+                        </div>
+
+                        <!-- Pengawas 3 -->
+                        <div class="bg-white rounded-sm border border-slate-200/90 hover:border-emerald-600 p-5 text-center transition-all duration-200 shadow-2xs hover:shadow-sm group">
+                            <div class="w-11 h-11 rounded-full bg-slate-100 border border-slate-200 text-slate-600 group-hover:bg-emerald-50 group-hover:text-[#006830] group-hover:border-emerald-200 flex items-center justify-center text-base mx-auto mb-3 transition-colors">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block mb-1">Pengawas</span>
+                            <h4 class="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                                Ginanjar Nugraha, M.Sy
+                            </h4>
+                            <p class="text-[11px] text-slate-500 mt-1">Dewan Pengawas Penerbit Persis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIER 3: DIREKSI & MANAJEMEN OPERASIONAL -->
+                <div>
+                    <!-- Category Title Divider -->
+                    <div class="flex items-center gap-4 mb-6 max-w-5xl mx-auto">
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                        <div class="flex items-center gap-2 px-3 py-1 rounded-sm bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border border-slate-200/90">
+                            <i class="fa-solid fa-briefcase text-emerald-700"></i> Direksi &amp; Manajemen Operasional
+                        </div>
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                    </div>
+
+                    <!-- Direktur Card (Featured Center) -->
+                    <div class="flex flex-col items-center mb-6">
+                        <div class="w-full max-w-sm bg-white rounded-sm border-2 border-emerald-600/90 shadow-2xs hover:shadow-md transition-all duration-200 p-5 text-center group">
+                            <div class="w-12 h-12 rounded-full bg-emerald-50 border-2 border-emerald-200 text-[#006830] flex items-center justify-center text-lg mx-auto mb-2.5 group-hover:scale-105 transition-transform duration-200">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <span class="inline-block text-[10px] font-extrabold uppercase tracking-wider bg-emerald-50 text-[#006830] border border-emerald-200/80 px-2.5 py-0.5 rounded-full mb-1">
+                                DIREKTUR
+                            </span>
+                            <h4 class="text-base font-extrabold text-slate-900 font-heading">
+                                A Nurjaman
+                            </h4>
+                            <p class="text-xs text-slate-600 font-medium mt-0.5">Direktur Penerbit Persis</p>
+                        </div>
+                    </div>
+
+                    <!-- 3 Divisi Grid (Marketing, Keuangan, Umum) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto">
+                        <!-- Marketing -->
+                        <div class="bg-white rounded-sm border border-slate-200/90 hover:border-emerald-600 p-5 text-center transition-all duration-200 shadow-2xs hover:shadow-sm group">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center text-sm mx-auto mb-2.5 group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-800 block mb-1">MARKETING</span>
+                            <h5 class="text-sm sm:text-base font-bold text-slate-900">
+                                Iban Muhiban
+                            </h5>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-snug">Pemasaran &amp; Distribusi</p>
+                        </div>
+
+                        <!-- Keuangan -->
+                        <div class="bg-white rounded-sm border border-slate-200/90 hover:border-emerald-600 p-5 text-center transition-all duration-200 shadow-2xs hover:shadow-sm group">
+                            <div class="w-10 h-10 rounded-full bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center text-sm mx-auto mb-2.5 group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 block mb-1">KEUANGAN</span>
+                            <h5 class="text-sm sm:text-base font-bold text-slate-900">
+                                Dewi Kurmiati
+                            </h5>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-snug">Keuangan &amp; Administrasi</p>
+                        </div>
+
+                        <!-- Umum -->
+                        <div class="bg-white rounded-sm border border-slate-200/90 hover:border-emerald-600 p-5 text-center transition-all duration-200 shadow-2xs hover:shadow-sm group">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center text-sm mx-auto mb-2.5 group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-boxes-packing"></i>
+                            </div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-700 block mb-1">UMUM</span>
+                            <h5 class="text-sm sm:text-base font-bold text-slate-900">
+                                Dedi Setiadi
+                            </h5>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-snug">Operasional &amp; Logistik</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TIER 4: TEKNOLOGI & SISTEM INFORMASI -->
+                <div>
+                    <!-- Category Title Divider -->
+                    <div class="flex items-center gap-4 mb-6 max-w-sm mx-auto">
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                        <div class="flex items-center gap-2 px-3 py-1 rounded-sm bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border border-slate-200/90">
+                            <i class="fa-solid fa-code text-emerald-700"></i> Teknologi Informasi
+                        </div>
+                        <div class="h-px bg-slate-200 flex-1"></div>
+                    </div>
+
+                    <!-- Web Development Card -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-full max-w-sm bg-white rounded-sm border border-slate-200/90 hover:border-emerald-600 p-5 text-center transition-all duration-200 shadow-2xs hover:shadow-sm group">
+                            <div class="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-sm mx-auto mb-2.5 group-hover:scale-105 transition-transform">
+                                <i class="fa-solid fa-laptop-code"></i>
+                            </div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 block mb-1">WEB DEVELOPMENT</span>
+                            <h5 class="text-sm sm:text-base font-bold text-slate-900">
+                                Zaki Yusron Hasyimi
+                            </h5>
+                            <p class="text-[11px] text-slate-500 mt-1 leading-snug">Teknologi &amp; Sistem Informasi</p>
                         </div>
                     </div>
                 </div>
