@@ -1,0 +1,89 @@
+================================================================================
+           DAFTAR AKUN PENGGUNA & HAK AKSES PANEL ADMIN PENERBIT PERSIS
+================================================================================
+
+URL Portal Login : https://penerbitpersis.com/admin/login
+                    (atau http://localhost:8000/admin/login untuk lokal)
+
+--------------------------------------------------------------------------------
+1. AKUN SUPER ADMIN (HAK AKSES PENUH SELURUH SISTEM)
+--------------------------------------------------------------------------------
+Deskripsi: Memiliki kendali mutlak untuk mengelola seluruh data website,
+           pengaturan halaman beranda/tentang/kontak, manajemen pengguna admin,
+           naskah, buku, layanan, dan transaksi pesanan.
+
+* Akun Utama:
+  - Email    : admin@persispers.com
+  - Password : persispers
+  - Role     : Super Admin (Akses Penuh)
+
+* Akun Alternatif:
+  - Email    : superadmin@penerbitpersis.com
+  - Password : persispers
+  - Role     : Super Admin (Akses Penuh)
+
+
+--------------------------------------------------------------------------------
+2. AKUN ADMIN REDAKSI & PENERBITAN NASKAH
+--------------------------------------------------------------------------------
+Deskripsi: Mengelola pengajuan naskah masuk dari penulis, konversi KTI,
+           layanan penerbitan, dan katalog buku ber-ISBN.
+           (Menu Pengaturan Web & Manajemen Pengguna otomatis TERSEMBUNYI).
+
+* Akun Redaksi:
+  - Email    : redaksi@penerbitpersis.com
+  - Password : persispers
+  - Role     : Admin Redaksi (Naskah & Layanan Web)
+
+
+--------------------------------------------------------------------------------
+3. AKUN OPERATOR TRANSAKSI, PENGIRIMAN & KASIR (KHUSUS PEMESANAN)
+--------------------------------------------------------------------------------
+Deskripsi: Khusus menangani transaksi pesanan buku masuk, update status order
+           (Pending, Dipacking, Dikirim, Selesai), input nomor resi ekspedisi,
+           cetak label pengiriman/invoice, dan live chat dengan pembeli.
+           (Menu Naskah, Layanan, Buku, & Pengaturan Web otomatis DIBLOKIR/TERSEMBUNYI).
+
+* Operator Transaksi & Kasir:
+  - Email    : operator@persispers.com
+  - Password : persispers
+  - Role     : Operator Transaksi & Pengiriman
+
+* Operator Pengiriman & Logistik Gudang:
+  - Email    : pengiriman@penerbitpersis.com
+  - Password : persispers
+  - Role     : Operator Transaksi & Pengiriman
+
+* Operator Keuangan & Faktur:
+  - Email    : keuangan@penerbitpersis.com
+  - Password : persispers
+  - Role     : Operator Transaksi & Pengiriman
+
+
+================================================================================
+                   TABEL MATRIKS HAK AKSES PER ROLE
+================================================================================
+Menu / Fitur             | Super Admin | Admin Redaksi | Operator Transaksi
+-------------------------+-------------+---------------+-------------------
+Dashboard Ringkasan      |     YA      |      YA       |        YA
+Pesan & Naskah Masuk     |     YA      |      YA       |   TIDAK (DIBLOKIR)
+Pesanan Buku (Transaksi) |     YA      |      YA       |   YA (AKSES UTAMA)
+Percakapan / Chat Order  |     YA      |      YA       |   YA (AKSES UTAMA)
+Kelola Layanan Web       |     YA      |      YA       |   TIDAK (DIBLOKIR)
+Katalog Buku & ISBN      |     YA      |      YA       |   TIDAK (DIBLOKIR)
+Pengaturan Web (CMS)     |     YA      | TIDAK (BLOK)  |   TIDAK (DIBLOKIR)
+Manajemen Pengguna       |     YA      | TIDAK (BLOK)  |   TIDAK (DIBLOKIR)
+-------------------------+-------------+---------------+-------------------
+
+================================================================================
+                           CATATAN KEAMANAN
+================================================================================
+1. Untuk memperbarui/mengisi data akun default di server, jalankan perintah:
+   php artisan db:seed --class=AdminSeeder --force
+
+2. Kata sandi default dapat diubah sewaktu-waktu melalui menu:
+   Profil Saya -> Ganti Kata Sandi (di pojok kanan atas panel admin).
+
+================================================================================
+               Dibuat untuk Tim Manajemen Penerbit Persis (2026)
+================================================================================
