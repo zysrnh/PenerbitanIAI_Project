@@ -220,6 +220,29 @@
                                 class="w-full px-3.5 py-2.5 text-sm rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600"
                             >{{ old('about_profile_story_2', $about['about_profile_story_2'] ?? ($about['profile_story_2'] ?? 'Didukung oleh mesin percetakan modern...')) }}</textarea>
                         </div>
+
+                        <!-- 4 Poin Keunggulan Lembaga -->
+                        <div class="pt-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-2">4 Poin Keunggulan / Fitur Lembaga</label>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Keunggulan 1</label>
+                                    <input type="text" name="about_feature_1" id="in_feature_1" value="{{ old('about_feature_1', $about['about_feature_1'] ?? 'Proses Peer-Review Berstandar Ilmiah') }}" oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Keunggulan 2</label>
+                                    <input type="text" name="about_feature_2" id="in_feature_2" value="{{ old('about_feature_2', $about['about_feature_2'] ?? 'Pengurusan ISBN & KDT Resmi Perpusnas') }}" oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Keunggulan 3</label>
+                                    <input type="text" name="about_feature_3" id="in_feature_3" value="{{ old('about_feature_3', $about['about_feature_3'] ?? 'Mesin Cetak Offset & Digital Mandiri') }}" oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-500 mb-1">Keunggulan 4</label>
+                                    <input type="text" name="about_feature_4" id="in_feature_4" value="{{ old('about_feature_4', $about['about_feature_4'] ?? 'Pendampingan Naskah Sampai Terbit') }}" oninput="updateAboutPreview()" class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
