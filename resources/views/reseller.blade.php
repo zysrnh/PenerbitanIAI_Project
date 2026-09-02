@@ -386,16 +386,50 @@
                 </p>
             </div>
 
+            <!-- Flash Message & WA Launcher -->
+            @if(session('success'))
+                <div class="mb-8 p-5 rounded-sm bg-emerald-50 border border-emerald-300 text-emerald-950 shadow-sm animate-fade-in">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-circle-check text-emerald-600 text-xl mt-0.5 shrink-0"></i>
+                        <div class="space-y-2 flex-1">
+                            <h4 class="text-sm font-extrabold text-emerald-900">Pendaftaran Berhasil Dikirim!</h4>
+                            <p class="text-xs text-emerald-800 leading-relaxed">{{ session('success') }}</p>
+                            @if(session('wa_url'))
+                                <div class="pt-2">
+                                    <a href="{{ session('wa_url') }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-sm text-xs font-bold shadow-xs hover:shadow-md transition">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i> Buka Chat WhatsApp Redaksi Sekarang &rarr;
+                                    </a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="mb-8 p-4 rounded-sm bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium space-y-1">
+                    @foreach($errors->all() as $error)
+                        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-exclamation text-rose-500"></i> {{ $error }}</div>
+                    @endforeach
+                </div>
+            @endif
+
             <!-- Registration Card -->
             <div class="bg-slate-50 rounded-sm border border-slate-200/90 p-6 sm:p-10 shadow-sm">
-                <form id="resellerForm" onsubmit="submitResellerForm(event)" class="space-y-5">
+                <form method="POST" action="{{ route('reseller.store') }}" class="space-y-5" id="resellerForm">
+                    @csrf
                     
+                    <!-- Anti-Spam Honeypot Field -->
+                    <input type="text" name="website_hp_check" value="" class="hidden" style="display:none;" tabindex="-1" autocomplete="off" />
+
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Lengkap Pemohon <span class="text-rose-500">*</span></label>
                             <input 
                                 type="text" 
+                                name="name"
                                 id="reseller_name" 
+                                value="{{ old('name') }}"
                                 required 
                                 placeholder="Contoh: Ahmad Fauzan" 
                                 class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
@@ -405,7 +439,9 @@
                             <label class="block text-xs font-bold text-slate-700 mb-1.5">Nomor WhatsApp Aktif <span class="text-rose-500">*</span></label>
                             <input 
                                 type="tel" 
+                                name="phone"
                                 id="reseller_wa" 
+                                value="{{ old('phone') }}"
                                 required 
                                 placeholder="Contoh: 081234567890" 
                                 class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
@@ -415,47 +451,65 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Toko / Usaha / Lembaga <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Email <span class="text-slate-400 font-normal">(Opsional)</span></label>
                             <input 
-                                type="text" 
-                                id="reseller_business" 
-                                placeholder="Contoh: Toko Buku Barokah / Pesantren Al-Hidayah" 
+                                type="email" 
+                                name="email"
+                                id="reseller_email" 
+                                value="{{ old('email') }}"
+                                placeholder="Contoh: pemohon@gmail.com" 
                                 class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                             />
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Reseller <span class="text-rose-500">*</span></label>
-                            <select 
-                                id="reseller_category" 
-                                required 
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Usaha / Toko / Lembaga <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                            <input 
+                                type="text" 
+                                name="business_name"
+                                id="reseller_business" 
+                                value="{{ old('business_name') }}"
+                                placeholder="Contoh: Toko Buku Barokah / Pesantren Al-Hidayah" 
                                 class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
-                            >
-                                <option value="Individu / Perorangan">Individu / Perorangan</option>
-                                <option value="Toko Buku Fisik / Online">Toko Buku Fisik / Online</option>
-                                <option value="Pesantren / Sekolah / Madrasah">Pesantren / Sekolah / Madrasah</option>
-                                <option value="Komunitas / Organisasi / Majelis">Komunitas / Organisasi / Majelis</option>
-                                <option value="Dosen / Guru / Mahasiswa">Dosen / Guru / Mahasiswa</option>
-                                <option value="Lainnya">Lainnya</option>
-                            </select>
+                            />
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Reseller <span class="text-rose-500">*</span></label>
+                        <select 
+                            name="category"
+                            id="reseller_category" 
+                            required 
+                            class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                        >
+                            <option value="Individu / Perorangan" {{ old('category') == 'Individu / Perorangan' ? 'selected' : '' }}>Individu / Perorangan</option>
+                            <option value="Toko Buku Fisik / Online" {{ old('category') == 'Toko Buku Fisik / Online' ? 'selected' : '' }}>Toko Buku Fisik / Online</option>
+                            <option value="Pesantren / Sekolah / Madrasah" {{ old('category') == 'Pesantren / Sekolah / Madrasah' ? 'selected' : '' }}>Pesantren / Sekolah / Madrasah</option>
+                            <option value="Komunitas / Organisasi / Majelis" {{ old('category') == 'Komunitas / Organisasi / Majelis' ? 'selected' : '' }}>Komunitas / Organisasi / Majelis</option>
+                            <option value="Dosen / Guru / Mahasiswa" {{ old('category') == 'Dosen / Guru / Mahasiswa' ? 'selected' : '' }}>Dosen / Guru / Mahasiswa</option>
+                            <option value="Lainnya" {{ old('category') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        </select>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Alamat Lengkap &amp; Kota / Kabupaten <span class="text-rose-500">*</span></label>
                         <textarea 
+                            name="address"
                             id="reseller_address" 
                             rows="3" 
                             required 
                             placeholder="Sebutkan alamat lengkap pengiriman untuk estimasi ongkos kirim..." 
                             class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
-                        ></textarea>
+                        >{{ old('address') }}</textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Catatan Tambahan / Minat Buku Tertentu <span class="text-slate-400 font-normal">(Opsional)</span></label>
                         <input 
                             type="text" 
+                            name="notes"
                             id="reseller_notes" 
+                            value="{{ old('notes') }}"
                             placeholder="Contoh: Tertarik memesan buku paket fiqih dan modul ajar..." 
                             class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
                         />
@@ -463,13 +517,13 @@
 
                     <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <span class="text-xs text-slate-500 flex items-center gap-1.5">
-                            <i class="fa-solid fa-lock text-emerald-600 text-xs"></i> Data Anda aman dan diteruskan ke WhatsApp Redaksi resmi.
+                            <i class="fa-solid fa-lock text-emerald-600 text-xs"></i> Data tersimpan ke admin &amp; notifikasi otomatis dikirim ke email Redaksi.
                         </span>
                         <button 
                             type="submit" 
                             class="w-full sm:w-auto px-8 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-sm text-xs sm:text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider"
                         >
-                            <i class="fa-brands fa-whatsapp text-base"></i> DAFTAR MENJADI RESELLER
+                            <i class="fa-solid fa-paper-plane text-xs"></i> DAFTAR MENJADI RESELLER
                         </button>
                     </div>
 
@@ -497,33 +551,14 @@
 
 </div>
 
+@if(session('wa_url'))
 <script>
-    function submitResellerForm(e) {
-        e.preventDefault();
-        
-        const name = document.getElementById('reseller_name').value.trim();
-        const wa = document.getElementById('reseller_wa').value.trim();
-        const business = document.getElementById('reseller_business').value.trim() || '-';
-        const category = document.getElementById('reseller_category').value;
-        const address = document.getElementById('reseller_address').value.trim();
-        const notes = document.getElementById('reseller_notes').value.trim() || '-';
-
-        if (!name || !wa || !address) {
-            alert('Mohon lengkapi kolom yang wajib diisi.');
-            return;
-        }
-
-        const msg = `*PENDAFTARAN RESELLER PENERBIT PERSIS*\n\n` +
-                    `*Nama Pemohon:* ${name}\n` +
-                    `*Nomor WhatsApp:* ${wa}\n` +
-                    `*Nama Usaha/Lembaga:* ${business}\n` +
-                    `*Kategori:* ${category}\n` +
-                    `*Alamat Lengkap:* ${address}\n` +
-                    `*Catatan:* ${notes}\n\n` +
-                    `_Saya telah membaca 12 Ketentuan Reseller dan ingin mendaftar menjadi reseller resmi Penerbit Persis._`;
-
-        const waUrl = `https://wa.me/6282116116133?text=${encodeURIComponent(msg)}`;
-        window.open(waUrl, '_blank');
-    }
+    // Auto-open WhatsApp in new tab if user just submitted
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            window.open("{{ session('wa_url') }}", "_blank");
+        }, 600);
+    });
 </script>
+@endif
 @endsection

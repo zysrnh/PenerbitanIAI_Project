@@ -61,6 +61,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/layanan/{slug}', [\App\Http\Controllers\ServiceController::class, 'show'])->name('layanan.show');
 Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');
 Route::get('/reseller', [ResellerController::class, 'index'])->name('reseller');
+Route::post('/reseller/daftar', [ResellerController::class, 'store'])->name('reseller.store')->middleware('throttle:6,1');
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
 Route::post('/kontak/kirim', [ContactController::class, 'store'])->name('kontak.store')->middleware('throttle:6,1');
