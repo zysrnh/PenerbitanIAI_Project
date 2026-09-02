@@ -153,7 +153,7 @@
     <section class="bg-brand-950 text-white py-14 sm:py-16 relative overflow-hidden border-b border-brand-900 animate-fade-in">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-cascade-up">
             <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
-                {{ $settings['catalog_banner_badge'] ?? 'PUBLIKASI RESMI KAMPUS' }}
+                {{ $settings['catalog_banner_badge'] ?? 'PUBLIKASI RESMI BER-ISBN' }}
             </span>
             <h1 class="text-2xl sm:text-4xl font-extrabold font-heading tracking-tight">
                 {{ $settings['catalog_banner_title'] ?? 'Katalog Buku & Karya Ilmiah' }}
@@ -662,7 +662,7 @@
             <div class="bg-brand-950 rounded-sm p-6 sm:p-8 text-white border border-brand-900 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm relative overflow-hidden animate-cascade-up">
                 <div class="relative z-10 text-center sm:text-left">
                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-brand-900 px-3 py-1 rounded-sm border border-emerald-500/20 inline-block mb-2">
-                        LAYANAN PENERBITAN KAMPUS
+                        LAYANAN PENERBITAN RESMI
                     </span>
                     <h3 class="text-xl sm:text-2xl font-black text-white mb-2">
                         {{ $settings['catalog_publish_box_title'] ?? 'Punya Naskah Buku Sendiri?' }}

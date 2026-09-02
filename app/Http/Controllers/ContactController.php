@@ -32,8 +32,8 @@ class ContactController extends Controller
             'wa_btn_text' => SiteSetting::get('contact_wa_btn_text', 'CHAT WHATSAPP SEKARANG'),
             'wa_default_msg' => SiteSetting::get('contact_wa_default_msg', 'Halo Redaksi PERSIS PERS, saya ingin berkonsultasi mengenai penerbitan naskah buku.'),
 
-            'maps_title' => SiteSetting::get('contact_maps_title', 'Lokasi Kampus & Percetakan'),
-            'maps' => SiteSetting::get('contact_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.2974465063073!2d107.63660527587638!3d-6.974191668289417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9af8d8c919d%3A0xe96841b53fa976df!2sInstitut%20Agama%20Islam%20Persatuan%20Islam%20Bandung!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid'),
+            'maps_title' => SiteSetting::get('contact_maps_title', 'Lokasi Kantor Redaksi & Percetakan'),
+            'maps' => SiteSetting::get('contact_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.2974465063073!2d107.63660527587638!3d-6.974191668289417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e9af8d8c919d%3A0xe96841b53fa976df!2sPERSIS%20PERS%20Bandung!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid'),
             'maps_external_url' => SiteSetting::get('contact_maps_external_url', 'https://maps.app.goo.gl/uXpW7mS6V8n5fF9w8'),
         ];
 

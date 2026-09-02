@@ -105,7 +105,7 @@ Kami membantu penulis dalam seluruh rangkaian proses penerbitan secara profesion
  'short_desc' => 'Ubah skripsi, tesis, disertasi, atau laporan penelitian menjadi buku referensi/monograf yang populer dan ber-ISBN.',
  'tagline' => '“Transformasi Riset Akademik Menjadi Buku Bernilai Tambah dan Luas Manfaatnya.”',
  'banner_image' => 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1600&auto=format&fit=crop',
- 'overview' => "Banyak karya ilmiah seperti skripsi, tesis, disertasi, dan laporan riset hanya tersimpan di perpustakaan kampus atau repositori digital. Melalui layanan ini, kami membantu mengonversi laporan ilmiah kaku menjadi buku monograf, buku referensi, atau buku populer yang nyaman dibaca publik luas tanpa menghilangkan substansi keilmuannya.",
+ 'overview' => "Banyak karya ilmiah seperti skripsi, tesis, disertasi, dan laporan riset hanya tersimpan di perpustakaan atau repositori digital. Melalui layanan ini, kami membantu mengonversi laporan ilmiah kaku menjadi buku monograf, buku referensi, atau buku populer yang nyaman dibaca publik luas tanpa menghilangkan substansi keilmuannya.",
  'features' => [
  'Restrukturisasi format laporan riset kaku (Bab I-V) menjadi bab tematik buku',
  'Penyuntingan bahasa ilmiah agar lebih komunikatif dan mengalir enak dibaca',

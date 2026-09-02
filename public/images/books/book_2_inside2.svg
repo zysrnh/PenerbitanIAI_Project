@@ -6,7 +6,7 @@
         <line x1="20" y1="0" x2="20" y2="820" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
         
         <!-- Header -->
-        <text x="50" y="60" fill="#64748b" font-family="serif" font-size="12" font-style="italic">PERSIS PERS • Publikasi Ilmiah Kampus</text>
+        <text x="50" y="60" fill="#64748b" font-family="serif" font-size="12" font-style="italic">PERSIS PERS • Publikasi Ilmiah & Buku</text>
         <text x="550" y="60" fill="#64748b" font-family="sans-serif" font-size="12" font-weight="bold" text-anchor="end">Halaman 2</text>
         <line x1="50" y1="75" x2="550" y2="75" stroke="#cbd5e1" stroke-width="1"/>
         

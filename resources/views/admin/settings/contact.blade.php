@@ -817,7 +817,7 @@
             document.getElementById('prev_wa_desc').textContent = document.getElementById('in_wa_desc').value || 'Deskripsi box...';
             document.getElementById('prev_wa_btn_text').textContent = document.getElementById('in_wa_btn_text').value || 'CHAT WHATSAPP';
 
-            document.getElementById('prev_maps_title').innerHTML = '<i class="fa-solid fa-map-location-dot text-emerald-600 mr-1"></i> ' + (document.getElementById('in_maps_title').value || 'Lokasi Kampus');
+            document.getElementById('prev_maps_title').innerHTML = '<i class="fa-solid fa-map-location-dot text-emerald-600 mr-1"></i> ' + (document.getElementById('in_maps_title').value || 'Lokasi Kantor Redaksi & Percetakan');
         }
 
         function updateMapPreview() {

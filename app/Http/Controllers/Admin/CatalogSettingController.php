@@ -11,7 +11,7 @@ class CatalogSettingController extends Controller
     public function index()
     {
         $settings = [
-            'catalog_banner_badge' => SiteSetting::get('catalog_banner_badge', 'PUBLIKASI RESMI KAMPUS'),
+            'catalog_banner_badge' => SiteSetting::get('catalog_banner_badge', 'PUBLIKASI RESMI BER-ISBN'),
             'catalog_banner_title' => SiteSetting::get('catalog_banner_title', 'Katalog Buku & Karya Ilmiah'),
             'catalog_banner_desc' => SiteSetting::get('catalog_banner_desc', 'Koleksi buku ajar perguruan tinggi, monograf riset dosen, dan literatur keislaman ber-ISBN resmi terbitan PERSIS PERS.'),
             'catalog_stat_books' => SiteSetting::get('catalog_stat_books', '150+ Judul Buku'),
