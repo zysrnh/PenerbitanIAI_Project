@@ -476,19 +476,78 @@
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Kategori Reseller <span class="text-rose-500">*</span></label>
-                        <select 
-                            name="category"
-                            id="reseller_category" 
-                            required 
-                            class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
-                        >
-                            <option value="Individu / Perorangan" {{ old('category') == 'Individu / Perorangan' ? 'selected' : '' }}>Individu / Perorangan</option>
-                            <option value="Toko Buku Fisik / Online" {{ old('category') == 'Toko Buku Fisik / Online' ? 'selected' : '' }}>Toko Buku Fisik / Online</option>
-                            <option value="Pesantren / Sekolah / Madrasah" {{ old('category') == 'Pesantren / Sekolah / Madrasah' ? 'selected' : '' }}>Pesantren / Sekolah / Madrasah</option>
-                            <option value="Komunitas / Organisasi / Majelis" {{ old('category') == 'Komunitas / Organisasi / Majelis' ? 'selected' : '' }}>Komunitas / Organisasi / Majelis</option>
-                            <option value="Dosen / Guru / Mahasiswa" {{ old('category') == 'Dosen / Guru / Mahasiswa' ? 'selected' : '' }}>Dosen / Guru / Mahasiswa</option>
-                            <option value="Lainnya" {{ old('category') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                        </select>
+                        
+                        <!-- Custom Styled Dropdown Component -->
+                        <div class="relative" id="customCategoryDropdown">
+                            <input type="hidden" name="category" id="reseller_category" value="{{ old('category', 'Individu / Perorangan') }}" required />
+                            
+                            <button 
+                                type="button" 
+                                id="categoryTriggerBtn"
+                                onclick="toggleCategoryDropdown(event)"
+                                class="w-full px-3.5 py-2.5 text-sm rounded-sm bg-white border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition flex items-center justify-between shadow-2xs hover:border-slate-300 text-left cursor-pointer"
+                            >
+                                <span class="flex items-center gap-2.5 text-slate-800 font-medium truncate" id="categoryDisplayLabel">
+                                    <i class="fa-solid fa-user text-emerald-700 text-xs w-4"></i>
+                                    <span>{{ old('category', 'Individu / Perorangan') }}</span>
+                                </span>
+                                <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200" id="categoryChevron"></i>
+                            </button>
+
+                            <!-- Floating Custom Dropdown Menu -->
+                            <div 
+                                id="categoryMenu" 
+                                class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-sm shadow-xl py-1.5 z-50 animate-fade-in-up divide-y divide-slate-50"
+                            >
+                                <button type="button" onclick="selectCategory('Individu / Perorangan', 'fa-solid fa-user')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition text-left cursor-pointer">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <i class="fa-solid fa-user text-emerald-700 text-xs w-4"></i>
+                                        <span>Individu / Perorangan</span>
+                                    </span>
+                                    <i class="fa-solid fa-check text-emerald-700 text-xs category-check {{ old('category', 'Individu / Perorangan') == 'Individu / Perorangan' ? '' : 'hidden' }}" data-val="Individu / Perorangan"></i>
+                                </button>
+                                
+                                <button type="button" onclick="selectCategory('Toko Buku Fisik / Online', 'fa-solid fa-store')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition text-left cursor-pointer">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <i class="fa-solid fa-store text-emerald-700 text-xs w-4"></i>
+                                        <span>Toko Buku Fisik / Online</span>
+                                    </span>
+                                    <i class="fa-solid fa-check text-emerald-700 text-xs category-check {{ old('category') == 'Toko Buku Fisik / Online' ? '' : 'hidden' }}" data-val="Toko Buku Fisik / Online"></i>
+                                </button>
+
+                                <button type="button" onclick="selectCategory('Pesantren / Sekolah / Madrasah', 'fa-solid fa-mosque')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition text-left cursor-pointer">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <i class="fa-solid fa-mosque text-emerald-700 text-xs w-4"></i>
+                                        <span>Pesantren / Sekolah / Madrasah</span>
+                                    </span>
+                                    <i class="fa-solid fa-check text-emerald-700 text-xs category-check {{ old('category') == 'Pesantren / Sekolah / Madrasah' ? '' : 'hidden' }}" data-val="Pesantren / Sekolah / Madrasah"></i>
+                                </button>
+
+                                <button type="button" onclick="selectCategory('Komunitas / Organisasi / Majelis', 'fa-solid fa-users')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition text-left cursor-pointer">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <i class="fa-solid fa-users text-emerald-700 text-xs w-4"></i>
+                                        <span>Komunitas / Organisasi / Majelis</span>
+                                    </span>
+                                    <i class="fa-solid fa-check text-emerald-700 text-xs category-check {{ old('category') == 'Komunitas / Organisasi / Majelis' ? '' : 'hidden' }}" data-val="Komunitas / Organisasi / Majelis"></i>
+                                </button>
+
+                                <button type="button" onclick="selectCategory('Dosen / Guru / Mahasiswa', 'fa-solid fa-graduation-cap')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition text-left cursor-pointer">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <i class="fa-solid fa-graduation-cap text-emerald-700 text-xs w-4"></i>
+                                        <span>Dosen / Guru / Mahasiswa</span>
+                                    </span>
+                                    <i class="fa-solid fa-check text-emerald-700 text-xs category-check {{ old('category') == 'Dosen / Guru / Mahasiswa' ? '' : 'hidden' }}" data-val="Dosen / Guru / Mahasiswa"></i>
+                                </button>
+
+                                <button type="button" onclick="selectCategory('Lainnya', 'fa-solid fa-ellipsis')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-900 transition text-left cursor-pointer">
+                                    <span class="flex items-center gap-2.5 font-medium">
+                                        <i class="fa-solid fa-ellipsis text-emerald-700 text-xs w-4"></i>
+                                        <span>Lainnya</span>
+                                    </span>
+                                    <i class="fa-solid fa-check text-emerald-700 text-xs category-check {{ old('category') == 'Lainnya' ? '' : 'hidden' }}" data-val="Lainnya"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
@@ -550,6 +609,55 @@
     </section>
 
 </div>
+
+<script>
+    function toggleCategoryDropdown(e) {
+        e.stopPropagation();
+        const menu = document.getElementById('categoryMenu');
+        const chevron = document.getElementById('categoryChevron');
+        if (!menu) return;
+        
+        const isHidden = menu.classList.contains('hidden');
+        if (isHidden) {
+            menu.classList.remove('hidden');
+            chevron?.classList.add('rotate-180');
+        } else {
+            menu.classList.add('hidden');
+            chevron?.classList.remove('rotate-180');
+        }
+    }
+
+    function selectCategory(val, iconClass) {
+        const input = document.getElementById('reseller_category');
+        const label = document.getElementById('categoryDisplayLabel');
+        const menu = document.getElementById('categoryMenu');
+        const chevron = document.getElementById('categoryChevron');
+
+        if (input) input.value = val;
+        if (label) {
+            label.innerHTML = `<i class="${iconClass} text-emerald-700 text-xs w-4"></i><span>${val}</span>`;
+        }
+
+        document.querySelectorAll('.category-check').forEach(el => {
+            if (el.getAttribute('data-val') === val) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        });
+
+        if (menu) menu.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+    }
+
+    document.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('customCategoryDropdown');
+        if (dropdown && !dropdown.contains(e.target)) {
+            document.getElementById('categoryMenu')?.classList.add('hidden');
+            document.getElementById('categoryChevron')?.classList.remove('rotate-180');
+        }
+    });
+</script>
 
 @if(session('wa_url'))
 <script>
