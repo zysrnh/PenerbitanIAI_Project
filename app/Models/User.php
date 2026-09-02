@@ -34,14 +34,57 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user is Operator (Transaksi/Pengiriman).
+     */
+    public function isOperator(): bool
+    {
+        return $this->role === 'operator';
+    }
+
+    /**
+     * Permission checks for UI & Controller Authorization
+     */
+    public function canAccessUsers(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    public function canAccessSettings(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    public function canAccessMessages(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin']);
+    }
+
+    public function canAccessServices(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin']);
+    }
+
+    public function canAccessBooks(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin']);
+    }
+
+    public function canAccessOrders(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin', 'operator']);
+    }
+
+    /**
      * Get the role display label.
      */
     public function getRoleLabelAttribute(): string
     {
         return match ($this->role) {
             'super_admin' => 'Super Admin',
-            'admin' => 'Admin Biasa',
-            default => ucfirst($this->role),
+            'admin'       => 'Admin Redaksi',
+            'operator'    => 'Operator Transaksi',
+            'member'      => 'Member / Penulis',
+            default       => ucfirst($this->role),
         };
     }
 

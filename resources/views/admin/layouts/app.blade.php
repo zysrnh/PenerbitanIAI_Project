@@ -117,6 +117,7 @@
                             <span>Dashboard</span>
                         </a>
 
+                        @if(Auth::user()->canAccessMessages())
                         <a href="{{ route('admin.messages.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.messages.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-inbox w-4 text-center"></i>
@@ -126,11 +127,14 @@
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-950 font-mono">{{ $unreadMessagesCount }}</span>
                             @endif
                         </a>
+                        @endif
 
+                        @if(Auth::user()->canAccessUsers())
                         <a href="{{ route('admin.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.users.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <i class="fa-solid fa-user-shield w-4 text-center"></i>
                             <span>Manajemen Pengguna</span>
                         </a>
+                        @endif
                     </div>
                 </div>
 
@@ -138,6 +142,7 @@
                 <div>
                     <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Transaksi &amp; Katalog</span>
                     <div class="space-y-1">
+                        @if(Auth::user()->canAccessOrders())
                         <a href="{{ route('admin.orders.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.orders.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-receipt w-4 text-center"></i>
@@ -147,21 +152,27 @@
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-[#032c21] font-mono">{{ $pendingOrdersCount }}</span>
                             @endif
                         </a>
+                        @endif
 
-                                        <a href="{{ route('admin.services.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold text-xs transition {{ request()->routeIs('admin.services.*') ? 'bg-brand-800 text-lime-300 shadow-2xs font-bold' : 'text-slate-300 hover:bg-brand-900 hover:text-white' }}">
-                    <i class="fa-solid fa-layer-group w-4 text-center"></i>
-                    <span>Kelola Layanan Web</span>
-                </a>
+                        @if(Auth::user()->canAccessServices())
+                        <a href="{{ route('admin.services.index') }}" 
+                           class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold text-xs transition {{ request()->routeIs('admin.services.*') ? 'bg-brand-800 text-lime-300 shadow-2xs font-bold' : 'text-slate-300 hover:bg-brand-900 hover:text-white' }}">
+                            <i class="fa-solid fa-layer-group w-4 text-center"></i>
+                            <span>Kelola Layanan Web</span>
+                        </a>
+                        @endif
 
-                <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                        @if(Auth::user()->canAccessBooks())
+                        <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.books.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <i class="fa-solid fa-book-bookmark w-4 text-center"></i>
                             <span>Katalog Buku &amp; ISBN</span>
                         </a>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Section 3: Pengaturan Web -->
+                <!-- Section 3: Pengaturan Web (Hanya Super Admin) -->
+                @if(Auth::user()->canAccessSettings())
                 <div>
                     <span class="px-3 text-[10px] font-bold tracking-wider text-emerald-400/60 uppercase block mb-2">Pengaturan Web</span>
                     <div class="space-y-1">
@@ -186,6 +197,7 @@
                         </a>
                     </div>
                 </div>
+                @endif
 
             </nav>
         </div>

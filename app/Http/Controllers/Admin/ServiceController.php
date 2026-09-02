@@ -9,6 +9,16 @@ use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth()->user() || !auth()->user()->canAccessServices()) {
+                abort(403, 'Akses Ditolak: Anda tidak memiliki hak akses ke modul kelola layanan.');
+            }
+            return $next($request);
+        });
+    }
+
     public function index(Request $request)
     {
         $query = Service::query()->orderBy('order')->orderBy('id', 'desc');

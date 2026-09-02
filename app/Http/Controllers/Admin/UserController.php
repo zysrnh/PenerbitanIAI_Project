@@ -60,7 +60,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone' => ['nullable', 'string', 'max:30'],
-            'role' => ['required', 'in:super_admin,admin,member'],
+            'role' => ['required', 'in:super_admin,admin,operator,member'],
             'is_active' => ['required', 'boolean'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
@@ -85,7 +85,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'phone' => ['nullable', 'string', 'max:30'],
-            'role' => ['required', 'in:super_admin,admin,member'],
+            'role' => ['required', 'in:super_admin,admin,operator,member'],
             'is_active' => ['required', 'boolean'],
             'password' => ['nullable', 'string', 'min:6', 'confirmed'],
         ]);

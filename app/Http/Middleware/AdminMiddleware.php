@@ -19,12 +19,12 @@ class AdminMiddleware
             return redirect()->route('member.dashboard')->with('error', 'Akses ditolak. Halaman tersebut khusus untuk Administrator Redaksi.');
         }
 
-        // Must be admin or super_admin
-        if (!in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+        // Must be super_admin, admin, or operator
+        if (!in_array(Auth::user()->role, ['super_admin', 'admin', 'operator'])) {
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            return redirect()->route('admin.login')->with('error', 'Akses ditolak: Anda tidak memiliki hak akses administrator.');
+            return redirect()->route('admin.login')->with('error', 'Akses ditolak: Anda tidak memiliki hak akses ke panel manajemen.');
         }
 
         if (!Auth::user()->is_active) {

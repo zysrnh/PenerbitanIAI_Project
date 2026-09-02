@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeSettingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (!auth()->user() || !auth()->user()->canAccessSettings()) {
+                abort(403, 'Akses Ditolak: Hanya Super Admin yang berhak mengelola pengaturan website.');
+            }
+            return $next($request);
+        });
+    }
+
     private function getDefaultServices()
     {
         return [

@@ -14,8 +14,16 @@ use Illuminate\Support\Str;
 
 class ContactMessageController extends Controller
 {
+    private function authorizeAccess()
+    {
+        if (!Auth::user() || !Auth::user()->canAccessMessages()) {
+            abort(403, 'Akses Ditolak: Anda tidak memiliki hak akses ke modul pesan & naskah.');
+        }
+    }
+
     public function index(Request $request)
     {
+        $this->authorizeAccess();
         $query = ContactMessage::query();
 
         if ($request->filled('search')) {
@@ -45,11 +53,13 @@ class ContactMessageController extends Controller
 
     public function show(ContactMessage $message)
     {
+        $this->authorizeAccess();
         return view('admin.messages.show', compact('message'));
     }
 
     public function update(Request $request, ContactMessage $message)
     {
+        $this->authorizeAccess();
         $validated = $request->validate([
             'status' => ['required', 'in:pending,contacted,completed'],
             'notes' => ['nullable', 'string'],
@@ -65,6 +75,7 @@ class ContactMessageController extends Controller
      */
     public function reply(Request $request, ContactMessage $message)
     {
+        $this->authorizeAccess();
         $validated = $request->validate([
             'subject' => ['required', 'string', 'max:255'],
             'reply_message' => ['required', 'string', 'max:5000'],

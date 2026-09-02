@@ -74,41 +74,57 @@
                             @if(old('role') === 'super_admin')
                                 <i class="fa-solid fa-user-shield text-amber-600 text-xs"></i>
                                 <span>Super Admin (Akses Penuh)</span>
+                            @elseif(old('role') === 'operator')
+                                <i class="fa-solid fa-boxes-packing text-blue-600 text-xs"></i>
+                                <span>Operator Transaksi &amp; Pengiriman</span>
+                            @elseif(old('role') === 'member')
+                                <i class="fa-solid fa-user text-slate-600 text-xs"></i>
+                                <span>Member / Pengguna Umum</span>
                             @else
                                 <i class="fa-solid fa-user-gear text-emerald-700 text-xs"></i>
-                                <span>Admin Biasa (Operator)</span>
+                                <span>Admin Redaksi (Naskah &amp; Layanan)</span>
                             @endif
                         </div>
                         <i id="createRoleChevron" class="fa-solid fa-chevron-down text-[9px] text-slate-400 transition-transform duration-200"></i>
                     </button>
 
                     <div id="createRoleMenu" class="hidden absolute z-30 w-full mt-1 bg-white border border-slate-200 rounded-sm shadow-xl overflow-hidden py-1 divide-y divide-slate-100 animate-fade-in">
-                        <button type="button" onclick="selectCreateRole('admin', 'Admin Biasa (Operator)', 'fa-solid fa-user-gear text-emerald-700')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                        <button type="button" onclick="selectCreateRole('operator', 'Operator Transaksi &amp; Pengiriman', 'fa-solid fa-boxes-packing text-blue-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-boxes-packing text-blue-600 text-xs"></i>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Operator Transaksi &amp; Pengiriman</p>
+                                    <p class="text-[10px] text-slate-400">Khusus kelola pesanan masuk, resi, &amp; chat pembeli</p>
+                                </div>
+                            </div>
+                            <i id="check_role_operator" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') === 'operator' ? '' : 'hidden' }}"></i>
+                        </button>
+                        <button type="button" onclick="selectCreateRole('admin', 'Admin Redaksi (Naskah &amp; Layanan)', 'fa-solid fa-user-gear text-emerald-700')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-user-gear text-emerald-700 text-xs"></i>
                                 <div>
-                                    <p class="text-xs font-bold text-slate-900">Admin Biasa (Operator)</p>
-                                    <p class="text-[10px] text-slate-400">Kelola buku, pesanan, dan pesan</p>
+                                    <p class="text-xs font-bold text-slate-900">Admin Redaksi (Naskah &amp; Layanan)</p>
+                                    <p class="text-[10px] text-slate-400">Kelola naskah masuk, layanan web, &amp; katalog buku</p>
                                 </div>
                             </div>
-                            <i id="check_role_admin" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') !== 'super_admin' ? '' : 'hidden' }}"></i>
+                            <i id="check_role_admin" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role', 'admin') === 'admin' ? '' : 'hidden' }}"></i>
                         </button>
-                        <button type="button" onclick="selectCreateRole('super_admin', 'Super Admin (Akses Penuh)', 'fa-solid fa-user-shield text-amber-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                        <button type="button" onclick="selectCreateRole('super_admin', 'Super Admin (Akses Penuh)', 'fa-solid fa-user-shield text-amber-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-user-shield text-amber-600 text-xs"></i>
                                 <div>
                                     <p class="text-xs font-bold text-slate-900">Super Admin (Akses Penuh)</p>
-                                    <p class="text-[10px] text-slate-400">Hak akses mutlak seluruh sistem &amp; pengguna</p>
+                                    <p class="text-[10px] text-slate-400">Hak akses mutlak seluruh sistem, web, &amp; pengguna</p>
                                 </div>
                             </div>
                             <i id="check_role_super" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') === 'super_admin' ? '' : 'hidden' }}"></i>
                         </button>
-                        <button type="button" onclick="selectCreateRole('member', 'Member / Pengguna Umum', 'fa-solid fa-user text-blue-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition">
+                        <button type="button" onclick="selectCreateRole('member', 'Member / Pengguna Umum', 'fa-solid fa-user text-slate-600')" class="w-full px-3 py-2 text-left hover:bg-slate-50 flex items-center justify-between transition cursor-pointer">
                             <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-user text-blue-600 text-xs"></i>
+                                <i class="fa-solid fa-user text-slate-600 text-xs"></i>
                                 <div>
                                     <p class="text-xs font-bold text-slate-900">Member / Pengguna Umum</p>
-                                    <p class="text-[10px] text-slate-400">Pengguna toko &amp; riwayat belanja</p>
+                                    <p class="text-[10px] text-slate-400">Pengguna toko &amp; riwayat belanja buku</p>
                                 </div>
                             </div>
                             <i id="check_role_member" class="fa-solid fa-check text-xs text-emerald-600 {{ old('role') === 'member' ? '' : 'hidden' }}"></i>

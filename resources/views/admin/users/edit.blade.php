@@ -63,8 +63,10 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1.5">Role Hak Akses <span class="text-rose-500">*</span></label>
                     <select name="role" required class="w-full px-3.5 py-2 text-xs sm:text-sm rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 bg-white text-slate-700">
-                        <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin Biasa (Operator)</option>
+                        <option value="operator" {{ old('role', $user->role) == 'operator' ? 'selected' : '' }}>Operator Transaksi &amp; Pengiriman</option>
+                        <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Admin Redaksi (Naskah &amp; Layanan)</option>
                         <option value="super_admin" {{ old('role', $user->role) == 'super_admin' ? 'selected' : '' }}>Super Admin (Akses Penuh)</option>
+                        <option value="member" {{ old('role', $user->role) == 'member' ? 'selected' : '' }}>Member / Pengguna Umum</option>
                     </select>
                 </div>
                 <div>
