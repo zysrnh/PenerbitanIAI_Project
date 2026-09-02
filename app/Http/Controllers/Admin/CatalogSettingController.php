@@ -8,16 +8,6 @@ use Illuminate\Http\Request;
 
 class CatalogSettingController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!auth()->user() || !auth()->user()->canAccessSettings()) {
-                abort(403, 'Akses Ditolak: Hanya Super Admin yang berhak mengelola pengaturan website.');
-            }
-            return $next($request);
-        });
-    }
-
     public function index()
     {
         $settings = [

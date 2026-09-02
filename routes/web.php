@@ -85,50 +85,52 @@ Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.log
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard
+    // 1. Shared for all panel users (Super Admin, Admin Redaksi, Operator Transaksi)
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Messages & Naskah Submissions
-    Route::resource('messages', ContactMessageController::class)->only(['index', 'show', 'update', 'destroy']);
-    Route::post('messages/{message}/reply', [ContactMessageController::class, 'reply'])->name('messages.reply');
-
-    // Live Notification Polling & Actions
-    Route::get('notifications/live', [ContactMessageController::class, 'liveNotifications'])->name('notifications.live');
-    Route::post('notifications/mark-all-read', [ContactMessageController::class, 'markAllRead'])->name('notifications.mark_all_read');
-
-    // Orders & Sales Management
-    Route::get('/orders',                [AdminOrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{id}',           [AdminOrderController::class, 'show'])->name('orders.show');
-    Route::get('/orders/{id}/shipping-label', [AdminOrderController::class, 'printShippingLabel'])->name('orders.shipping_label');
-    Route::post('/orders/{id}/shipping', [AdminOrderController::class, 'updateShipping'])->name('orders.shipping');
-    Route::post('/orders/{id}/messages', [AdminOrderController::class, 'sendOrderMessage'])->name('orders.message');
-    Route::get('/orders/{id}/messages-api', [AdminOrderController::class, 'getOrderMessagesApi'])->name('orders.messages_api_data');
-    Route::post('/orders/{id}/payment',  [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment');
-    Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
-
-    // Books & Catalog Collection
-    Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
-    Route::post('/books/bulk-destroy', [BookController::class, 'bulkDestroy'])->name('books.bulk_destroy');
-    Route::resource('books', BookController::class);
-
-    // Admin Users Management
-    Route::resource('users', UserController::class);
-
-    // Profile & Password
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Settings
-    Route::get('/settings/home', [HomeSettingController::class, 'index'])->name('settings.home');
-    Route::put('/settings/home', [HomeSettingController::class, 'update'])->name('settings.home.update');
-    Route::get('/settings/catalog', [CatalogSettingController::class, 'index'])->name('settings.catalog');
-    Route::put('/settings/catalog', [CatalogSettingController::class, 'update'])->name('settings.catalog.update');
-    Route::get('/settings/contact', [SettingController::class, 'contact'])->name('settings.contact');
-    Route::put('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
-    Route::get('/settings/about', [AboutSettingController::class, 'index'])->name('settings.about');
-    Route::put('/settings/about', [AboutSettingController::class, 'update'])->name('settings.about.update');
+    // Live Notification Polling & Actions (Shared)
+    Route::get('notifications/live', [ContactMessageController::class, 'liveNotifications'])->name('notifications.live');
+    Route::post('notifications/mark-all-read', [ContactMessageController::class, 'markAllRead'])->name('notifications.mark_all_read');
+
+    // 2. Orders & Sales Management (super_admin, admin, operator)
+    Route::middleware('role:super_admin,admin,operator')->group(function () {
+        Route::get('/orders',                [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{id}',           [AdminOrderController::class, 'show'])->name('orders.show');
+        Route::get('/orders/{id}/shipping-label', [AdminOrderController::class, 'printShippingLabel'])->name('orders.shipping_label');
+        Route::post('/orders/{id}/shipping', [AdminOrderController::class, 'updateShipping'])->name('orders.shipping');
+        Route::post('/orders/{id}/messages', [AdminOrderController::class, 'sendOrderMessage'])->name('orders.message');
+        Route::get('/orders/{id}/messages-api', [AdminOrderController::class, 'getOrderMessagesApi'])->name('orders.messages_api_data');
+        Route::post('/orders/{id}/payment',  [AdminOrderController::class, 'updatePaymentStatus'])->name('orders.payment');
+        Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
+    });
+
+    // 3. Publishing, Services & Catalog (super_admin, admin)
+    Route::middleware('role:super_admin,admin')->group(function () {
+        Route::resource('messages', ContactMessageController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::post('messages/{message}/reply', [ContactMessageController::class, 'reply'])->name('messages.reply');
+
+        Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
+        Route::post('/books/bulk-destroy', [BookController::class, 'bulkDestroy'])->name('books.bulk_destroy');
+        Route::resource('books', BookController::class);
+    });
+
+    // 4. Super Admin Only: User Management & System Settings
+    Route::middleware('role:super_admin')->group(function () {
+        Route::resource('users', UserController::class);
+
+        Route::get('/settings/home', [HomeSettingController::class, 'index'])->name('settings.home');
+        Route::put('/settings/home', [HomeSettingController::class, 'update'])->name('settings.home.update');
+        Route::get('/settings/catalog', [CatalogSettingController::class, 'index'])->name('settings.catalog');
+        Route::put('/settings/catalog', [CatalogSettingController::class, 'update'])->name('settings.catalog.update');
+        Route::get('/settings/contact', [SettingController::class, 'contact'])->name('settings.contact');
+        Route::put('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
+        Route::get('/settings/about', [AboutSettingController::class, 'index'])->name('settings.about');
+        Route::put('/settings/about', [AboutSettingController::class, 'update'])->name('settings.about.update');
+    });
 });
 
 /*

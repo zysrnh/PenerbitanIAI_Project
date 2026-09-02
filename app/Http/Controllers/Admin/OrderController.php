@@ -14,16 +14,6 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!auth()->user() || !auth()->user()->canAccessOrders()) {
-                abort(403, 'Akses Ditolak: Anda tidak memiliki hak akses ke modul pesanan buku.');
-            }
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
         $status = $request->query('status');

@@ -10,16 +10,6 @@ use Illuminate\Support\Str;
 
 class BookController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            if (!auth()->user() || !auth()->user()->canAccessBooks()) {
-                abort(403, 'Akses Ditolak: Anda tidak memiliki hak akses ke modul katalog buku.');
-            }
-            return $next($request);
-        });
-    }
-
     public function index(Request $request)
     {
         $query = Book::latest();
