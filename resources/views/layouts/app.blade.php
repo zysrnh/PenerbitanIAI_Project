@@ -260,12 +260,25 @@
 @endphp
 
     @if($topbarActive)
-        <!-- Top Social Media Bar (Clean Centered & Smooth Icons) -->
+        <!-- Top Contact Info & Social Media Bar (Left: Phone & Email, Right: Smooth Social Icons) -->
         <div class="bg-slate-50/90 border-b border-slate-200/80 py-1.5 transition-all text-xs select-none">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-4">
                 
-                <!-- Social Media Buttons (Centered & Smooth) -->
-                <div class="flex items-center justify-center gap-2 flex-wrap">
+                <!-- Left: Quick Contact (Phone & Email) -->
+                <div class="flex items-center gap-3 sm:gap-4 text-slate-600 text-[11px] truncate">
+                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', \App\Models\SiteSetting::get('contact_phone', '(022) 5441951')) }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
+                        <i class="fa-solid fa-phone text-emerald-700 text-[10.5px]"></i>
+                        <span>{{ \App\Models\SiteSetting::get('contact_phone', '(022) 5441951') }}</span>
+                    </a>
+                    <span class="text-slate-300">•</span>
+                    <a href="mailto:{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
+                        <i class="fa-solid fa-envelope text-emerald-700 text-[10.5px]"></i>
+                        <span>{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}</span>
+                    </a>
+                </div>
+
+                <!-- Right: Social Media Buttons (Smooth & Aligned Right) -->
+                <div class="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0">
                     @if(!empty($socFacebook))
                         <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#1877F2] hover:bg-[#0d65d9] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Facebook Resmi PERSIS PERS">
                             <i class="fa-brands fa-facebook-f"></i>
