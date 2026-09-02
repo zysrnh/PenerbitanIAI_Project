@@ -260,84 +260,65 @@
 @endphp
 
     @if($topbarActive)
-        <!-- Top Social Media & Information Bar (Above Navbar) -->
-        <div class="bg-slate-50/95 border-b border-slate-200/80 py-1.5 transition-all text-xs select-none">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 items-center gap-2">
+        <!-- Top Social Media Bar (Clean Centered & Smooth Icons) -->
+        <div class="bg-slate-50/90 border-b border-slate-200/80 py-1.5 transition-all text-xs select-none">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
                 
-                <!-- Left: Quick Contact (Phone & Email) -->
-                <div class="hidden md:flex items-center gap-3 text-slate-600 text-[11px]">
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', \App\Models\SiteSetting::get('contact_phone', '(022) 5441951')) }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
-                        <i class="fa-solid fa-phone text-emerald-700 text-[10px]"></i>
-                        <span>{{ \App\Models\SiteSetting::get('contact_phone', '(022) 5441951') }}</span>
-                    </a>
-                    <span class="text-slate-300">•</span>
-                    <a href="mailto:{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
-                        <i class="fa-solid fa-envelope text-emerald-700 text-[10px]"></i>
-                        <span>{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}</span>
-                    </a>
-                </div>
-
-                <!-- Center: Social Media Buttons (Centered directly above navbar) -->
-                <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                <!-- Social Media Buttons (Centered & Smooth) -->
+                <div class="flex items-center justify-center gap-2 flex-wrap">
                     @if(!empty($socFacebook))
-                        <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#1877F2] hover:bg-[#0d65d9] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="Facebook Resmi PERSIS PERS">
+                        <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#1877F2] hover:bg-[#0d65d9] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Facebook Resmi PERSIS PERS">
                             <i class="fa-brands fa-facebook-f"></i>
                         </a>
                     @endif
 
                     @if(!empty($socTwitter))
-                        <a href="{{ $socTwitter }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-black hover:bg-slate-800 text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="Twitter / X Resmi PERSIS PERS">
+                        <a href="{{ $socTwitter }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Twitter / X Resmi PERSIS PERS">
                             <i class="fa-brands fa-x-twitter"></i>
                         </a>
                     @endif
 
                     @if(!empty($socPinterest))
-                        <a href="{{ $socPinterest }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#E60023] hover:bg-[#c4001e] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="Pinterest PERSIS PERS">
+                        <a href="{{ $socPinterest }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#E60023] hover:bg-[#c4001e] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Pinterest PERSIS PERS">
                             <i class="fa-brands fa-pinterest-p"></i>
                         </a>
                     @endif
 
                     @if(!empty($socWhatsapp))
-                        <a href="{{ str_starts_with($socWhatsapp, 'http') ? $socWhatsapp : 'https://wa.me/' . preg_replace('/[^0-9]/', '', $socWhatsapp) }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#25D366] hover:bg-[#1ebd56] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="WhatsApp Resmi PERSIS PERS">
+                        <a href="{{ str_starts_with($socWhatsapp, 'http') ? $socWhatsapp : 'https://wa.me/' . preg_replace('/[^0-9]/', '', $socWhatsapp) }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#25D366] hover:bg-[#1ebd56] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="WhatsApp Resmi PERSIS PERS">
                             <i class="fa-brands fa-whatsapp"></i>
                         </a>
                     @endif
 
                     @if(!empty($socTelegram))
-                        <a href="{{ $socTelegram }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#229ED9] hover:bg-[#1888be] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="Telegram Channel PERSIS PERS">
+                        <a href="{{ $socTelegram }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#229ED9] hover:bg-[#1888be] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Telegram Channel PERSIS PERS">
                             <i class="fa-brands fa-telegram"></i>
                         </a>
                     @endif
 
                     @if(!empty($socInstagram))
-                        <a href="{{ $socInstagram }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-90 text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="Instagram Resmi PERSIS PERS">
+                        <a href="{{ $socInstagram }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-95 text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Instagram Resmi PERSIS PERS">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
                     @endif
 
                     @if(!empty($socTiktok))
-                        <a href="{{ $socTiktok }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-black hover:bg-slate-800 text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="TikTok Resmi PERSIS PERS">
+                        <a href="{{ $socTiktok }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="TikTok Resmi PERSIS PERS">
                             <i class="fa-brands fa-tiktok"></i>
                         </a>
                     @endif
 
                     @if(!empty($socYoutube))
-                        <a href="{{ $socYoutube }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#FF0000] hover:bg-[#d90000] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="YouTube Official PERSIS PERS">
+                        <a href="{{ $socYoutube }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#FF0000] hover:bg-[#d90000] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="YouTube Official PERSIS PERS">
                             <i class="fa-brands fa-youtube"></i>
                         </a>
                     @endif
 
                     @if(!empty($socLinkedin))
-                        <a href="{{ $socLinkedin }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#0A66C2] hover:bg-[#084e96] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="LinkedIn PERSIS PERS">
+                        <a href="{{ $socLinkedin }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#0A66C2] hover:bg-[#084e96] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="LinkedIn PERSIS PERS">
                             <i class="fa-brands fa-linkedin-in"></i>
                         </a>
                     @endif
-                </div>
-
-                <!-- Right: Tagline / Status Info -->
-                <div class="hidden md:flex items-center justify-end gap-2 text-slate-600 text-[11px] truncate">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                    <span class="font-medium text-slate-700 truncate">{{ $topbarTagline }}</span>
                 </div>
 
             </div>
