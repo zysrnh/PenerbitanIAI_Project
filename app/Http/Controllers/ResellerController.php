@@ -110,6 +110,20 @@ class ResellerController extends Controller
 
         $waRedirectUrl = "https://wa.me/{$waNumber}?text={$waText}";
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pendaftaran Reseller berhasil dikirim! Data telah tersimpan di sistem admin dan notifikasi email telah diteruskan ke Redaksi.',
+                'wa_url'  => $waRedirectUrl,
+                'data'    => [
+                    'name'     => $name,
+                    'phone'    => $phone,
+                    'category' => $category,
+                    'business' => $business,
+                ],
+            ]);
+        }
+
         return back()->with('success', 'Formulir pendaftaran Reseller berhasil dikirim! Data telah tersimpan di sistem admin dan notifikasi email telah diteruskan ke Redaksi.')
                      ->with('wa_url', $waRedirectUrl);
     }

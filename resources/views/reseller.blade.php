@@ -415,8 +415,12 @@
             @endif
 
             <!-- Registration Card -->
-            <div class="bg-slate-50 rounded-sm border border-slate-200/90 p-6 sm:p-10 shadow-sm">
-                <form method="POST" action="{{ route('reseller.store') }}" class="space-y-5" id="resellerForm">
+            <div class="bg-slate-50 rounded-sm border border-slate-200/90 p-6 sm:p-10 shadow-sm relative">
+                
+                <!-- Client-Side Alert Error Container -->
+                <div id="resellerClientError" class="hidden mb-6 p-4 rounded-sm bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium space-y-1"></div>
+
+                <form method="POST" action="{{ route('reseller.store') }}" onsubmit="handleResellerFormSubmit(event)" class="space-y-5" id="resellerForm">
                     @csrf
                     
                     <!-- Anti-Spam Honeypot Field -->
@@ -580,6 +584,7 @@
                         </span>
                         <button 
                             type="submit" 
+                            id="btnSubmitReseller"
                             class="w-full sm:w-auto px-8 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-sm text-xs sm:text-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider"
                         >
                             <i class="fa-solid fa-paper-plane text-xs"></i> DAFTAR MENJADI RESELLER
@@ -608,6 +613,68 @@
         </div>
     </section>
 
+</div>
+
+<!-- ========================================================================= -->
+<!-- RESELLER REGISTRATION SUCCESS MODAL POPUP -->
+<!-- ========================================================================= -->
+<div id="resellerSuccessModal" class="fixed inset-0 z-[99999] hidden items-center justify-center p-4 select-none animate-fade-in" style="display: none;">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity" onclick="closeResellerSuccessModal()"></div>
+    
+    <!-- Dialog Card -->
+    <div class="relative bg-white rounded-xl shadow-2xl border border-slate-200 max-w-lg w-full p-6 sm:p-8 text-center transform transition-all animate-scale-up z-10 space-y-5">
+        
+        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-3xl mx-auto shadow-xs ring-8 ring-emerald-50">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div>
+            <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-1">Pendaftaran Berhasil</span>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 font-heading">Selamat Datang di Jaringan Reseller!</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                Data pendaftaran Anda telah <strong>tersimpan di sistem Admin Redaksi</strong> dan <strong>notifikasi email resmi telah dikirimkan</strong>.
+            </p>
+        </div>
+
+        <!-- Detail Box -->
+        <div class="p-3.5 bg-slate-50 rounded-sm border border-slate-200 text-left text-xs space-y-1.5 font-medium">
+            <div class="flex justify-between">
+                <span class="text-slate-500">Nama Pemohon:</span>
+                <span class="text-slate-900 font-bold" id="modalResellerName">-</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-500">WhatsApp:</span>
+                <span class="text-slate-900 font-mono font-bold" id="modalResellerWa">-</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-500">Kategori:</span>
+                <span class="text-emerald-800 font-bold" id="modalResellerCategory">-</span>
+            </div>
+        </div>
+
+        <!-- Big WhatsApp Action Button -->
+        <div class="space-y-2.5 pt-2">
+            <a 
+                id="modalResellerWaBtn"
+                href="#" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="w-full py-3.5 px-6 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-sm font-bold text-xs sm:text-sm uppercase tracking-wider transition flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg transform active:scale-95"
+            >
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                <span>Buka WhatsApp Redaksi Sekarang</span>
+            </a>
+            <button 
+                type="button" 
+                onclick="closeResellerSuccessModal()" 
+                class="w-full py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-800 transition"
+            >
+                Tutup Jendela Ini
+            </button>
+        </div>
+
+    </div>
 </div>
 
 <script>
@@ -657,16 +724,112 @@
             document.getElementById('categoryChevron')?.classList.remove('rotate-180');
         }
     });
-</script>
 
-@if(session('wa_url'))
-<script>
-    // Auto-open WhatsApp in new tab if user just submitted
-    window.addEventListener('load', function() {
-        setTimeout(function() {
-            window.open("{{ session('wa_url') }}", "_blank");
-        }, 600);
-    });
+    // Form submission via AJAX & direct WhatsApp popup
+    function handleResellerFormSubmit(e) {
+        e.preventDefault();
+        const form = document.getElementById('resellerForm');
+        const btn = document.getElementById('btnSubmitReseller');
+        const errContainer = document.getElementById('resellerClientError');
+        
+        if (!form) return;
+
+        // Validation check
+        const name = document.getElementById('reseller_name').value.trim();
+        const wa = document.getElementById('reseller_wa').value.trim();
+        const addr = document.getElementById('reseller_address').value.trim();
+
+        if (!name || !wa || !addr) {
+            if (errContainer) {
+                errContainer.innerHTML = '<i class="fa-solid fa-circle-exclamation text-rose-500"></i> Mohon lengkapi semua kolom yang bertanda bintang (*)';
+                errContainer.classList.remove('hidden');
+            }
+            return;
+        }
+
+        if (errContainer) errContainer.classList.add('hidden');
+
+        const originalBtnHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> Memproses Pendaftaran...';
+
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => {
+            if (!res.ok) throw res;
+            return res.json();
+        })
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+
+            if (data && data.success) {
+                // Populate Modal Data
+                document.getElementById('modalResellerName').textContent = data.data?.name || name;
+                document.getElementById('modalResellerWa').textContent = data.data?.phone || wa;
+                document.getElementById('modalResellerCategory').textContent = data.data?.category || 'Reseller';
+                document.getElementById('modalResellerWaBtn').href = data.wa_url;
+
+                // Show Modal
+                openResellerSuccessModal();
+
+                // Open WhatsApp directly in new tab
+                if (data.wa_url) {
+                    window.open(data.wa_url, '_blank');
+                }
+
+                // Reset form
+                form.reset();
+                selectCategory('Individu / Perorangan', 'fa-solid fa-user');
+            } else {
+                alert(data.message || 'Gagal mengirim pendaftaran.');
+            }
+        })
+        .catch(async err => {
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHtml;
+            
+            let errMsg = 'Terjadi kendala saat mengirim pendaftaran.';
+            try {
+                const errData = await err.json();
+                if (errData && errData.errors) {
+                    errMsg = Object.values(errData.errors).flat().join('<br>');
+                } else if (errData && errData.message) {
+                    errMsg = errData.message;
+                }
+            } catch(e) {}
+
+            if (errContainer) {
+                errContainer.innerHTML = errMsg;
+                errContainer.classList.remove('hidden');
+            } else {
+                alert(errMsg);
+            }
+        });
+    }
+
+    function openResellerSuccessModal() {
+        const modal = document.getElementById('resellerSuccessModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeResellerSuccessModal() {
+        const modal = document.getElementById('resellerSuccessModal');
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+        }
+    }
 </script>
-@endif
 @endsection

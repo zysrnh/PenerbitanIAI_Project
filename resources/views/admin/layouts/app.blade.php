@@ -554,9 +554,46 @@
             .catch(err => console.error(err));
         }
 
-        // Live Real-Time Polling & Toast Popup System
+        // Live Real-Time Polling, Sound Alert & Floating Toast System
         (function() {
             let lastBadgeCount = {{ $totalNotifCount ?? 0 }};
+            let lastSeenMessageId = {{ ($latestMessages && $latestMessages->first()) ? $latestMessages->first()->id : 0 }};
+            let lastSeenOrderId = {{ ($latestOrders && $latestOrders->first()) ? $latestOrders->first()->id : 0 }};
+            let isInitialPoll = true;
+
+            function playNotificationSound() {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    if (!AudioContext) return;
+                    const ctx = new AudioContext();
+                    const now = ctx.currentTime;
+                    
+                    // Pleasant two-tone chime
+                    const osc1 = ctx.createOscillator();
+                    const gain1 = ctx.createGain();
+                    osc1.type = 'sine';
+                    osc1.frequency.setValueAtTime(587.33, now); // D5
+                    osc1.frequency.exponentialRampToValueAtTime(880, now + 0.15); // A5
+                    gain1.gain.setValueAtTime(0.18, now);
+                    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                    osc1.connect(gain1);
+                    gain1.connect(ctx.destination);
+                    osc1.start(now);
+                    osc1.stop(now + 0.6);
+
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.type = 'triangle';
+                    osc2.frequency.setValueAtTime(880, now + 0.08);
+                    osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.25); // D6
+                    gain2.gain.setValueAtTime(0.12, now + 0.08);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.start(now + 0.08);
+                    osc2.stop(now + 0.8);
+                } catch(e) {}
+            }
 
             function checkLiveNotifications() {
                 fetch("{{ route('admin.notifications.live') }}", {
@@ -582,55 +619,143 @@
                         headerBadgeEl.innerText = currentBadge + ' Baru';
                     }
 
-                    // If new notification arrived, show real-time animated popup toast & wiggle bell
-                    if (currentBadge > lastBadgeCount) {
-                        const newMessages = data.messages.filter(m => m.is_pending);
-                        if (newMessages.length > 0) {
-                            const latest = newMessages[0];
+                    // Check for new messages
+                    if (data.messages && data.messages.length > 0) {
+                        const newestMsg = data.messages[0];
+                        if (!isInitialPoll && newestMsg.id > lastSeenMessageId) {
+                            lastSeenMessageId = newestMsg.id;
+                            playNotificationSound();
                             showLiveToast(
-                                '🔔 Pesan & Naskah Baru Masuk!',
-                                `${latest.name}: "${latest.subject}"`,
-                                latest.url,
+                                '🔔 Pesan / Naskah Masuk Baru!',
+                                `${newestMsg.name} (${newestMsg.category}): "${newestMsg.subject}"`,
+                                newestMsg.url,
                                 'fa-solid fa-inbox text-emerald-400'
                             );
-                        }
 
-                        // Bell wiggle animation
-                        if (bellIcon) {
-                            bellIcon.classList.add('animate-bounce', 'text-amber-500');
-                            setTimeout(() => {
-                                bellIcon.classList.remove('animate-bounce', 'text-amber-500');
-                            }, 3000);
+                            if (bellIcon) {
+                                bellIcon.classList.add('animate-bounce', 'text-amber-500');
+                                setTimeout(() => bellIcon.classList.remove('animate-bounce', 'text-amber-500'), 4000);
+                            }
+                        } else if (isInitialPoll) {
+                            lastSeenMessageId = newestMsg.id;
                         }
                     }
 
+                    // Check for new orders
+                    if (data.orders && data.orders.length > 0) {
+                        const newestOrder = data.orders[0];
+                        if (!isInitialPoll && newestOrder.id > lastSeenOrderId) {
+                            lastSeenOrderId = newestOrder.id;
+                            playNotificationSound();
+                            showLiveToast(
+                                '📦 Transaksi Pesanan Baru Masuk!',
+                                `#${newestOrder.order_number} - ${newestOrder.customer_name} (${newestOrder.total_amount})`,
+                                newestOrder.url,
+                                'fa-solid fa-receipt text-blue-400'
+                            );
+
+                            if (bellIcon) {
+                                bellIcon.classList.add('animate-bounce', 'text-emerald-500');
+                                setTimeout(() => bellIcon.classList.remove('animate-bounce', 'text-emerald-500'), 4000);
+                            }
+                        } else if (isInitialPoll) {
+                            lastSeenOrderId = newestOrder.id;
+                        }
+                    }
+
+                    // Also sync the dropdown list items if messages exist
+                    if (data.messages && data.messages.length > 0) {
+                        renderLiveDropdownItems(data.messages, data.orders);
+                    }
+
                     lastBadgeCount = currentBadge;
+                    isInitialPoll = false;
                 })
                 .catch(err => console.error("Notif poll error:", err));
             }
 
-            // Show Toast Alert Popup
+            function renderLiveDropdownItems(messages, orders) {
+                const listContainer = document.getElementById('notifListContainer');
+                if (!listContainer) return;
+
+                let html = '';
+                if (messages && messages.length > 0) {
+                    html += `<div class="px-3 py-1.5 bg-slate-50/80 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pesan &amp; Pengajuan Naskah</div>`;
+                    messages.forEach(msg => {
+                        html += `
+                            <a href="${msg.url}" class="block p-3 hover:bg-slate-50 transition ${msg.is_pending ? 'bg-emerald-50/50' : ''}">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="w-8 h-8 rounded-full ${msg.is_pending ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-600'} flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
+                                        ${(msg.name || 'U').substring(0, 1).toUpperCase()}
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between gap-1">
+                                            <span class="text-xs font-bold text-slate-900 truncate">${msg.name}</span>
+                                            <span class="text-[10px] text-slate-400 shrink-0 font-mono">${msg.time_ago}</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-600 truncate leading-snug mt-0.5 font-medium">${msg.subject}</p>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-[9.5px] px-1.5 py-0.2 rounded bg-slate-100 text-slate-600 font-medium">${msg.category}</span>
+                                            ${msg.is_pending ? `<span class="text-[9.5px] font-bold text-amber-600 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span> Belum Dihubungi</span>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                    });
+                }
+
+                if (orders && orders.length > 0) {
+                    html += `<div class="px-3 py-1.5 bg-slate-50/80 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-t border-slate-100">Transaksi Buku Terbaru</div>`;
+                    orders.forEach(ord => {
+                        html += `
+                            <a href="${ord.url}" class="block p-3 hover:bg-slate-50 transition">
+                                <div class="flex items-start gap-2.5">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                                        <i class="fa-solid fa-receipt text-xs"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between gap-1">
+                                            <span class="text-xs font-bold text-slate-900 truncate">#${ord.order_number}</span>
+                                            <span class="text-[10px] text-slate-400 shrink-0 font-mono">${ord.time_ago}</span>
+                                        </div>
+                                        <p class="text-[11px] text-slate-600 truncate mt-0.5">${ord.customer_name} &bull; <strong class="text-slate-900 font-mono">${ord.total_amount}</strong></p>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                    });
+                }
+
+                if (html) {
+                    listContainer.innerHTML = html;
+                }
+            }
+
+            // Show Toast Alert Popup (Floating Top-Right Card with Sound & Action)
             function showLiveToast(title, desc, linkUrl, iconClass) {
                 const container = document.getElementById('adminLiveToastContainer');
                 if (!container) return;
 
                 const toast = document.createElement('div');
-                toast.className = 'pointer-events-auto p-3.5 bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700 flex items-start gap-3 transform transition-all duration-300 translate-x-full opacity-0 cursor-pointer hover:border-emerald-500';
+                toast.className = 'pointer-events-auto p-4 bg-slate-900 text-white rounded-xl shadow-2xl border-2 border-emerald-500/60 flex items-start gap-3.5 transform transition-all duration-300 translate-x-full opacity-0 cursor-pointer hover:border-emerald-400 hover:scale-[1.02] ring-4 ring-black/20';
                 toast.onclick = () => window.location.href = linkUrl;
 
                 toast.innerHTML = `
-                    <div class="w-8 h-8 rounded-full bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center shrink-0">
-                        <i class="${iconClass} text-xs"></i>
+                    <div class="w-9 h-9 rounded-full bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                        <i class="${iconClass} text-sm"></i>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-xs font-bold text-white flex items-center justify-between">
-                            <span>${title}</span>
-                            <span class="text-[9.5px] text-emerald-400 font-mono">Baru saja</span>
+                            <span class="text-emerald-300 font-heading">${title}</span>
+                            <span class="text-[9.5px] text-slate-400 font-mono">Baru saja</span>
                         </p>
-                        <p class="text-[11px] text-slate-300 truncate mt-0.5">${desc}</p>
-                        <span class="inline-block mt-1 text-[10px] text-emerald-400 font-bold underline">Buka Pesan &rarr;</span>
+                        <p class="text-[11px] text-slate-200 line-clamp-2 mt-1 leading-snug">${desc}</p>
+                        <div class="mt-2 flex items-center gap-2">
+                            <span class="px-2 py-0.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xs text-[10px] font-bold">Buka Pesan &rarr;</span>
+                        </div>
                     </div>
-                    <button type="button" onclick="event.stopPropagation(); this.parentElement.remove();" class="text-slate-400 hover:text-white text-xs">
+                    <button type="button" onclick="event.stopPropagation(); this.parentElement.remove();" class="text-slate-400 hover:text-white text-xs p-1" title="Tutup">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 `;
@@ -643,15 +768,15 @@
                     toast.classList.add('translate-x-0', 'opacity-100');
                 }, 50);
 
-                // Auto remove after 7 seconds
+                // Auto remove after 9 seconds
                 setTimeout(() => {
                     toast.classList.add('translate-x-full', 'opacity-0');
                     setTimeout(() => toast.remove(), 400);
-                }, 7000);
+                }, 9000);
             }
 
-            // Poll every 15 seconds
-            setInterval(checkLiveNotifications, 15000);
+            // Poll every 5 seconds for responsive real-time notifications
+            setInterval(checkLiveNotifications, 5000);
         })();
     </script>
 
