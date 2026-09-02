@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ResellerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,6 +60,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/layanan/{slug}', [\App\Http\Controllers\ServiceController::class, 'show'])->name('layanan.show');
 Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');
+Route::get('/reseller', [ResellerController::class, 'index'])->name('reseller');
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
 Route::post('/kontak/kirim', [ContactController::class, 'store'])->name('kontak.store')->middleware('throttle:6,1');

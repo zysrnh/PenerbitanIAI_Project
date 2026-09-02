@@ -373,6 +373,7 @@
                         </div>
                     </div>
 
+                    <a href="{{ route('reseller') }}" class="{{ request()->routeIs('reseller*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">RESELLER &amp; AGEN</a>
                     <a href="{{ route('katalog') }}" class="{{ request()->routeIs('katalog') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KATALOG BUKU</a>
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
@@ -512,6 +513,9 @@
             </a>
             <a href="{{ url('/#layanan') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
                 <i class="fa-solid fa-list-check text-emerald-700 text-xs mr-2 w-4"></i> Layanan Penerbitan
+            </a>
+            <a href="{{ route('reseller') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('reseller*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fa-solid fa-handshake text-emerald-700 text-xs mr-2 w-4"></i> Reseller &amp; Agen
             </a>
             <a href="{{ route('katalog') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
                 <i class="fa-solid fa-book-open text-emerald-700 text-xs mr-2 w-4"></i> Katalog Buku
@@ -721,6 +725,7 @@
                         <li><a href="{{ url('/') }}" class="hover:text-emerald-400 transition">Beranda</a></li>
                         <li><a href="{{ route('tentang') }}" class="hover:text-emerald-400 transition">Tentang Kami</a></li>
                         <li><a href="{{ url('/#layanan') }}" class="hover:text-emerald-400 transition">Layanan</a></li>
+                        <li><a href="{{ route('reseller') }}" class="hover:text-emerald-400 transition">Reseller &amp; Agen</a></li>
                         <li><a href="{{ url('/#katalog') }}" class="hover:text-emerald-400 transition">Katalog Buku</a></li>
                         <li><a href="{{ url('/kontak') }}" class="hover:text-emerald-400 transition">Kontak</a></li>
                     </ul>
