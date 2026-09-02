@@ -14,15 +14,33 @@ class SettingController extends Controller
             // Topbar & Social Media
             'topbar_is_active' => SiteSetting::get('topbar_is_active', '1'),
             'topbar_tagline' => SiteSetting::get('topbar_tagline', 'Penerbitan & Percetakan Resmi PERSIS PERS Bandung'),
+            
             'social_facebook' => SiteSetting::get('social_facebook', 'https://facebook.com'),
+            'social_facebook_active' => SiteSetting::get('social_facebook_active', '1'),
+            
             'social_twitter' => SiteSetting::get('social_twitter', 'https://twitter.com'),
+            'social_twitter_active' => SiteSetting::get('social_twitter_active', '1'),
+            
             'social_pinterest' => SiteSetting::get('social_pinterest', 'https://pinterest.com'),
+            'social_pinterest_active' => SiteSetting::get('social_pinterest_active', '1'),
+            
             'social_whatsapp' => SiteSetting::get('social_whatsapp', 'https://wa.me/6282116116133'),
+            'social_whatsapp_active' => SiteSetting::get('social_whatsapp_active', '1'),
+            
             'social_telegram' => SiteSetting::get('social_telegram', 'https://t.me'),
+            'social_telegram_active' => SiteSetting::get('social_telegram_active', '1'),
+            
             'social_instagram' => SiteSetting::get('social_instagram', 'https://instagram.com'),
+            'social_instagram_active' => SiteSetting::get('social_instagram_active', '1'),
+            
             'social_tiktok' => SiteSetting::get('social_tiktok', 'https://tiktok.com'),
+            'social_tiktok_active' => SiteSetting::get('social_tiktok_active', '1'),
+            
             'social_youtube' => SiteSetting::get('social_youtube', 'https://youtube.com'),
+            'social_youtube_active' => SiteSetting::get('social_youtube_active', '1'),
+            
             'social_linkedin' => SiteSetting::get('social_linkedin', ''),
+            'social_linkedin_active' => SiteSetting::get('social_linkedin_active', '0'),
 
             // Email Notification Recipient
             'notification_recipient_email' => SiteSetting::get('notification_recipient_email', 'zakiyh782@gmail.com'),
@@ -104,6 +122,12 @@ class SettingController extends Controller
         ]);
 
         $validated['topbar_is_active'] = $request->has('topbar_is_active') ? '1' : '0';
+
+        // Process individual social media active toggles
+        $socialPlatforms = ['facebook', 'twitter', 'pinterest', 'whatsapp', 'telegram', 'instagram', 'tiktok', 'youtube', 'linkedin'];
+        foreach ($socialPlatforms as $platform) {
+            $validated['social_' . $platform . '_active'] = $request->has('social_' . $platform . '_active') ? '1' : '0';
+        }
 
         $mapsInput = $validated['contact_maps'];
         if (str_contains($mapsInput, 'src=')) {

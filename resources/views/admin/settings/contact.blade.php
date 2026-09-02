@@ -122,15 +122,36 @@
                         </div>
 
                         <div class="border-t border-slate-100 pt-4">
-                            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-3">Tautan Akun Media Sosial Resmi</span>
+                            <div class="flex items-center justify-between mb-3">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-800 uppercase tracking-wider block">Tautan Akun Media Sosial Resmi</span>
+                                    <span class="text-[11px] text-slate-400">Centang kotak untuk menampilkan, atau hilangkan centang untuk menyembunyikan icon</span>
+                                </div>
+                            </div>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                 <!-- Facebook -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-[#1877F2] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-facebook-f"></i></span>
-                                        <span>Facebook</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-[#1877F2] text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-facebook-f"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">Facebook</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_facebook_active" 
+                                                id="in_soc_facebook_active" 
+                                                value="1" 
+                                                {{ old('social_facebook_active', $settings['social_facebook_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_facebook" 
@@ -138,16 +159,32 @@
                                         value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}" 
                                         placeholder="https://facebook.com/nama_halaman"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- Twitter / X -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-black text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-x-twitter"></i></span>
-                                        <span>Twitter / X</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-x-twitter"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">Twitter / X</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_twitter_active" 
+                                                id="in_soc_twitter_active" 
+                                                value="1" 
+                                                {{ old('social_twitter_active', $settings['social_twitter_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_twitter" 
@@ -155,16 +192,32 @@
                                         value="{{ old('social_twitter', $settings['social_twitter'] ?? '') }}" 
                                         placeholder="https://x.com/akun_resmi"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- Pinterest -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-[#E60023] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-pinterest-p"></i></span>
-                                        <span>Pinterest</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-[#E60023] text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-pinterest-p"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">Pinterest</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_pinterest_active" 
+                                                id="in_soc_pinterest_active" 
+                                                value="1" 
+                                                {{ old('social_pinterest_active', $settings['social_pinterest_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_pinterest" 
@@ -172,16 +225,32 @@
                                         value="{{ old('social_pinterest', $settings['social_pinterest'] ?? '') }}" 
                                         placeholder="https://pinterest.com/akun"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- WhatsApp -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-[#25D366] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-whatsapp"></i></span>
-                                        <span>WhatsApp Chat / Channel</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-[#25D366] text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-whatsapp"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">WhatsApp Chat</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_whatsapp_active" 
+                                                id="in_soc_whatsapp_active" 
+                                                value="1" 
+                                                {{ old('social_whatsapp_active', $settings['social_whatsapp_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_whatsapp" 
@@ -189,16 +258,32 @@
                                         value="{{ old('social_whatsapp', $settings['social_whatsapp'] ?? '') }}" 
                                         placeholder="https://wa.me/6282116116133"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- Telegram -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-[#229ED9] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-telegram"></i></span>
-                                        <span>Telegram</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-[#229ED9] text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-telegram"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">Telegram</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_telegram_active" 
+                                                id="in_soc_telegram_active" 
+                                                value="1" 
+                                                {{ old('social_telegram_active', $settings['social_telegram_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_telegram" 
@@ -206,16 +291,32 @@
                                         value="{{ old('social_telegram', $settings['social_telegram'] ?? '') }}" 
                                         placeholder="https://t.me/akun_persis"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- Instagram -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-instagram"></i></span>
-                                        <span>Instagram</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-instagram"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">Instagram</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_instagram_active" 
+                                                id="in_soc_instagram_active" 
+                                                value="1" 
+                                                {{ old('social_instagram_active', $settings['social_instagram_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_instagram" 
@@ -223,16 +324,32 @@
                                         value="{{ old('social_instagram', $settings['social_instagram'] ?? '') }}" 
                                         placeholder="https://instagram.com/penerbitpersis"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- TikTok -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-black text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-tiktok"></i></span>
-                                        <span>TikTok</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-tiktok"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">TikTok</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_tiktok_active" 
+                                                id="in_soc_tiktok_active" 
+                                                value="1" 
+                                                {{ old('social_tiktok_active', $settings['social_tiktok_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_tiktok" 
@@ -240,16 +357,32 @@
                                         value="{{ old('social_tiktok', $settings['social_tiktok'] ?? '') }}" 
                                         placeholder="https://tiktok.com/@penerbitpersis"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- YouTube -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-[#FF0000] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-youtube"></i></span>
-                                        <span>YouTube</span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-[#FF0000] text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-youtube"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">YouTube</span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_youtube_active" 
+                                                id="in_soc_youtube_active" 
+                                                value="1" 
+                                                {{ old('social_youtube_active', $settings['social_youtube_active'] ?? '1') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_youtube" 
@@ -257,16 +390,32 @@
                                         value="{{ old('social_youtube', $settings['social_youtube'] ?? '') }}" 
                                         placeholder="https://youtube.com/@penerbitpersis"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
 
                                 <!-- LinkedIn (Opsional) -->
-                                <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1.5">
-                                        <span class="w-5 h-5 rounded-xs bg-[#0A66C2] text-white flex items-center justify-center text-[11px]"><i class="fa-brands fa-linkedin-in"></i></span>
-                                        <span>LinkedIn <span class="text-slate-400 font-normal">(Opsional)</span></span>
-                                    </label>
+                                <div class="bg-slate-50/80 border border-slate-200/90 rounded-sm p-3 space-y-2 hover:border-emerald-300 transition sm:col-span-2">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 min-w-0">
+                                            <span class="w-6 h-6 rounded-xs bg-[#0A66C2] text-white flex items-center justify-center text-xs shrink-0 shadow-2xs">
+                                                <i class="fa-brands fa-linkedin-in"></i>
+                                            </span>
+                                            <span class="text-xs font-bold text-slate-800 truncate">LinkedIn <span class="text-slate-400 font-normal">(Opsional)</span></span>
+                                        </div>
+                                        <label class="inline-flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+                                            <input 
+                                                type="checkbox" 
+                                                name="social_linkedin_active" 
+                                                id="in_soc_linkedin_active" 
+                                                value="1" 
+                                                {{ old('social_linkedin_active', $settings['social_linkedin_active'] ?? '0') == '1' ? 'checked' : '' }}
+                                                onchange="updatePreview()" 
+                                                class="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                                            />
+                                            <span class="text-[11px] font-bold text-slate-600">Tampilkan</span>
+                                        </label>
+                                    </div>
                                     <input 
                                         type="text" 
                                         name="social_linkedin" 
@@ -274,7 +423,7 @@
                                         value="{{ old('social_linkedin', $settings['social_linkedin'] ?? '') }}" 
                                         placeholder="https://linkedin.com/company/penerbitpersis"
                                         oninput="updatePreview()"
-                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 focus:outline-none focus:border-emerald-600 transition font-mono"
+                                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-200 bg-white focus:outline-none focus:border-emerald-600 transition font-mono"
                                     />
                                 </div>
                             </div>
@@ -616,39 +765,39 @@
                         <!-- Real-time Social Buttons Row (Matches Public View Design) -->
                         <div id="prev_social_buttons_row" class="flex items-center gap-1.5 flex-wrap justify-center shrink-0">
                             <!-- Facebook -->
-                            <a id="prev_soc_facebook" href="{{ $settings['social_facebook'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#1877F2] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_facebook']) ? 'hidden' : '' }}" title="Facebook">
+                            <a id="prev_soc_facebook" href="{{ $settings['social_facebook'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#1877F2] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_facebook']) || ($settings['social_facebook_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="Facebook">
                                 <i class="fa-brands fa-facebook-f"></i>
                             </a>
                             <!-- Twitter / X -->
-                            <a id="prev_soc_twitter" href="{{ $settings['social_twitter'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_twitter']) ? 'hidden' : '' }}" title="Twitter / X">
+                            <a id="prev_soc_twitter" href="{{ $settings['social_twitter'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_twitter']) || ($settings['social_twitter_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="Twitter / X">
                                 <i class="fa-brands fa-x-twitter"></i>
                             </a>
                             <!-- Pinterest -->
-                            <a id="prev_soc_pinterest" href="{{ $settings['social_pinterest'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#E60023] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_pinterest']) ? 'hidden' : '' }}" title="Pinterest">
+                            <a id="prev_soc_pinterest" href="{{ $settings['social_pinterest'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#E60023] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_pinterest']) || ($settings['social_pinterest_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="Pinterest">
                                 <i class="fa-brands fa-pinterest-p"></i>
                             </a>
                             <!-- WhatsApp -->
-                            <a id="prev_soc_whatsapp" href="{{ $settings['social_whatsapp'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#25D366] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_whatsapp']) ? 'hidden' : '' }}" title="WhatsApp">
+                            <a id="prev_soc_whatsapp" href="{{ $settings['social_whatsapp'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#25D366] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_whatsapp']) || ($settings['social_whatsapp_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="WhatsApp">
                                 <i class="fa-brands fa-whatsapp"></i>
                             </a>
                             <!-- Telegram -->
-                            <a id="prev_soc_telegram" href="{{ $settings['social_telegram'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#229ED9] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_telegram']) ? 'hidden' : '' }}" title="Telegram">
+                            <a id="prev_soc_telegram" href="{{ $settings['social_telegram'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#229ED9] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_telegram']) || ($settings['social_telegram_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="Telegram">
                                 <i class="fa-brands fa-telegram"></i>
                             </a>
                             <!-- Instagram -->
-                            <a id="prev_soc_instagram" href="{{ $settings['social_instagram'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_instagram']) ? 'hidden' : '' }}" title="Instagram">
+                            <a id="prev_soc_instagram" href="{{ $settings['social_instagram'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_instagram']) || ($settings['social_instagram_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="Instagram">
                                 <i class="fa-brands fa-instagram"></i>
                             </a>
                             <!-- TikTok -->
-                            <a id="prev_soc_tiktok" href="{{ $settings['social_tiktok'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_tiktok']) ? 'hidden' : '' }}" title="TikTok">
+                            <a id="prev_soc_tiktok" href="{{ $settings['social_tiktok'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_tiktok']) || ($settings['social_tiktok_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="TikTok">
                                 <i class="fa-brands fa-tiktok"></i>
                             </a>
                             <!-- YouTube -->
-                            <a id="prev_soc_youtube" href="{{ $settings['social_youtube'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#FF0000] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_youtube']) ? 'hidden' : '' }}" title="YouTube">
+                            <a id="prev_soc_youtube" href="{{ $settings['social_youtube'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#FF0000] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_youtube']) || ($settings['social_youtube_active'] ?? '1') != '1') ? 'hidden' : '' }}" title="YouTube">
                                 <i class="fa-brands fa-youtube"></i>
                             </a>
                             <!-- LinkedIn -->
-                            <a id="prev_soc_linkedin" href="{{ $settings['social_linkedin'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#0A66C2] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ empty($settings['social_linkedin']) ? 'hidden' : '' }}" title="LinkedIn">
+                            <a id="prev_soc_linkedin" href="{{ $settings['social_linkedin'] ?? '#' }}" target="_blank" class="w-6 h-6 rounded-xs bg-[#0A66C2] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-110 transition {{ (empty($settings['social_linkedin']) || ($settings['social_linkedin_active'] ?? '0') != '1') ? 'hidden' : '' }}" title="LinkedIn">
                                 <i class="fa-brands fa-linkedin-in"></i>
                             </a>
                         </div>
@@ -680,50 +829,71 @@
                         </p>
                     </div>
 
-                    <!-- WhatsApp -->
+                    <!-- WhatsApp Konsultasi -->
                     <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
                         <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
-                            <i class="fa-brands fa-whatsapp text-base text-[#25D366]"></i> <span>WhatsApp & Telepon</span>
+                            <i class="fa-brands fa-whatsapp text-sm"></i> <span>WhatsApp Redaksi</span>
                         </div>
-                        <span id="prev_whatsapp" class="text-slate-900 font-bold text-xs block mt-1">{{ $settings['contact_whatsapp'] }}</span>
-                        <span id="prev_phone" class="text-slate-500 text-xs block">{{ $settings['contact_phone'] }}</span>
+                        <p id="prev_whatsapp" class="text-slate-700 text-xs font-semibold mt-1">
+                            {{ $settings['contact_whatsapp'] }}
+                        </p>
                     </div>
 
-                    <!-- Email -->
+                    <!-- Telepon Kantor -->
+                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
+                        <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
+                            <i class="fa-solid fa-phone text-sm"></i> <span>Telepon Kantor</span>
+                        </div>
+                        <p id="prev_phone" class="text-slate-700 text-xs font-semibold mt-1">
+                            {{ $settings['contact_phone'] }}
+                        </p>
+                    </div>
+
+                    <!-- Email Resmi -->
                     <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
                         <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
                             <i class="fa-solid fa-envelope text-sm"></i> <span>Email Resmi</span>
                         </div>
-                        <span id="prev_email" class="text-slate-900 font-bold text-xs block mt-1 truncate">{{ $settings['contact_email'] }}</span>
-                        <span id="prev_email_note" class="text-slate-500 text-xs block mt-0.5">{{ $settings['contact_email_note'] }}</span>
+                        <p id="prev_email" class="text-slate-700 text-xs font-semibold mt-1">
+                            {{ $settings['contact_email'] }}
+                        </p>
+                        <span id="prev_email_note" class="text-[10px] text-slate-400 block mt-0.5">{{ $settings['contact_email_note'] }}</span>
                     </div>
 
-                    <!-- Jam Kerja -->
-                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80">
+                    <!-- Jam Kerja Operasional -->
+                    <div class="p-4 rounded-sm bg-slate-50 border border-slate-200/80 sm:col-span-2">
                         <div class="flex items-center gap-2 text-emerald-700 font-bold text-xs mb-1">
-                            <i class="fa-solid fa-clock text-sm"></i> <span>Jam Layanan</span>
+                            <i class="fa-solid fa-clock text-sm"></i> <span>Jam Operasional</span>
                         </div>
-                        <span id="prev_hours" class="text-slate-900 font-bold text-xs block mt-1">{{ $settings['contact_hours'] }}</span>
-                        <span id="prev_hours_weekend" class="text-slate-500 text-xs block mt-0.5">{{ $settings['contact_hours_weekend'] }}</span>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs mt-1 gap-1 text-slate-600">
+                            <span id="prev_hours">{{ $settings['contact_hours'] }}</span>
+                            <span id="prev_hours_weekend" class="text-slate-400 font-medium">{{ $settings['contact_hours_weekend'] }}</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Mockup 3: WhatsApp Fast Consultation Box -->
-                <div class="bg-[#032c21] text-white p-5 rounded-sm border border-emerald-950 shadow-sm">
-                    <div class="flex items-center gap-3 mb-2.5">
-                        <div class="w-9 h-9 rounded-sm bg-[#25D366] text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
+                <div class="p-5 rounded-sm bg-emerald-50/70 border border-emerald-200 text-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-sm bg-[#25D366] text-white flex items-center justify-center text-lg shrink-0 shadow-xs">
                             <i class="fa-brands fa-whatsapp"></i>
                         </div>
-                        <div>
-                            <h5 id="prev_wa_title" class="font-bold text-sm leading-tight text-white">{{ $settings['contact_wa_box_title'] }}</h5>
-                            <span id="prev_wa_subtitle" class="text-xs text-emerald-400 font-medium block mt-0.5">{{ $settings['contact_wa_box_subtitle'] }}</span>
+                        <div class="min-w-0 flex-1">
+                            <h5 id="prev_wa_title" class="font-extrabold text-sm text-slate-900 leading-tight">
+                                {{ $settings['contact_wa_box_title'] }}
+                            </h5>
+                            <p id="prev_wa_subtitle" class="text-xs text-emerald-800 font-semibold mt-0.5">
+                                {{ $settings['contact_wa_box_subtitle'] }}
+                            </p>
                         </div>
                     </div>
-                    <p id="prev_wa_desc" class="text-xs text-slate-300 leading-relaxed mb-3.5">
+                    <p id="prev_wa_desc" class="text-xs text-slate-600 mt-3 leading-relaxed">
                         {{ $settings['contact_wa_box_desc'] }}
                     </p>
-                    <div class="w-full py-2.5 bg-[#25D366] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-xs">
-                        <i class="fa-brands fa-whatsapp text-base"></i> <span id="prev_wa_btn_text">{{ $settings['contact_wa_btn_text'] }}</span>
+                    <div class="mt-3.5">
+                        <span id="prev_wa_btn_text" class="inline-flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white font-bold text-xs rounded-sm shadow-xs">
+                            <i class="fa-brands fa-whatsapp"></i> {{ $settings['contact_wa_btn_text'] }}
+                        </span>
                     </div>
                 </div>
 
@@ -774,23 +944,26 @@
 
             // Social Buttons Sync
             const socialMap = [
-                { input: 'in_soc_facebook', prev: 'prev_soc_facebook' },
-                { input: 'in_soc_twitter', prev: 'prev_soc_twitter' },
-                { input: 'in_soc_pinterest', prev: 'prev_soc_pinterest' },
-                { input: 'in_soc_whatsapp', prev: 'prev_soc_whatsapp' },
-                { input: 'in_soc_telegram', prev: 'prev_soc_telegram' },
-                { input: 'in_soc_instagram', prev: 'prev_soc_instagram' },
-                { input: 'in_soc_tiktok', prev: 'prev_soc_tiktok' },
-                { input: 'in_soc_youtube', prev: 'prev_soc_youtube' },
-                { input: 'in_soc_linkedin', prev: 'prev_soc_linkedin' },
+                { input: 'in_soc_facebook', check: 'in_soc_facebook_active', prev: 'prev_soc_facebook' },
+                { input: 'in_soc_twitter', check: 'in_soc_twitter_active', prev: 'prev_soc_twitter' },
+                { input: 'in_soc_pinterest', check: 'in_soc_pinterest_active', prev: 'prev_soc_pinterest' },
+                { input: 'in_soc_whatsapp', check: 'in_soc_whatsapp_active', prev: 'prev_soc_whatsapp' },
+                { input: 'in_soc_telegram', check: 'in_soc_telegram_active', prev: 'prev_soc_telegram' },
+                { input: 'in_soc_instagram', check: 'in_soc_instagram_active', prev: 'prev_soc_instagram' },
+                { input: 'in_soc_tiktok', check: 'in_soc_tiktok_active', prev: 'prev_soc_tiktok' },
+                { input: 'in_soc_youtube', check: 'in_soc_youtube_active', prev: 'prev_soc_youtube' },
+                { input: 'in_soc_linkedin', check: 'in_soc_linkedin_active', prev: 'prev_soc_linkedin' },
             ];
 
             socialMap.forEach(item => {
                 const inEl = document.getElementById(item.input);
+                const checkEl = document.getElementById(item.check);
                 const prevEl = document.getElementById(item.prev);
+                const isActive = checkEl ? checkEl.checked : true;
+                
                 if (inEl && prevEl) {
                     const val = inEl.value.trim();
-                    if (val) {
+                    if (val && isActive) {
                         prevEl.classList.remove('hidden');
                         prevEl.href = val;
                     } else {
