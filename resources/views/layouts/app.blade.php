@@ -262,16 +262,23 @@
     @if($topbarActive)
         <!-- Top Social Media & Information Bar (Above Navbar) -->
         <div class="bg-slate-50/95 border-b border-slate-200/80 py-1.5 transition-all text-xs select-none">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center sm:justify-between gap-3 sm:gap-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 items-center gap-2">
                 
-                <!-- Left Tagline (Hidden on mobile for ultra clean look, visible on sm+) -->
-                <div class="hidden sm:flex items-center gap-2 text-slate-600 text-[11px] truncate">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                    <span class="font-medium text-slate-700 truncate">{{ $topbarTagline }}</span>
+                <!-- Left: Quick Contact (Phone & Email) -->
+                <div class="hidden md:flex items-center gap-3 text-slate-600 text-[11px]">
+                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', \App\Models\SiteSetting::get('contact_phone', '(022) 5441951')) }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
+                        <i class="fa-solid fa-phone text-emerald-700 text-[10px]"></i>
+                        <span>{{ \App\Models\SiteSetting::get('contact_phone', '(022) 5441951') }}</span>
+                    </a>
+                    <span class="text-slate-300">•</span>
+                    <a href="mailto:{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
+                        <i class="fa-solid fa-envelope text-emerald-700 text-[10px]"></i>
+                        <span>{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}</span>
+                    </a>
                 </div>
 
-                <!-- Social Media Buttons (Centered & Colorful matching user request) -->
-                <div class="flex items-center gap-1.5 flex-wrap justify-center shrink-0">
+                <!-- Center: Social Media Buttons (Centered directly above navbar) -->
+                <div class="flex items-center justify-center gap-1.5 flex-wrap">
                     @if(!empty($socFacebook))
                         <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#1877F2] hover:bg-[#0d65d9] text-white flex items-center justify-center text-[11px] shadow-2xs hover:scale-115 active:scale-95 transition-all duration-150" title="Facebook Resmi PERSIS PERS">
                             <i class="fa-brands fa-facebook-f"></i>
@@ -325,6 +332,12 @@
                             <i class="fa-brands fa-linkedin-in"></i>
                         </a>
                     @endif
+                </div>
+
+                <!-- Right: Tagline / Status Info -->
+                <div class="hidden md:flex items-center justify-end gap-2 text-slate-600 text-[11px] truncate">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                    <span class="font-medium text-slate-700 truncate">{{ $topbarTagline }}</span>
                 </div>
 
             </div>
