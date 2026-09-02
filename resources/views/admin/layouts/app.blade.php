@@ -505,7 +505,7 @@
     <div id="adminLiveToastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none"></div>
 
     <script>
-        // Notification Dropdown Toggle
+        // Notification Dropdown Toggle & Open Helpers
         window.toggleNotifDropdown = function(e) {
             if (e) {
                 try { e.preventDefault(); e.stopPropagation(); } catch(err) {}
@@ -514,12 +514,26 @@
             if (!notifDropdown) return;
             const isClosed = notifDropdown.classList.contains('hidden') || notifDropdown.style.display === 'none' || (window.getComputedStyle && window.getComputedStyle(notifDropdown).display === 'none');
             if (isClosed) {
-                notifDropdown.style.display = 'block';
-                notifDropdown.classList.remove('hidden');
+                window.openNotifDropdown();
             } else {
-                notifDropdown.style.display = 'none';
-                notifDropdown.classList.add('hidden');
+                window.closeNotifDropdown();
             }
+        };
+
+        window.openNotifDropdown = function() {
+            const notifDropdown = document.getElementById('notifDropdown');
+            if (!notifDropdown) return;
+            notifDropdown.style.display = 'block';
+            notifDropdown.classList.remove('hidden');
+            const listContainer = document.getElementById('notifListContainer');
+            if (listContainer) listContainer.scrollTop = 0;
+        };
+
+        window.closeNotifDropdown = function() {
+            const notifDropdown = document.getElementById('notifDropdown');
+            if (!notifDropdown) return;
+            notifDropdown.style.display = 'none';
+            notifDropdown.classList.add('hidden');
         };
 
         // Close dropdown when clicking outside
@@ -527,8 +541,7 @@
             const notifDropdown = document.getElementById('notifDropdown');
             const notifContainer = document.getElementById('notifDropdownContainer');
             if (notifDropdown && notifContainer && !notifContainer.contains(e.target)) {
-                notifDropdown.style.display = 'none';
-                notifDropdown.classList.add('hidden');
+                window.closeNotifDropdown();
             }
         });
 
@@ -554,7 +567,7 @@
             .catch(err => console.error(err));
         }
 
-        // Live Real-Time Polling, Sound Alert & Floating Toast System
+        // Live Real-Time Polling, Sound Alert, Floating Toast & Auto-Open Dropdown System
         (function() {
             let lastBadgeCount = {{ $totalNotifCount ?? 0 }};
             let lastSeenMessageId = {{ ($latestMessages && $latestMessages->first()) ? $latestMessages->first()->id : 0 }};
@@ -625,6 +638,10 @@
                         if (!isInitialPoll && newestMsg.id > lastSeenMessageId) {
                             lastSeenMessageId = newestMsg.id;
                             playNotificationSound();
+                            
+                            // Automatically pop open the notification dropdown menu
+                            window.openNotifDropdown();
+
                             showLiveToast(
                                 '🔔 Pesan / Naskah Masuk Baru!',
                                 `${newestMsg.name} (${newestMsg.category}): "${newestMsg.subject}"`,
@@ -647,6 +664,10 @@
                         if (!isInitialPoll && newestOrder.id > lastSeenOrderId) {
                             lastSeenOrderId = newestOrder.id;
                             playNotificationSound();
+                            
+                            // Automatically pop open the notification dropdown menu
+                            window.openNotifDropdown();
+
                             showLiveToast(
                                 '📦 Transaksi Pesanan Baru Masuk!',
                                 `#${newestOrder.order_number} - ${newestOrder.customer_name} (${newestOrder.total_amount})`,
@@ -663,7 +684,7 @@
                         }
                     }
 
-                    // Also sync the dropdown list items if messages exist
+                    // Sync the dropdown list items if messages or orders exist
                     if (data.messages && data.messages.length > 0) {
                         renderLiveDropdownItems(data.messages, data.orders);
                     }
