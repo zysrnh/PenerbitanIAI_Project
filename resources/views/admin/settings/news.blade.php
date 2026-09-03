@@ -16,9 +16,12 @@
             <p class="text-sm text-slate-500 mt-1">Ubah teks banner header halaman berita dengan visualisasi real-time.</p>
         </div>
 
-        <div class="flex items-center gap-2.5 shrink-0">
-            <a href="{{ route('berita.index') }}" target="_blank" class="px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-sm text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
-                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400"></i> Buka Halaman Berita
+        <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
+            <a href="{{ route('admin.articles.index') }}" class="px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-sm text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
+                <i class="fa-regular fa-newspaper text-emerald-700 text-xs"></i> Daftar Berita
+            </a>
+            <a href="{{ route('admin.articles.create') }}" class="px-3.5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-xs">
+                <i class="fa-solid fa-plus text-xs"></i> Tulis Berita Baru
             </a>
             <button type="submit" form="newsSettingsForm" title="Simpan Perubahan" class="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-sm transition shadow-xs hover:shadow-md flex items-center justify-center cursor-pointer">
                 <i class="fa-solid fa-floppy-disk text-base mr-1.5"></i>
