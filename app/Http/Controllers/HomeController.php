@@ -104,12 +104,47 @@ class HomeController extends Controller
             'home_services_title'   => SiteSetting::get('home_services_title', 'Solusi Lengkap Untuk Kebutuhan Anda'),
         ];
 
-        // Fetch 4 latest published books for the Showcase Section on the home page
-        $featuredBooks = Book::where('status', 'publish')->latest()->take(4)->get();
-        if ($featuredBooks->isEmpty()) {
-            $featuredBooks = Book::latest()->take(4)->get();
+        // Fetch Dynamic Hero Slides
+        $rawSlides = SiteSetting::get('home_slides_json', null);
+        $slides = $rawSlides ? json_decode($rawSlides, true) : null;
+        if (!is_array($slides) || empty($slides)) {
+            $slides = [
+                [
+                    'type'      => SiteSetting::get('home_slide1_clean_mode', '0') === '1' ? 'clean' : 'standard',
+                    'title'     => SiteSetting::get('home_slide1_title', "Melayani Penerbitan\ndan Percetakan"),
+                    'highlight' => SiteSetting::get('home_slide1_highlight', 'Berkualitas'),
+                    'desc'      => SiteSetting::get('home_slide1_desc', 'Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.'),
+                    'image'     => SiteSetting::get('home_slide1_image', 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop'),
+                    'btn1_text' => SiteSetting::get('home_slide1_btn1_text', 'LIHAT LAYANAN'),
+                    'btn1_url'  => SiteSetting::get('home_slide1_btn1_url', '#layanan'),
+                    'btn2_text' => SiteSetting::get('home_slide1_btn2_text', 'KATALOG BUKU'),
+                    'btn2_url'  => SiteSetting::get('home_slide1_btn2_url', '/katalog'),
+                ],
+                [
+                    'type'      => SiteSetting::get('home_slide2_clean_mode', '0') === '1' ? 'clean' : 'standard',
+                    'title'     => SiteSetting::get('home_slide2_title', "Penerbitan Buku\nBer-ISBN Resmi"),
+                    'highlight' => SiteSetting::get('home_slide2_highlight', '& Terindeks'),
+                    'desc'      => SiteSetting::get('home_slide2_desc', 'Dukung publikasi karya ilmiah, monograf, dan buku referensi Anda dengan pendaftaran resmi ke Perpustakaan Nasional dan sertifikasi Hak Cipta.'),
+                    'image'     => SiteSetting::get('home_slide2_image', 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop'),
+                    'btn1_text' => SiteSetting::get('home_slide2_btn1_text', 'AJUKAN NASKAH'),
+                    'btn1_url'  => SiteSetting::get('home_slide2_btn1_url', '/kontak'),
+                    'btn2_text' => SiteSetting::get('home_slide2_btn2_text', 'PANDUAN PENULIS'),
+                    'btn2_url'  => SiteSetting::get('home_slide2_btn2_url', '#layanan'),
+                ],
+                [
+                    'type'      => SiteSetting::get('home_slide3_clean_mode', '0') === '1' ? 'clean' : 'standard',
+                    'title'     => SiteSetting::get('home_slide3_title', "Percetakan Cepat,\nHarga Bersahabat"),
+                    'highlight' => SiteSetting::get('home_slide3_highlight', '& Presisi'),
+                    'desc'      => SiteSetting::get('home_slide3_desc', 'Mencetak majalah, prosiding, buletin, modul ajar, dan kebutuhan cetak custom institusi dengan teknologi modern dan ketepatan waktu.'),
+                    'image'     => SiteSetting::get('home_slide3_image', 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop'),
+                    'btn1_text' => SiteSetting::get('home_slide3_btn1_text', 'ORDER SEKARANG'),
+                    'btn1_url'  => SiteSetting::get('home_slide3_btn1_url', '/katalog'),
+                    'btn2_text' => SiteSetting::get('home_slide3_btn2_text', 'HUBUNGI KAMI'),
+                    'btn2_url'  => SiteSetting::get('home_slide3_btn2_url', '/kontak'),
+                ],
+            ];
         }
 
-        return view('landingpage', compact('settings', 'services', 'featuredBooks'));
+        return view('landingpage', compact('settings', 'services', 'featuredBooks', 'slides'));
     }
 }

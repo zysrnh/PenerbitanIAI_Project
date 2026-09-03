@@ -9,6 +9,45 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeSettingController extends Controller
 {
+    private function getDefaultSlides()
+    {
+        return [
+            [
+                'type'        => SiteSetting::get('home_slide1_clean_mode', '0') === '1' ? 'clean' : 'standard',
+                'title'       => SiteSetting::get('home_slide1_title', "Melayani Penerbitan\ndan Percetakan"),
+                'highlight'   => SiteSetting::get('home_slide1_highlight', 'Berkualitas'),
+                'desc'        => SiteSetting::get('home_slide1_desc', 'Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.'),
+                'image'       => SiteSetting::get('home_slide1_image', 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop'),
+                'btn1_text'   => SiteSetting::get('home_slide1_btn1_text', 'LIHAT LAYANAN'),
+                'btn1_url'    => SiteSetting::get('home_slide1_btn1_url', '#layanan'),
+                'btn2_text'   => SiteSetting::get('home_slide1_btn2_text', 'KATALOG BUKU'),
+                'btn2_url'    => SiteSetting::get('home_slide1_btn2_url', '/katalog'),
+            ],
+            [
+                'type'        => SiteSetting::get('home_slide2_clean_mode', '0') === '1' ? 'clean' : 'standard',
+                'title'       => SiteSetting::get('home_slide2_title', "Penerbitan Buku\nBer-ISBN Resmi"),
+                'highlight'   => SiteSetting::get('home_slide2_highlight', '& Terindeks'),
+                'desc'        => SiteSetting::get('home_slide2_desc', 'Dukung publikasi karya ilmiah, monograf, dan buku referensi Anda dengan pendaftaran resmi ke Perpustakaan Nasional dan sertifikasi Hak Cipta.'),
+                'image'       => SiteSetting::get('home_slide2_image', 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop'),
+                'btn1_text'   => SiteSetting::get('home_slide2_btn1_text', 'AJUKAN NASKAH'),
+                'btn1_url'    => SiteSetting::get('home_slide2_btn1_url', '/kontak'),
+                'btn2_text'   => SiteSetting::get('home_slide2_btn2_text', 'PANDUAN PENULIS'),
+                'btn2_url'    => SiteSetting::get('home_slide2_btn2_url', '#layanan'),
+            ],
+            [
+                'type'        => SiteSetting::get('home_slide3_clean_mode', '0') === '1' ? 'clean' : 'standard',
+                'title'       => SiteSetting::get('home_slide3_title', "Percetakan Cepat,\nHarga Bersahabat"),
+                'highlight'   => SiteSetting::get('home_slide3_highlight', '& Presisi'),
+                'desc'        => SiteSetting::get('home_slide3_desc', 'Mencetak majalah, prosiding, buletin, modul ajar, dan kebutuhan cetak custom institusi dengan teknologi modern dan ketepatan waktu.'),
+                'image'       => SiteSetting::get('home_slide3_image', 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop'),
+                'btn1_text'   => SiteSetting::get('home_slide3_btn1_text', 'ORDER SEKARANG'),
+                'btn1_url'    => SiteSetting::get('home_slide3_btn1_url', '/katalog'),
+                'btn2_text'   => SiteSetting::get('home_slide3_btn2_text', 'HUBUNGI KAMI'),
+                'btn2_url'    => SiteSetting::get('home_slide3_btn2_url', '/kontak'),
+            ],
+        ];
+    }
+
     private function getDefaultServices()
     {
         return [
@@ -53,6 +92,12 @@ class HomeSettingController extends Controller
 
     public function index()
     {
+        $rawSlides = SiteSetting::get('home_slides_json', null);
+        $slides = $rawSlides ? json_decode($rawSlides, true) : null;
+        if (!is_array($slides) || empty($slides)) {
+            $slides = $this->getDefaultSlides();
+        }
+
         $rawServices = SiteSetting::get('home_services_json', null);
         $services = $rawServices ? json_decode($rawServices, true) : $this->getDefaultServices();
         if (!is_array($services)) {
@@ -60,39 +105,6 @@ class HomeSettingController extends Controller
         }
 
         $settings = [
-            // Slide 1
-            'home_slide1_clean_mode'=> SiteSetting::get('home_slide1_clean_mode', '0'),
-            'home_slide1_title'     => SiteSetting::get('home_slide1_title', "Melayani Penerbitan\ndan Percetakan"),
-            'home_slide1_highlight' => SiteSetting::get('home_slide1_highlight', 'Berkualitas'),
-            'home_slide1_desc'      => SiteSetting::get('home_slide1_desc', 'Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.'),
-            'home_slide1_image'     => SiteSetting::get('home_slide1_image', 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop'),
-            'home_slide1_btn1_text' => SiteSetting::get('home_slide1_btn1_text', 'LIHAT LAYANAN'),
-            'home_slide1_btn1_url'  => SiteSetting::get('home_slide1_btn1_url', '#layanan'),
-            'home_slide1_btn2_text' => SiteSetting::get('home_slide1_btn2_text', 'KATALOG BUKU'),
-            'home_slide1_btn2_url'  => SiteSetting::get('home_slide1_btn2_url', '/katalog'),
-
-            // Slide 2
-            'home_slide2_clean_mode'=> SiteSetting::get('home_slide2_clean_mode', '0'),
-            'home_slide2_title'     => SiteSetting::get('home_slide2_title', "Penerbitan Buku\nBer-ISBN Resmi"),
-            'home_slide2_highlight' => SiteSetting::get('home_slide2_highlight', '& Terindeks'),
-            'home_slide2_desc'      => SiteSetting::get('home_slide2_desc', 'Dukung publikasi karya ilmiah, monograf, dan buku referensi Anda dengan pendaftaran resmi ke Perpustakaan Nasional dan sertifikasi Hak Cipta.'),
-            'home_slide2_image'     => SiteSetting::get('home_slide2_image', 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop'),
-            'home_slide2_btn1_text' => SiteSetting::get('home_slide2_btn1_text', 'AJUKAN NASKAH'),
-            'home_slide2_btn1_url'  => SiteSetting::get('home_slide2_btn1_url', '/kontak'),
-            'home_slide2_btn2_text' => SiteSetting::get('home_slide2_btn2_text', 'PANDUAN PENULIS'),
-            'home_slide2_btn2_url'  => SiteSetting::get('home_slide2_btn2_url', '#layanan'),
-
-            // Slide 3
-            'home_slide3_clean_mode'=> SiteSetting::get('home_slide3_clean_mode', '0'),
-            'home_slide3_title'     => SiteSetting::get('home_slide3_title', "Percetakan Cepat,\nHarga Bersahabat"),
-            'home_slide3_highlight' => SiteSetting::get('home_slide3_highlight', '& Presisi'),
-            'home_slide3_desc'      => SiteSetting::get('home_slide3_desc', 'Mencetak majalah, prosiding, buletin, modul ajar, dan kebutuhan cetak custom institusi dengan teknologi modern dan ketepatan waktu.'),
-            'home_slide3_image'     => SiteSetting::get('home_slide3_image', 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop'),
-            'home_slide3_btn1_text' => SiteSetting::get('home_slide3_btn1_text', 'ORDER SEKARANG'),
-            'home_slide3_btn1_url'  => SiteSetting::get('home_slide3_btn1_url', '/katalog'),
-            'home_slide3_btn2_text' => SiteSetting::get('home_slide3_btn2_text', 'HUBUNGI KAMI'),
-            'home_slide3_btn2_url'  => SiteSetting::get('home_slide3_btn2_url', '/kontak'),
-
             // 4 Keunggulan
             'home_feat1_title'      => SiteSetting::get('home_feat1_title', 'Kualitas Terbaik'),
             'home_feat1_desc'       => SiteSetting::get('home_feat1_desc', 'Hasil cetak tajam, warna akurat'),
@@ -117,48 +129,13 @@ class HomeSettingController extends Controller
             'home_services_title'   => SiteSetting::get('home_services_title', 'Solusi Lengkap Untuk Kebutuhan Anda'),
         ];
 
-        return view('admin.settings.home', compact('settings', 'services'));
+        return view('admin.settings.home', compact('settings', 'services', 'slides'));
     }
 
     public function update(Request $request)
     {
         $validated = $request->validate([
-            // Slide 1
-            'home_slide1_clean_mode' => ['nullable', 'string'],
-            'home_slide1_title'      => ['nullable', 'string'],
-            'home_slide1_highlight'  => ['nullable', 'string', 'max:100'],
-            'home_slide1_desc'       => ['nullable', 'string'],
-            'home_slide1_image'      => ['nullable', 'string'],
-            'home_slide1_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
-            'home_slide1_btn1_text'  => ['nullable', 'string', 'max:100'],
-            'home_slide1_btn1_url'   => ['nullable', 'string', 'max:255'],
-            'home_slide1_btn2_text'  => ['nullable', 'string', 'max:100'],
-            'home_slide1_btn2_url'   => ['nullable', 'string', 'max:255'],
-
-            // Slide 2
-            'home_slide2_clean_mode' => ['nullable', 'string'],
-            'home_slide2_title'      => ['nullable', 'string'],
-            'home_slide2_highlight'  => ['nullable', 'string', 'max:100'],
-            'home_slide2_desc'       => ['nullable', 'string'],
-            'home_slide2_image'      => ['nullable', 'string'],
-            'home_slide2_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
-            'home_slide2_btn1_text'  => ['nullable', 'string', 'max:100'],
-            'home_slide2_btn1_url'   => ['nullable', 'string', 'max:255'],
-            'home_slide2_btn2_text'  => ['nullable', 'string', 'max:100'],
-            'home_slide2_btn2_url'   => ['nullable', 'string', 'max:255'],
-
-            // Slide 3
-            'home_slide3_clean_mode' => ['nullable', 'string'],
-            'home_slide3_title'      => ['nullable', 'string'],
-            'home_slide3_highlight'  => ['nullable', 'string', 'max:100'],
-            'home_slide3_desc'       => ['nullable', 'string'],
-            'home_slide3_image'      => ['nullable', 'string'],
-            'home_slide3_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
-            'home_slide3_btn1_text'  => ['nullable', 'string', 'max:100'],
-            'home_slide3_btn1_url'   => ['nullable', 'string', 'max:255'],
-            'home_slide3_btn2_text'  => ['nullable', 'string', 'max:100'],
-            'home_slide3_btn2_url'   => ['nullable', 'string', 'max:255'],
-
+            'slides'                 => ['nullable', 'array'],
             // 4 Keunggulan
             'home_feat1_title'       => ['required', 'string', 'max:150'],
             'home_feat1_desc'        => ['required', 'string', 'max:255'],
@@ -185,28 +162,44 @@ class HomeSettingController extends Controller
             'services'               => ['nullable', 'array'],
         ]);
 
-        // Handle File Uploads for Slide 1, 2, 3 and About
-        $imageSlots = [
-            'home_slide1_image' => 'home_slide1_image_file',
-            'home_slide2_image' => 'home_slide2_image_file',
-            'home_slide3_image' => 'home_slide3_image_file',
-            'home_about_image'  => 'home_about_image_file',
-        ];
-
-        foreach ($imageSlots as $settingKey => $fileInputName) {
-            if ($request->hasFile($fileInputName)) {
-                $path = $request->file($fileInputName)->store('banners', 'public');
-                $validated[$settingKey] = '/storage/' . $path;
-            } elseif (!empty($request->input($settingKey))) {
-                $validated[$settingKey] = $request->input($settingKey);
-            }
-            unset($validated[$fileInputName]);
+        // Handle File Upload for About image
+        if ($request->hasFile('home_about_image_file')) {
+            $path = $request->file('home_about_image_file')->store('banners', 'public');
+            $validated['home_about_image'] = '/storage/' . $path;
+        } elseif (!empty($request->input('home_about_image'))) {
+            $validated['home_about_image'] = $request->input('home_about_image');
         }
+        unset($validated['home_about_image_file']);
 
-        // Handle Clean Mode Checkbox Toggles (Slide 1, 2, 3)
-        $validated['home_slide1_clean_mode'] = $request->has('home_slide1_clean_mode') ? '1' : '0';
-        $validated['home_slide2_clean_mode'] = $request->has('home_slide2_clean_mode') ? '1' : '0';
-        $validated['home_slide3_clean_mode'] = $request->has('home_slide3_clean_mode') ? '1' : '0';
+        // Handle Dynamic Slides
+        if ($request->has('slides')) {
+            $slidesInput = $request->input('slides', []);
+            $slidesData = [];
+
+            foreach ($slidesInput as $i => $slide) {
+                $imagePath = $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop';
+
+                if ($request->hasFile("slides.{$i}.image_file")) {
+                    $path = $request->file("slides.{$i}.image_file")->store('banners', 'public');
+                    $imagePath = '/storage/' . $path;
+                }
+
+                $slidesData[] = [
+                    'type'      => ($slide['type'] ?? 'standard') === 'clean' ? 'clean' : 'standard',
+                    'title'     => $slide['title'] ?? '',
+                    'highlight' => $slide['highlight'] ?? '',
+                    'desc'      => $slide['desc'] ?? '',
+                    'image'     => $imagePath,
+                    'btn1_text' => $slide['btn1_text'] ?? '',
+                    'btn1_url'  => $slide['btn1_url'] ?? '',
+                    'btn2_text' => $slide['btn2_text'] ?? '',
+                    'btn2_url'  => $slide['btn2_url'] ?? '',
+                ];
+            }
+
+            SiteSetting::set('home_slides_json', json_encode(array_values($slidesData)));
+            unset($validated['slides']);
+        }
 
         // Save Services JSON
         if ($request->has('services')) {
@@ -219,6 +212,6 @@ class HomeSettingController extends Controller
             SiteSetting::set($key, $val ?? '');
         }
 
-        return back()->with('success', 'Semua konten, banner, dan daftar layanan beranda berhasil diperbarui!');
+        return back()->with('success', 'Semua slide banner, konten, dan daftar layanan beranda berhasil diperbarui!');
     }
 }
