@@ -58,7 +58,7 @@ class ArticleController extends Controller
     {
         $validated = $request->validate([
             'title'          => ['required', 'string', 'max:255'],
-            'slug'           => ['nullable', 'string', 'max:255', 'unique:articles,slug'],
+            'slug'           => ['nullable', 'string', 'max:255'],
             'category_name'  => ['nullable', 'string', 'max:100'],
             'category_id'    => ['nullable'],
             'thumbnail_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
@@ -71,9 +71,18 @@ class ArticleController extends Controller
             'published_at'   => ['nullable', 'date'],
         ]);
 
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
+        // Auto-generate and ensure unique slug
+        $baseSlug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        if (empty($baseSlug)) {
+            $baseSlug = 'berita-' . time();
         }
+        $slug = $baseSlug;
+        $counter = 1;
+        while (Article::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $validated['slug'] = $slug;
 
         // Auto-find or create category from text input
         $categoryName = trim($request->input('category_name', ''));
@@ -125,7 +134,7 @@ class ArticleController extends Controller
 
         $validated = $request->validate([
             'title'          => ['required', 'string', 'max:255'],
-            'slug'           => ['nullable', 'string', 'max:255', 'unique:articles,slug,' . $article->id],
+            'slug'           => ['nullable', 'string', 'max:255'],
             'category_name'  => ['nullable', 'string', 'max:100'],
             'category_id'    => ['nullable'],
             'thumbnail_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
@@ -138,9 +147,18 @@ class ArticleController extends Controller
             'published_at'   => ['nullable', 'date'],
         ]);
 
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
+        // Auto-generate and ensure unique slug
+        $baseSlug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['title']);
+        if (empty($baseSlug)) {
+            $baseSlug = 'berita-' . $article->id;
         }
+        $slug = $baseSlug;
+        $counter = 1;
+        while (Article::where('slug', $slug)->where('id', '!=', $article->id)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $validated['slug'] = $slug;
 
         // Auto-find or create category from text input
         $categoryName = trim($request->input('category_name', ''));

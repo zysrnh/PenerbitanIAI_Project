@@ -96,11 +96,11 @@
 
                 <!-- Contenteditable Visual Editor -->
                 <div id="editorContent" contenteditable="true" class="w-full min-h-[360px] p-4 text-slate-800 rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 bg-white font-sans text-sm leading-relaxed prose max-w-none shadow-inner" oninput="syncEditorToHiddenInput()">
-                    {!! old('content', '<p>Tuliskan isi berita atau artikel lengkap di sini...</p>') !!}
+                    {!! old('content', '') !!}
                 </div>
 
                 <!-- Hidden Input for Form Submission -->
-                <textarea name="content" id="hidden_content_input" class="hidden">{{ old('content', '<p>Tuliskan isi berita atau artikel lengkap di sini...</p>') }}</textarea>
+                <textarea name="content" id="hidden_content_input" class="hidden">{{ old('content', '') }}</textarea>
 
                 <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
                     <span id="wordCounter">0 kata | Estimasi baca: 1 menit</span>
