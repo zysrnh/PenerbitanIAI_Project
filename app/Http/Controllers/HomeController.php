@@ -49,6 +49,16 @@ class HomeController extends Controller
             $services = $this->getDefaultServices();
         }
 
+        // Fetch Featured Books for Homepage Showcase
+        try {
+            $featuredBooks = Book::with('category')->where('is_featured', true)->latest()->take(8)->get();
+            if ($featuredBooks->isEmpty()) {
+                $featuredBooks = Book::with('category')->latest()->take(8)->get();
+            }
+        } catch (\Throwable $e) {
+            $featuredBooks = collect([]);
+        }
+
         $settings = [
             // Slide 1
             'home_slide1_title'     => SiteSetting::get('home_slide1_title', "Melayani Penerbitan\ndan Percetakan"),
