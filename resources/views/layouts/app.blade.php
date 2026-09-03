@@ -275,6 +275,16 @@
     
     $socLinkedin = \App\Models\SiteSetting::get('social_linkedin', '');
     $socLinkedinActive = \App\Models\SiteSetting::get('social_linkedin_active', '0') === '1';
+
+    $hasAnyActiveSocial = (!empty($socFacebook) && $socFacebookActive) ||
+                          (!empty($socTwitter) && $socTwitterActive) ||
+                          (!empty($socPinterest) && $socPinterestActive) ||
+                          (!empty($socWhatsapp) && $socWhatsappActive) ||
+                          (!empty($socTelegram) && $socTelegramActive) ||
+                          (!empty($socInstagram) && $socInstagramActive) ||
+                          (!empty($socTiktok) && $socTiktokActive) ||
+                          (!empty($socYoutube) && $socYoutubeActive) ||
+                          (!empty($socLinkedin) && $socLinkedinActive);
 @endphp
 
     @if($topbarActive)
@@ -557,57 +567,59 @@
                 <i class="fa-solid fa-headset text-emerald-700 text-xs mr-2 w-4"></i> Kontak Redaksi
             </a>
 
+            @if($hasAnyActiveSocial)
             <!-- Social Media in Mobile Menu Drawer -->
             <div class="py-2.5 px-3 bg-slate-50 rounded-sm border border-slate-200/80 my-2">
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block mb-2 text-center">Media Sosial Resmi</span>
                 <div class="flex items-center gap-1.5 flex-wrap justify-center">
-                    @if(!empty($socFacebook))
+                    @if(!empty($socFacebook) && $socFacebookActive)
                         <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#1877F2] text-white flex items-center justify-center text-[11px] shadow-2xs" title="Facebook">
                             <i class="fa-brands fa-facebook-f"></i>
                         </a>
                     @endif
-                    @if(!empty($socTwitter))
+                    @if(!empty($socTwitter) && $socTwitterActive)
                         <a href="{{ $socTwitter }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs" title="Twitter / X">
                             <i class="fa-brands fa-x-twitter"></i>
                         </a>
                     @endif
-                    @if(!empty($socPinterest))
+                    @if(!empty($socPinterest) && $socPinterestActive)
                         <a href="{{ $socPinterest }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#E60023] text-white flex items-center justify-center text-[11px] shadow-2xs" title="Pinterest">
                             <i class="fa-brands fa-pinterest-p"></i>
                         </a>
                     @endif
-                    @if(!empty($socWhatsapp))
+                    @if(!empty($socWhatsapp) && $socWhatsappActive)
                         <a href="{{ str_starts_with($socWhatsapp, 'http') ? $socWhatsapp : 'https://wa.me/' . preg_replace('/[^0-9]/', '', $socWhatsapp) }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#25D366] text-white flex items-center justify-center text-[11px] shadow-2xs" title="WhatsApp">
                             <i class="fa-brands fa-whatsapp"></i>
                         </a>
                     @endif
-                    @if(!empty($socTelegram))
+                    @if(!empty($socTelegram) && $socTelegramActive)
                         <a href="{{ $socTelegram }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#229ED9] text-white flex items-center justify-center text-[11px] shadow-2xs" title="Telegram">
                             <i class="fa-brands fa-telegram"></i>
                         </a>
                     @endif
-                    @if(!empty($socInstagram))
+                    @if(!empty($socInstagram) && $socInstagramActive)
                         <a href="{{ $socInstagram }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-[11px] shadow-2xs" title="Instagram">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
                     @endif
-                    @if(!empty($socTiktok))
+                    @if(!empty($socTiktok) && $socTiktokActive)
                         <a href="{{ $socTiktok }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-black text-white flex items-center justify-center text-[11px] shadow-2xs" title="TikTok">
                             <i class="fa-brands fa-tiktok"></i>
                         </a>
                     @endif
-                    @if(!empty($socYoutube))
+                    @if(!empty($socYoutube) && $socYoutubeActive)
                         <a href="{{ $socYoutube }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#FF0000] text-white flex items-center justify-center text-[11px] shadow-2xs" title="YouTube">
                             <i class="fa-brands fa-youtube"></i>
                         </a>
                     @endif
-                    @if(!empty($socLinkedin))
+                    @if(!empty($socLinkedin) && $socLinkedinActive)
                         <a href="{{ $socLinkedin }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 rounded-xs bg-[#0A66C2] text-white flex items-center justify-center text-[11px] shadow-2xs" title="LinkedIn">
                             <i class="fa-brands fa-linkedin-in"></i>
                         </a>
                     @endif
                 </div>
             </div>
+            @endif
 
             <div class="pt-3 border-t border-slate-100 space-y-2">
                 @auth
@@ -713,57 +725,59 @@
                         Penerbitan & Percetakan Resmi PENERBIT PERSIS. Melayani penerbitan buku ber-ISBN resmi, modul ajar perkuliahan, monograf riset, jurnal ilmiah, dan percetakan standar UNESCO berkualitas tinggi.
                     </p>
 
+                    @if($hasAnyActiveSocial)
                     <!-- Social Media Links in Footer -->
                     <div class="pt-1">
                         <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block mb-2">Ikuti Media Sosial Kami:</span>
                         <div class="flex items-center gap-1.5 flex-wrap">
-                            @if(!empty($socFacebook))
+                            @if(!empty($socFacebook) && $socFacebookActive)
                                 <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-[#1877F2] hover:bg-[#0d65d9] text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition" title="Facebook">
                                     <i class="fa-brands fa-facebook-f"></i>
                                 </a>
                             @endif
-                            @if(!empty($socTwitter))
+                            @if(!empty($socTwitter) && $socTwitterActive)
                                 <a href="{{ $socTwitter }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition border border-white/20" title="Twitter / X">
                                     <i class="fa-brands fa-x-twitter"></i>
                                 </a>
                             @endif
-                            @if(!empty($socPinterest))
+                            @if(!empty($socPinterest) && $socPinterestActive)
                                 <a href="{{ $socPinterest }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-[#E60023] hover:bg-[#c4001e] text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition" title="Pinterest">
                                     <i class="fa-brands fa-pinterest-p"></i>
                                 </a>
                             @endif
-                            @if(!empty($socWhatsapp))
+                            @if(!empty($socWhatsapp) && $socWhatsappActive)
                                 <a href="{{ str_starts_with($socWhatsapp, 'http') ? $socWhatsapp : 'https://wa.me/' . preg_replace('/[^0-9]/', '', $socWhatsapp) }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-[#25D366] hover:bg-[#1ebd56] text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition" title="WhatsApp">
                                     <i class="fa-brands fa-whatsapp"></i>
                                 </a>
                             @endif
-                            @if(!empty($socTelegram))
+                            @if(!empty($socTelegram) && $socTelegramActive)
                                 <a href="{{ $socTelegram }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-[#229ED9] hover:bg-[#1888be] text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition" title="Telegram">
                                     <i class="fa-brands fa-telegram"></i>
                                 </a>
                             @endif
-                            @if(!empty($socInstagram))
+                            @if(!empty($socInstagram) && $socInstagramActive)
                                 <a href="{{ $socInstagram }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition" title="Instagram">
                                     <i class="fa-brands fa-instagram"></i>
                                 </a>
                             @endif
-                            @if(!empty($socTiktok))
+                            @if(!empty($socTiktok) && $socTiktokActive)
                                 <a href="{{ $socTiktok }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition border border-white/20" title="TikTok">
                                     <i class="fa-brands fa-tiktok"></i>
                                 </a>
                             @endif
-                            @if(!empty($socYoutube))
+                            @if(!empty($socYoutube) && $socYoutubeActive)
                                 <a href="{{ $socYoutube }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-[#FF0000] hover:bg-[#d90000] text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition" title="YouTube">
                                     <i class="fa-brands fa-youtube"></i>
                                 </a>
                             @endif
-                            @if(!empty($socLinkedin))
+                            @if(!empty($socLinkedin) && $socLinkedinActive)
                                 <a href="{{ $socLinkedin }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-xs bg-[#0A66C2] hover:bg-[#084e96] text-white flex items-center justify-center text-xs shadow-xs hover:scale-110 transition" title="LinkedIn">
                                     <i class="fa-brands fa-linkedin-in"></i>
                                 </a>
                             @endif
                         </div>
                     </div>
+                    @endif
                 </div>
 
                 <!-- Navigation -->
