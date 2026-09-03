@@ -118,6 +118,14 @@
                             <span>Dashboard</span>
                         </a>
 
+                        <a href="javascript:void(0)" onclick="openMemberCartDrawer()" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300 cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-cart-shopping w-4 text-center text-emerald-400"></i>
+                                <span>Keranjang Saya</span>
+                            </div>
+                            <span id="sidebarCartBadge" class="hidden px-2 py-0.5 rounded-full text-[10px] font-bold bg-lime-400 text-[#032c21] font-mono">0</span>
+                        </a>
+
                         <a href="{{ route('member.orders') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('member.orders*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <div class="flex items-center gap-3">
                                 <i class="fa-solid fa-receipt w-4 text-center"></i>
@@ -217,6 +225,20 @@
                     <i class="fa-solid fa-book-open text-[10px]"></i>
                     <span>Katalog</span>
                 </a>
+
+                <!-- Member Cart Header Button -->
+                <button 
+                    type="button" 
+                    onclick="openMemberCartDrawer()" 
+                    id="memberHeaderCartBtn"
+                    class="relative p-1.5 sm:p-2 text-slate-600 hover:text-emerald-800 hover:bg-emerald-50 active:bg-emerald-100 rounded-sm border border-slate-200 transition flex items-center justify-center cursor-pointer select-none"
+                    title="Keranjang Belanja"
+                >
+                    <i class="fa-solid fa-cart-shopping text-sm text-emerald-800"></i>
+                    <span id="headerCartBadge" class="hidden absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-[#006830] text-white text-[8.5px] font-black flex items-center justify-center font-mono shadow-xs">
+                        0
+                    </span>
+                </button>
 
                 <!-- Member Notification Bell Dropdown -->
                 <div class="relative" id="memberNotifContainer">
@@ -975,8 +997,297 @@
                 contactAdminViaWa('6282116116133', 'Admin Redaksi');
             }
         }
+
+        // ==================== MEMBER CART ENGINE ====================
+        let memberCartData = { items: [], count: 0, total: 0, formatted_total: 'Rp 0' };
+
+        function openMemberCartDrawer() {
+            const drawer = document.getElementById('memberCartDrawer');
+            const backdrop = document.getElementById('memberCartDrawerBackdrop');
+            const panel = document.getElementById('memberCartDrawerPanel');
+            if (!drawer) return;
+
+            drawer.style.display = 'flex';
+            drawer.classList.remove('hidden');
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                backdrop.classList.add('opacity-100');
+                panel.classList.remove('translate-y-full', 'sm:translate-x-full');
+                panel.classList.add('translate-y-0', 'sm:translate-x-0');
+            }, 10);
+            fetchMemberCartData();
+        }
+
+        function closeMemberCartDrawer() {
+            const drawer = document.getElementById('memberCartDrawer');
+            const backdrop = document.getElementById('memberCartDrawerBackdrop');
+            const panel = document.getElementById('memberCartDrawerPanel');
+            if (!drawer) return;
+
+            backdrop.classList.remove('opacity-100');
+            backdrop.classList.add('opacity-0');
+            panel.classList.remove('translate-y-0', 'sm:translate-x-0');
+            panel.classList.add('translate-y-full', 'sm:translate-x-full');
+            setTimeout(() => {
+                drawer.style.display = 'none';
+                drawer.classList.add('hidden');
+            }, 300);
+        }
+
+        function fetchMemberCartData() {
+            fetch('{{ route("member.cart.index") }}')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success) {
+                        memberCartData = data;
+                        renderMemberCartUI(data);
+                        updateMemberCartBadges(data.count);
+                    }
+                })
+                .catch(err => console.error('Error fetching cart:', err));
+        }
+
+        function updateMemberCartBadges(count) {
+            const sidebarBadge = document.getElementById('sidebarCartBadge');
+            const headerBadge = document.getElementById('headerCartBadge');
+            if (sidebarBadge) {
+                if (count > 0) {
+                    sidebarBadge.textContent = count;
+                    sidebarBadge.classList.remove('hidden');
+                } else {
+                    sidebarBadge.classList.add('hidden');
+                }
+            }
+            if (headerBadge) {
+                if (count > 0) {
+                    headerBadge.textContent = count;
+                    headerBadge.classList.remove('hidden');
+                } else {
+                    headerBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        function renderMemberCartUI(data) {
+            const list = document.getElementById('memberCartDrawerItemsList');
+            const footer = document.getElementById('memberCartDrawerFooter');
+            const countBadge = document.getElementById('memberCartDrawerCountBadge');
+            const totalText = document.getElementById('memberCartDrawerTotalItemsText');
+            const subtotalText = document.getElementById('memberCartDrawerSubtotal');
+
+            if (!list) return;
+            if (countBadge) countBadge.textContent = `${data.count || 0} item`;
+            if (totalText) totalText.textContent = `${data.count || 0} Eksemplar`;
+            if (subtotalText) subtotalText.textContent = data.formatted_total || 'Rp 0';
+
+            if (!data.items || data.items.length === 0) {
+                list.innerHTML = `
+                    <div class="py-12 px-4 text-center space-y-3">
+                        <div class="w-14 h-14 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-2xs border border-emerald-100">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-800">Keranjang Belanja Masih Kosong</h4>
+                            <p class="text-xs text-slate-500 mt-1">Pilih buku terbitan terbaik PERSIS PERS di katalog.</p>
+                        </div>
+                        <div class="pt-2">
+                            <a href="{{ route('katalog') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition shadow-xs">
+                                <i class="fa-solid fa-book-open text-xs text-emerald-300"></i>
+                                <span>Lihat Katalog Buku</span>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                if (footer) footer.classList.add('hidden');
+                return;
+            }
+
+            if (footer) footer.classList.remove('hidden');
+
+            let html = '';
+            data.items.forEach(item => {
+                const cover = item.cover_url || (item.book && item.book.cover_image ? `/storage/${item.book.cover_image}` : 'https://placehold.co/100x140?text=No+Cover');
+                const title = item.title || (item.book ? item.book.title : 'Buku Terbitan');
+                const author = item.author || (item.book && item.book.author ? item.book.author : 'Penulis PERSIS');
+
+                html += `
+                <div class="p-3 bg-white border border-slate-200 rounded-sm hover:border-emerald-500 transition shadow-2xs flex gap-3 group relative select-none">
+                    <img src="${cover}" alt="${title}" class="w-12 h-16 object-cover rounded-xs shadow-xs border border-slate-200 shrink-0 bg-slate-100" />
+                    <div class="flex-grow min-w-0 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <h4 class="font-bold text-xs text-slate-800 line-clamp-1 group-hover:text-emerald-800 transition" title="${title}">${title}</h4>
+                                <button type="button" onclick="removeMemberCartItem(${item.id})" class="text-slate-400 hover:text-red-500 text-xs p-1 -mr-1 transition cursor-pointer" title="Hapus">
+                                    <i class="fa-solid fa-trash-can pointer-events-none"></i>
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-slate-500 truncate">${author}</p>
+                            <p class="text-xs font-black text-emerald-700 mt-1 font-mono">${item.formatted_price}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-2">
+                            <div class="flex items-center border border-slate-200 rounded-xs bg-slate-50">
+                                <button type="button" onclick="updateMemberCartItemQty(${item.id}, -1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 text-xs transition cursor-pointer">-</button>
+                                <span class="w-7 text-center font-bold text-xs font-mono text-slate-800">${item.quantity}</span>
+                                <button type="button" onclick="updateMemberCartItemQty(${item.id}, 1)" class="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-slate-200 text-xs transition cursor-pointer">+</button>
+                            </div>
+                            <span class="text-xs font-extrabold text-slate-900 font-mono">${item.formatted_subtotal}</span>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function updateMemberCartItemQty(cartItemId, change) {
+            const item = memberCartData.items.find(i => i.id === cartItemId);
+            if (!item) return;
+            const newQty = item.quantity + change;
+            if (newQty <= 0) {
+                removeMemberCartItem(cartItemId);
+                return;
+            }
+            fetch('/member/cart/update/' + cartItemId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ quantity: newQty })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.success) {
+                    memberCartData = data;
+                    renderMemberCartUI(data);
+                    updateMemberCartBadges(data.count);
+                }
+            })
+            .catch(err => fetchMemberCartData());
+        }
+
+        function removeMemberCartItem(cartItemId) {
+            fetch('/member/cart/remove/' + cartItemId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-HTTP-Method-Override': 'DELETE'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.success) {
+                    memberCartData = data;
+                    renderMemberCartUI(data);
+                    updateMemberCartBadges(data.count);
+                } else {
+                    fetchMemberCartData();
+                }
+            })
+            .catch(err => fetchMemberCartData());
+        }
+
+        function clearMemberCart() {
+            if (!confirm('Apakah Anda yakin ingin mengosongkan keranjang belanja?')) return;
+            fetch('{{ route("member.cart.clear") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-HTTP-Method-Override': 'DELETE'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.success) {
+                    memberCartData = data;
+                    renderMemberCartUI(data);
+                    updateMemberCartBadges(0);
+                } else {
+                    fetchMemberCartData();
+                }
+            })
+            .catch(err => fetchMemberCartData());
+        }
+
+        function checkoutMemberCartViaWhatsApp() {
+            if (!memberCartData || !memberCartData.items || memberCartData.items.length === 0) {
+                alert('Keranjang belanja masih kosong.');
+                return;
+            }
+            let msg = "Halo Admin PERSIS PERS, saya member *{{ Auth::user()->name }}* ingin memesan buku di keranjang:\n\n";
+            memberCartData.items.forEach((it, idx) => {
+                const title = it.title || (it.book ? it.book.title : 'Buku');
+                msg += `${idx + 1}. *${title}* (${it.quantity} eks) - ${it.formatted_subtotal}\n`;
+            });
+            msg += `\n*Total: ${memberCartData.formatted_total}*\n\nMohon konfirmasi pesanan saya. Terima kasih!`;
+            const waNum = '6282116116133';
+            window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchMemberCartData();
+        });
     </script>
 
+    <!-- ==================== MEMBER CART SLIDE DRAWER ==================== -->
+    <div id="memberCartDrawer" class="fixed inset-0 z-[9999] hidden items-end sm:items-stretch sm:justify-end" style="display: none;">
+        <div id="memberCartDrawerBackdrop" onclick="closeMemberCartDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300 opacity-0 cursor-pointer"></div>
+        <div id="memberCartDrawerPanel" class="relative z-10 w-full sm:max-w-md bg-white shadow-2xl rounded-t-2xl sm:rounded-none flex flex-col max-h-[85vh] sm:max-h-full sm:h-full transform translate-y-full sm:translate-y-0 sm:translate-x-full transition-transform duration-300 ease-out border-t sm:border-t-0 sm:border-l border-slate-200">
+            <!-- Header -->
+            <div class="p-4 sm:p-5 bg-brand-950 text-white flex items-center justify-between border-b border-brand-900 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-sm bg-white/10 flex items-center justify-center text-lime-400">
+                        <i class="fa-solid fa-basket-shopping text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm leading-none font-heading">Keranjang Belanja</h3>
+                        <span id="memberCartDrawerCountBadge" class="text-xs font-semibold text-emerald-300 font-mono mt-0.5 block">0 item</span>
+                    </div>
+                </div>
+                <button type="button" onclick="closeMemberCartDrawer()" class="w-7 h-7 rounded-sm text-slate-300 hover:text-white hover:bg-white/10 flex items-center justify-center transition cursor-pointer" title="Tutup Keranjang">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <!-- Items list -->
+            <div id="memberCartDrawerItemsList" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3"></div>
+            <!-- Footer -->
+            <div id="memberCartDrawerFooter" class="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 space-y-3 shrink-0">
+                <div class="space-y-1 text-xs">
+                    <div class="flex items-center justify-between text-slate-500">
+                        <span>Total Jumlah:</span>
+                        <span id="memberCartDrawerTotalItemsText" class="font-bold text-slate-800">0 Eksemplar</span>
+                    </div>
+                    <div class="flex items-center justify-between text-slate-700">
+                        <span class="font-bold">Total Pembayaran:</span>
+                        <span id="memberCartDrawerSubtotal" class="font-mono font-black text-emerald-800 text-base">Rp 0</span>
+                    </div>
+                </div>
+                <div class="space-y-2 select-none">
+                    <a href="{{ route('katalog') }}" class="w-full py-2.5 px-4 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs sm:text-sm font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-book-open text-xs text-lime-300"></i>
+                        <span>Buka Katalog &amp; Checkout</span>
+                    </a>
+                    <button type="button" onclick="checkoutMemberCartViaWhatsApp()" class="w-full py-2 px-4 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs">
+                        <i class="fa-brands fa-whatsapp text-sm text-emerald-600"></i>
+                        <span>Pesan via WhatsApp</span>
+                    </button>
+                    <div class="flex items-center justify-between pt-1">
+                        <button type="button" onclick="clearMemberCart()" class="text-[11px] text-red-600 hover:text-red-800 font-medium flex items-center gap-1 cursor-pointer">
+                            <i class="fa-solid fa-trash-can text-[9px]"></i>
+                            <span>Kosongkan</span>
+                        </button>
+                        <button type="button" onclick="closeMemberCartDrawer()" class="text-[11px] text-slate-500 hover:text-emerald-800 font-medium cursor-pointer">
+                            Tutup &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
