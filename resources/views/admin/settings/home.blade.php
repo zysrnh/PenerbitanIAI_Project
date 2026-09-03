@@ -130,6 +130,22 @@
                                             <input type="text" name="slides[{{ $i }}][image]" id="in_s_{{ $i }}_img" value="{{ $slide['image'] ?? '' }}" placeholder="Atau paste URL gambar..." oninput="updateSlideImageUrl({{ $i }})" class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
                                         </div>
                                     </div>
+                                    
+                                    <!-- Fit Mode Selector -->
+                                    <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px]">
+                                        <span class="font-bold text-slate-700">Tampilan Banner:</span>
+                                        @php $fit = $slide['fit'] ?? ($isClean ? 'contain' : 'cover'); @endphp
+                                        <div class="inline-flex rounded-xs bg-slate-100 p-0.5 border border-slate-200 text-[10px]">
+                                            <label class="cursor-pointer px-2 py-0.5 rounded-xs transition {{ $fit === 'contain' ? 'bg-[#006830] text-white font-bold' : 'text-slate-600 hover:text-slate-900' }}">
+                                                <input type="radio" name="slides[{{ $i }}][fit]" value="contain" {{ $fit === 'contain' ? 'checked' : '' }} onchange="handleSlideFitChange(this)" class="sr-only">
+                                                <span><i class="fa-solid fa-compress mr-1"></i>Tampil Utuh (No-Crop)</span>
+                                            </label>
+                                            <label class="cursor-pointer px-2 py-0.5 rounded-xs transition {{ $fit === 'cover' ? 'bg-[#006830] text-white font-bold' : 'text-slate-600 hover:text-slate-900' }}">
+                                                <input type="radio" name="slides[{{ $i }}][fit]" value="cover" {{ $fit === 'cover' ? 'checked' : '' }} onchange="handleSlideFitChange(this)" class="sr-only">
+                                                <span><i class="fa-solid fa-expand mr-1"></i>Penuhi Layar (Cover)</span>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Text Overlay Inputs (Collapsible or Hidden when Clean Mode) -->
@@ -375,9 +391,14 @@
             <div class="bg-slate-100 rounded-sm border border-slate-200/90 shadow-md overflow-hidden text-slate-800 space-y-3.5 p-3 sm:p-4 max-h-[82vh] overflow-y-auto">
                 <!-- 1. Hero Slider Exact Preview -->
                 <div class="relative bg-brand-950 bg-[#032c21] rounded-sm overflow-hidden border border-slate-800 text-white min-h-[300px] sm:min-h-[320px] p-5 sm:p-6 flex flex-col justify-between shadow-inner">
+                    <!-- Ambient Blurred Backdrop -->
+                    <div id="mock_hero_ambient" class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                        <img id="mock_hero_ambient_img" src="{{ $slides[0]['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" class="w-full h-full object-cover blur-2xl opacity-40 scale-110" />
+                    </div>
+
                     <!-- Bg Image with Optional Scrim -->
-                    <div class="absolute inset-0 z-0">
-                        <img id="mock_hero_img" src="{{ $slides[0]['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" class="w-full h-full object-cover object-center" />
+                    <div class="absolute inset-0 z-0 flex items-center justify-center">
+                        <img id="mock_hero_img" src="{{ $slides[0]['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" class="w-full h-full object-contain object-center" />
                         <div id="mock_hero_scrim" class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent"></div>
                     </div>
 
@@ -575,6 +596,19 @@
                         <input type="text" name="slides[${newIndex}][image]" id="in_s_${newIndex}_img" value="" placeholder="Atau paste URL gambar..." oninput="updateSlideImageUrl(${newIndex})" class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
                     </div>
                 </div>
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px]">
+                    <span class="font-bold text-slate-700">Tampilan Banner:</span>
+                    <div class="inline-flex rounded-xs bg-slate-100 p-0.5 border border-slate-200 text-[10px]">
+                        <label class="cursor-pointer px-2 py-0.5 rounded-xs transition bg-[#006830] text-white font-bold">
+                            <input type="radio" name="slides[${newIndex}][fit]" value="contain" checked onchange="handleSlideFitChange(this)" class="sr-only">
+                            <span><i class="fa-solid fa-compress mr-1"></i>Tampil Utuh (No-Crop)</span>
+                        </label>
+                        <label class="cursor-pointer px-2 py-0.5 rounded-xs transition text-slate-600 hover:text-slate-900">
+                            <input type="radio" name="slides[${newIndex}][fit]" value="cover" onchange="handleSlideFitChange(this)" class="sr-only">
+                            <span><i class="fa-solid fa-expand mr-1"></i>Penuhi Layar (Cover)</span>
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="slide-text-fields space-y-3 text-xs opacity-50">
@@ -600,14 +634,14 @@
                     <span class="text-[10px] font-bold text-emerald-800 uppercase flex items-center gap-1">
                         <i class="fa-solid fa-arrow-right text-[9px]"></i> Tombol Aksi 1 (Hijau Terang)
                     </span>
-                    <input type="text" name="slides[${newIndex}][btn1_text]" id="in_s_${newIndex}_b1_t" value="ORDER SEKARANG" placeholder="Label Tombol" oninput="updateLiveHomePreview()" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
+                    <input type="text" name="slides[${newIndex}][btn1_text]" id="in_s_${newIndex}_b1_t" value="" placeholder="Label Tombol (opsional)" oninput="updateLiveHomePreview()" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
                     <input type="text" name="slides[${newIndex}][btn1_url]" value="/katalog" placeholder="Link URL" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
                 </div>
                 <div class="p-3 bg-white border border-slate-200 rounded-sm space-y-2">
                     <span class="text-[10px] font-bold text-slate-700 uppercase flex items-center gap-1">
                         <i class="fa-brands fa-whatsapp text-emerald-600 text-xs"></i> Tombol Aksi 2 (Gelap / Garis)
                     </span>
-                    <input type="text" name="slides[${newIndex}][btn2_text]" id="in_s_${newIndex}_b2_t" value="HUBUNGI KAMI" placeholder="Label Tombol" oninput="updateLiveHomePreview()" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
+                    <input type="text" name="slides[${newIndex}][btn2_text]" id="in_s_${newIndex}_b2_t" value="" placeholder="Label Tombol (opsional)" oninput="updateLiveHomePreview()" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
                     <input type="text" name="slides[${newIndex}][btn2_url]" value="/kontak" placeholder="Link URL" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
                 </div>
             </div>
@@ -694,6 +728,19 @@
         updateLiveHomePreview();
     }
 
+    function handleSlideFitChange(radio) {
+        const card = radio.closest('.slide-item-card');
+        const labels = radio.closest('.inline-flex').querySelectorAll('label');
+        if (radio.value === 'contain') {
+            labels[0].className = 'cursor-pointer px-2 py-0.5 rounded-xs transition bg-[#006830] text-white font-bold';
+            labels[1].className = 'cursor-pointer px-2 py-0.5 rounded-xs transition text-slate-600 hover:text-slate-900';
+        } else {
+            labels[0].className = 'cursor-pointer px-2 py-0.5 rounded-xs transition text-slate-600 hover:text-slate-900';
+            labels[1].className = 'cursor-pointer px-2 py-0.5 rounded-xs transition bg-[#006830] text-white font-bold';
+        }
+        updateLiveHomePreview();
+    }
+
     function handleSlideImageFilePreview(input, index) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -702,7 +749,10 @@
                 const thumb = document.getElementById('thumb_s_' + index);
                 if (thumb) thumb.src = dataUrl;
                 if (currentActivePreviewSlideIndex === index) {
-                    document.getElementById('mock_hero_img').src = dataUrl;
+                    const heroImg = document.getElementById('mock_hero_img');
+                    const ambImg = document.getElementById('mock_hero_ambient_img');
+                    if (heroImg) heroImg.src = dataUrl;
+                    if (ambImg) ambImg.src = dataUrl;
                 }
             };
             reader.readAsDataURL(input.files[0]);
@@ -715,7 +765,10 @@
             const thumb = document.getElementById('thumb_s_' + index);
             if (thumb) thumb.src = urlInput.value;
             if (currentActivePreviewSlideIndex === index) {
-                document.getElementById('mock_hero_img').src = urlInput.value;
+                const heroImg = document.getElementById('mock_hero_img');
+                const ambImg = document.getElementById('mock_hero_ambient_img');
+                if (heroImg) heroImg.src = urlInput.value;
+                if (ambImg) ambImg.src = urlInput.value;
             }
         }
     }
@@ -779,6 +832,9 @@
         const typeInput = card.querySelector(`input[name="slides[${i}][type]"]:checked`);
         const isClean = typeInput ? typeInput.value === 'clean' : false;
 
+        const fitInput = card.querySelector(`input[name="slides[${i}][fit]"]:checked`);
+        const fitMode = fitInput ? fitInput.value : (isClean ? 'contain' : 'cover');
+
         const titleInput = card.querySelector(`textarea[name="slides[${i}][title]"]`);
         const hlInput = card.querySelector(`input[name="slides[${i}][highlight]"]`);
         const descInput = card.querySelector(`textarea[name="slides[${i}][desc]"]`);
@@ -796,6 +852,16 @@
         const scrim = document.getElementById('mock_hero_scrim');
         const contentWrapper = document.getElementById('mock_hero_content_wrapper');
         const textBox = document.getElementById('mock_hero_text_box');
+        const heroImg = document.getElementById('mock_hero_img');
+        const ambImg = document.getElementById('mock_hero_ambient_img');
+
+        if (fitMode === 'contain') {
+            if (heroImg) heroImg.className = 'w-full h-full object-contain object-center';
+            if (ambImg && ambImg.parentElement) ambImg.parentElement.classList.remove('hidden');
+        } else {
+            if (heroImg) heroImg.className = 'w-full h-full object-cover object-center';
+            if (ambImg && ambImg.parentElement) ambImg.parentElement.classList.add('hidden');
+        }
 
         if (isClean || (!title.trim() && !desc.trim())) {
             if (scrim) scrim.classList.add('hidden');
@@ -817,20 +883,21 @@
         }
 
         if (thumbImg) {
-            document.getElementById('mock_hero_img').src = thumbImg;
+            if (heroImg) heroImg.src = thumbImg;
+            if (ambImg) ambImg.src = thumbImg;
         }
 
         const b1El = document.getElementById('mock_hero_b1');
         const b2El = document.getElementById('mock_hero_b2');
 
-        if (b1) {
+        if (b1 && b1.trim() !== '') {
             b1El.classList.remove('hidden');
             b1El.innerHTML = b1 + ' <i class="fa-solid fa-arrow-right text-[8px]"></i>';
         } else {
             b1El.classList.add('hidden');
         }
 
-        if (b2) {
+        if (b2 && b2.trim() !== '') {
             b2El.classList.remove('hidden');
             b2El.innerHTML = b2 + ' <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>';
         } else {

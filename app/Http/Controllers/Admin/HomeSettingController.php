@@ -186,6 +186,7 @@ class HomeSettingController extends Controller
 
                 $slidesData[] = [
                     'type'      => ($slide['type'] ?? 'standard') === 'clean' ? 'clean' : 'standard',
+                    'fit'       => ($slide['fit'] ?? '') === 'cover' ? 'cover' : (($slide['type'] ?? 'standard') === 'clean' ? 'contain' : 'cover'),
                     'title'     => $slide['title'] ?? '',
                     'highlight' => $slide['highlight'] ?? '',
                     'desc'      => $slide['desc'] ?? '',

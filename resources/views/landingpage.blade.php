@@ -12,34 +12,56 @@
             @foreach($slides as $index => $slide)
                 @php
                     $isClean = ($slide['type'] ?? 'standard') === 'clean' || (empty($slide['title']) && empty($slide['desc']));
+                    $fitMode = $slide['fit'] ?? ($isClean ? 'contain' : 'cover');
                 @endphp
                 <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out {{ $index === 0 ? 'opacity-100 z-10 block' : 'opacity-0 z-0 hidden' }}" data-index="{{ $index }}">
-                    <!-- 100% Full Width & Full Height Background Image -->
-                    <div class="absolute inset-0 z-0 w-full h-full">
-                        <img 
-                            src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
-                            alt="Banner Slide {{ $index + 1 }}" 
-                            class="w-full h-full object-cover object-center"
-                        />
-                        @if(!$isClean)
-                            <!-- Seamless Ambient Gradient for Text Mode -->
-                            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
-                        @endif
-                    </div>
+                    
+                    @if($fitMode === 'contain')
+                        <!-- Ambient Blurred Backdrop for seamless 100% full look -->
+                        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#032c21]">
+                            <img 
+                                src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
+                                alt="" 
+                                class="w-full h-full object-cover blur-2xl opacity-40 scale-110"
+                                aria-hidden="true"
+                            />
+                        </div>
+                        <!-- 100% Complete Image (No-Crop) -->
+                        <div class="relative z-1 w-full h-full flex items-center justify-center">
+                            <img 
+                                src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
+                                alt="Banner Slide {{ $index + 1 }}" 
+                                class="w-full h-full object-contain object-center"
+                            />
+                        </div>
+                    @else
+                        <!-- 100% Full Width & Full Height Background Image (Cover Mode) -->
+                        <div class="absolute inset-0 z-0 w-full h-full">
+                            <img 
+                                src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
+                                alt="Banner Slide {{ $index + 1 }}" 
+                                class="w-full h-full object-cover object-center"
+                            />
+                            @if(!$isClean)
+                                <!-- Seamless Ambient Gradient for Text Mode -->
+                                <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                            @endif
+                        </div>
+                    @endif
 
                     @if($isClean)
-                        <!-- Clean Banner Mode: Only sleek bottom CTA buttons -->
-                        @if(!empty($slide['btn1_text']) || !empty($slide['btn2_text']))
+                        <!-- Clean Banner Mode: Only sleek bottom CTA buttons if filled -->
+                        @if(!empty(trim($slide['btn1_text'] ?? '')) || !empty(trim($slide['btn2_text'] ?? '')))
                         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
                             <div class="flex items-center gap-3 pointer-events-auto flex-wrap">
-                                @if(!empty($slide['btn1_text']))
+                                @if(!empty(trim($slide['btn1_text'] ?? '')))
                                     <a href="{{ $slide['btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xl transform hover:-translate-y-0.5">
                                         <span>{{ $slide['btn1_text'] }}</span>
                                         <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                     </a>
                                 @endif
-                                @if(!empty($slide['btn2_text']))
+                                @if(!empty(trim($slide['btn2_text'] ?? '')))
                                     <a href="{{ $slide['btn2_url'] ?? '/kontak' }}" class="bg-black/70 hover:bg-black/90 text-white font-bold px-4 sm:px-5 py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-md shadow-xl transform hover:-translate-y-0.5">
                                         <span>{{ $slide['btn2_text'] }}</span>
                                         <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>
