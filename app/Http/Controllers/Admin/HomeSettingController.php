@@ -61,6 +61,7 @@ class HomeSettingController extends Controller
 
         $settings = [
             // Slide 1
+            'home_slide1_clean_mode'=> SiteSetting::get('home_slide1_clean_mode', '0'),
             'home_slide1_title'     => SiteSetting::get('home_slide1_title', "Melayani Penerbitan\ndan Percetakan"),
             'home_slide1_highlight' => SiteSetting::get('home_slide1_highlight', 'Berkualitas'),
             'home_slide1_desc'      => SiteSetting::get('home_slide1_desc', 'Persis Pers hadir untuk mendukung kebutuhan penerbitan buku, jurnal, modul, dan berbagai produk cetak lainnya dengan kualitas terbaik dan pelayanan profesional.'),
@@ -71,6 +72,7 @@ class HomeSettingController extends Controller
             'home_slide1_btn2_url'  => SiteSetting::get('home_slide1_btn2_url', '/katalog'),
 
             // Slide 2
+            'home_slide2_clean_mode'=> SiteSetting::get('home_slide2_clean_mode', '0'),
             'home_slide2_title'     => SiteSetting::get('home_slide2_title', "Penerbitan Buku\nBer-ISBN Resmi"),
             'home_slide2_highlight' => SiteSetting::get('home_slide2_highlight', '& Terindeks'),
             'home_slide2_desc'      => SiteSetting::get('home_slide2_desc', 'Dukung publikasi karya ilmiah, monograf, dan buku referensi Anda dengan pendaftaran resmi ke Perpustakaan Nasional dan sertifikasi Hak Cipta.'),
@@ -81,6 +83,7 @@ class HomeSettingController extends Controller
             'home_slide2_btn2_url'  => SiteSetting::get('home_slide2_btn2_url', '#layanan'),
 
             // Slide 3
+            'home_slide3_clean_mode'=> SiteSetting::get('home_slide3_clean_mode', '0'),
             'home_slide3_title'     => SiteSetting::get('home_slide3_title', "Percetakan Cepat,\nHarga Bersahabat"),
             'home_slide3_highlight' => SiteSetting::get('home_slide3_highlight', '& Presisi'),
             'home_slide3_desc'      => SiteSetting::get('home_slide3_desc', 'Mencetak majalah, prosiding, buletin, modul ajar, dan kebutuhan cetak custom institusi dengan teknologi modern dan ketepatan waktu.'),
@@ -121,37 +124,40 @@ class HomeSettingController extends Controller
     {
         $validated = $request->validate([
             // Slide 1
-            'home_slide1_title'      => ['required', 'string'],
+            'home_slide1_clean_mode' => ['nullable', 'string'],
+            'home_slide1_title'      => ['nullable', 'string'],
             'home_slide1_highlight'  => ['nullable', 'string', 'max:100'],
-            'home_slide1_desc'       => ['required', 'string'],
+            'home_slide1_desc'       => ['nullable', 'string'],
             'home_slide1_image'      => ['nullable', 'string'],
             'home_slide1_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
-            'home_slide1_btn1_text'  => ['required', 'string', 'max:100'],
-            'home_slide1_btn1_url'   => ['required', 'string', 'max:255'],
-            'home_slide1_btn2_text'  => ['required', 'string', 'max:100'],
-            'home_slide1_btn2_url'   => ['required', 'string', 'max:255'],
+            'home_slide1_btn1_text'  => ['nullable', 'string', 'max:100'],
+            'home_slide1_btn1_url'   => ['nullable', 'string', 'max:255'],
+            'home_slide1_btn2_text'  => ['nullable', 'string', 'max:100'],
+            'home_slide1_btn2_url'   => ['nullable', 'string', 'max:255'],
 
             // Slide 2
-            'home_slide2_title'      => ['required', 'string'],
+            'home_slide2_clean_mode' => ['nullable', 'string'],
+            'home_slide2_title'      => ['nullable', 'string'],
             'home_slide2_highlight'  => ['nullable', 'string', 'max:100'],
-            'home_slide2_desc'       => ['required', 'string'],
+            'home_slide2_desc'       => ['nullable', 'string'],
             'home_slide2_image'      => ['nullable', 'string'],
             'home_slide2_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
-            'home_slide2_btn1_text'  => ['required', 'string', 'max:100'],
-            'home_slide2_btn1_url'   => ['required', 'string', 'max:255'],
-            'home_slide2_btn2_text'  => ['required', 'string', 'max:100'],
-            'home_slide2_btn2_url'   => ['required', 'string', 'max:255'],
+            'home_slide2_btn1_text'  => ['nullable', 'string', 'max:100'],
+            'home_slide2_btn1_url'   => ['nullable', 'string', 'max:255'],
+            'home_slide2_btn2_text'  => ['nullable', 'string', 'max:100'],
+            'home_slide2_btn2_url'   => ['nullable', 'string', 'max:255'],
 
             // Slide 3
-            'home_slide3_title'      => ['required', 'string'],
+            'home_slide3_clean_mode' => ['nullable', 'string'],
+            'home_slide3_title'      => ['nullable', 'string'],
             'home_slide3_highlight'  => ['nullable', 'string', 'max:100'],
-            'home_slide3_desc'       => ['required', 'string'],
+            'home_slide3_desc'       => ['nullable', 'string'],
             'home_slide3_image'      => ['nullable', 'string'],
             'home_slide3_image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
-            'home_slide3_btn1_text'  => ['required', 'string', 'max:100'],
-            'home_slide3_btn1_url'   => ['required', 'string', 'max:255'],
-            'home_slide3_btn2_text'  => ['required', 'string', 'max:100'],
-            'home_slide3_btn2_url'   => ['required', 'string', 'max:255'],
+            'home_slide3_btn1_text'  => ['nullable', 'string', 'max:100'],
+            'home_slide3_btn1_url'   => ['nullable', 'string', 'max:255'],
+            'home_slide3_btn2_text'  => ['nullable', 'string', 'max:100'],
+            'home_slide3_btn2_url'   => ['nullable', 'string', 'max:255'],
 
             // 4 Keunggulan
             'home_feat1_title'       => ['required', 'string', 'max:150'],
@@ -197,6 +203,11 @@ class HomeSettingController extends Controller
             unset($validated[$fileInputName]);
         }
 
+        // Handle Clean Mode Checkbox Toggles (Slide 1, 2, 3)
+        $validated['home_slide1_clean_mode'] = $request->has('home_slide1_clean_mode') ? '1' : '0';
+        $validated['home_slide2_clean_mode'] = $request->has('home_slide2_clean_mode') ? '1' : '0';
+        $validated['home_slide3_clean_mode'] = $request->has('home_slide3_clean_mode') ? '1' : '0';
+
         // Save Services JSON
         if ($request->has('services')) {
             $servicesData = array_values($request->input('services', []));
@@ -205,9 +216,7 @@ class HomeSettingController extends Controller
         }
 
         foreach ($validated as $key => $val) {
-            if ($val !== null) {
-                SiteSetting::set($key, $val);
-            }
+            SiteSetting::set($key, $val ?? '');
         }
 
         return back()->with('success', 'Semua konten, banner, dan daftar layanan beranda berhasil diperbarui!');

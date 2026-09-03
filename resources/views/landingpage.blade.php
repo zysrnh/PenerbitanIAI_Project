@@ -3,6 +3,12 @@
 @section('title', 'PERSIS PERS | Penerbitan & Percetakan')
 
 @section('content')
+@php
+    $s1Clean = ($settings['home_slide1_clean_mode'] ?? '0') === '1' || (empty($settings['home_slide1_title']) && empty($settings['home_slide1_desc']));
+    $s2Clean = ($settings['home_slide2_clean_mode'] ?? '0') === '1' || (empty($settings['home_slide2_title']) && empty($settings['home_slide2_desc']));
+    $s3Clean = ($settings['home_slide3_clean_mode'] ?? '0') === '1' || (empty($settings['home_slide3_title']) && empty($settings['home_slide3_desc']));
+@endphp
+
     <!-- Hero Slider Section (Seamless, Premium Full-Width Banner with Elegant Typography) -->
     <section class="relative bg-brand-950 bg-[#032c21] text-white overflow-hidden select-none">
         
@@ -18,44 +24,68 @@
                         alt="Banner Slide 1" 
                         class="w-full h-full object-cover object-center"
                     />
-                    <!-- Seamless Ambient Gradient (Soft Left Scrim, 0% harsh box, background shines 100%) -->
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                    @if(!$s1Clean)
+                        <!-- Seamless Ambient Gradient for Text Mode -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                    @endif
                 </div>
 
-                <!-- Text Content (Seamless, No Ugly Square Box, Crisp Typography) -->
-                @if(!empty($settings['home_slide1_title']) && trim($settings['home_slide1_title']) !== '')
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
-                    <div class="max-w-lg lg:max-w-xl">
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-3 [text-shadow:_0_2px_12px_rgba(0,0,0,0.7)]">
-                            {!! nl2br(e($settings['home_slide1_title'])) !!}<br>
-                            @if(!empty($settings['home_slide1_highlight']))
-                                <span class="text-lime-400 font-black">{{ $settings['home_slide1_highlight'] }}</span>
-                            @endif
-                        </h2>
-                        
-                        @if(!empty($settings['home_slide1_desc']))
-                            <p class="text-xs sm:text-sm text-slate-100/95 leading-relaxed mb-5 sm:mb-6 max-w-md [text-shadow:_0_1px_8px_rgba(0,0,0,0.7)]">
-                                {{ $settings['home_slide1_desc'] }}
-                            </p>
-                        @endif
-
-                        <div class="flex items-center gap-3">
+                @if($s1Clean)
+                    <!-- Clean Banner Mode: Only sleek bottom CTA buttons -->
+                    @if(!empty($settings['home_slide1_btn1_text']) || !empty($settings['home_slide1_btn2_text']))
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
+                        <div class="flex items-center gap-3 pointer-events-auto flex-wrap">
                             @if(!empty($settings['home_slide1_btn1_text']))
-                                <a href="{{ $settings['home_slide1_btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-lg transform hover:-translate-y-0.5">
+                                <a href="{{ $settings['home_slide1_btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xl transform hover:-translate-y-0.5">
                                     <span>{{ $settings['home_slide1_btn1_text'] }}</span>
                                     <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                 </a>
                             @endif
                             @if(!empty($settings['home_slide1_btn2_text']))
-                                <a href="{{ $settings['home_slide1_btn2_url'] ?? '/katalog' }}" class="bg-black/30 hover:bg-black/50 text-white font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs shadow-lg transform hover:-translate-y-0.5">
+                                <a href="{{ $settings['home_slide1_btn2_url'] ?? '/katalog' }}" class="bg-black/70 hover:bg-black/90 text-white font-bold px-4 sm:px-5 py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-md shadow-xl transform hover:-translate-y-0.5">
                                     <span>{{ $settings['home_slide1_btn2_text'] }}</span>
-                                    <i class="fa-solid fa-book-open text-[10px]"></i>
+                                    <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>
                                 </a>
                             @endif
                         </div>
                     </div>
-                </div>
+                    @endif
+                @else
+                    <!-- Text Content Mode -->
+                    @if(!empty($settings['home_slide1_title']) && trim($settings['home_slide1_title']) !== '')
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
+                        <div class="max-w-lg lg:max-w-xl">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-3 [text-shadow:_0_2px_12px_rgba(0,0,0,0.7)]">
+                                {!! nl2br(e($settings['home_slide1_title'])) !!}<br>
+                                @if(!empty($settings['home_slide1_highlight']))
+                                    <span class="text-lime-400 font-black">{{ $settings['home_slide1_highlight'] }}</span>
+                                @endif
+                            </h2>
+                            
+                            @if(!empty($settings['home_slide1_desc']))
+                                <p class="text-xs sm:text-sm text-slate-100/95 leading-relaxed mb-5 sm:mb-6 max-w-md [text-shadow:_0_1px_8px_rgba(0,0,0,0.7)]">
+                                    {{ $settings['home_slide1_desc'] }}
+                                </p>
+                            @endif
+
+                            <div class="flex items-center gap-3">
+                                @if(!empty($settings['home_slide1_btn1_text']))
+                                    <a href="{{ $settings['home_slide1_btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-lg transform hover:-translate-y-0.5">
+                                        <span>{{ $settings['home_slide1_btn1_text'] }}</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                    </a>
+                                @endif
+                                @if(!empty($settings['home_slide1_btn2_text']))
+                                    <a href="{{ $settings['home_slide1_btn2_url'] ?? '/katalog' }}" class="bg-black/30 hover:bg-black/50 text-white font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs shadow-lg transform hover:-translate-y-0.5">
+                                        <span>{{ $settings['home_slide1_btn2_text'] }}</span>
+                                        <i class="fa-solid fa-book-open text-[10px]"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 @endif
             </div>
 
@@ -68,43 +98,67 @@
                         alt="Banner Slide 2" 
                         class="w-full h-full object-cover object-center"
                     />
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                    @if(!$s2Clean)
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                    @endif
                 </div>
 
-                <!-- Text Content -->
-                @if(!empty($settings['home_slide2_title']) && trim($settings['home_slide2_title']) !== '')
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
-                    <div class="max-w-lg lg:max-w-xl">
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-3 [text-shadow:_0_2px_12px_rgba(0,0,0,0.7)]">
-                            {!! nl2br(e($settings['home_slide2_title'])) !!}<br>
-                            @if(!empty($settings['home_slide2_highlight']))
-                                <span class="text-lime-400 font-black">{{ $settings['home_slide2_highlight'] }}</span>
-                            @endif
-                        </h2>
-                        
-                        @if(!empty($settings['home_slide2_desc']))
-                            <p class="text-xs sm:text-sm text-slate-100/95 leading-relaxed mb-5 sm:mb-6 max-w-md [text-shadow:_0_1px_8px_rgba(0,0,0,0.7)]">
-                                {{ $settings['home_slide2_desc'] }}
-                            </p>
-                        @endif
-
-                        <div class="flex items-center gap-3">
+                @if($s2Clean)
+                    <!-- Clean Banner Mode: Only sleek bottom CTA buttons -->
+                    @if(!empty($settings['home_slide2_btn1_text']) || !empty($settings['home_slide2_btn2_text']))
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
+                        <div class="flex items-center gap-3 pointer-events-auto flex-wrap">
                             @if(!empty($settings['home_slide2_btn1_text']))
-                                <a href="{{ $settings['home_slide2_btn1_url'] ?? '/kontak' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-lg transform hover:-translate-y-0.5">
+                                <a href="{{ $settings['home_slide2_btn1_url'] ?? '/kontak' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xl transform hover:-translate-y-0.5">
                                     <span>{{ $settings['home_slide2_btn1_text'] }}</span>
                                     <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i>
                                 </a>
                             @endif
                             @if(!empty($settings['home_slide2_btn2_text']))
-                                <a href="{{ $settings['home_slide2_btn2_url'] ?? '#layanan' }}" class="bg-black/30 hover:bg-black/50 text-white font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs shadow-lg transform hover:-translate-y-0.5">
+                                <a href="{{ $settings['home_slide2_btn2_url'] ?? '#layanan' }}" class="bg-black/70 hover:bg-black/90 text-white font-bold px-4 sm:px-5 py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-md shadow-xl transform hover:-translate-y-0.5">
                                     <span>{{ $settings['home_slide2_btn2_text'] }}</span>
                                     <i class="fa-solid fa-file-lines text-[10px]"></i>
                                 </a>
                             @endif
                         </div>
                     </div>
-                </div>
+                    @endif
+                @else
+                    <!-- Text Content -->
+                    @if(!empty($settings['home_slide2_title']) && trim($settings['home_slide2_title']) !== '')
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
+                        <div class="max-w-lg lg:max-w-xl">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-3 [text-shadow:_0_2px_12px_rgba(0,0,0,0.7)]">
+                                {!! nl2br(e($settings['home_slide2_title'])) !!}<br>
+                                @if(!empty($settings['home_slide2_highlight']))
+                                    <span class="text-lime-400 font-black">{{ $settings['home_slide2_highlight'] }}</span>
+                                @endif
+                            </h2>
+                            
+                            @if(!empty($settings['home_slide2_desc']))
+                                <p class="text-xs sm:text-sm text-slate-100/95 leading-relaxed mb-5 sm:mb-6 max-w-md [text-shadow:_0_1px_8px_rgba(0,0,0,0.7)]">
+                                    {{ $settings['home_slide2_desc'] }}
+                                </p>
+                            @endif
+
+                            <div class="flex items-center gap-3">
+                                @if(!empty($settings['home_slide2_btn1_text']))
+                                    <a href="{{ $settings['home_slide2_btn1_url'] ?? '/kontak' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-lg transform hover:-translate-y-0.5">
+                                        <span>{{ $settings['home_slide2_btn1_text'] }}</span>
+                                        <i class="fa-solid fa-cloud-arrow-up text-[10px]"></i>
+                                    </a>
+                                @endif
+                                @if(!empty($settings['home_slide2_btn2_text']))
+                                    <a href="{{ $settings['home_slide2_btn2_url'] ?? '#layanan' }}" class="bg-black/30 hover:bg-black/50 text-white font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs shadow-lg transform hover:-translate-y-0.5">
+                                        <span>{{ $settings['home_slide2_btn2_text'] }}</span>
+                                        <i class="fa-solid fa-file-lines text-[10px]"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 @endif
             </div>
 
@@ -117,43 +171,67 @@
                         alt="Banner Slide 3" 
                         class="w-full h-full object-cover object-center"
                     />
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                    @if(!$s3Clean)
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 lg:via-black/20 to-transparent pointer-events-none"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+                    @endif
                 </div>
 
-                <!-- Text Content -->
-                @if(!empty($settings['home_slide3_title']) && trim($settings['home_slide3_title']) !== '')
-                <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
-                    <div class="max-w-lg lg:max-w-xl">
-                        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-3 [text-shadow:_0_2px_12px_rgba(0,0,0,0.7)]">
-                            {!! nl2br(e($settings['home_slide3_title'])) !!}<br>
-                            @if(!empty($settings['home_slide3_highlight']))
-                                <span class="text-lime-400 font-black">{{ $settings['home_slide3_highlight'] }}</span>
-                            @endif
-                        </h2>
-                        
-                        @if(!empty($settings['home_slide3_desc']))
-                            <p class="text-xs sm:text-sm text-slate-100/95 leading-relaxed mb-5 sm:mb-6 max-w-md [text-shadow:_0_1px_8px_rgba(0,0,0,0.7)]">
-                                {{ $settings['home_slide3_desc'] }}
-                            </p>
-                        @endif
-
-                        <div class="flex items-center gap-3">
+                @if($s3Clean)
+                    <!-- Clean Banner Mode: Only sleek bottom CTA buttons -->
+                    @if(!empty($settings['home_slide3_btn1_text']) || !empty($settings['home_slide3_btn2_text']))
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
+                        <div class="flex items-center gap-3 pointer-events-auto flex-wrap">
                             @if(!empty($settings['home_slide3_btn1_text']))
-                                <a href="{{ $settings['home_slide3_btn1_url'] ?? '/katalog' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-lg transform hover:-translate-y-0.5">
+                                <a href="{{ $settings['home_slide3_btn1_url'] ?? '/katalog' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xl transform hover:-translate-y-0.5">
                                     <span>{{ $settings['home_slide3_btn1_text'] }}</span>
                                     <i class="fa-solid fa-cart-shopping text-[10px]"></i>
                                 </a>
                             @endif
                             @if(!empty($settings['home_slide3_btn2_text']))
-                                <a href="{{ $settings['home_slide3_btn2_url'] ?? '/kontak' }}" class="bg-black/30 hover:bg-black/50 text-white font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs shadow-lg transform hover:-translate-y-0.5">
+                                <a href="{{ $settings['home_slide3_btn2_url'] ?? '/kontak' }}" class="bg-black/70 hover:bg-black/90 text-white font-bold px-4 sm:px-5 py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-md shadow-xl transform hover:-translate-y-0.5">
                                     <span>{{ $settings['home_slide3_btn2_text'] }}</span>
                                     <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>
                                 </a>
                             @endif
                         </div>
                     </div>
-                </div>
+                    @endif
+                @else
+                    <!-- Text Content -->
+                    @if(!empty($settings['home_slide3_title']) && trim($settings['home_slide3_title']) !== '')
+                    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
+                        <div class="max-w-lg lg:max-w-xl">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-3 [text-shadow:_0_2px_12px_rgba(0,0,0,0.7)]">
+                                {!! nl2br(e($settings['home_slide3_title'])) !!}<br>
+                                @if(!empty($settings['home_slide3_highlight']))
+                                    <span class="text-lime-400 font-black">{{ $settings['home_slide3_highlight'] }}</span>
+                                @endif
+                            </h2>
+                            
+                            @if(!empty($settings['home_slide3_desc']))
+                                <p class="text-xs sm:text-sm text-slate-100/95 leading-relaxed mb-5 sm:mb-6 max-w-md [text-shadow:_0_1px_8px_rgba(0,0,0,0.7)]">
+                                    {{ $settings['home_slide3_desc'] }}
+                                </p>
+                            @endif
+
+                            <div class="flex items-center gap-3">
+                                @if(!empty($settings['home_slide3_btn1_text']))
+                                    <a href="{{ $settings['home_slide3_btn1_url'] ?? '/katalog' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-lg transform hover:-translate-y-0.5">
+                                        <span>{{ $settings['home_slide3_btn1_text'] }}</span>
+                                        <i class="fa-solid fa-cart-shopping text-[10px]"></i>
+                                    </a>
+                                @endif
+                                @if(!empty($settings['home_slide3_btn2_text']))
+                                    <a href="{{ $settings['home_slide3_btn2_url'] ?? '/kontak' }}" class="bg-black/30 hover:bg-black/50 text-white font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-sm border border-white/40 text-xs tracking-wider uppercase transition flex items-center gap-1.5 backdrop-blur-xs shadow-lg transform hover:-translate-y-0.5">
+                                        <span>{{ $settings['home_slide3_btn2_text'] }}</span>
+                                        <i class="fa-brands fa-whatsapp text-xs text-lime-400"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 @endif
             </div>
 
