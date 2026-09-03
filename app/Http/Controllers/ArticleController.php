@@ -40,17 +40,40 @@ class ArticleController extends Controller
 
         $articles = $query->paginate(6)->withQueryString();
 
-        // Settings for Banner, Stats, and Promo Box
+        // Featured Headlines for News Portal Hero Section
+        $headlineArticle = null;
+        $secondaryHeadlines = collect([]);
+        if (empty($search) && empty($categorySlug) && (int) $request->input('page', 1) === 1) {
+            $headlineArticle = Article::with(['category', 'author'])
+                ->published()
+                ->where('is_featured', true)
+                ->latest('published_at')
+                ->first();
+
+            if (!$headlineArticle) {
+                $headlineArticle = Article::with(['category', 'author'])
+                    ->published()
+                    ->latest('published_at')
+                    ->first();
+            }
+
+            if ($headlineArticle) {
+                $secondaryHeadlines = Article::with(['category', 'author'])
+                    ->published()
+                    ->where('id', '!=', $headlineArticle->id)
+                    ->latest('published_at')
+                    ->take(2)
+                    ->get();
+            }
+        }
+
+        // Settings for Banner & Promo
         $settings = [
-            'news_banner_badge'     => \App\Models\SiteSetting::get('news_banner_badge', 'WARNA LITERASI & WARTA'),
-            'news_banner_title'     => \App\Models\SiteSetting::get('news_banner_title', 'Kabar & Artikel Penerbitan'),
-            'news_banner_desc'      => \App\Models\SiteSetting::get('news_banner_desc', 'Temukan informasi terbaru, panduan penulisan ilmiah & keislaman, agenda literasi, serta kabar terkini dari Penerbit Persis.'),
-            'news_stat_total'       => \App\Models\SiteSetting::get('news_stat_total', 'Warta & Artikel'),
-            'news_stat_categories'  => \App\Models\SiteSetting::get('news_stat_categories', 'Kategori Lengkap'),
-            'news_stat_views'       => \App\Models\SiteSetting::get('news_stat_views', 'Pembaca Terlayani'),
-            'news_stat_authors'     => \App\Models\SiteSetting::get('news_stat_authors', 'Editor & Penulis'),
-            'news_promo_title'      => \App\Models\SiteSetting::get('news_promo_title', 'Ingin Menerbitkan Buku Anda?'),
-            'news_promo_desc'       => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
+            'news_banner_badge' => \App\Models\SiteSetting::get('news_banner_badge', 'WARNA LITERASI & WARTA'),
+            'news_banner_title' => \App\Models\SiteSetting::get('news_banner_title', 'Kabar & Artikel Penerbitan'),
+            'news_banner_desc'  => \App\Models\SiteSetting::get('news_banner_desc', 'Temukan warta kegiatan, tips penulisan buku ber-ISBN, agenda workshop, serta pemikiran literasi Islam dari Penerbit Persis.'),
+            'news_promo_title'  => \App\Models\SiteSetting::get('news_promo_title', 'Punya Naskah Buku Sendiri?'),
+            'news_promo_desc'   => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
         ];
 
         // Sidebar Data
@@ -62,6 +85,8 @@ class ArticleController extends Controller
             'articles',
             'categories',
             'currentCategory',
+            'headlineArticle',
+            'secondaryHeadlines',
             'recentArticles',
             'popularArticles',
             'search',
