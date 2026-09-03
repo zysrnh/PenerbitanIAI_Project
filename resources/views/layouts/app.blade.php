@@ -282,16 +282,21 @@
         <div class="bg-slate-50/90 border-b border-slate-200/80 py-1.5 transition-all text-xs select-none">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-4">
                 
-                <!-- Left: Quick Contact (Phone & Email) -->
-                <div class="flex items-center gap-3 sm:gap-4 text-slate-600 text-[11px] truncate">
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', \App\Models\SiteSetting::get('contact_phone', '(022) 5441951')) }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
-                        <i class="fa-solid fa-phone text-emerald-700 text-[10.5px]"></i>
-                        <span>{{ \App\Models\SiteSetting::get('contact_phone', '(022) 5441951') }}</span>
+                <!-- Left: Quick Contact (Phone & Email Badges) -->
+                <div class="flex items-center gap-2 text-[11px] truncate flex-wrap">
+                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', \App\Models\SiteSetting::get('contact_phone', '(022) 5441951')) }}" 
+                       class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4.5px] bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-800/80 shadow-2xs hover:shadow-xs transition-all duration-200 group">
+                        <span class="w-4 h-4 rounded-xs bg-emerald-600/30 text-emerald-400 flex items-center justify-center text-[9.5px]">
+                            <i class="fa-solid fa-phone"></i>
+                        </span>
+                        <span class="font-semibold tracking-tight text-slate-100 group-hover:text-white">{{ \App\Models\SiteSetting::get('contact_phone', '(022) 5441951') }}</span>
                     </a>
-                    <span class="text-slate-300">•</span>
-                    <a href="mailto:{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}" class="flex items-center gap-1.5 hover:text-emerald-800 transition font-medium">
-                        <i class="fa-solid fa-envelope text-emerald-700 text-[10.5px]"></i>
-                        <span>{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}</span>
+                    <a href="mailto:{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}" 
+                       class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4.5px] bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-800/80 shadow-2xs hover:shadow-xs transition-all duration-200 group">
+                        <span class="w-4 h-4 rounded-xs bg-emerald-600/30 text-emerald-400 flex items-center justify-center text-[9.5px]">
+                            <i class="fa-solid fa-envelope"></i>
+                        </span>
+                        <span class="font-semibold tracking-tight text-slate-100 group-hover:text-white">{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}</span>
                     </a>
                 </div>
 
