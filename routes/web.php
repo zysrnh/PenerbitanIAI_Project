@@ -63,6 +63,8 @@ Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');
 Route::get('/reseller', [ResellerController::class, 'index'])->name('reseller');
 Route::post('/reseller/daftar', [ResellerController::class, 'store'])->name('reseller.store')->middleware('throttle:6,1');
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
+Route::get('/berita', [\App\Http\Controllers\ArticleController::class, 'index'])->name('berita.index');
+Route::get('/berita/{slug}', [\App\Http\Controllers\ArticleController::class, 'show'])->name('berita.show');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
 Route::post('/kontak/kirim', [ContactController::class, 'store'])->name('kontak.store')->middleware('throttle:6,1');
 
@@ -108,7 +110,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::delete('/orders/{id}',        [AdminOrderController::class, 'destroy'])->name('orders.destroy');
     });
 
-    // 3. Publishing, Services & Catalog (super_admin, admin)
+    // 3. Publishing, Services, Articles & Catalog (super_admin, admin)
     Route::middleware('role:super_admin,admin')->group(function () {
         Route::resource('messages', ContactMessageController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::post('messages/{message}/reply', [ContactMessageController::class, 'reply'])->name('messages.reply');
@@ -116,6 +118,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
         Route::post('/books/bulk-destroy', [BookController::class, 'bulkDestroy'])->name('books.bulk_destroy');
         Route::resource('books', BookController::class);
+
+        // News & Articles Management (WordPress-like CMS)
+        Route::post('/articles/upload-image', [\App\Http\Controllers\Admin\ArticleController::class, 'uploadEditorImage'])->name('articles.upload_image');
+        Route::patch('/articles/{id}/toggle', [\App\Http\Controllers\Admin\ArticleController::class, 'toggleStatus'])->name('articles.toggle');
+        Route::resource('articles', \App\Http\Controllers\Admin\ArticleController::class);
+        Route::resource('article-categories', \App\Http\Controllers\Admin\ArticleCategoryController::class)->except(['create', 'show', 'edit']);
     });
 
     // 4. Super Admin Only: User Management & System Settings

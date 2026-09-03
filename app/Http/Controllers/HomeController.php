@@ -59,6 +59,13 @@ class HomeController extends Controller
             $featuredBooks = collect([]);
         }
 
+        // Fetch Latest Articles for Homepage Showcase
+        try {
+            $latestArticles = \App\Models\Article::with('category')->published()->take(4)->get();
+        } catch (\Throwable $e) {
+            $latestArticles = collect([]);
+        }
+
         $settings = [
             // Slide 1
             'home_slide1_title'     => SiteSetting::get('home_slide1_title', "Melayani Penerbitan\ndan Percetakan"),
@@ -155,6 +162,6 @@ class HomeController extends Controller
             ];
         }
 
-        return view('landingpage', compact('settings', 'services', 'featuredBooks', 'slides'));
+        return view('landingpage', compact('settings', 'services', 'featuredBooks', 'slides', 'latestArticles'));
     }
 }

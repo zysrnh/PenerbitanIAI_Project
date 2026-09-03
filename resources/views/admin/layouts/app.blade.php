@@ -168,6 +168,13 @@
                             <span>Katalog Buku &amp; ISBN</span>
                         </a>
                         @endif
+
+                        @if(Auth::user()->canAccessArticles())
+                        <a href="{{ route('admin.articles.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.articles.*') || request()->routeIs('admin.article-categories.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <i class="fa-regular fa-newspaper w-4 text-center"></i>
+                            <span>Berita &amp; Artikel</span>
+                        </a>
+                        @endif
                     </div>
                 </div>
 

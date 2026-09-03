@@ -69,6 +69,11 @@ class User extends Authenticatable
         return in_array($this->role, ['super_admin', 'admin']);
     }
 
+    public function canAccessArticles(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin']);
+    }
+
     public function canAccessOrders(): bool
     {
         return in_array($this->role, ['super_admin', 'admin', 'operator']);

@@ -328,6 +328,71 @@
         </div>
     </section>
 
+    <!-- Section: Berita & Artikel Terbaru -->
+    @if(isset($latestArticles) && $latestArticles->count() > 0)
+    <section id="berita" class="py-12 sm:py-16 bg-slate-50 border-t border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                    <span class="text-brand-800 font-bold text-[10.5px] uppercase tracking-widest block mb-1">KABAR LITERASI</span>
+                    <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 leading-tight">Berita &amp; Artikel Terkini</h3>
+                    <div class="w-10 h-1 bg-emerald-700 mt-2 rounded-full"></div>
+                </div>
+                <a href="{{ route('berita.index') }}" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#006830] hover:text-emerald-900 transition group">
+                    <span>Lihat Semua Berita</span>
+                    <i class="fa-solid fa-arrow-right text-[10px] transform group-hover:translate-x-1 transition"></i>
+                </a>
+            </div>
+
+            <!-- Articles Grid (3 cols) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($latestArticles->take(3) as $art)
+                    <article class="bg-white rounded-sm border border-slate-200/90 shadow-2xs hover:shadow-md transition overflow-hidden flex flex-col justify-between group">
+                        <div>
+                            <a href="{{ route('berita.show', $art->slug) }}" class="block aspect-[16/9] overflow-hidden bg-slate-100 relative">
+                                <img 
+                                    src="{{ $art->thumbnail ?: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop' }}" 
+                                    alt="{{ $art->title }}" 
+                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
+                                    loading="lazy"
+                                />
+                                @if($art->category)
+                                    <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 bg-[#006830]/90 backdrop-blur-xs text-white text-[9.5px] font-bold uppercase tracking-wider rounded-xs shadow-xs">
+                                        {{ $art->category->name }}
+                                    </span>
+                                @endif
+                            </a>
+
+                            <div class="p-4 sm:p-5 space-y-2">
+                                <div class="flex items-center gap-2 text-[10.5px] text-slate-400">
+                                    <i class="fa-regular fa-calendar text-[10px] text-emerald-700"></i>
+                                    <span>{{ $art->published_at ? $art->published_at->format('d M Y') : '-' }}</span>
+                                    <span>&bull;</span>
+                                    <span>{{ $art->reading_time }} mnt baca</span>
+                                </div>
+
+                                <h4 class="font-bold text-sm text-slate-900 group-hover:text-emerald-700 transition leading-snug line-clamp-2">
+                                    <a href="{{ route('berita.show', $art->slug) }}">{{ $art->title }}</a>
+                                </h4>
+
+                                <p class="text-xs text-slate-600 leading-relaxed line-clamp-2">
+                                    {{ $art->excerpt ?: Str::limit(strip_tags($art->content), 100) }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="px-4 sm:p-5 pt-0 pb-4">
+                            <a href="{{ route('berita.show', $art->slug) }}" class="text-xs font-bold text-[#006830] inline-flex items-center gap-1 group-hover:underline">
+                                <span>Baca Selengkapnya</span>
+                                <i class="fa-solid fa-arrow-right text-[9px] group-hover:translate-x-0.5 transition"></i>
+                            </a>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
 
 @endsection
 
