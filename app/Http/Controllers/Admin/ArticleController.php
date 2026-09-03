@@ -59,7 +59,8 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title'          => ['required', 'string', 'max:255'],
             'slug'           => ['nullable', 'string', 'max:255', 'unique:articles,slug'],
-            'category_id'    => ['nullable', 'exists:article_categories,id'],
+            'category_name'  => ['nullable', 'string', 'max:100'],
+            'category_id'    => ['nullable'],
             'thumbnail_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'thumbnail'      => ['nullable', 'string'],
             'excerpt'        => ['nullable', 'string', 'max:500'],
@@ -73,6 +74,25 @@ class ArticleController extends Controller
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['title']);
         }
+
+        // Auto-find or create category from text input
+        $categoryName = trim($request->input('category_name', ''));
+        if (!empty($categoryName)) {
+            $cat = ArticleCategory::firstOrCreate(
+                ['name' => $categoryName],
+                ['slug' => Str::slug($categoryName), 'order' => 0]
+            );
+            $validated['category_id'] = $cat->id;
+        } elseif ($request->filled('category_id')) {
+            $validated['category_id'] = $request->input('category_id');
+        } else {
+            $cat = ArticleCategory::firstOrCreate(
+                ['name' => 'Kabar Penerbitan'],
+                ['slug' => 'kabar-penerbitan', 'order' => 0]
+            );
+            $validated['category_id'] = $cat->id;
+        }
+        unset($validated['category_name']);
 
         // Handle Thumbnail Upload
         if ($request->hasFile('thumbnail_file')) {
@@ -106,7 +126,8 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title'          => ['required', 'string', 'max:255'],
             'slug'           => ['nullable', 'string', 'max:255', 'unique:articles,slug,' . $article->id],
-            'category_id'    => ['nullable', 'exists:article_categories,id'],
+            'category_name'  => ['nullable', 'string', 'max:100'],
+            'category_id'    => ['nullable'],
             'thumbnail_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'thumbnail'      => ['nullable', 'string'],
             'excerpt'        => ['nullable', 'string', 'max:500'],
@@ -120,6 +141,20 @@ class ArticleController extends Controller
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['title']);
         }
+
+        // Auto-find or create category from text input
+        $categoryName = trim($request->input('category_name', ''));
+        if (!empty($categoryName)) {
+            $cat = ArticleCategory::firstOrCreate(
+                ['name' => $categoryName],
+                ['slug' => Str::slug($categoryName), 'order' => 0]
+            );
+            $validated['category_id'] = $cat->id;
+        } elseif ($request->filled('category_id')) {
+            $validated['category_id'] = $request->input('category_id');
+        }
+
+        unset($validated['category_name']);
 
         if ($request->hasFile('thumbnail_file')) {
             $path = $request->file('thumbnail_file')->store('articles/thumbnails', 'public');

@@ -154,21 +154,28 @@
             </div>
 
             <!-- Kategori Berita -->
-            <div class="bg-white p-5 rounded-sm border border-slate-200/90 shadow-2xs space-y-3">
-                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                    <label class="block font-extrabold text-xs text-slate-900 uppercase tracking-wider">Kategori Berita</label>
-                    <a href="{{ route('admin.article-categories.index') }}" target="_blank" class="text-[10px] text-emerald-700 font-bold hover:underline">+ Kelola</a>
-                </div>
-
-                <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1 text-xs">
-                    @forelse($categories as $cat)
-                        <label class="flex items-center gap-2 p-2 rounded-xs hover:bg-slate-50 cursor-pointer transition">
-                            <input type="radio" name="category_id" value="{{ $cat->id }}" {{ old('category_id') == $cat->id || $loop->first ? 'checked' : '' }} class="text-emerald-700 focus:ring-0 cursor-pointer" />
-                            <span class="text-slate-800 font-semibold">{{ $cat->name }}</span>
-                        </label>
-                    @empty
-                        <p class="text-slate-400 text-xs italic py-2">Belum ada kategori. Silakan buat kategori baru.</p>
-                    @endforelse
+            <div class="bg-white p-5 rounded-sm border border-slate-200/90 shadow-2xs space-y-2.5">
+                <label class="block font-extrabold text-xs text-slate-900 uppercase tracking-wider">Kategori Berita</label>
+                <div class="space-y-1.5">
+                    <input 
+                        type="text" 
+                        name="category_name" 
+                        id="category_name" 
+                        list="categorySuggestions" 
+                        value="{{ old('category_name', 'Kabar Penerbitan') }}" 
+                        placeholder="Ketik kategori (misal: Kabar Penerbitan)..." 
+                        class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 bg-white font-semibold text-slate-800"
+                    />
+                    <datalist id="categorySuggestions">
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->name }}"></option>
+                        @endforeach
+                        <option value="Kabar Penerbitan"></option>
+                        <option value="Tips Penulis"></option>
+                        <option value="Pelatihan & Event"></option>
+                        <option value="Opini & Literasi"></option>
+                    </datalist>
+                    <p class="text-[11px] text-slate-400">Ketik bebas nama kategori apa saja, sistem akan otomatis menyimpannya.</p>
                 </div>
             </div>
 

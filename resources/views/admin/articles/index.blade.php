@@ -15,12 +15,8 @@
             <p class="text-xs sm:text-sm text-slate-500 mt-1">Kelola publikasi kabar penerbitan, artikel literasi, dan panduan penulis ala WordPress.</p>
         </div>
         <div class="flex items-center gap-2.5 flex-wrap">
-            <a href="{{ route('admin.article-categories.index') }}" class="px-3 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
-                <i class="fa-solid fa-tags text-slate-400"></i>
-                <span>Kelola Kategori</span>
-            </a>
-            <a href="{{ route('admin.articles.create') }}" class="px-3.5 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-xs">
-                <i class="fa-solid fa-plus text-[11px]"></i>
+            <a href="{{ route('admin.articles.create') }}" class="px-4 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 shadow-xs">
+                <i class="fa-solid fa-plus text-xs"></i>
                 <span>Tulis Berita Baru</span>
             </a>
         </div>
