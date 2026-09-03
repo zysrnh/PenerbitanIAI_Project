@@ -172,6 +172,14 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <!-- Bottom Add Slide Button -->
+                    <div class="pt-2">
+                        <button type="button" onclick="addNewSlideRow()" class="w-full py-3 border-2 border-dashed border-emerald-300 hover:border-emerald-600 bg-emerald-50/50 hover:bg-emerald-100/70 text-emerald-800 rounded-sm text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
+                            <i class="fa-solid fa-plus-circle text-sm text-emerald-600"></i>
+                            <span>+ Tambah Slide Banner / Iklan Baru</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- 4. NILAI KEUNGGULAN (4 Cards) -->
@@ -609,6 +617,7 @@
         renumberSlides();
         renderPreviewTabs();
         switchPreviewSlide(newIndex);
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function removeSlideRow(btn) {
