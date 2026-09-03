@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Seed All Specialized Admin Roles
         $this->call(AdminSeeder::class);
+        $this->call(ArticleSeeder::class);
 
         // 3. Default Contact & About Settings
         $settings = [
