@@ -27,7 +27,7 @@
                             />
                         </div>
                         <!-- 100% Complete Image (No-Crop) -->
-                        <div class="relative z-1 w-full h-full flex items-center justify-center">
+                        <div class="absolute inset-0 z-1 w-full h-full flex items-center justify-center">
                             <img 
                                 src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
                                 alt="Banner Slide {{ $index + 1 }}" 
@@ -53,7 +53,7 @@
                     @if($isClean)
                         <!-- Clean Banner Mode: Only sleek bottom CTA buttons if filled -->
                         @if(!empty(trim($slide['btn1_text'] ?? '')) || !empty(trim($slide['btn2_text'] ?? '')))
-                        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
+                        <div class="absolute inset-0 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-end pb-8 sm:pb-12 pointer-events-none">
                             <div class="flex items-center gap-3 pointer-events-auto flex-wrap">
                                 @if(!empty(trim($slide['btn1_text'] ?? '')))
                                     <a href="{{ $slide['btn1_url'] ?? '#layanan' }}" class="bg-lime-500 hover:bg-lime-600 text-brand-950 font-extrabold px-4 sm:px-5 py-2.5 rounded-sm text-xs tracking-wider uppercase transition flex items-center gap-1.5 shadow-xl transform hover:-translate-y-0.5">
@@ -73,7 +73,7 @@
                     @else
                         <!-- Text Content Mode -->
                         @if(!empty($slide['title']) && trim($slide['title']) !== '')
-                        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
+                        <div class="absolute inset-0 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center py-10 sm:py-16">
                             <div class="max-w-lg lg:max-w-xl">
                                 <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight tracking-tight mb-2.5 sm:mb-3 [text-shadow:_0_2px_12px_rgba(0,0,0,0.7)]">
                                     {!! nl2br(e($slide['title'])) !!}<br>
