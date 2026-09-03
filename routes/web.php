@@ -134,10 +134,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::put('/settings/home', [HomeSettingController::class, 'update'])->name('settings.home.update');
         Route::get('/settings/catalog', [CatalogSettingController::class, 'index'])->name('settings.catalog');
         Route::put('/settings/catalog', [CatalogSettingController::class, 'update'])->name('settings.catalog.update');
-        Route::get('/settings/contact', [SettingController::class, 'contact'])->name('settings.contact');
-        Route::put('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
+        Route::get('/settings/news', [\App\Http\Controllers\Admin\NewsSettingController::class, 'index'])->name('settings.news');
+        Route::put('/settings/news', [\App\Http\Controllers\Admin\NewsSettingController::class, 'update'])->name('settings.news.update');
         Route::get('/settings/about', [AboutSettingController::class, 'index'])->name('settings.about');
         Route::put('/settings/about', [AboutSettingController::class, 'update'])->name('settings.about.update');
+        Route::get('/settings/contact', [SettingController::class, 'contact'])->name('settings.contact');
+        Route::put('/settings/contact', [SettingController::class, 'updateContact'])->name('settings.contact.update');
     });
 });
 

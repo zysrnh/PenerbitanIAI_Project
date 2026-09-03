@@ -40,6 +40,19 @@ class ArticleController extends Controller
 
         $articles = $query->paginate(6)->withQueryString();
 
+        // Settings for Banner, Stats, and Promo Box
+        $settings = [
+            'news_banner_badge'     => \App\Models\SiteSetting::get('news_banner_badge', 'WARNA LITERASI & WARTA'),
+            'news_banner_title'     => \App\Models\SiteSetting::get('news_banner_title', 'Kabar & Artikel Penerbitan'),
+            'news_banner_desc'      => \App\Models\SiteSetting::get('news_banner_desc', 'Temukan informasi terbaru, panduan penulisan ilmiah & keislaman, agenda literasi, serta kabar terkini dari Penerbit Persis.'),
+            'news_stat_total'       => \App\Models\SiteSetting::get('news_stat_total', 'Warta & Artikel'),
+            'news_stat_categories'  => \App\Models\SiteSetting::get('news_stat_categories', 'Kategori Lengkap'),
+            'news_stat_views'       => \App\Models\SiteSetting::get('news_stat_views', 'Pembaca Terlayani'),
+            'news_stat_authors'     => \App\Models\SiteSetting::get('news_stat_authors', 'Editor & Penulis'),
+            'news_promo_title'      => \App\Models\SiteSetting::get('news_promo_title', 'Ingin Menerbitkan Buku Anda?'),
+            'news_promo_desc'       => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
+        ];
+
         // Sidebar Data
         $categories = ArticleCategory::withCount(['publishedArticles'])->orderBy('order')->get();
         $recentArticles = Article::published()->latest('published_at')->take(5)->get();
@@ -51,7 +64,8 @@ class ArticleController extends Controller
             'currentCategory',
             'recentArticles',
             'popularArticles',
-            'search'
+            'search',
+            'settings'
         ));
     }
 
@@ -98,11 +112,17 @@ class ArticleController extends Controller
         $categories = ArticleCategory::withCount(['publishedArticles'])->orderBy('order')->get();
         $recentArticles = Article::published()->where('id', '!=', $article->id)->latest('published_at')->take(5)->get();
 
+        $settings = [
+            'news_promo_title' => \App\Models\SiteSetting::get('news_promo_title', 'Ingin Menerbitkan Buku Anda?'),
+            'news_promo_desc'  => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
+        ];
+
         return view('articles.show', compact(
             'article',
             'relatedArticles',
             'categories',
-            'recentArticles'
+            'recentArticles',
+            'settings'
         ));
     }
 }

@@ -193,6 +193,11 @@
                             <span>Kelola Halaman Katalog</span>
                         </a>
 
+                        <a href="{{ route('admin.settings.news') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.settings.news') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <i class="fa-regular fa-newspaper w-4 text-center"></i>
+                            <span>Kelola Halaman Berita</span>
+                        </a>
+
                         <a href="{{ route('admin.settings.about') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.settings.about') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <i class="fa-solid fa-circle-info w-4 text-center"></i>
                             <span>Kelola Tentang Kami</span>
