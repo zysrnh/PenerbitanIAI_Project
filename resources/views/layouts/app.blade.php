@@ -450,6 +450,9 @@
                                         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard Admin
                                         </a>
+                                        <a href="{{ route('orders.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-receipt text-emerald-600 text-xs w-4"></i> Kelola Pesanan Buku
+                                        </a>
                                         <a href="{{ route('admin.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-user text-slate-400 text-xs w-4"></i> Profil Saya
                                         </a>
@@ -467,6 +470,9 @@
                                     @else
                                         <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard
+                                        </a>
+                                        <a href="{{ route('member.orders') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                            <i class="fa-solid fa-receipt text-emerald-600 text-xs w-4"></i> Pesanan Saya
                                         </a>
                                         <a href="{{ route('member.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-user text-slate-400 text-xs w-4"></i> Profil Saya
@@ -622,6 +628,12 @@
                         <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
                             <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Admin
                         </a>
+                        <a href="{{ route('orders.index') }}" class="w-full py-2.5 bg-emerald-50 text-emerald-900 border border-emerald-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
+                            <i class="fa-solid fa-receipt text-emerald-700"></i> Kelola Pesanan Buku
+                        </a>
+                        <button type="button" onclick="window.closeMobileMenu(); window.openCartDrawer();" class="w-full py-2.5 bg-white text-slate-700 border border-slate-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+                            <i class="fa-solid fa-cart-shopping text-emerald-700"></i> Keranjang Belanja
+                        </button>
                         <form method="POST" action="{{ route('admin.logout') }}">
                             @csrf
                             <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50 cursor-pointer">
@@ -632,6 +644,12 @@
                         <a href="{{ route('member.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
                             <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Saya
                         </a>
+                        <a href="{{ route('member.orders') }}" class="w-full py-2.5 bg-emerald-50 text-emerald-900 border border-emerald-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
+                            <i class="fa-solid fa-receipt text-emerald-700"></i> Pesanan Saya
+                        </a>
+                        <button type="button" onclick="window.closeMobileMenu(); window.openCartDrawer();" class="w-full py-2.5 bg-white text-slate-700 border border-slate-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+                            <i class="fa-solid fa-cart-shopping text-emerald-700"></i> Keranjang Belanja
+                        </button>
                         <form method="POST" action="{{ route('member.logout') }}">
                             @csrf
                             <button type="submit" class="w-full py-2.5 border border-red-200 text-red-600 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-50 cursor-pointer">
@@ -640,6 +658,9 @@
                         </form>
                     @endif
                 @else
+                    <button type="button" onclick="window.closeMobileMenu(); window.openCartDrawer();" class="w-full py-2.5 bg-white text-slate-700 border border-slate-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs cursor-pointer mb-1">
+                        <i class="fa-solid fa-cart-shopping text-emerald-700"></i> Keranjang Belanja
+                    </button>
                     <a href="{{ route('member.login') }}" class="w-full py-2.5 border border-slate-300 text-slate-700 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-slate-50 shadow-2xs">
                         <i class="fa-solid fa-right-to-bracket text-xs text-emerald-700"></i> Masuk Akun
                     </a>

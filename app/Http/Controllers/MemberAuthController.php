@@ -45,7 +45,11 @@ class MemberAuthController extends Controller
                 return redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin, ' . Auth::user()->name . '!');
             }
 
-            return redirect()->route('member.dashboard')->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
+            if ($request->filled('redirect')) {
+                return redirect($request->input('redirect'))->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
+            }
+
+            return redirect()->intended(route('member.dashboard'))->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
         }
 
         return back()->withErrors(['email' => 'Email atau kata sandi salah.'])->onlyInput('email');
@@ -85,7 +89,11 @@ class MemberAuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('member.dashboard')->with('success', 'Akun berhasil dibuat! Selamat datang, ' . $user->name . '!');
+        if ($request->filled('redirect')) {
+            return redirect($request->input('redirect'))->with('success', 'Akun berhasil dibuat! Selamat datang, ' . $user->name . '!');
+        }
+
+        return redirect()->intended(route('member.dashboard'))->with('success', 'Akun berhasil dibuat! Selamat datang, ' . $user->name . '!');
     }
 
     public function logout(Request $request)

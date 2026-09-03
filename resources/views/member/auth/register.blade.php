@@ -86,6 +86,9 @@
 
             <form method="POST" action="{{ route('member.register.submit') }}" class="space-y-3">
                 @csrf
+                @if(request('redirect'))
+                    <input type="hidden" name="redirect" value="{{ request('redirect') }}">
+                @endif
 
                 <!-- Name Input -->
                 <div class="space-y-1">

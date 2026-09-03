@@ -1079,7 +1079,12 @@
                 }
             }
 
-            const waNumber = '6281220000000';
+            const rawWa = @json(\App\Models\SiteSetting::get('contact_whatsapp', '6282116116133'));
+            let waNumber = String(rawWa).replace(/[^0-9]/g, '');
+            if (waNumber.startsWith('0')) {
+                waNumber = '62' + waNumber.substring(1);
+            }
+            if (!waNumber) waNumber = '6282116116133';
             const waText = encodeURIComponent('Halo PERSIS PERS, saya ingin memesan buku "' + (book.title||'') + '" (ISBN: ' + (book.isbn||'-') + ') dengan harga ' + (book.price||'') + '.');
             const waBtn = document.getElementById('modalWaOrderBtn');
             if (waBtn) waBtn.href = 'https://wa.me/' + waNumber + '?text=' + waText;
