@@ -303,90 +303,93 @@
 @endphp
 
     @if($topbarActive)
-        <!-- Top Contact Info & Social Media Bar (Left: Phone & Email, Right: Smooth Social Icons) -->
-        <div class="bg-slate-50/90 border-b border-slate-200/80 py-1.5 transition-all text-xs select-none">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-4">
+        <!-- Top Contact Info & Social Media Bar (3-Column Layout: Left=Auth, Center=Inline Search, Right=Socials) -->
+        <div class="bg-white border-b border-slate-200 py-1.5 transition-all text-xs select-none">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-6">
                 
-                <!-- Left: Quick Contact (Phone & Email Badges) -->
-                <div class="flex items-center gap-2 text-[11px] truncate flex-wrap">
-                    <a href="{{ $phoneHref }}" 
-                       target="{{ $phoneTarget }}" 
-                       @if($phoneTarget === '_blank') rel="noopener noreferrer" @endif
-                       class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4.5px] bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-800/80 shadow-2xs hover:shadow-xs transition-all duration-200 group"
-                       title="{{ $isMobilePhone ? 'Hubungi via WhatsApp Resmi' : 'Telepon Kantor' }}">
-                        <span class="w-4 h-4 rounded-xs bg-emerald-600/30 text-emerald-400 flex items-center justify-center text-[9.5px]">
-                            @if($isMobilePhone)
-                                <i class="fa-brands fa-whatsapp text-[10px]"></i>
-                            @else
-                                <i class="fa-solid fa-phone"></i>
-                            @endif
-                        </span>
-                        <span class="font-semibold tracking-tight text-slate-100 group-hover:text-white">{{ $contactPhoneRaw }}</span>
-                    </a>
-                    <a href="mailto:{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}" 
-                       class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4.5px] bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-800/80 shadow-2xs hover:shadow-xs transition-all duration-200 group">
-                        <span class="w-4 h-4 rounded-xs bg-emerald-600/30 text-emerald-400 flex items-center justify-center text-[9.5px]">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
-                        <span class="font-semibold tracking-tight text-slate-100 group-hover:text-white">{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}</span>
-                    </a>
+                <!-- 1. Left: Daftar | Login -->
+                <div class="flex items-center gap-2 shrink-0 text-xs">
+                    @guest
+                        <a href="{{ route('member.register') }}" class="font-bold text-red-600 hover:text-red-700 transition">
+                            Daftar
+                        </a>
+                        <span class="text-slate-300 font-normal">|</span>
+                        <a href="{{ route('member.login') }}" class="font-bold text-slate-700 hover:text-emerald-800 transition">
+                            Login
+                        </a>
+                    @else
+                        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span class="truncate max-w-[120px] sm:max-w-none">{{ Auth::user()->name }}</span>
+                        </div>
+                    @endguest
                 </div>
 
-                <!-- Right: Social Media Buttons (Smooth & Aligned Right) -->
-                <div class="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0">
-                    @if(!empty($socFacebook) && $socFacebookActive)
-                        <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#1877F2] hover:bg-[#0d65d9] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Facebook Resmi PERSIS PERS">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                    @endif
+                <!-- 2. Center: Inline Book Search (Cari Buku [ _______ ]) -->
+                <div class="flex-1 max-w-md mx-auto hidden sm:block">
+                    <form action="{{ route('katalog') }}" method="GET" class="flex items-center gap-2">
+                        <label for="topbarSearchInput" class="text-xs font-bold text-slate-700 shrink-0 whitespace-nowrap cursor-pointer">
+                            Cari Buku
+                        </label>
+                        <div class="relative flex-1">
+                            <input 
+                                type="text" 
+                                id="topbarSearchInput" 
+                                name="q" 
+                                placeholder="Ketik judul buku, penulis, ISBN..." 
+                                class="w-full px-2.5 py-1 pr-7 text-xs bg-white border border-slate-300 focus:border-emerald-600 focus:outline-none rounded-xs text-slate-800 placeholder-slate-400 shadow-2xs transition"
+                                autocomplete="off"
+                                spellcheck="false"
+                            />
+                            <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-800 p-0.5 text-xs cursor-pointer" title="Cari Buku">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-                    @if(!empty($socTwitter) && $socTwitterActive)
-                        <a href="{{ $socTwitter }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Twitter / X Resmi PERSIS PERS">
-                            <i class="fa-brands fa-x-twitter"></i>
-                        </a>
-                    @endif
+                <!-- 3. Right: Ikuti Kami di [WA] [IG] [TikTok] etc. -->
+                <div class="flex items-center justify-end gap-2 shrink-0">
+                    <span class="text-xs font-semibold text-slate-600 hidden md:inline whitespace-nowrap">
+                        Ikuti Kami di
+                    </span>
+                    <div class="flex items-center gap-1.5">
+                        @if(!empty($socWhatsapp) && $socWhatsappActive)
+                            <a href="{{ str_starts_with($socWhatsapp, 'http') ? $socWhatsapp : 'https://wa.me/' . preg_replace('/[^0-9]/', '', $socWhatsapp) }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-[#25D366] hover:bg-[#1ebd56] text-white flex items-center justify-center text-xs shadow-2xs hover:scale-110 transition" title="WhatsApp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                        @endif
 
-                    @if(!empty($socPinterest) && $socPinterestActive)
-                        <a href="{{ $socPinterest }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#E60023] hover:bg-[#c4001e] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Pinterest PERSIS PERS">
-                            <i class="fa-brands fa-pinterest-p"></i>
-                        </a>
-                    @endif
+                        @if(!empty($socInstagram) && $socInstagramActive)
+                            <a href="{{ $socInstagram }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center text-xs shadow-2xs hover:scale-110 transition" title="Instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                        @endif
 
-                    @if(!empty($socWhatsapp) && $socWhatsappActive)
-                        <a href="{{ str_starts_with($socWhatsapp, 'http') ? $socWhatsapp : 'https://wa.me/' . preg_replace('/[^0-9]/', '', $socWhatsapp) }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#25D366] hover:bg-[#1ebd56] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="WhatsApp Resmi PERSIS PERS">
-                            <i class="fa-brands fa-whatsapp"></i>
-                        </a>
-                    @endif
+                        @if(!empty($socTiktok) && $socTiktokActive)
+                            <a href="{{ $socTiktok }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-2xs hover:scale-110 transition border border-white/20" title="TikTok">
+                                <i class="fa-brands fa-tiktok"></i>
+                            </a>
+                        @endif
 
-                    @if(!empty($socTelegram) && $socTelegramActive)
-                        <a href="{{ $socTelegram }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#229ED9] hover:bg-[#1888be] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Telegram Channel PERSIS PERS">
-                            <i class="fa-brands fa-telegram"></i>
-                        </a>
-                    @endif
+                        @if(!empty($socFacebook) && $socFacebookActive)
+                            <a href="{{ $socFacebook }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-[#1877F2] hover:bg-[#0d65d9] text-white flex items-center justify-center text-xs shadow-2xs hover:scale-110 transition" title="Facebook">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                        @endif
 
-                    @if(!empty($socInstagram) && $socInstagramActive)
-                        <a href="{{ $socInstagram }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] hover:opacity-95 text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="Instagram Resmi PERSIS PERS">
-                            <i class="fa-brands fa-instagram"></i>
-                        </a>
-                    @endif
+                        @if(!empty($socTwitter) && $socTwitterActive)
+                            <a href="{{ $socTwitter }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-2xs hover:scale-110 transition border border-white/20" title="Twitter / X">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
+                        @endif
 
-                    @if(!empty($socTiktok) && $socTiktokActive)
-                        <a href="{{ $socTiktok }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-black hover:bg-slate-800 text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="TikTok Resmi PERSIS PERS">
-                            <i class="fa-brands fa-tiktok"></i>
-                        </a>
-                    @endif
-
-                    @if(!empty($socYoutube) && $socYoutubeActive)
-                        <a href="{{ $socYoutube }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#FF0000] hover:bg-[#d90000] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="YouTube Official PERSIS PERS">
-                            <i class="fa-brands fa-youtube"></i>
-                        </a>
-                    @endif
-
-                    @if(!empty($socLinkedin) && $socLinkedinActive)
-                        <a href="{{ $socLinkedin }}" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-[4.5px] bg-[#0A66C2] hover:bg-[#084e96] text-white flex items-center justify-center text-xs shadow-2xs hover:shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-110 active:scale-95" title="LinkedIn PERSIS PERS">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
-                    @endif
+                        @if(!empty($socYoutube) && $socYoutubeActive)
+                            <a href="{{ $socYoutube }}" target="_blank" rel="noopener noreferrer" class="w-6 h-6 sm:w-7 sm:h-7 rounded-xs bg-[#FF0000] hover:bg-[#d90000] text-white flex items-center justify-center text-xs shadow-2xs hover:scale-110 transition" title="YouTube">
+                                <i class="fa-brands fa-youtube"></i>
+                            </a>
+                        @endif
+                    </div>
                 </div>
 
             </div>
@@ -434,20 +437,10 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header Action Buttons (100% Unified Clean Style for All Users) -->
+                <!-- Header Action Buttons (Clean & Solid) -->
                 <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
                     
-                    <!-- Search Books Trigger Button (Desktop Pill with Ctrl+K badge) -->
-                    <button type="button" 
-                            onclick="window.openNavbarSearchModal()" 
-                            class="user-nav-btn h-10 px-3 hidden sm:flex items-center gap-2 bg-slate-50 hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-500 hover:text-emerald-800 rounded-sm shadow-2xs transition select-none cursor-pointer group shrink-0"
-                            title="Cari Buku (Ctrl + K)">
-                        <i class="fa-solid fa-magnifying-glass text-xs text-slate-400 group-hover:text-emerald-700 pointer-events-none transition-colors"></i>
-                        <span class="text-xs font-semibold text-slate-600 group-hover:text-emerald-900 pointer-events-none">Cari Buku...</span>
-                        <kbd class="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-bold font-mono text-slate-400 group-hover:text-emerald-800 bg-white border border-slate-200 rounded-xs shadow-2xs pointer-events-none">Ctrl K</kbd>
-                    </button>
-
-                    <!-- Mobile Search Button (Square Icon for <sm screens) -->
+                    <!-- Mobile Search Button (Only for screen < sm) -->
                     <button type="button" 
                             onclick="window.openNavbarSearchModal()" 
                             class="sm:hidden w-10 h-10 rounded-sm flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs cursor-pointer transition select-none shrink-0"

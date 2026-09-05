@@ -6,6 +6,49 @@
     <!-- Hero Slider Section (Seamless, Premium Full-Width Banner with Elegant Typography) -->
     <section class="relative bg-brand-950 bg-[#032c21] text-white overflow-hidden select-none">
         
+        @php
+            $heroPhoneRaw = \App\Models\SiteSetting::get('contact_phone', '(022) 5441951');
+            $heroPhoneClean = preg_replace('/[^0-9]/', '', $heroPhoneRaw);
+            $heroIsMobile = str_starts_with($heroPhoneClean, '08') || str_starts_with($heroPhoneClean, '628') || str_starts_with($heroPhoneClean, '8');
+            if ($heroIsMobile) {
+                $heroWaPhone = str_starts_with($heroPhoneClean, '0') 
+                    ? '62' . substr($heroPhoneClean, 1) 
+                    : (str_starts_with($heroPhoneClean, '8') ? '62' . $heroPhoneClean : $heroPhoneClean);
+                $heroPhoneHref = "https://wa.me/{$heroWaPhone}?text=" . urlencode("Halo Admin PENERBIT PERSIS, saya ingin berkonsultasi mengenai penerbitan buku.");
+                $heroPhoneTarget = '_blank';
+            } else {
+                $heroPhoneHref = "tel:" . preg_replace('/[^0-9+]/', '', $heroPhoneRaw);
+                $heroPhoneTarget = '_self';
+            }
+            $heroEmail = \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com');
+        @endphp
+
+        <!-- Quick Contact Overlay Badges on Hero Banner (Pindah ke bawah dari Topbar) -->
+        <div class="absolute top-3 left-3 sm:top-5 sm:left-6 z-30 flex items-center gap-2 flex-wrap">
+            <a href="{{ $heroPhoneHref }}" 
+               target="{{ $heroPhoneTarget }}" 
+               @if($heroPhoneTarget === '_blank') rel="noopener noreferrer" @endif
+               class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs bg-[#032c21]/90 hover:bg-slate-900 text-white border border-emerald-600/70 shadow-md hover:shadow-lg transition-all duration-200 group text-xs backdrop-blur-xs select-none"
+               title="{{ $heroIsMobile ? 'WhatsApp Resmi Redaksi' : 'Telepon Kantor' }}">
+                <span class="w-4 h-4 rounded-xs bg-emerald-600/40 text-emerald-300 flex items-center justify-center text-[10px]">
+                    @if($heroIsMobile)
+                        <i class="fa-brands fa-whatsapp text-[10.5px]"></i>
+                    @else
+                        <i class="fa-solid fa-phone text-[9px]"></i>
+                    @endif
+                </span>
+                <span class="font-semibold text-slate-100 group-hover:text-white tracking-tight">{{ $heroPhoneRaw }}</span>
+            </a>
+            <a href="mailto:{{ $heroEmail }}" 
+               class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs bg-[#032c21]/90 hover:bg-slate-900 text-white border border-emerald-600/70 shadow-md hover:shadow-lg transition-all duration-200 group text-xs backdrop-blur-xs select-none"
+               title="Email Resmi Redaksi">
+                <span class="w-4 h-4 rounded-xs bg-emerald-600/40 text-emerald-300 flex items-center justify-center text-[10px]">
+                    <i class="fa-solid fa-envelope text-[9px]"></i>
+                </span>
+                <span class="font-semibold text-slate-100 group-hover:text-white tracking-tight">{{ $heroEmail }}</span>
+            </a>
+        </div>
+
         <!-- Slider Container -->
         <div id="hero-slider" class="relative w-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] lg:min-h-[540px] xl:min-h-[580px] flex items-center overflow-hidden">
             
