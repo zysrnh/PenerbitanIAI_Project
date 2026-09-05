@@ -14,7 +14,7 @@
                 $heroWaPhone = str_starts_with($heroPhoneClean, '0') 
                     ? '62' . substr($heroPhoneClean, 1) 
                     : (str_starts_with($heroPhoneClean, '8') ? '62' . $heroPhoneClean : $heroPhoneClean);
-                $heroPhoneHref = "https://wa.me/{$heroWaPhone}?text=" . urlencode("Halo Admin PENERBIT PERSIS, saya ingin berkonsultasi mengenai penerbitan buku.");
+                $heroPhoneHref = "https://wa.me/{$heroWaPhone}?text=" . urlencode("Assalamualaikum Admin Penerbit Persis, saya ingin berkonsultasi mengenai penerbitan buku.");
                 $heroPhoneTarget = '_blank';
             } else {
                 $heroPhoneHref = "tel:" . preg_replace('/[^0-9+]/', '', $heroPhoneRaw);

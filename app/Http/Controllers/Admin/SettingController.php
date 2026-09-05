@@ -64,7 +64,7 @@ class SettingController extends Controller
             'contact_wa_box_subtitle' => SiteSetting::get('contact_wa_box_subtitle', 'Langsung terhubung dengan Tim Redaksi'),
             'contact_wa_box_desc' => SiteSetting::get('contact_wa_box_desc', 'Ingin konsultasi langsung terkait naskah buku, estimasi biaya cetak, atau panduan ISBN? Klik tombol di bawah untuk memulai chat WhatsApp resmi.'),
             'contact_wa_btn_text' => SiteSetting::get('contact_wa_btn_text', 'CHAT WHATSAPP SEKARANG'),
-            'contact_wa_default_msg' => SiteSetting::get('contact_wa_default_msg', 'Halo Redaksi PERSIS PERS, saya ingin berkonsultasi mengenai penerbitan naskah buku.'),
+            'contact_wa_default_msg' => SiteSetting::get('contact_wa_default_msg', 'Assalamualaikum Redaksi Penerbit Persis, saya ingin berkonsultasi mengenai penerbitan naskah buku.'),
 
             // Google Maps
             'contact_maps_title' => SiteSetting::get('contact_maps_title', 'Lokasi Kantor Redaksi & Percetakan'),

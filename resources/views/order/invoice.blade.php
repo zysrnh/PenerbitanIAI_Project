@@ -208,7 +208,7 @@
                     <p>Layanan Pelanggan WhatsApp: <strong class="text-slate-800">0821-1611-6133</strong></p>
                 </div>
                 @php
-                    $waMsg = "Halo Redaksi PENERBIT PERSIS, saya telah melakukan pemesanan buku dengan No. Invoice *{$order->order_number}* atas nama *{$order->customer_name}* (Total {$order->formatted_payment}). Mohon info konfirmasi pengiriman naskah/buku ya kak. Terima kasih!";
+                    $waMsg = "Assalamualaikum Redaksi Penerbit Persis, saya telah melakukan pemesanan buku dengan No. Invoice *{$order->order_number}* atas nama *{$order->customer_name}* (Total {$order->formatted_payment}). Mohon info konfirmasi pengiriman naskah/buku ya kak. Terima kasih!";
                     $waShareUrl = "https://wa.me/6282116116133?text=" . urlencode($waMsg);
                 @endphp
 

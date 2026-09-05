@@ -1085,7 +1085,7 @@
                 waNumber = '62' + waNumber.substring(1);
             }
             if (!waNumber) waNumber = '6282116116133';
-            const waText = encodeURIComponent('Halo PERSIS PERS, saya ingin memesan buku "' + (book.title||'') + '" (ISBN: ' + (book.isbn||'-') + ') dengan harga ' + (book.price||'') + '.');
+            const waText = encodeURIComponent('Assalamualaikum, saya ingin memesan buku "' + (book.title||'') + '" (ISBN: ' + (book.isbn||'-') + ') dengan harga ' + (book.price||'') + '.');
             const waBtn = document.getElementById('modalWaOrderBtn');
             if (waBtn) waBtn.href = 'https://wa.me/' + waNumber + '?text=' + waText;
 

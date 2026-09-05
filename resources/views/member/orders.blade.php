@@ -597,7 +597,7 @@
                                     </a>
 
                                     <!-- Tombol WhatsApp Redaksi -->
-                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya ingin menanyakan pesanan #' . $ord->order_number . ' atas nama ' . $ord->customer_name . '.') }}" target="_blank" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1 shrink-0" title="Hubungi WhatsApp">
+                                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Assalamualaikum Redaksi Penerbit Persis, saya ingin menanyakan pesanan #' . $ord->order_number . ' atas nama ' . $ord->customer_name . '.') }}" target="_blank" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-semibold transition flex items-center justify-center gap-1 shrink-0" title="Hubungi WhatsApp">
                                         <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
                                         <span class="hidden sm:inline">WhatsApp</span>
                                     </a>
@@ -683,7 +683,7 @@
         </a>
 
         <!-- 4. WhatsApp Redaksi -->
-        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya member ' . $user->name . ' ingin berkonsultasi.') }}" target="_blank" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-emerald-700 font-medium">
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Assalamualaikum Redaksi Penerbit Persis, saya member ' . $user->name . ' ingin berkonsultasi.') }}" target="_blank" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-emerald-700 font-medium">
             <div class="relative">
                 <i class="fa-brands fa-whatsapp text-base text-emerald-600"></i>
             </div>
@@ -837,10 +837,10 @@
             <!-- Quick Template Chips -->
             <div class="px-3.5 py-2 bg-slate-100/90 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-[11px] shrink-0">
                 <span class="text-slate-400 text-[10px] font-bold uppercase tracking-wider shrink-0">Template:</span>
-                <button type="button" onclick="setDiscussionQuickText('Halo Admin PERSIS PERS, apakah pesanan buku saya sudah selesai dipacking?')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
+                <button type="button" onclick="setDiscussionQuickText('Assalamualaikum Admin Penerbit Persis, apakah pesanan buku saya sudah selesai dipacking?')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
                     📦 Status Packing
                 </button>
-                <button type="button" onclick="setDiscussionQuickText('Halo kak, mohon informasi nomor resi dan ekspedisi pengirimannya ya. Terima kasih!')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
+                <button type="button" onclick="setDiscussionQuickText('Assalamualaikum kak, mohon informasi nomor resi dan ekspedisi pengirimannya ya. Terima kasih!')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
                     🚚 Info No. Resi
                 </button>
                 <button type="button" onclick="setDiscussionQuickText('Alhamdulillah buku telah saya terima dengan baik dan rapi. Terima kasih banyak PERSIS PERS!')" class="px-2.5 py-1 bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 rounded-xs transition shrink-0 cursor-pointer shadow-2xs">
@@ -1136,7 +1136,7 @@
         function openDirectWhatsAppForOrder() {
             if (!currentDiscussionOrderNumber) return;
             const waNumber = '6282116116133';
-            const msg = `Halo Admin PERSIS PERS, saya ingin berdiskusi mengenai pesanan saya dengan No. Invoice *#${currentDiscussionOrderNumber}*. Mohon bantuannya ya kak. Terima kasih!`;
+            const msg = `Assalamualaikum Admin Penerbit Persis, saya ingin berdiskusi mengenai pesanan saya dengan No. Invoice *#${currentDiscussionOrderNumber}*. Mohon bantuannya ya kak. Terima kasih!`;
             window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -1360,7 +1360,7 @@
                 alert('Keranjang belanja masih kosong.');
                 return;
             }
-            let msg = "Halo Admin PERSIS PERS, saya member *{{ Auth::user()->name }}* ingin memesan buku di keranjang:\n\n";
+            let msg = "Assalamualaikum Admin Penerbit Persis, saya member *{{ Auth::user()->name }}* ingin memesan buku di keranjang:\n\n";
             memberCartData.items.forEach((it, idx) => {
                 const title = it.title || (it.book ? it.book.title : 'Buku');
                 msg += `${idx + 1}. *${title}* (${it.quantity} eks) - ${it.formatted_subtotal}\n`;

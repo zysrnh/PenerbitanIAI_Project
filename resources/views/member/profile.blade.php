@@ -577,7 +577,7 @@
         </a>
 
         <!-- 4. WhatsApp Redaksi -->
-        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Halo Redaksi PENERBIT PERSIS, saya member ' . $user->name . ' ingin berkonsultasi.') }}" target="_blank" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-emerald-700 font-medium">
+        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Assalamualaikum Redaksi Penerbit Persis, saya member ' . $user->name . ' ingin berkonsultasi.') }}" target="_blank" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-emerald-700 font-medium">
             <div class="relative">
                 <i class="fa-brands fa-whatsapp text-base text-emerald-600"></i>
             </div>
@@ -931,7 +931,7 @@
         }
 
         function contactAdminViaWa(phone, adminRole) {
-            let msg = `Halo ${adminRole}, saya ingin berkonsultasi mengenai layanan PENERBIT PERSIS`;
+            let msg = `Assalamualaikum ${adminRole}, saya ingin berkonsultasi mengenai layanan Penerbit Persis`;
             if (currentDrawerOrderNumber) {
                 msg += ` untuk pesanan *#${currentDrawerOrderNumber}*`;
                 if (currentDrawerTrackingNumber) {
@@ -1198,7 +1198,7 @@
                 alert('Keranjang belanja masih kosong.');
                 return;
             }
-            let msg = "Halo Admin PERSIS PERS, saya member *{{ Auth::user()->name }}* ingin memesan buku di keranjang:\n\n";
+            let msg = "Assalamualaikum Admin Penerbit Persis, saya member *{{ Auth::user()->name }}* ingin memesan buku di keranjang:\n\n";
             memberCartData.items.forEach((it, idx) => {
                 const title = it.title || (it.book ? it.book.title : 'Buku');
                 msg += `${idx + 1}. *${title}* (${it.quantity} eks) - ${it.formatted_subtotal}\n`;

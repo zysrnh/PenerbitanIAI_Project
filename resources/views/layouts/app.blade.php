@@ -294,7 +294,7 @@
         $waFormattedPhone = str_starts_with($contactPhoneClean, '0') 
             ? '62' . substr($contactPhoneClean, 1) 
             : (str_starts_with($contactPhoneClean, '8') ? '62' . $contactPhoneClean : $contactPhoneClean);
-        $phoneHref = "https://wa.me/{$waFormattedPhone}?text=" . urlencode("Halo Admin PENERBIT PERSIS, saya ingin berkonsultasi mengenai penerbitan buku.");
+        $phoneHref = "https://wa.me/{$waFormattedPhone}?text=" . urlencode("Assalamualaikum Admin Penerbit Persis, saya ingin berkonsultasi mengenai penerbitan buku.");
         $phoneTarget = '_blank';
     } else {
         $phoneHref = "tel:" . preg_replace('/[^0-9+]/', '', $contactPhoneRaw);
@@ -735,7 +735,7 @@
         if (str_starts_with($cleanWa, '0')) {
             $cleanWa = '62' . substr($cleanWa, 1);
         }
-        $waQuickUrl = "https://wa.me/{$cleanWa}?text=" . urlencode("Halo Tim Redaksi PERSIS PERS, saya ingin konsultasi penerbitan/percetakan.");
+        $waQuickUrl = "https://wa.me/{$cleanWa}?text=" . urlencode("Assalamualaikum Tim Redaksi Penerbit Persis, saya ingin konsultasi penerbitan/percetakan.");
     @endphp
     <div class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 group flex items-center gap-2">
         <a 
@@ -1474,7 +1474,7 @@
                 return;
             }
 
-            let msg = "Halo Admin PERSIS PERS, saya ingin memesan buku berikut:\n\n";
+            let msg = "Assalamualaikum Admin Penerbit Persis, saya ingin memesan buku berikut:\n\n";
             data.items.forEach((it, idx) => {
                 const title = it.title || (it.book ? it.book.title : 'Buku');
                 msg += `${idx + 1}. *${title}* (${it.quantity} eks) - ${it.formatted_subtotal}\n`;

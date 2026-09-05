@@ -601,7 +601,7 @@
                     <p class="text-emerald-700 mt-0.5">Hubungi Tim Layanan Redaksi &amp; Distribusi Penerbit Persis melalui WhatsApp.</p>
                 </div>
                 <a 
-                    href="https://wa.me/6282116116133?text={{ urlencode('Halo Redaksi Penerbit Persis, saya ingin bertanya mengenai program kemitraan Reseller.') }}" 
+                    href="https://wa.me/6282116116133?text={{ urlencode('Assalamualaikum Redaksi Penerbit Persis, saya ingin bertanya mengenai program kemitraan Reseller.') }}" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-sm shrink-0 transition flex items-center gap-2 shadow-2xs"
