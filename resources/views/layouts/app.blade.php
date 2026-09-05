@@ -325,27 +325,22 @@
                     @endguest
                 </div>
 
-                <!-- 2. Center: Inline Book Search (Cari Buku [ _______ ]) -->
-                <div class="flex-1 max-w-md mx-auto hidden sm:block">
-                    <form action="{{ route('katalog') }}" method="GET" class="flex items-center gap-2">
-                        <label for="topbarSearchInput" class="text-xs font-bold text-slate-700 shrink-0 whitespace-nowrap cursor-pointer">
-                            Cari Buku
-                        </label>
-                        <div class="relative flex-1">
-                            <input 
-                                type="text" 
-                                id="topbarSearchInput" 
-                                name="q" 
-                                placeholder="Ketik judul buku, penulis, ISBN..." 
-                                class="w-full px-2.5 py-1 pr-7 text-xs bg-white border border-slate-300 focus:border-emerald-600 focus:outline-none rounded-xs text-slate-800 placeholder-slate-400 shadow-2xs transition"
-                                autocomplete="off"
-                                spellcheck="false"
-                            />
-                            <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-800 p-0.5 text-xs cursor-pointer" title="Cari Buku">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
+                <!-- 2. Center: Quick Book Search Trigger (Cari Buku [ _______ ]) -->
+                <div class="flex-1 max-w-sm lg:max-w-md mx-auto hidden sm:block">
+                    <button type="button" 
+                            onclick="window.openNavbarSearchModal()" 
+                            class="w-full flex items-center justify-between gap-2 px-3 py-1 bg-white hover:bg-emerald-50/50 border border-slate-300 hover:border-emerald-600 rounded-xs shadow-2xs transition select-none cursor-pointer group text-left"
+                            title="Pencarian Buku (Ctrl + K)">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-xs font-bold text-slate-800 group-hover:text-emerald-900 shrink-0">Cari Buku</span>
+                            <span class="text-slate-300 text-xs">|</span>
+                            <span class="text-xs text-slate-400 group-hover:text-slate-600 truncate font-normal">Ketik judul, penulis, ISBN...</span>
                         </div>
-                    </form>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <kbd class="hidden md:inline-block px-1.5 py-0.2 text-[9px] font-bold font-mono text-slate-400 group-hover:text-emerald-800 bg-slate-100 group-hover:bg-white border border-slate-200 rounded-xs shadow-2xs">Ctrl K</kbd>
+                            <i class="fa-solid fa-magnifying-glass text-xs text-slate-400 group-hover:text-emerald-700 transition-colors"></i>
+                        </div>
+                    </button>
                 </div>
 
                 <!-- 3. Right: Ikuti Kami di [WA] [IG] [TikTok] etc. -->
