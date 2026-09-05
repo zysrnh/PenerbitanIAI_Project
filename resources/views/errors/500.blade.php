@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 - Akses Ditolak | PERSIS PERS</title>
+    <title>500 - Terjadi Kendala Server | PERSIS PERS</title>
     
     <!-- Favicons & App Icons (Forced & Canonical) -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
@@ -25,37 +25,29 @@
 <body class="min-h-screen bg-slate-100 flex items-center justify-center p-4 text-slate-800 select-none">
     <div class="max-w-md w-full bg-white rounded-sm border border-slate-200 shadow-xl p-6 sm:p-8 text-center space-y-5">
         
-        <div class="w-16 h-16 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-2xl mx-auto shadow-xs">
-            <i class="fa-solid fa-shield-halved"></i>
+        <div class="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-2xl mx-auto shadow-xs">
+            <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
 
         <div class="space-y-1.5">
-            <span class="text-xs font-mono font-bold text-rose-600 uppercase tracking-widest block">Error 403 • Akses Terbatas</span>
+            <span class="text-xs font-mono font-bold text-amber-700 uppercase tracking-widest block">Error 500 • Kendala Server</span>
             <h1 class="text-xl sm:text-2xl font-black text-slate-900 font-heading">
-                Akses Ditolak
+                Terjadi Kendala Sistem
             </h1>
             <p class="text-xs text-slate-500 leading-relaxed">
-                {{ $exception->getMessage() ?: 'Anda tidak memiliki izin atau wewenang untuk mengakses halaman ini.' }}
+                Maaf, sedang terjadi sedikit kendala teknis pada server. Tim pengembang kami sedang melakukan pengecekan dan perbaikan.
             </p>
         </div>
 
         <div class="pt-2 flex flex-col sm:flex-row gap-2">
-            @if(Auth::check() && Auth::user()->role === 'member')
-                <a href="{{ route('member.dashboard') }}" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
-                    <i class="fa-solid fa-arrow-left text-xs"></i>
-                    <span>Kembali ke Dashboard</span>
-                </a>
-            @elseif(Auth::check() && in_array(Auth::user()->role, ['admin', 'super_admin']))
-                <a href="{{ route('admin.dashboard') }}" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
-                    <i class="fa-solid fa-arrow-left text-xs"></i>
-                    <span>Kembali ke Dashboard</span>
-                </a>
-            @else
-                <a href="{{ route('home') }}" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
-                    <i class="fa-solid fa-house text-xs"></i>
-                    <span>Beranda Utama</span>
-                </a>
-            @endif
+            <button type="button" onclick="window.location.reload()" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs cursor-pointer">
+                <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                <span>Muat Ulang Halaman</span>
+            </button>
+            <a href="{{ route('home') }}" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-house text-xs text-emerald-700"></i>
+                <span>Beranda Utama</span>
+            </a>
         </div>
     </div>
 </body>

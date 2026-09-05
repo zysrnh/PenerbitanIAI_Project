@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 - Akses Ditolak | PERSIS PERS</title>
+    <title>404 - Halaman Tidak Ditemukan | PERSIS PERS</title>
     
     <!-- Favicons & App Icons (Forced & Canonical) -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
@@ -25,37 +25,29 @@
 <body class="min-h-screen bg-slate-100 flex items-center justify-center p-4 text-slate-800 select-none">
     <div class="max-w-md w-full bg-white rounded-sm border border-slate-200 shadow-xl p-6 sm:p-8 text-center space-y-5">
         
-        <div class="w-16 h-16 rounded-full bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center text-2xl mx-auto shadow-xs">
-            <i class="fa-solid fa-shield-halved"></i>
+        <div class="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center text-2xl mx-auto shadow-xs">
+            <i class="fa-solid fa-book-bookmark"></i>
         </div>
 
         <div class="space-y-1.5">
-            <span class="text-xs font-mono font-bold text-rose-600 uppercase tracking-widest block">Error 403 • Akses Terbatas</span>
+            <span class="text-xs font-mono font-bold text-emerald-800 uppercase tracking-widest block">Error 404 • Tidak Ditemukan</span>
             <h1 class="text-xl sm:text-2xl font-black text-slate-900 font-heading">
-                Akses Ditolak
+                Halaman Tidak Ditemukan
             </h1>
             <p class="text-xs text-slate-500 leading-relaxed">
-                {{ $exception->getMessage() ?: 'Anda tidak memiliki izin atau wewenang untuk mengakses halaman ini.' }}
+                Maaf, halaman atau buku yang Anda tuju tidak ditemukan, telah dipindahkan, atau tautan yang Anda akses kurang tepat.
             </p>
         </div>
 
         <div class="pt-2 flex flex-col sm:flex-row gap-2">
-            @if(Auth::check() && Auth::user()->role === 'member')
-                <a href="{{ route('member.dashboard') }}" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
-                    <i class="fa-solid fa-arrow-left text-xs"></i>
-                    <span>Kembali ke Dashboard</span>
-                </a>
-            @elseif(Auth::check() && in_array(Auth::user()->role, ['admin', 'super_admin']))
-                <a href="{{ route('admin.dashboard') }}" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
-                    <i class="fa-solid fa-arrow-left text-xs"></i>
-                    <span>Kembali ke Dashboard</span>
-                </a>
-            @else
-                <a href="{{ route('home') }}" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
-                    <i class="fa-solid fa-house text-xs"></i>
-                    <span>Beranda Utama</span>
-                </a>
-            @endif
+            <a href="{{ route('home') }}" class="flex-1 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-house text-xs"></i>
+                <span>Beranda Utama</span>
+            </a>
+            <a href="{{ route('catalog.index') }}" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+                <i class="fa-solid fa-book-open text-xs text-emerald-700"></i>
+                <span>Katalog Buku</span>
+            </a>
         </div>
     </div>
 </body>
