@@ -51,9 +51,9 @@ class HomeController extends Controller
 
         // Fetch Featured Books for Homepage Showcase
         try {
-            $featuredBooks = Book::with('category')->where('is_featured', true)->latest()->take(8)->get();
+            $featuredBooks = Book::published()->where('is_best_seller', true)->latest()->take(8)->get();
             if ($featuredBooks->isEmpty()) {
-                $featuredBooks = Book::with('category')->latest()->take(8)->get();
+                $featuredBooks = Book::published()->latest()->take(8)->get();
             }
         } catch (\Throwable $e) {
             $featuredBooks = collect([]);

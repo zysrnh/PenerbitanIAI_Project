@@ -97,43 +97,79 @@ class CatalogController extends Controller
 
     public function searchApi(Request $request)
     {
-        $q = trim($request->input('q', ''));
+        try {
+            $q = trim($request->input('q', ''));
 
-        $query = Book::published()->latest();
+            $query = Book::query();
 
-        if (!empty($q)) {
-            $query->where(function ($queryBuilder) use ($q) {
-                $queryBuilder->where('title', 'like', "%{$q}%")
-                             ->orWhere('author', 'like', "%{$q}%")
-                             ->orWhere('isbn', 'like', "%{$q}%")
-                             ->orWhere('category', 'like', "%{$q}%")
-                             ->orWhere('synopsis', 'like', "%{$q}%");
+            // Handle status published or default/null
+            $query->where(function ($qb) {
+                $qb->where('status', 'published')
+                   ->orWhereNull('status')
+                   ->orWhere('status', '');
             });
+
+            if (!empty($q)) {
+                $query->where(function ($queryBuilder) use ($q) {
+                    $queryBuilder->where('title', 'like', "%{$q}%")
+                                 ->orWhere('author', 'like', "%{$q}%")
+                                 ->orWhere('isbn', 'like', "%{$q}%")
+                                 ->orWhere('category', 'like', "%{$q}%")
+                                 ->orWhere('synopsis', 'like', "%{$q}%");
+                });
+            }
+
+            $books = $query->latest('id')->take(10)->get()->map(function ($book) {
+                // Safe Price Formatting for PHP 8.3
+                $rawPrice = (string)$book->price;
+                $formattedPrice = $rawPrice ?: 'Hubungi Admin';
+                if (is_numeric($rawPrice)) {
+                    $formattedPrice = 'Rp ' . number_format((float)$rawPrice, 0, ',', '.');
+                } elseif (preg_match('/[0-9]+/', $rawPrice)) {
+                    $numOnly = preg_replace('/[^0-9]/', '', $rawPrice);
+                    if (!empty($numOnly)) {
+                        $formattedPrice = 'Rp ' . number_format((float)$numOnly, 0, ',', '.');
+                    }
+                }
+
+                // Cover Image URL Resolver
+                $coverUrl = null;
+                if (!empty($book->cover_image)) {
+                    $coverUrl = (str_starts_with($book->cover_image, 'http') || str_starts_with($book->cover_image, '/'))
+                        ? $book->cover_image
+                        : asset('storage/' . $book->cover_image);
+                }
+
+                return [
+                    'id'              => $book->id,
+                    'title'           => $book->title,
+                    'slug'            => $book->slug,
+                    'author'          => $book->author ?: 'Penulis PERSIS',
+                    'category'        => $book->category ?: 'Buku Ajar',
+                    'isbn'            => $book->isbn ?: '',
+                    'price'           => $rawPrice,
+                    'formatted_price' => $formattedPrice,
+                    'year'            => $book->year ?: '2026',
+                    'pages'           => $book->pages ?: '-',
+                    'cover_url'       => $coverUrl,
+                    'is_new_release'  => (bool)$book->is_new_release,
+                    'is_best_seller'  => (bool)$book->is_best_seller,
+                    'catalog_url'     => route('katalog', ['q' => $book->title]),
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'count'   => $books->count(),
+                'books'   => $books,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'count'   => 0,
+                'books'   => [],
+                'message' => $e->getMessage(),
+            ], 200); // return 200 so fetch JSON doesn't trigger fatal network error
         }
-
-        $books = $query->take(12)->get()->map(function ($book) {
-            return [
-                'id' => $book->id,
-                'title' => $book->title,
-                'slug' => $book->slug,
-                'author' => $book->author,
-                'category' => $book->category,
-                'isbn' => $book->isbn,
-                'price' => $book->price,
-                'formatted_price' => 'Rp ' . number_format($book->price, 0, ',', '.'),
-                'year' => $book->year,
-                'pages' => $book->pages,
-                'cover_url' => $book->cover_image ? (str_starts_with($book->cover_image, 'http') ? $book->cover_image : asset('storage/' . $book->cover_image)) : asset('images/books/book_placeholder.png'),
-                'is_new_release' => (bool)$book->is_new_release,
-                'is_best_seller' => (bool)$book->is_best_seller,
-                'catalog_url' => route('katalog', ['q' => $book->title]),
-            ];
-        });
-
-        return response()->json([
-            'success' => true,
-            'count' => $books->count(),
-            'books' => $books
-        ]);
     }
 }
