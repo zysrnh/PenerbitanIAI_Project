@@ -285,6 +285,21 @@
                           (!empty($socTiktok) && $socTiktokActive) ||
                           (!empty($socYoutube) && $socYoutubeActive) ||
                           (!empty($socLinkedin) && $socLinkedinActive);
+
+    $contactPhoneRaw = \App\Models\SiteSetting::get('contact_phone', '(022) 5441951');
+    $contactPhoneClean = preg_replace('/[^0-9]/', '', $contactPhoneRaw);
+    $isMobilePhone = str_starts_with($contactPhoneClean, '08') || str_starts_with($contactPhoneClean, '628') || str_starts_with($contactPhoneClean, '8');
+    
+    if ($isMobilePhone) {
+        $waFormattedPhone = str_starts_with($contactPhoneClean, '0') 
+            ? '62' . substr($contactPhoneClean, 1) 
+            : (str_starts_with($contactPhoneClean, '8') ? '62' . $contactPhoneClean : $contactPhoneClean);
+        $phoneHref = "https://wa.me/{$waFormattedPhone}?text=" . urlencode("Halo Admin PENERBIT PERSIS, saya ingin berkonsultasi mengenai penerbitan buku.");
+        $phoneTarget = '_blank';
+    } else {
+        $phoneHref = "tel:" . preg_replace('/[^0-9+]/', '', $contactPhoneRaw);
+        $phoneTarget = '_self';
+    }
 @endphp
 
     @if($topbarActive)
@@ -294,12 +309,19 @@
                 
                 <!-- Left: Quick Contact (Phone & Email Badges) -->
                 <div class="flex items-center gap-2 text-[11px] truncate flex-wrap">
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', \App\Models\SiteSetting::get('contact_phone', '(022) 5441951')) }}" 
-                       class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4.5px] bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-800/80 shadow-2xs hover:shadow-xs transition-all duration-200 group">
+                    <a href="{{ $phoneHref }}" 
+                       target="{{ $phoneTarget }}" 
+                       @if($phoneTarget === '_blank') rel="noopener noreferrer" @endif
+                       class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4.5px] bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-800/80 shadow-2xs hover:shadow-xs transition-all duration-200 group"
+                       title="{{ $isMobilePhone ? 'Hubungi via WhatsApp Resmi' : 'Telepon Kantor' }}">
                         <span class="w-4 h-4 rounded-xs bg-emerald-600/30 text-emerald-400 flex items-center justify-center text-[9.5px]">
-                            <i class="fa-solid fa-phone"></i>
+                            @if($isMobilePhone)
+                                <i class="fa-brands fa-whatsapp text-[10px]"></i>
+                            @else
+                                <i class="fa-solid fa-phone"></i>
+                            @endif
                         </span>
-                        <span class="font-semibold tracking-tight text-slate-100 group-hover:text-white">{{ \App\Models\SiteSetting::get('contact_phone', '(022) 5441951') }}</span>
+                        <span class="font-semibold tracking-tight text-slate-100 group-hover:text-white">{{ $contactPhoneRaw }}</span>
                     </a>
                     <a href="mailto:{{ \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com') }}" 
                        class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[4.5px] bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-800/80 shadow-2xs hover:shadow-xs transition-all duration-200 group">
