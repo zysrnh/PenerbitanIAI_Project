@@ -992,11 +992,6 @@
                     <i class="fa-solid fa-right-to-bracket text-xs"></i>
                     <span>Masuk Akun Member</span>
                 </a>
-                <a href="{{ route('member.register') }}" 
-                   class="w-full py-2.5 px-4 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 border border-slate-200 hover:border-emerald-300 font-bold text-xs rounded-sm transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-plus text-xs text-emerald-700"></i>
-                    <span>Daftar Akun Baru (Gratis)</span>
-                </a>
                 <button type="button" onclick="window.closeLoginPromptModal()" class="w-full py-1.5 text-xs text-slate-400 hover:text-slate-600 font-medium transition cursor-pointer">
                     Nanti Saja
                 </button>
