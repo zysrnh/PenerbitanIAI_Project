@@ -434,8 +434,27 @@
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
-                <!-- Header Action Buttons (100% Unified Clean Style for All Logged-in Users) -->
-                <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                <!-- Header Action Buttons (100% Unified Clean Style for All Users) -->
+                <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                    
+                    <!-- Search Books Trigger Button (Desktop Pill with Ctrl+K badge) -->
+                    <button type="button" 
+                            onclick="window.openNavbarSearchModal()" 
+                            class="user-nav-btn h-10 px-3 hidden sm:flex items-center gap-2 bg-slate-50 hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-500 hover:text-emerald-800 rounded-sm shadow-2xs transition select-none cursor-pointer group shrink-0"
+                            title="Cari Buku (Ctrl + K)">
+                        <i class="fa-solid fa-magnifying-glass text-xs text-slate-400 group-hover:text-emerald-700 pointer-events-none transition-colors"></i>
+                        <span class="text-xs font-semibold text-slate-600 group-hover:text-emerald-900 pointer-events-none">Cari Buku...</span>
+                        <kbd class="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-bold font-mono text-slate-400 group-hover:text-emerald-800 bg-white border border-slate-200 rounded-xs shadow-2xs pointer-events-none">Ctrl K</kbd>
+                    </button>
+
+                    <!-- Mobile Search Button (Square Icon for <sm screens) -->
+                    <button type="button" 
+                            onclick="window.openNavbarSearchModal()" 
+                            class="sm:hidden w-10 h-10 rounded-sm flex items-center justify-center bg-white hover:bg-emerald-50 active:bg-emerald-100 border border-slate-200 hover:border-emerald-600 text-slate-700 hover:text-emerald-800 shadow-2xs cursor-pointer transition select-none shrink-0"
+                            title="Cari Buku">
+                        <i class="fa-solid fa-magnifying-glass text-sm text-emerald-800 pointer-events-none"></i>
+                    </button>
+
                     @auth
                         {{-- 1. Shopping Cart Button --}}
                         <button type="button" 
@@ -567,6 +586,16 @@
 
         <!-- Mobile Drawer Menu -->
         <div id="mobile-drawer" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-2 animate-fade-in-up shadow-lg">
+            <!-- Mobile Search Bar in Drawer -->
+            <div class="mb-3">
+                <button type="button" onclick="window.closeMobileMenu(); window.openNavbarSearchModal();" class="w-full py-2.5 px-3.5 bg-slate-50 hover:bg-emerald-50 border border-slate-200 rounded-sm text-xs font-semibold text-slate-600 hover:text-emerald-900 flex items-center justify-between shadow-2xs transition cursor-pointer">
+                    <span class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-magnifying-glass text-emerald-700"></i>
+                        <span>Cari Judul Buku / ISBN...</span>
+                    </span>
+                    <i class="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
+                </button>
+            </div>
             <a href="{{ url('/') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->is('/') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-solid fa-house text-emerald-700 text-xs mr-2 w-4"></i> Beranda
             </a>
@@ -1764,8 +1793,280 @@
 
             </div>
 
+    <!-- ========================================================================= -->
+    <!-- QUICK BOOK LIVE SEARCH MODAL (POP-UP PENCARIAN BUKU REALTIME) -->
+    <!-- ========================================================================= -->
+    <div id="navbarSearchModal" class="fixed inset-0 z-[1200] hidden items-start justify-center p-3 sm:p-6 sm:pt-20 overflow-y-auto" style="display: none;">
+        <!-- Backdrop -->
+        <div id="navbarSearchModalBackdrop" onclick="window.closeNavbarSearchModal()" class="fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-250 opacity-0 cursor-pointer"></div>
+
+        <!-- Modal Panel -->
+        <div id="navbarSearchModalPanel" class="relative z-10 w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden transform scale-95 opacity-0 transition-all duration-200 ease-out">
+            
+            <!-- Top Search Input Bar -->
+            <div class="p-3.5 sm:p-4 bg-white border-b border-slate-200 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </div>
+                <input 
+                    type="text" 
+                    id="navbarSearchInput" 
+                    placeholder="Ketik judul buku, nama penulis, atau ISBN..." 
+                    class="w-full text-sm sm:text-base font-semibold text-slate-900 placeholder-slate-400 bg-transparent border-none focus:outline-none focus:ring-0"
+                    autocomplete="off"
+                    spellcheck="false"
+                />
+                <button type="button" onclick="window.clearNavbarSearchInput()" id="navbarSearchClearBtn" class="hidden text-slate-400 hover:text-slate-600 p-1 text-xs cursor-pointer" title="Bersihkan">
+                    <i class="fa-solid fa-circle-xmark text-sm"></i>
+                </button>
+                <button type="button" onclick="window.closeNavbarSearchModal()" class="px-2.5 py-1 text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-sm transition cursor-pointer select-none">
+                    ESC
+                </button>
+            </div>
+
+            <!-- Quick Filter Categories / Popular Tags -->
+            <div class="px-4 py-2.5 bg-slate-50 border-b border-slate-100 flex items-center gap-1.5 overflow-x-auto text-[11px] select-none no-scrollbar">
+                <span class="text-slate-400 font-bold uppercase text-[9.5px] shrink-0 mr-1">Rekomendasi:</span>
+                <button type="button" onclick="window.setNavbarSearchKeyword('')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-800 font-semibold transition shrink-0 cursor-pointer">
+                    Semua Terbitan
+                </button>
+                <button type="button" onclick="window.setNavbarSearchKeyword('Pendidikan')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-800 font-semibold transition shrink-0 cursor-pointer">
+                    Pendidikan
+                </button>
+                <button type="button" onclick="window.setNavbarSearchKeyword('Agama Islam')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-800 font-semibold transition shrink-0 cursor-pointer">
+                    Agama Islam
+                </button>
+                <button type="button" onclick="window.setNavbarSearchKeyword('Monograf Riset')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-800 font-semibold transition shrink-0 cursor-pointer">
+                    Monograf Riset
+                </button>
+                <button type="button" onclick="window.setNavbarSearchKeyword('Buku Ajar')" class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-700 hover:border-emerald-500 hover:text-emerald-800 font-semibold transition shrink-0 cursor-pointer">
+                    Buku Ajar
+                </button>
+            </div>
+
+            <!-- Results Container -->
+            <div id="navbarSearchResultsContainer" class="max-h-[60vh] sm:max-h-[380px] overflow-y-auto p-2 sm:p-3">
+                <!-- Initial State -->
+                <div id="navbarSearchInitialState" class="py-10 text-center space-y-2">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto text-lg shadow-2xs border border-emerald-100">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800">Pencarian Buku Terbitan PERSIS PERS</p>
+                    <p class="text-[11px] text-slate-500 max-w-sm mx-auto">Ketik judul buku, nama dosen/penulis, atau nomor ISBN untuk mencari langsung.</p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="navbarSearchLoadingState" class="hidden py-10 text-center space-y-2">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl text-emerald-700"></i>
+                    <p class="text-xs text-slate-500 font-medium">Mencari buku terbitan...</p>
+                </div>
+
+                <!-- Live Results List -->
+                <div id="navbarSearchResultsList" class="space-y-2 hidden"></div>
+
+                <!-- No Results State -->
+                <div id="navbarSearchEmptyState" class="hidden py-10 text-center space-y-2">
+                    <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mx-auto text-lg border border-rose-100">
+                        <i class="fa-solid fa-face-meh"></i>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800">Buku Tidak Ditemukan</p>
+                    <p class="text-[11px] text-slate-500">Coba gunakan kata kunci judul atau nama penulis yang lain.</p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500 select-none">
+                <div class="flex items-center gap-3">
+                    <span class="hidden sm:inline"><kbd class="px-1 py-0.5 bg-white border border-slate-200 rounded-xs font-mono text-[9px]">ESC</kbd> tutup</span>
+                    <span class="hidden sm:inline"><kbd class="px-1 py-0.5 bg-white border border-slate-200 rounded-xs font-mono text-[9px]">ENTER</kbd> lihat di katalog</span>
+                </div>
+                <a href="{{ route('katalog') }}" id="navbarSearchSeeAllLink" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 transition">
+                    <span>Lihat Semua Buku di Katalog</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
+
         </div>
     </div>
+
+    <!-- Live Search JavaScript Engine -->
+    <script>
+        (function() {
+            let searchTimeout = null;
+            const searchModal = document.getElementById('navbarSearchModal');
+            const searchBackdrop = document.getElementById('navbarSearchModalBackdrop');
+            const searchPanel = document.getElementById('navbarSearchModalPanel');
+            const searchInput = document.getElementById('navbarSearchInput');
+            const searchClearBtn = document.getElementById('navbarSearchClearBtn');
+            const initialState = document.getElementById('navbarSearchInitialState');
+            const loadingState = document.getElementById('navbarSearchLoadingState');
+            const emptyState = document.getElementById('navbarSearchEmptyState');
+            const resultsList = document.getElementById('navbarSearchResultsList');
+            const seeAllLink = document.getElementById('navbarSearchSeeAllLink');
+
+            window.openNavbarSearchModal = function() {
+                if (!searchModal) return;
+                searchModal.style.display = 'flex';
+                searchModal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+                
+                setTimeout(() => {
+                    searchBackdrop.classList.remove('opacity-0');
+                    searchBackdrop.classList.add('opacity-100');
+                    searchPanel.classList.remove('scale-95', 'opacity-0');
+                    searchPanel.classList.add('scale-100', 'opacity-100');
+                    searchInput.focus();
+                    if (searchInput.value.trim() === '') {
+                        window.fetchLiveBooks('');
+                    }
+                }, 10);
+            };
+
+            window.closeNavbarSearchModal = function() {
+                if (!searchModal) return;
+                searchBackdrop.classList.remove('opacity-100');
+                searchBackdrop.classList.add('opacity-0');
+                searchPanel.classList.remove('scale-100', 'opacity-100');
+                searchPanel.classList.add('scale-95', 'opacity-0');
+                document.body.classList.remove('overflow-hidden');
+
+                setTimeout(() => {
+                    searchModal.style.display = 'none';
+                    searchModal.classList.add('hidden');
+                }, 200);
+            };
+
+            window.clearNavbarSearchInput = function() {
+                if (!searchInput) return;
+                searchInput.value = '';
+                searchClearBtn.classList.add('hidden');
+                seeAllLink.href = '{{ route("katalog") }}';
+                searchInput.focus();
+                window.fetchLiveBooks('');
+            };
+
+            window.setNavbarSearchKeyword = function(keyword) {
+                if (!searchInput) return;
+                searchInput.value = keyword;
+                if (keyword) {
+                    searchClearBtn.classList.remove('hidden');
+                } else {
+                    searchClearBtn.classList.add('hidden');
+                }
+                searchInput.focus();
+                window.fetchLiveBooks(keyword);
+            };
+
+            window.fetchLiveBooks = function(query) {
+                const q = query.trim();
+                seeAllLink.href = q ? `{{ route('katalog') }}?q=${encodeURIComponent(q)}` : `{{ route('katalog') }}`;
+
+                if (q.length > 0) {
+                    searchClearBtn.classList.remove('hidden');
+                } else {
+                    searchClearBtn.classList.add('hidden');
+                }
+
+                initialState.classList.add('hidden');
+                emptyState.classList.add('hidden');
+                resultsList.classList.add('hidden');
+                loadingState.classList.remove('hidden');
+
+                fetch(`{{ route('api.books.search') }}?q=${encodeURIComponent(q)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        loadingState.classList.add('hidden');
+                        if (data && data.success && data.books && data.books.length > 0) {
+                            renderSearchResults(data.books);
+                            resultsList.classList.remove('hidden');
+                        } else {
+                            emptyState.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Search error:', err);
+                        loadingState.classList.add('hidden');
+                        emptyState.classList.remove('hidden');
+                    });
+            };
+
+            function renderSearchResults(books) {
+                let html = '';
+                books.forEach(book => {
+                    const badgeRelease = book.is_new_release ? '<span class="px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-amber-100 text-amber-800 uppercase">Baru</span>' : '';
+                    const badgeBest = book.is_best_seller ? '<span class="px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-rose-100 text-rose-800 uppercase">Best Seller</span>' : '';
+
+                    html += `
+                    <div class="p-2.5 sm:p-3 bg-white hover:bg-emerald-50/60 border border-slate-200 hover:border-emerald-400 rounded-sm transition flex items-center justify-between gap-3 group shadow-2xs">
+                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                            <img src="${book.cover_url}" alt="${book.title}" class="w-11 h-15 object-cover rounded-xs border border-slate-200 shadow-2xs shrink-0 bg-slate-100" />
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5 flex-wrap mb-0.5">
+                                    <span class="px-1.5 py-0.2 rounded-xs text-[9.5px] font-bold bg-emerald-100 text-emerald-800">${book.category || 'Buku'}</span>
+                                    ${badgeRelease}
+                                    ${badgeBest}
+                                    ${book.isbn ? `<span class="text-[9.5px] text-slate-400 font-mono">ISBN: ${book.isbn}</span>` : ''}
+                                </div>
+                                <h4 class="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-emerald-900 truncate" title="${book.title}">
+                                    ${book.title}
+                                </h4>
+                                <p class="text-[11px] text-slate-500 truncate mt-0.5">
+                                    <i class="fa-solid fa-user-pen text-[9px] text-slate-400 mr-1"></i>${book.author || 'Penulis PERSIS'}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0 flex flex-col items-end gap-1.5">
+                            <span class="font-mono font-bold text-xs sm:text-sm text-emerald-800">${book.formatted_price}</span>
+                            <a href="${book.catalog_url}" class="px-2.5 py-1 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[10.5px] font-bold transition flex items-center gap-1 shadow-2xs">
+                                <span>Buka Buku</span>
+                                <i class="fa-solid fa-chevron-right text-[8px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                    `;
+                });
+                resultsList.innerHTML = html;
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    clearTimeout(searchTimeout);
+                    const val = e.target.value;
+                    searchTimeout = setTimeout(() => {
+                        window.fetchLiveBooks(val);
+                    }, 250);
+                });
+
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const val = searchInput.value.trim();
+                        if (val) {
+                            window.location.href = `{{ route('katalog') }}?q=${encodeURIComponent(val)}`;
+                        } else {
+                            window.location.href = `{{ route('katalog') }}`;
+                        }
+                    }
+                });
+            }
+
+            // Keyboard shortcut listener (Ctrl + K or Cmd + K, Esc)
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    if (searchModal && searchModal.classList.contains('hidden')) {
+                        window.openNavbarSearchModal();
+                    } else {
+                        window.closeNavbarSearchModal();
+                    }
+                } else if (e.key === 'Escape') {
+                    if (searchModal && !searchModal.classList.contains('hidden')) {
+                        window.closeNavbarSearchModal();
+                    }
+                }
+            });
+        })();
+    </script>
 
     @stack('scripts')
 </body>

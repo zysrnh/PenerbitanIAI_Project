@@ -94,4 +94,46 @@ class CatalogController extends Controller
             'activeCategory'
         ));
     }
+
+    public function searchApi(Request $request)
+    {
+        $q = trim($request->input('q', ''));
+
+        $query = Book::published()->latest();
+
+        if (!empty($q)) {
+            $query->where(function ($queryBuilder) use ($q) {
+                $queryBuilder->where('title', 'like', "%{$q}%")
+                             ->orWhere('author', 'like', "%{$q}%")
+                             ->orWhere('isbn', 'like', "%{$q}%")
+                             ->orWhere('category', 'like', "%{$q}%")
+                             ->orWhere('synopsis', 'like', "%{$q}%");
+            });
+        }
+
+        $books = $query->take(12)->get()->map(function ($book) {
+            return [
+                'id' => $book->id,
+                'title' => $book->title,
+                'slug' => $book->slug,
+                'author' => $book->author,
+                'category' => $book->category,
+                'isbn' => $book->isbn,
+                'price' => $book->price,
+                'formatted_price' => 'Rp ' . number_format($book->price, 0, ',', '.'),
+                'year' => $book->year,
+                'pages' => $book->pages,
+                'cover_url' => $book->cover_image ? (str_starts_with($book->cover_image, 'http') ? $book->cover_image : asset('storage/' . $book->cover_image)) : asset('images/books/book_placeholder.png'),
+                'is_new_release' => (bool)$book->is_new_release,
+                'is_best_seller' => (bool)$book->is_best_seller,
+                'catalog_url' => route('katalog', ['q' => $book->title]),
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'count' => $books->count(),
+            'books' => $books
+        ]);
+    }
 }

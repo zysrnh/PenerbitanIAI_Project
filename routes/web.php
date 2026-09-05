@@ -63,6 +63,7 @@ Route::get('/tentang', [AboutController::class, 'index'])->name('tentang');
 Route::get('/reseller', [ResellerController::class, 'index'])->name('reseller');
 Route::post('/reseller/daftar', [ResellerController::class, 'store'])->name('reseller.store')->middleware('throttle:6,1');
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
+Route::get('/api/books/search', [CatalogController::class, 'searchApi'])->name('api.books.search');
 Route::get('/berita', [\App\Http\Controllers\ArticleController::class, 'index'])->name('berita.index');
 Route::get('/berita/{slug}', [\App\Http\Controllers\ArticleController::class, 'show'])->name('berita.show');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
