@@ -1792,6 +1792,8 @@
                 </div>
 
             </div>
+        </div>
+    </div>
 
     <!-- ========================================================================= -->
     <!-- QUICK BOOK LIVE SEARCH MODAL (POP-UP PENCARIAN BUKU REALTIME) -->
