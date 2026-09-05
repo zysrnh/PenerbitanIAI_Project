@@ -501,7 +501,7 @@
                                         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-gauge-high text-emerald-600 text-xs w-4"></i> Dashboard Admin
                                         </a>
-                                        <a href="{{ route('orders.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
+                                        <a href="{{ route('admin.orders.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
                                             <i class="fa-solid fa-receipt text-emerald-600 text-xs w-4"></i> Kelola Pesanan Buku
                                         </a>
                                         <a href="{{ route('admin.profile') }}" class="flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-sm transition">
@@ -691,7 +691,7 @@
                         <a href="{{ route('admin.dashboard') }}" class="w-full py-2.5 bg-[#006830] text-white rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
                             <i class="fa-solid fa-gauge-high text-emerald-300"></i> Dashboard Admin
                         </a>
-                        <a href="{{ route('orders.index') }}" class="w-full py-2.5 bg-emerald-50 text-emerald-900 border border-emerald-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
+                        <a href="{{ route('admin.orders.index') }}" class="w-full py-2.5 bg-emerald-50 text-emerald-900 border border-emerald-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs">
                             <i class="fa-solid fa-receipt text-emerald-700"></i> Kelola Pesanan Buku
                         </a>
                         <button type="button" onclick="window.closeMobileMenu(); window.openCartDrawer();" class="w-full py-2.5 bg-white text-slate-700 border border-slate-300 rounded-sm font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
