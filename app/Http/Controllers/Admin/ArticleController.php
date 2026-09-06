@@ -109,6 +109,12 @@ class ArticleController extends Controller
             $validated['thumbnail'] = '/storage/' . $path;
         }
 
+        // Auto-extract excerpt from content if not provided
+        if (empty($validated['excerpt']) && !empty($validated['content'])) {
+            $cleanText = trim(preg_replace('/\s+/', ' ', strip_tags($validated['content'])));
+            $validated['excerpt'] = Str::limit($cleanText, 180, '...');
+        }
+
         $validated['author_id'] = Auth::id();
         $validated['is_featured'] = $request->has('is_featured');
         $validated['published_at'] = $validated['published_at'] ?? now();
@@ -173,6 +179,12 @@ class ArticleController extends Controller
         }
 
         unset($validated['category_name']);
+
+        // Auto-extract excerpt from content if not provided
+        if (empty($validated['excerpt']) && !empty($validated['content'])) {
+            $cleanText = trim(preg_replace('/\s+/', ' ', strip_tags($validated['content'])));
+            $validated['excerpt'] = Str::limit($cleanText, 180, '...');
+        }
 
         if ($request->hasFile('thumbnail_file')) {
             $path = $request->file('thumbnail_file')->store('articles/thumbnails', 'public');

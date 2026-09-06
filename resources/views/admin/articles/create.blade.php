@@ -45,23 +45,14 @@
         <div class="lg:col-span-8 space-y-5">
             
             <!-- Judul Berita -->
-            <div class="bg-white p-5 rounded-sm border border-slate-200/90 shadow-2xs space-y-4">
+            <div class="bg-white p-5 rounded-sm border border-slate-200/90 shadow-2xs space-y-2">
                 <div>
                     <label class="block font-bold text-slate-800 text-xs mb-1.5">Judul Berita / Artikel <span class="text-rose-500">*</span></label>
-                    <input type="text" name="title" id="article_title" value="{{ old('title') }}" required placeholder="Masukkan judul berita yang menarik..." class="w-full px-3.5 py-2.5 text-sm font-bold text-slate-900 rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600" oninput="autoGenerateSlug()" />
-                </div>
-
-                <!-- Slug URL -->
-                <div class="flex items-center gap-2 text-xs bg-slate-50 p-2.5 rounded-xs border border-slate-200">
-                    <span class="text-slate-500 font-mono text-[11px] shrink-0">URL Slug: /berita/</span>
-                    <input type="text" name="slug" id="article_slug" value="{{ old('slug') }}" placeholder="judul-berita-otomatis" class="w-full px-2 py-1 text-xs rounded-xs border border-slate-300 bg-white font-mono text-[11px] focus:outline-hidden focus:border-emerald-600" />
-                </div>
-
-                <!-- Ringkasan / Excerpt -->
-                <div>
-                    <label class="block font-bold text-slate-800 text-xs mb-1">Ringkasan Singkat (Excerpt)</label>
-                    <p class="text-[11px] text-slate-400 mb-1.5">Teks ringkasan 1-2 kalimat yang tampil di kartu berita dan pratinjau media sosial.</p>
-                    <textarea name="excerpt" rows="2" placeholder="Tuliskan rangkuman pokok berita di sini..." class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 text-slate-700">{{ old('excerpt') }}</textarea>
+                    <input type="text" name="title" id="article_title" value="{{ old('title') }}" required placeholder="Masukkan judul berita yang menarik..." class="w-full px-3.5 py-2.5 text-sm font-bold text-slate-900 rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600" />
+                    <p class="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-emerald-600 text-xs"></i>
+                        <span>URL slug dan ringkasan singkat berita akan di-generate otomatis oleh sistem dari judul dan isi berita.</span>
+                    </p>
                 </div>
             </div>
 
