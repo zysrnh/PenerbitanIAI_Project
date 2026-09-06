@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,16 +14,16 @@ class ThreatShieldMiddleware
     /**
      * Anti-DDoS rate limiter + intelligent malicious payload blocker.
      *
-     * Layer 1: Global per-IP rate limiting (150 req/min)
+     * Layer 1: Global per-IP rate limiting (Whitelisted for Admin & Assets)
      * Layer 2: Targeted SQL injection pattern detection
      * Layer 3: Malicious script & payload detection (public routes)
      * Layer 4: Path traversal attempt detection
      * Layer 5: Known exploit scanner blocking
      */
 
-    private const GLOBAL_RATE_LIMIT = 180;
+    private const GLOBAL_RATE_LIMIT = 350;
     private const RATE_WINDOW_SECONDS = 60;
-    private const VIOLATION_THRESHOLD = 15;
+    private const VIOLATION_THRESHOLD = 20;
     private const BAN_DURATION_MINUTES = 30;
 
     public function handle(Request $request, Closure $next): Response
@@ -34,14 +35,21 @@ class ThreatShieldMiddleware
             return response('Akses Anda sementara dibatasi karena aktivitas mencurigakan. Silakan hubungi admin.', 429);
         }
 
-        // 2. Global Rate Limiter per IP
-        $rateKey = "threat_rate:{$ip}";
-        $count = (int) Cache::get($rateKey, 0);
-        if ($count >= self::GLOBAL_RATE_LIMIT) {
-            $this->recordViolation($ip, 'rate_limit');
-            return response('Terlalu banyak permintaan (Rate Limit Exceeded). Harap tunggu sejenak.', 429);
+        // 2. Global Rate Limiter per IP (Exempt Admin, Authenticated Users, and Static Asset Requests)
+        $isAdminOrAsset = $request->is('admin*') || 
+                          $request->is('storage*') || 
+                          $request->is('images*') || 
+                          Auth::check();
+
+        if (!$isAdminOrAsset) {
+            $rateKey = "threat_rate:{$ip}";
+            $count = (int) Cache::get($rateKey, 0);
+            if ($count >= self::GLOBAL_RATE_LIMIT) {
+                $this->recordViolation($ip, 'rate_limit');
+                return response('Terlalu banyak permintaan (Rate Limit Exceeded). Harap tunggu sejenak.', 429);
+            }
+            Cache::put($rateKey, $count + 1, now()->addSeconds(self::RATE_WINDOW_SECONDS));
         }
-        Cache::put($rateKey, $count + 1, now()->addSeconds(self::RATE_WINDOW_SECONDS));
 
         // 3. Path Traversal Detection (on URI)
         $uri = rawurldecode($request->getRequestUri());
@@ -59,7 +67,7 @@ class ThreatShieldMiddleware
         }
 
         // 5. Query string SQLi / XSS inspection for public & guest requests
-        if (!$request->is('admin/*')) {
+        if (!$request->is('admin*')) {
             $queryString = (string) $request->getQueryString();
             if (!empty($queryString) && $this->containsMaliciousPayload($queryString)) {
                 $this->recordViolation($ip, 'malicious_query');
