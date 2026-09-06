@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Masuk Admin | PERSIS PERS</title>
+    <title>Lupa Kata Sandi Admin | PERSIS PERS</title>
 
     <!-- Favicons & App Icons -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}?v=3">
@@ -11,7 +11,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}?v=3">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v=3">
     <link rel="manifest" href="{{ asset('site.webmanifest') }}?v=3">
-    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=3">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +33,6 @@
             outline: none; 
         }
         
-        /* Ultra Smooth Entrance Animation */
         @keyframes smoothFadeUp {
             0% {
                 opacity: 0;
@@ -48,15 +46,9 @@
         .animate-smooth-in {
             animation: smoothFadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
-
-        @media (max-width: 640px) {
-            .auth-container {
-                min-height: 100dvh;
-            }
-        }
     </style>
 </head>
-<body class="h-full antialiased auth-container flex flex-col items-center justify-center p-3.5 sm:p-6 bg-[#0a0f1d] text-slate-100 selection:bg-emerald-500 selection:text-white">
+<body class="h-full antialiased flex flex-col items-center justify-center p-3.5 sm:p-6 bg-[#0a0f1d] text-slate-100 selection:bg-emerald-500 selection:text-white">
 
     <div class="w-full max-w-sm my-auto animate-smooth-in space-y-4">
         
@@ -65,16 +57,29 @@
             <a href="{{ url('/') }}" class="inline-block transition-transform duration-300 hover:scale-105 active:scale-95" title="PERSIS PERS">
                 <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 sm:h-14 w-auto mx-auto object-contain" />
             </a>
-            <p class="text-xs text-slate-400 font-medium tracking-tight">Panel Administrasi &amp; Redaksi</p>
+            <p class="text-xs text-slate-400 font-medium tracking-tight">Pemulihan Kata Sandi Admin</p>
         </div>
 
-        <!-- Main Admin Login Card -->
+        <!-- Main Card -->
         <div class="bg-white text-slate-800 rounded-sm shadow-2xl border border-slate-200 p-5 sm:p-7 space-y-4">
             
+            <div class="space-y-1">
+                <h1 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-key text-[#006830]"></i>
+                    <span>Lupa Kata Sandi?</span>
+                </h1>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Masukkan alamat email administrator Anda yang terdaftar. Kami akan mengirimkan tautan untuk menyetel ulang kata sandi.
+                </p>
+            </div>
+
             @if(session('success'))
-                <div class="p-3 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2.5">
-                    <i class="fa-solid fa-circle-check text-emerald-600 shrink-0 text-sm"></i>
-                    <span>{{ session('success') }}</span>
+                <div class="p-3 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium space-y-1.5">
+                    <div class="flex items-center gap-2 font-bold text-emerald-900">
+                        <i class="fa-solid fa-circle-check text-emerald-600 shrink-0 text-sm"></i>
+                        <span>Permintaan Terkirim</span>
+                    </div>
+                    <p class="text-[11px] leading-relaxed">{{ session('success') }}</p>
                 </div>
             @endif
 
@@ -92,12 +97,12 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('admin.login.submit') }}" class="space-y-3.5">
+            <form method="POST" action="{{ route('admin.password.email') }}" class="space-y-3.5">
                 @csrf
 
                 <!-- Email Input -->
                 <div class="space-y-1">
-                    <label for="email" class="block text-xs font-bold text-slate-700">Alamat Email</label>
+                    <label for="email" class="block text-xs font-bold text-slate-700">Email Administrator</label>
                     <div class="relative">
                         <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
                         <input 
@@ -113,76 +118,29 @@
                     </div>
                 </div>
 
-                <!-- Password Input -->
-                <div class="space-y-1">
-                    <div class="flex items-center justify-between">
-                        <label for="adminPassword" class="block text-xs font-bold text-slate-700">Kata Sandi</label>
-                        <a href="{{ route('admin.password.request') }}" class="text-[11px] font-semibold text-[#006830] hover:text-[#032c21] hover:underline transition">
-                            Lupa kata sandi?
-                        </a>
-                    </div>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            id="adminPassword"
-                            placeholder="Masukkan kata sandi" 
-                            required 
-                            class="input-focus w-full pl-9 pr-10 py-2.5 sm:py-2 text-xs sm:text-sm rounded-sm border border-slate-300 transition bg-slate-50/60"
-                        />
-                        <button 
-                            type="button" 
-                            onclick="togglePass()" 
-                            class="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-600 active:scale-90 transition rounded-sm cursor-pointer"
-                            aria-label="Toggle Password Visibility"
-                        >
-                            <i id="eyeIcon" class="fa-solid fa-eye text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Remember Me -->
-                <div class="flex items-center justify-between text-xs pt-0.5 select-none">
-                    <label class="flex items-center gap-2 text-slate-600 cursor-pointer">
-                        <input type="checkbox" name="remember" class="w-3.5 h-3.5 rounded-xs border-slate-300 text-[#006830] focus:ring-[#006830]" />
-                        <span class="text-xs">Ingat saya</span>
-                    </label>
-                </div>
-
                 <!-- Submit Button -->
                 <button 
                     type="submit" 
                     class="w-full py-2.5 sm:py-2 bg-[#006830] hover:bg-[#032c21] active:scale-[0.98] text-white rounded-sm text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-2xs mt-2 flex items-center justify-center gap-2 cursor-pointer"
                 >
-                    <i class="fa-solid fa-right-to-bracket text-xs"></i>
-                    <span>Masuk Admin</span>
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                    <span>Kirim Tautan Pemulihan</span>
                 </button>
             </form>
 
-            <div class="mt-4 pt-3.5 border-t border-slate-100 text-center">
-                <a href="{{ url('/') }}" class="text-xs text-slate-400 hover:text-slate-700 transition inline-flex items-center gap-1.5 py-1">
+            <div class="mt-4 pt-3.5 border-t border-slate-100 flex flex-col items-center gap-2 text-center text-xs">
+                <a href="{{ route('admin.login') }}" class="text-xs font-semibold text-[#006830] hover:text-[#032c21] hover:underline transition inline-flex items-center gap-1.5 py-0.5">
                     <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                    <span>Kembali ke Beranda</span>
+                    <span>Kembali ke Halaman Masuk</span>
+                </a>
+                
+                <a href="https://wa.me/6282116116133?text=Halo%20Admin%20Super,%20saya%20membutuhkan%20bantuan%20reset%20password%20panel%20Penerbit%20Persis." target="_blank" class="text-[11px] text-slate-400 hover:text-emerald-700 transition inline-flex items-center gap-1">
+                    <i class="fa-brands fa-whatsapp text-emerald-600"></i>
+                    <span>Bantuan Kontak Admin Super</span>
                 </a>
             </div>
         </div>
     </div>
 
-    <script>
-        function togglePass() {
-            const pass = document.getElementById('adminPassword');
-            const icon = document.getElementById('eyeIcon');
-            if (pass.type === 'password') {
-                pass.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                pass.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-    </script>
 </body>
 </html>

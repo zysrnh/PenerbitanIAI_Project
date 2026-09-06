@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\AboutSettingController;
 use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\ForgotPasswordController as AdminForgotPasswordController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\HomeSettingController;
 use App\Http\Controllers\Admin\CatalogSettingController;
@@ -78,6 +79,12 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', function () { return redirect()->route('member.login'); })->name('login');
     Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit')->middleware('throttle:5,1');
+
+    // Admin Forgot & Reset Password
+    Route::get('/admin/forgot-password', [AdminForgotPasswordController::class, 'showLinkRequestForm'])->name('admin.password.request');
+    Route::post('/admin/forgot-password', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->name('admin.password.email')->middleware('throttle:6,1');
+    Route::get('/admin/reset-password/{token}', [AdminForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
+    Route::post('/admin/reset-password', [AdminForgotPasswordController::class, 'reset'])->name('admin.password.update')->middleware('throttle:6,1');
 });
 
 Route::post('/admin/logout', [AuthController::class, 'logout'])->name('admin.logout')->middleware('auth');

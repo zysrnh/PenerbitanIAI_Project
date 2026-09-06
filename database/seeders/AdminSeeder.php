@@ -14,7 +14,16 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         $admins = [
-            // 1. Super Admin Utama (Akses Penuh Seluruh Sistem)
+            // 1. Super Admin Utama (M. Farhan Zaki)
+            [
+                'email'     => 'zakiyh782@gmail.com',
+                'name'      => 'M. Farhan Zaki (Super Admin)',
+                'role'      => 'super_admin',
+                'phone'     => '082116116133',
+                'is_active' => true,
+                'password'  => Hash::make('persispers'),
+            ],
+            // 2. Super Admin Alternatif
             [
                 'email'     => 'admin@persispers.com',
                 'name'      => 'Super Admin PERSIS PERS',
@@ -23,7 +32,7 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
                 'password'  => Hash::make('persispers'),
             ],
-            // 2. Super Admin Alternatif
+            // 3. Super Admin Alternatif 2
             [
                 'email'     => 'superadmin@penerbitpersis.com',
                 'name'      => 'Super Admin PERSIS PERS',
@@ -32,7 +41,7 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
                 'password'  => Hash::make('persispers'),
             ],
-            // 3. Admin Redaksi & Penerbitan Naskah (Naskah & Layanan Web)
+            // 4. Admin Redaksi & Penerbitan Naskah (Naskah & Layanan Web)
             [
                 'email'     => 'redaksi@penerbitpersis.com',
                 'name'      => 'M. Farhan Zaki, M.Ag. (Admin Redaksi)',
@@ -41,7 +50,7 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
                 'password'  => Hash::make('persispers'),
             ],
-            // 4. Operator Transaksi & Pesanan Buku (Khusus Transaksi)
+            // 5. Operator Transaksi & Pesanan Buku (Khusus Transaksi)
             [
                 'email'     => 'operator@persispers.com',
                 'name'      => 'Operator Transaksi & Kasir',
@@ -50,7 +59,7 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
                 'password'  => Hash::make('persispers'),
             ],
-            // 5. Operator Pengiriman & Gudang Logistik
+            // 6. Operator Pengiriman & Gudang Logistik
             [
                 'email'     => 'pengiriman@penerbitpersis.com',
                 'name'      => 'Ust. Wildan Hidayat (Operator Pengiriman)',
@@ -59,7 +68,7 @@ class AdminSeeder extends Seeder
                 'is_active' => true,
                 'password'  => Hash::make('persispers'),
             ],
-            // 6. Operator Keuangan & Faktur Transaksi
+            // 7. Operator Keuangan & Faktur Transaksi
             [
                 'email'     => 'keuangan@penerbitpersis.com',
                 'name'      => 'Nurul Hidayah, M.Pd. (Operator Keuangan)',
