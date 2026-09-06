@@ -90,20 +90,21 @@
                 </button>
             </div>
 
-            <!-- User Admin Profile Box -->
-            <div class="p-3 bg-white/5 border border-white/10 rounded-sm mb-5 flex items-center gap-3">
+            <!-- User Admin Profile Box (Clickable to Edit Profile) -->
+            <a href="{{ route('admin.profile') }}" class="p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-sm mb-5 flex items-center gap-3 transition group block" title="Buka Pengaturan Profil & Akun">
                 @if(Auth::user()->avatar_url)
-                    <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-sm object-cover shrink-0 ring-1 ring-emerald-400/40" />
+                    <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-sm object-cover shrink-0 ring-1 ring-emerald-400/40 group-hover:ring-emerald-400 transition" />
                 @else
-                    <div class="w-9 h-9 rounded-sm bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white font-extrabold text-xs shrink-0 shadow-xs ring-1 ring-emerald-500/30">
+                    <div class="w-9 h-9 rounded-sm bg-[#006830] text-white flex items-center justify-center font-extrabold text-xs shrink-0 shadow-xs ring-1 ring-emerald-500/30">
                         {{ Auth::user()->initials }}
                     </div>
                 @endif
                 <div class="min-w-0 flex-1">
-                    <p class="text-xs font-bold text-white truncate leading-snug">{{ Auth::user()->name }}</p>
+                    <p class="text-xs font-bold text-white truncate leading-snug group-hover:text-emerald-300 transition">{{ Auth::user()->name }}</p>
                     <p class="text-[10px] text-emerald-300/80 uppercase font-mono tracking-wider">{{ Auth::user()->role_label ?? 'Superadmin' }}</p>
                 </div>
-            </div>
+                <i class="fa-solid fa-gear text-slate-400 group-hover:text-white text-xs transition"></i>
+            </a>
 
             <!-- Navigation Links -->
             <nav class="space-y-5 text-xs">
@@ -115,6 +116,11 @@
                         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <i class="fa-solid fa-gauge-high w-4 text-center"></i>
                             <span>Dashboard</span>
+                        </a>
+
+                        <a href="{{ route('admin.profile') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.profile*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <i class="fa-solid fa-id-badge w-4 text-center"></i>
+                            <span>Profil Saya</span>
                         </a>
 
                         @if(Auth::user()->canAccessMessages())
@@ -391,17 +397,17 @@
                     </div>
                 </div>
 
-                <!-- Admin Profile Pill -->
-                <div class="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-1.5 pr-2 sm:pr-2.5 py-1 rounded-sm bg-slate-100 border border-slate-200">
+                <!-- Admin Profile Pill (Clickable to Edit Profile) -->
+                <a href="{{ route('admin.profile') }}" class="flex items-center gap-1.5 sm:gap-2 pl-1 sm:pl-1.5 pr-2 sm:pr-2.5 py-1 rounded-sm bg-slate-100 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 transition group" title="Pengaturan Profil & Akun">
                     @if(Auth::user()->avatar_url)
                         <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-6 h-6 rounded-sm object-cover" />
                     @else
-                        <div class="w-6 h-6 rounded-sm bg-emerald-700 text-white flex items-center justify-center text-[10px] font-black">
+                        <div class="w-6 h-6 rounded-sm bg-[#006830] text-white flex items-center justify-center text-[10px] font-black">
                             {{ Auth::user()->initials }}
                         </div>
                     @endif
-                    <span class="text-xs font-bold text-slate-700 max-w-[90px] truncate hidden sm:inline">{{ explode(' ', Auth::user()->name)[0] }}</span>
-                </div>
+                    <span class="text-xs font-bold text-slate-700 group-hover:text-emerald-900 max-w-[90px] truncate hidden sm:inline">{{ explode(' ', Auth::user()->name)[0] }}</span>
+                </a>
 
             </div>
         </header>
@@ -442,13 +448,7 @@
         </a>
 
         <!-- 3. Books -->
-                        <a href="{{ route('admin.services.index') }}" 
-                   class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold text-xs transition {{ request()->routeIs('admin.services.*') ? 'bg-brand-800 text-lime-300 shadow-2xs font-bold' : 'text-slate-300 hover:bg-brand-900 hover:text-white' }}">
-                    <i class="fa-solid fa-layer-group w-4 text-center"></i>
-                    <span>Kelola Layanan Web</span>
-                </a>
-
-                <a href="{{ route('admin.books.index') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.books.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+        <a href="{{ route('admin.books.index') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.books.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
             <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.books.*') ? 'text-emerald-700 scale-110' : '' }}">
                 <i class="fa-solid fa-book-bookmark"></i>
             </div>
@@ -468,12 +468,12 @@
             @endif
         </a>
 
-        <!-- 5. Users -->
-        <a href="{{ route('admin.users.index') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.users.*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
-            <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.users.*') ? 'text-emerald-700 scale-110' : '' }}">
-                <i class="fa-solid fa-user-shield"></i>
+        <!-- 5. Profil Akun -->
+        <a href="{{ route('admin.profile') }}" class="flex flex-col items-center gap-0.5 px-2 py-1 rounded-xs transition {{ request()->routeIs('admin.profile*') ? 'text-emerald-800 font-extrabold' : 'text-slate-500 hover:text-slate-800' }}">
+            <div class="w-6 h-6 flex items-center justify-center text-base {{ request()->routeIs('admin.profile*') ? 'text-emerald-700 scale-110' : '' }}">
+                <i class="fa-solid fa-user-gear"></i>
             </div>
-            <span class="text-[10px] tracking-tight">Pengguna</span>
+            <span class="text-[10px] tracking-tight">Profil</span>
         </a>
 
     </nav>
