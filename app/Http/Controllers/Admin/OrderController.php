@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
@@ -107,7 +108,6 @@ class OrderController extends Controller
         return back()->with('success', 'Status pembayaran pesanan #' . $order->order_number . ' berhasil diperbarui.');
     }
 
-    
     /**
      * Send message from Admin to Customer
      */
@@ -168,7 +168,6 @@ class OrderController extends Controller
         return back()->with('success', 'Pesan berhasil dikirimkan ke pembeli.');
     }
 
-    
     /**
      * Get Order details and messages stream JSON for Admin drawer chat
      */
@@ -228,6 +227,9 @@ class OrderController extends Controller
         ]);
     }
 
+    /**
+     * Hapus satuan pesanan
+     */
     public function destroy($id)
     {
         $order = Order::findOrFail($id);
@@ -235,5 +237,166 @@ class OrderController extends Controller
         $order->delete();
 
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan #' . $orderNum . ' berhasil dihapus.');
+    }
+
+    /**
+     * Hapus banyak pesanan sekaligus (Bulk Delete)
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids'   => 'required|array',
+            'ids.*' => 'exists:orders,id',
+        ]);
+
+        $ids = $request->input('ids');
+        $count = count($ids);
+
+        Order::whereIn('id', $ids)->delete();
+
+        return redirect()->route('admin.orders.index')->with('success', "{$count} pesanan berhasil dihapus dari sistem.");
+    }
+
+    /**
+     * Bersihkan semua pesanan berstatus Menunggu (Pending / Expired)
+     */
+    public function clearPending()
+    {
+        $deleted = Order::whereIn('payment_status', ['pending', 'expired', 'failed'])->delete();
+
+        if ($deleted > 0) {
+            return redirect()->route('admin.orders.index')->with('success', "{$deleted} pesanan yang belum dibayar/kedaluwarsa berhasil dibersihkan.");
+        }
+
+        return redirect()->route('admin.orders.index')->with('info', 'Tidak ada pesanan belum dibayar yang perlu dibersihkan.');
+    }
+
+    /**
+     * Export Data Pesanan ke File Excel (.csv format kompatibel penuh dengan MS Excel)
+     */
+    public function exportExcel(Request $request)
+    {
+        $status = $request->query('status');
+        $search = $request->query('q');
+        $search = $search ? str_replace(['%', '_'], ['\%', '\_'], $search) : null;
+
+        $query = Order::latest();
+
+        if ($status) {
+            $query->where('payment_status', $status);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('order_number', 'like', "%{$search}%")
+                  ->orWhere('customer_name', 'like', "%{$search}%")
+                  ->orWhere('customer_phone', 'like', "%{$search}%")
+                  ->orWhere('customer_email', 'like', "%{$search}%");
+            });
+        }
+
+        $orders = $query->get();
+
+        $filename = 'Laporan_Pesanan_PERSIS_PERS_' . date('Y-m-d_His') . '.csv';
+
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Pragma'              => 'no-cache',
+            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires'             => '0',
+        ];
+
+        return new StreamedResponse(function () use ($orders) {
+            $handle = fopen('php://output', 'w');
+
+            // UTF-8 BOM untuk memastikan Microsoft Excel membaca karakter Indonesia/Arab dengan sempurna
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // Header Kolom
+            fputcsv($handle, [
+                'No',
+                'No. Invoice',
+                'Tanggal Transaksi',
+                'Waktu (WIB)',
+                'Nama Pemesan',
+                'No. WhatsApp / HP',
+                'Email Pemesan',
+                'Alamat Pengiriman',
+                'Provinsi',
+                'Kota/Kabupaten',
+                'Kecamatan',
+                'Kode Pos',
+                'Rincian Buku Dipesan',
+                'Total Eksemplar',
+                'Total Tagihan (Rp)',
+                'Metode Pembayaran',
+                'Status Pembayaran',
+                'Kurir Ekspedisi',
+                'No. Resi Pengiriman',
+                'Status Pengiriman',
+                'Catatan Pembeli',
+            ]);
+
+            $no = 1;
+            foreach ($orders as $order) {
+                $items = is_array($order->items_json) ? $order->items_json : json_decode($order->items_json ?? '[]', true);
+                $bookList = [];
+                $totalQty = 0;
+
+                foreach ($items as $it) {
+                    $qty = (int)($it['quantity'] ?? ($it['qty'] ?? 1));
+                    $title = $it['title'] ?? 'Buku';
+                    $price = isset($it['price']) ? ' (Rp ' . number_format($it['price'], 0, ',', '.') . ')' : '';
+                    $bookList[] = "{$title} [{$qty} eks{$price}]";
+                    $totalQty += $qty;
+                }
+
+                $bookListStr = implode(";\n", $bookList);
+
+                // Format status pembayaran
+                $paymentStatusLabel = match ($order->payment_status) {
+                    'completed' => 'LUNAS (TERBAYAR)',
+                    'pending'   => 'MENUNGGU PEMBAYARAN',
+                    'expired'   => 'KEDALUWARSA',
+                    'failed'    => 'GAGAL',
+                    default     => strtoupper($order->payment_status ?? 'MENUNGGU'),
+                };
+
+                // Format status pengiriman
+                $shippingStatusLabel = match ($order->shipping_status) {
+                    'selesai', 'delivered' => 'DITERIMA PEMBELI',
+                    'dikirim', 'shipped'   => 'SEDANG DIKIRIM',
+                    'diproses', 'processing' => 'SEDANG DIPACKING',
+                    default                => 'MENUNGGU PROSES',
+                };
+
+                fputcsv($handle, [
+                    $no++,
+                    $order->order_number,
+                    $order->created_at ? $order->created_at->format('Y-m-d') : '-',
+                    $order->created_at ? $order->created_at->format('H:i:s') : '-',
+                    $order->customer_name,
+                    "'" . ($order->customer_phone ?? '-'), // Tanda kutip agar nomor HP tidak terpotong di Excel
+                    $order->customer_email ?? '-',
+                    $order->shipping_address ?? '-',
+                    $order->province ?? '-',
+                    $order->city ?? '-',
+                    $order->district ?? '-',
+                    $order->postal_code ?? '-',
+                    $bookListStr,
+                    $totalQty,
+                    $order->total_amount,
+                    strtoupper($order->payment_method ?? 'QRIS'),
+                    $paymentStatusLabel,
+                    strtoupper($order->courier ?? 'JNE/J&T/POS'),
+                    $order->tracking_number ?? '-',
+                    $shippingStatusLabel,
+                    $order->notes ?? '-',
+                ]);
+            }
+
+            fclose($handle);
+        }, 200, $headers);
     }
 }

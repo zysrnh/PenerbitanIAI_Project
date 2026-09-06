@@ -109,6 +109,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // 2. Orders & Sales Management (super_admin, admin, operator)
     Route::middleware('role:super_admin,admin,operator')->group(function () {
         Route::get('/orders',                [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/export/excel',   [AdminOrderController::class, 'exportExcel'])->name('orders.export_excel');
+        Route::post('/orders/bulk-delete',   [AdminOrderController::class, 'bulkDestroy'])->name('orders.bulk_destroy');
+        Route::post('/orders/clear-pending', [AdminOrderController::class, 'clearPending'])->name('orders.clear_pending');
         Route::get('/orders/{id}',           [AdminOrderController::class, 'show'])->name('orders.show');
         Route::get('/orders/{id}/shipping-label', [AdminOrderController::class, 'printShippingLabel'])->name('orders.shipping_label');
         Route::post('/orders/{id}/shipping', [AdminOrderController::class, 'updateShipping'])->name('orders.shipping');

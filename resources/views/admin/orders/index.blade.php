@@ -21,11 +21,36 @@
                         {{ $totalOrders }} Total Transaksi
                     </span>
                 </div>
-                <p class="text-xs text-slate-500 mt-0.5">Kelola konfirmasi pembayaran QRIS, update resi ekspedisi, dan cetak invoice pemesan.</p>
+                <p class="text-xs text-slate-500 mt-0.5">Kelola konfirmasi pembayaran QRIS, update resi ekspedisi, export data Excel, dan hapus transaksi.</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-2 shrink-0">
+        <!-- Action Buttons: Export Excel & Toko Publik & Clear Pending -->
+        <div class="flex items-center gap-2 flex-wrap shrink-0">
+            <!-- Export Excel Button -->
+            <a 
+                href="{{ route('admin.orders.export_excel', request()->query()) }}" 
+                class="px-3.5 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                title="Unduh seluruh data pesanan ke format Excel (.CSV)"
+            >
+                <i class="fa-solid fa-file-excel text-xs"></i>
+                <span>Export Excel</span>
+            </a>
+
+            <!-- Clear Pending Orders (Hapus yang belum bayar) -->
+            @if($totalPending > 0)
+                <button 
+                    type="button" 
+                    onclick="confirmClearPending()" 
+                    class="px-3 py-2 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                    title="Bersihkan semua pesanan berstatus menunggu pembayaran"
+                >
+                    <i class="fa-solid fa-broom text-xs"></i>
+                    <span>Bersihkan Belum Bayar ({{ $totalPending }})</span>
+                </button>
+            @endif
+
+            <!-- Public Store Link -->
             <a href="{{ route('katalog') }}" target="_blank" class="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-emerald-700"></i>
                 <span>Toko Publik</span>
@@ -33,7 +58,7 @@
         </div>
     </div>
 
-    <!-- 4 Key Stat Cards (2x2 Grid on Mobile, 4 Cols on Desktop) -->
+    <!-- 4 Key Stat Cards -->
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
         
         <!-- Total Pendapatan -->
@@ -143,6 +168,48 @@
         </div>
     </div>
 
+    <!-- Bulk Action Toolbar (Tampil otomatis saat ada checkbox yang dipilih) -->
+    <div id="bulkActionToolbar" class="hidden bg-slate-900 text-white p-3 rounded-sm shadow-md flex items-center justify-between gap-3 animate-fade-in">
+        <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-xs bg-rose-600 text-white flex items-center justify-center text-xs font-bold" id="selectedCountBadge">0</span>
+            <span class="text-xs font-semibold">Pesanan Terpilih</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button 
+                type="button" 
+                onclick="cancelBulkSelection()" 
+                class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xs text-xs font-bold transition cursor-pointer"
+            >
+                Batal
+            </button>
+            <button 
+                type="button" 
+                onclick="confirmBulkDelete()" 
+                class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            >
+                <i class="fa-solid fa-trash-can text-xs"></i>
+                <span>Hapus Pesanan Terpilih</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Form Tersembunyi untuk Bulk Delete -->
+    <form id="bulkDeleteForm" method="POST" action="{{ route('admin.orders.bulk_destroy') }}" class="hidden">
+        @csrf
+        <div id="bulkDeleteInputs"></div>
+    </form>
+
+    <!-- Form Tersembunyi untuk Clear Pending -->
+    <form id="clearPendingForm" method="POST" action="{{ route('admin.orders.clear_pending') }}" class="hidden">
+        @csrf
+    </form>
+
+    <!-- Form Tersembunyi untuk Single Delete -->
+    <form id="singleDeleteForm" method="POST" action="" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
     <!-- Orders Table & Mobile Card Stream -->
     <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs overflow-hidden w-full">
         
@@ -155,9 +222,17 @@
                 @endphp
                 <div class="p-3.5 space-y-2.5 hover:bg-slate-50/80 transition order-card-item" data-invoice="{{ strtolower($order->order_number) }}" data-name="{{ strtolower($order->customer_name) }}" data-phone="{{ strtolower($order->customer_phone ?? '') }}" data-book="{{ strtolower($bookNames) }}">
                     <div class="flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-mono font-bold text-xs text-slate-900">{{ $order->order_number }}</span>
-                            <span class="text-[10px] text-slate-400">• {{ $order->created_at->format('d/m H:i') }}</span>
+                        <div class="flex items-center gap-2">
+                            <input 
+                                type="checkbox" 
+                                class="order-checkbox w-4 h-4 rounded-xs border-slate-300 text-emerald-700 focus:ring-emerald-700 cursor-pointer" 
+                                value="{{ $order->id }}" 
+                                onchange="handleCheckboxChange()"
+                            />
+                            <div>
+                                <span class="font-mono font-bold text-xs text-slate-900">{{ $order->order_number }}</span>
+                                <span class="text-[10px] text-slate-400 block">{{ $order->created_at->format('d/m H:i') }} WIB</span>
+                            </div>
                         </div>
                         @if($order->payment_status === 'completed' || $order->status === 'completed')
                             <span class="px-1.5 py-0.2 rounded-xs text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono">
@@ -188,14 +263,21 @@
                             Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                         </span>
                         <div class="flex items-center gap-1.5">
-                            <a href="{{ route('admin.orders.shipping_label', $order->id) }}" target="_blank" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xs text-xs font-bold transition flex items-center gap-1">
+                            <a href="{{ route('admin.orders.shipping_label', $order->id) }}" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xs text-xs font-bold transition flex items-center gap-1" title="Cetak Resi">
                                 <i class="fa-solid fa-print text-[10px]"></i>
-                                <span>Resi</span>
                             </a>
-                            <a href="{{ route('admin.orders.show', $order->id) }}" class="px-3 py-1 bg-[#006830] text-white rounded-xs text-xs font-bold shadow-2xs flex items-center gap-1">
+                            <a href="{{ route('admin.orders.show', $order->id) }}" class="px-2.5 py-1 bg-[#006830] text-white rounded-xs text-xs font-bold shadow-2xs flex items-center gap-1">
                                 <span>Detail</span>
                                 <i class="fa-solid fa-angle-right text-[9px]"></i>
                             </a>
+                            <button 
+                                type="button" 
+                                onclick="confirmSingleDelete('{{ route('admin.orders.destroy', $order->id) }}', '{{ $order->order_number }}')" 
+                                class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xs text-xs font-bold transition cursor-pointer"
+                                title="Hapus Pesanan"
+                            >
+                                <i class="fa-solid fa-trash-can text-[10px]"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -212,6 +294,14 @@
             <table class="w-full text-left text-xs text-slate-700">
                 <thead class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200 text-[10px]">
                     <tr>
+                        <th class="py-3 px-3 w-10 text-center">
+                            <input 
+                                type="checkbox" 
+                                id="selectAllCheckbox" 
+                                class="w-4 h-4 rounded-xs border-slate-300 text-emerald-700 focus:ring-emerald-700 cursor-pointer" 
+                                onchange="toggleSelectAll(this.checked)"
+                            />
+                        </th>
                         <th class="py-3 px-4">No. Invoice &amp; Waktu</th>
                         <th class="py-3 px-4">Nama Pemesan</th>
                         <th class="py-3 px-4">Buku Dipesan</th>
@@ -228,6 +318,16 @@
                             $bookNames = collect($itemsArr)->pluck('title')->filter()->implode(', ');
                         @endphp
                         <tr class="hover:bg-slate-50/70 transition order-table-row" data-invoice="{{ strtolower($order->order_number) }}" data-name="{{ strtolower($order->customer_name) }}" data-phone="{{ strtolower($order->customer_phone ?? '') }}" data-book="{{ strtolower($bookNames) }}">
+                            <!-- Checkbox Selection -->
+                            <td class="py-3 px-3 text-center whitespace-nowrap">
+                                <input 
+                                    type="checkbox" 
+                                    class="order-checkbox w-4 h-4 rounded-xs border-slate-300 text-emerald-700 focus:ring-emerald-700 cursor-pointer" 
+                                    value="{{ $order->id }}" 
+                                    onchange="handleCheckboxChange()"
+                                />
+                            </td>
+
                             <!-- No. Invoice & Date -->
                             <td class="py-3 px-4 whitespace-nowrap">
                                 <a href="{{ route('admin.orders.show', $order->id) }}" class="font-mono font-bold text-emerald-800 hover:underline">
@@ -315,12 +415,20 @@
                                         <span>Detail</span>
                                         <i class="fa-solid fa-angle-right text-[9px]"></i>
                                     </a>
+                                    <button 
+                                        type="button" 
+                                        onclick="confirmSingleDelete('{{ route('admin.orders.destroy', $order->id) }}', '{{ $order->order_number }}')" 
+                                        class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-xs text-xs font-bold transition flex items-center gap-1 shadow-2xs cursor-pointer" 
+                                        title="Hapus Pesanan Ini"
+                                    >
+                                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="p-12 text-center text-slate-400">
+                            <td colspan="8" class="p-12 text-center text-slate-400">
                                 <div class="w-12 h-12 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center mx-auto text-xl mb-2">
                                     <i class="fa-solid fa-receipt"></i>
                                 </div>
@@ -342,7 +450,8 @@
 
 </div>
 
-<!-- Client-side Instant Search & Autocomplete Script -->
+<!-- SweetAlert2 Script & Client-side Handlers -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Prepare order data for autocomplete
     const orderIndexData = [
@@ -439,5 +548,108 @@
             dropdown.classList.add('hidden');
         }
     });
+
+    // Checkbox & Bulk Actions Logic
+    function toggleSelectAll(checked) {
+        const checkboxes = document.querySelectorAll('.order-checkbox');
+        checkboxes.forEach(cb => cb.checked = checked);
+        handleCheckboxChange();
+    }
+
+    function handleCheckboxChange() {
+        const checkboxes = document.querySelectorAll('.order-checkbox:checked');
+        const total = checkboxes.length;
+        const toolbar = document.getElementById('bulkActionToolbar');
+        const countBadge = document.getElementById('selectedCountBadge');
+        const selectAll = document.getElementById('selectAllCheckbox');
+
+        if (countBadge) countBadge.textContent = total;
+
+        if (total > 0) {
+            toolbar.classList.remove('hidden');
+        } else {
+            toolbar.classList.add('hidden');
+            if (selectAll) selectAll.checked = false;
+        }
+    }
+
+    function cancelBulkSelection() {
+        const checkboxes = document.querySelectorAll('.order-checkbox');
+        checkboxes.forEach(cb => cb.checked = false);
+        const selectAll = document.getElementById('selectAllCheckbox');
+        if (selectAll) selectAll.checked = false;
+        handleCheckboxChange();
+    }
+
+    function confirmBulkDelete() {
+        const checkboxes = document.querySelectorAll('.order-checkbox:checked');
+        const count = checkboxes.length;
+        if (count === 0) return;
+
+        Swal.fire({
+            title: 'Hapus ' + count + ' Pesanan Terpilih?',
+            text: 'Data transaksi pesanan yang dihapus tidak dapat dikembalikan!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus Sekarang!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('bulkDeleteForm');
+                const container = document.getElementById('bulkDeleteInputs');
+                container.innerHTML = '';
+
+                checkboxes.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'ids[]';
+                    input.value = cb.value;
+                    container.appendChild(input);
+                });
+
+                form.submit();
+            }
+        });
+    }
+
+    // Single Delete Confirmation
+    function confirmSingleDelete(url, orderNum) {
+        Swal.fire({
+            title: 'Hapus Pesanan #' + orderNum + '?',
+            text: 'Data transaksi ini akan dihapus permanen dari sistem.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('singleDeleteForm');
+                form.action = url;
+                form.submit();
+            }
+        });
+    }
+
+    // Clear Pending Orders Confirmation
+    function confirmClearPending() {
+        Swal.fire({
+            title: 'Bersihkan Pesanan Menunggu?',
+            text: 'Semua pesanan yang belum diselesaikan/kedaluwarsa akan dihapus dari sistem.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Bersihkan',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('clearPendingForm').submit();
+            }
+        });
+    }
 </script>
 @endsection
