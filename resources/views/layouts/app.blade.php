@@ -300,29 +300,51 @@
         $phoneHref = "tel:" . preg_replace('/[^0-9+]/', '', $contactPhoneRaw);
         $phoneTarget = '_self';
     }
+    $contactEmail = \App\Models\SiteSetting::get('contact_email', 'info@penerbitpersis.com');
 @endphp
 
     @if($topbarActive)
-        <!-- Top Contact Info & Social Media Bar (3-Column Layout: Left=Auth, Center=Inline Search, Right=Socials) -->
+        <!-- Top Contact Info & Social Media Bar (3-Column Layout: Left=Auth & Contact, Center=Inline Search, Right=Socials) -->
         <div class="bg-white border-b border-slate-200 py-1.5 transition-all text-xs select-none">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-6">
                 
-                <!-- 1. Left: Daftar | Login -->
-                <div class="flex items-center gap-2 shrink-0 text-xs">
-                    @guest
-                        <a href="{{ route('member.register') }}" class="font-bold text-red-600 hover:text-red-700 transition">
-                            Daftar
+                <!-- 1. Left: Daftar | Login & Contact Links -->
+                <div class="flex items-center gap-3 shrink-0 text-xs">
+                    <div class="flex items-center gap-2">
+                        @guest
+                            <a href="{{ route('member.register') }}" class="font-bold text-red-600 hover:text-red-700 transition">
+                                Daftar
+                            </a>
+                            <span class="text-slate-300 font-normal">|</span>
+                            <a href="{{ route('member.login') }}" class="font-bold text-slate-700 hover:text-emerald-800 transition">
+                                Login
+                            </a>
+                        @else
+                            <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                <span class="truncate max-w-[120px] sm:max-w-none">{{ Auth::user()->name }}</span>
+                            </div>
+                        @endguest
+                    </div>
+
+                    <!-- Clean Quick Contact in Topbar -->
+                    <div class="hidden md:flex items-center gap-2.5 pl-3 border-l border-slate-200 text-[11px] text-slate-600 font-medium">
+                        <a href="{{ $phoneHref }}" 
+                           target="{{ $phoneTarget }}" 
+                           @if($phoneTarget === '_blank') rel="noopener noreferrer" @endif
+                           class="hover:text-emerald-700 flex items-center gap-1 transition" 
+                           title="{{ $isMobilePhone ? 'WhatsApp Resmi' : 'Telepon Kantor' }}">
+                            <i class="{{ $isMobilePhone ? 'fa-brands fa-whatsapp text-emerald-600 text-xs font-bold' : 'fa-solid fa-phone text-emerald-600 text-[10px]' }}"></i>
+                            <span>{{ $contactPhoneRaw }}</span>
                         </a>
-                        <span class="text-slate-300 font-normal">|</span>
-                        <a href="{{ route('member.login') }}" class="font-bold text-slate-700 hover:text-emerald-800 transition">
-                            Login
+                        <span class="text-slate-300 font-normal">•</span>
+                        <a href="mailto:{{ $contactEmail }}" 
+                           class="hover:text-emerald-700 flex items-center gap-1 transition" 
+                           title="Email Resmi Redaksi">
+                            <i class="fa-solid fa-envelope text-emerald-600 text-[10px]"></i>
+                            <span>{{ $contactEmail }}</span>
                         </a>
-                    @else
-                        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span class="truncate max-w-[120px] sm:max-w-none">{{ Auth::user()->name }}</span>
-                        </div>
-                    @endguest
+                    </div>
                 </div>
 
                 <!-- 2. Center: Quick Book Search Trigger (Cari Buku [ _______ ]) -->
