@@ -12,7 +12,7 @@ class MemberAuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+            if (in_array(Auth::user()->role, ['admin', 'super_admin', 'operator'])) {
                 return redirect()->route('admin.dashboard');
             }
             return redirect()->route('member.dashboard');
@@ -30,7 +30,7 @@ class MemberAuthController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Email atau kata sandi salah.'])->onlyInput('email');
+            return back()->withErrors(['email' => 'Alamat email tidak terdaftar di sistem.'])->onlyInput('email');
         }
 
         if (!$user->is_active) {
@@ -40,8 +40,8 @@ class MemberAuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             
-            // If admin logs in from member form, redirect to admin dashboard
-            if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+            // If administrator/operator logs in from member form, redirect automatically to admin dashboard
+            if (in_array(Auth::user()->role, ['admin', 'super_admin', 'operator'])) {
                 return redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin, ' . Auth::user()->name . '!');
             }
 
@@ -52,7 +52,7 @@ class MemberAuthController extends Controller
             return redirect()->intended(route('member.dashboard'))->with('success', 'Selamat datang, ' . Auth::user()->name . '!');
         }
 
-        return back()->withErrors(['email' => 'Email atau kata sandi salah.'])->onlyInput('email');
+        return back()->withErrors(['email' => 'Kata sandi yang Anda masukkan salah.'])->onlyInput('email');
     }
 
     public function showRegister()

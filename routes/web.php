@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\MemberForgotPasswordController;
 use App\Http\Controllers\ResellerController;
 use Illuminate\Support\Facades\Route;
 
@@ -170,6 +171,12 @@ Route::middleware('guest')->prefix('member')->name('member.')->group(function ()
     Route::post('/login',       [MemberAuthController::class, 'login'])->name('login.submit')->middleware('throttle:5,1');
     Route::get('/register',     [MemberAuthController::class, 'showRegister'])->name('register');
     Route::post('/register',    [MemberAuthController::class, 'register'])->name('register.submit')->middleware('throttle:3,1');
+
+    // Member Forgot & Reset Password
+    Route::get('/forgot-password', [MemberForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [MemberForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email')->middleware('throttle:6,1');
+    Route::get('/reset-password/{token}', [MemberForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [MemberForgotPasswordController::class, 'reset'])->name('password.update')->middleware('throttle:6,1');
 });
 
 // Authenticated member routes
