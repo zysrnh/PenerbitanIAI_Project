@@ -50,7 +50,7 @@
         </div>
 
         <!-- Slider Container -->
-        <div id="hero-slider" class="relative w-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] lg:min-h-[540px] xl:min-h-[580px] flex items-center overflow-hidden">
+        <div id="hero-slider" class="relative w-full aspect-[16/10] sm:aspect-[16/9] md:aspect-[16/8] lg:aspect-[21/9] xl:aspect-[2.35/1] min-h-[300px] max-h-[620px] flex items-center overflow-hidden">
             
             @foreach($slides as $index => $slide)
                 @php

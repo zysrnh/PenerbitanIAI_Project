@@ -390,7 +390,7 @@
             <!-- Visual Preview Canvas (Exact Page Representation) -->
             <div class="bg-slate-100 rounded-sm border border-slate-200/90 shadow-md overflow-hidden text-slate-800 space-y-3.5 p-3 sm:p-4 max-h-[82vh] overflow-y-auto">
                 <!-- 1. Hero Slider Exact Preview -->
-                <div class="relative bg-brand-950 bg-[#032c21] rounded-sm overflow-hidden border border-slate-800 text-white min-h-[300px] sm:min-h-[320px] p-5 sm:p-6 flex flex-col justify-between shadow-inner">
+                <div class="relative bg-brand-950 bg-[#032c21] rounded-sm overflow-hidden border border-slate-800 text-white aspect-[16/9] min-h-[260px] max-h-[360px] p-4 sm:p-5 flex flex-col justify-between shadow-inner">
                     <!-- Ambient Blurred Backdrop -->
                     <div id="mock_hero_ambient" class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                         <img id="mock_hero_ambient_img" src="{{ $slides[0]['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" class="w-full h-full object-cover blur-2xl opacity-40 scale-110" />
