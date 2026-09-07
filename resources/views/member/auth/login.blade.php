@@ -163,21 +163,16 @@
                 </button>
             </form>
 
-            <div class="mt-4 pt-3.5 border-t border-slate-100 text-center space-y-2.5">
+            <div class="mt-4 pt-3.5 border-t border-slate-100 text-center space-y-2">
                 <p class="text-xs text-slate-500">
                     Belum punya akun? 
                     <a href="{{ route('member.register') }}" class="font-bold text-[#006830] hover:text-[#032c21] hover:underline transition">Daftar Sekarang</a>
                 </p>
 
-                <div class="pt-1 flex items-center justify-center gap-3 text-xs">
-                    <a href="{{ url('/') }}" class="text-slate-400 hover:text-slate-700 transition inline-flex items-center gap-1">
+                <div>
+                    <a href="{{ url('/') }}" class="text-xs text-slate-400 hover:text-slate-700 transition inline-flex items-center gap-1.5 py-1">
                         <i class="fa-solid fa-arrow-left text-[10px]"></i>
-                        <span>Beranda</span>
-                    </a>
-                    <span class="text-slate-300">•</span>
-                    <a href="{{ route('admin.login') }}" class="text-slate-500 hover:text-emerald-800 font-semibold transition inline-flex items-center gap-1">
-                        <i class="fa-solid fa-shield-halved text-[10px] text-emerald-700"></i>
-                        <span>Portal Admin</span>
+                        <span>Kembali ke Beranda</span>
                     </a>
                 </div>
             </div>
