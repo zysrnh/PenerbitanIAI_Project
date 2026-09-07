@@ -327,22 +327,29 @@
                         @endguest
                     </div>
 
-                    <!-- Clean Quick Contact in Topbar -->
-                    <div class="hidden md:flex items-center gap-2.5 pl-3 border-l border-slate-200 text-[11px] text-slate-600 font-medium">
+                    <!-- Quick Contact Badges in Topbar -->
+                    <div class="hidden md:flex items-center gap-2 pl-3 border-l border-slate-200">
                         <a href="{{ $phoneHref }}" 
                            target="{{ $phoneTarget }}" 
                            @if($phoneTarget === '_blank') rel="noopener noreferrer" @endif
-                           class="hover:text-emerald-700 flex items-center gap-1 transition" 
-                           title="{{ $isMobilePhone ? 'WhatsApp Resmi' : 'Telepon Kantor' }}">
-                            <i class="{{ $isMobilePhone ? 'fa-brands fa-whatsapp text-emerald-600 text-xs font-bold' : 'fa-solid fa-phone text-emerald-600 text-[10px]' }}"></i>
-                            <span>{{ $contactPhoneRaw }}</span>
+                           class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-[#006830] hover:bg-[#032c21] text-white border border-emerald-700/80 shadow-2xs transition text-[11px] font-semibold" 
+                           title="{{ $isMobilePhone ? 'WhatsApp Resmi Redaksi' : 'Telepon Kantor' }}">
+                            <span class="w-3.5 h-3.5 rounded-xs bg-emerald-800/60 text-emerald-200 flex items-center justify-center text-[9.5px]">
+                                @if($isMobilePhone)
+                                    <i class="fa-brands fa-whatsapp text-[10px]"></i>
+                                @else
+                                    <i class="fa-solid fa-phone text-[8.5px]"></i>
+                                @endif
+                            </span>
+                            <span class="tracking-tight">{{ $contactPhoneRaw }}</span>
                         </a>
-                        <span class="text-slate-300 font-normal">•</span>
                         <a href="mailto:{{ $contactEmail }}" 
-                           class="hover:text-emerald-700 flex items-center gap-1 transition" 
+                           class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-600/70 shadow-2xs transition text-[11px] font-semibold" 
                            title="Email Resmi Redaksi">
-                            <i class="fa-solid fa-envelope text-emerald-600 text-[10px]"></i>
-                            <span>{{ $contactEmail }}</span>
+                            <span class="w-3.5 h-3.5 rounded-xs bg-emerald-700/50 text-emerald-300 flex items-center justify-center text-[9px]">
+                                <i class="fa-solid fa-envelope text-[8.5px]"></i>
+                            </span>
+                            <span class="tracking-tight">{{ $contactEmail }}</span>
                         </a>
                     </div>
                 </div>
