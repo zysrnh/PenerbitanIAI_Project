@@ -328,11 +328,11 @@
     </main>
 
     <!-- 3. MODAL POPUP DIALOG: PROGRAM WAKAF AL-QUR'AN & BUKU -->
-    <div id="wakafProgramModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-300">
-        <div class="bg-white rounded-sm max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-emerald-300 overflow-hidden transform transition-all">
+    <div id="wakafProgramModal" class="fixed inset-0 z-[1200] hidden items-center justify-center p-3 sm:p-6 bg-slate-950/75 backdrop-blur-xs transition-opacity duration-300 overflow-y-auto">
+        <div class="bg-white rounded-sm max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-emerald-300 overflow-hidden transform transition-all my-auto">
             
             <!-- Modal Header -->
-            <div class="bg-[#006830] text-white p-4 sm:p-5 flex items-start justify-between gap-3 shrink-0">
+            <div class="bg-[#006830] text-white px-5 py-4 sm:px-6 sm:py-5 flex items-start justify-between gap-3 shrink-0">
                 <div class="space-y-1">
                     <span class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest font-mono block">PROGRAM RESMI PENERBIT PERSIS</span>
                     <h3 class="text-base sm:text-lg font-black font-heading leading-snug text-white">
@@ -342,7 +342,7 @@
                         {{ $settings['wakaf_program_subtitle'] ?? 'Menghidupkan Literasi, Menebarkan Ilmu, Mengalirkan Pahala' }}
                     </p>
                 </div>
-                <button type="button" onclick="closeWakafModal()" class="w-8 h-8 rounded-xs bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer shrink-0">
+                <button type="button" onclick="closeWakafModal()" class="w-8 h-8 rounded-xs bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition cursor-pointer shrink-0" title="Tutup Modal">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
