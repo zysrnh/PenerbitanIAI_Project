@@ -198,11 +198,97 @@
                     </div>
                 </div>
 
-                <!-- 4. NILAI KEUNGGULAN (4 Cards) -->
+                <!-- 2. SLIDER BANNER PROMO / INFORMASI (DI ATAS BERITA) -->
+                <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
+                    <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 flex-wrap gap-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-sm bg-amber-50 text-amber-700 flex items-center justify-center text-xs font-bold shrink-0">
+                                2
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading">Slider Banner Promo / Informasi</h3>
+                                <p class="text-[11px] text-slate-400">Tampil melintang di atas section Kabar Literasi / Berita Terkini.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <label class="inline-flex items-center gap-2 cursor-pointer bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1 rounded-xs border border-slate-300 text-xs transition">
+                                <input type="checkbox" name="home_promo_active" value="1" {{ ($promoActive ?? true) ? 'checked' : '' }} class="rounded-xs text-emerald-700 focus:ring-0 cursor-pointer">
+                                <span class="font-bold text-slate-700 text-[11px]">Aktifkan Slider Promo</span>
+                            </label>
+                            <button type="button" onclick="addNewPromoSlideRow()" class="px-2.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-xs text-[11px] font-bold transition flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-plus text-[10px]"></i>
+                                <span>Tambah Slide Promo</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Promo Slide Repeater Container -->
+                    <div id="promoSlidesListContainer" class="space-y-4">
+                        @foreach($promoSlides as $pIndex => $pSlide)
+                            <div class="promo-slide-item-card p-4 bg-slate-50/80 border border-slate-200 rounded-sm space-y-3 relative" data-pindex="{{ $pIndex }}">
+                                <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                                    <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                                        <i class="fa-solid fa-grip-vertical text-slate-400 text-xs"></i>
+                                        <span>Slide Promo #<span class="promo-num">{{ $pIndex + 1 }}</span></span>
+                                    </span>
+                                    <button type="button" onclick="removePromoSlideRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1 cursor-pointer text-xs" title="Hapus Slide Promo">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Image Upload -->
+                                <div class="p-3 bg-white border border-slate-200 rounded-sm space-y-2 text-xs">
+                                    <div class="flex items-center justify-between">
+                                        <label class="block font-bold text-slate-800">Gambar Banner Promo (Widescreen 21:7 atau 16:6)</label>
+                                        <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xs">Max 5MB</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-20 h-10 rounded-xs overflow-hidden border border-slate-300 bg-slate-100 shrink-0">
+                                            <img id="thumb_promo_{{ $pIndex }}" src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" class="w-full h-full object-cover" />
+                                        </div>
+                                        <div class="flex-1 space-y-1">
+                                            <input type="file" name="promo_slides[{{ $pIndex }}][image_file]" accept="image/*" onchange="handlePromoImageFilePreview(this, {{ $pIndex }})" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-amber-600 file:text-white hover:file:bg-amber-700 cursor-pointer" />
+                                            <input type="text" name="promo_slides[{{ $pIndex }}][image]" id="in_promo_{{ $pIndex }}_img" value="{{ $pSlide['image'] ?? '' }}" placeholder="Atau paste URL gambar banner..." class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Text & Link Inputs -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                    <div>
+                                        <label class="block font-bold text-slate-700 mb-1">Judul Banner (Opsional)</label>
+                                        <input type="text" name="promo_slides[{{ $pIndex }}][title]" value="{{ $pSlide['title'] ?? '' }}" placeholder="Misal: Diskon Spesial Penerbitan 2026" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white font-semibold" />
+                                    </div>
+                                    <div>
+                                        <label class="block font-bold text-slate-700 mb-1">Teks Tombol Aksi (Opsional)</label>
+                                        <input type="text" name="promo_slides[{{ $pIndex }}][btn_text]" value="{{ $pSlide['btn_text'] ?? '' }}" placeholder="Misal: Konsultasi Sekarang" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
+                                    </div>
+                                    <div>
+                                        <label class="block font-bold text-slate-700 mb-1">Subjudul / Keterangan (Opsional)</label>
+                                        <input type="text" name="promo_slides[{{ $pIndex }}][subtitle]" value="{{ $pSlide['subtitle'] ?? '' }}" placeholder="Deskripsi singkat promo..." class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
+                                    </div>
+                                    <div>
+                                        <label class="block font-bold text-slate-700 mb-1">Link URL Tujuan Saat Diklik</label>
+                                        <input type="text" name="promo_slides[{{ $pIndex }}][url]" value="{{ $pSlide['url'] ?? '' }}" placeholder="Misal: /layanan atau https://wa.me/..." class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="pt-1">
+                        <button type="button" onclick="addNewPromoSlideRow()" class="w-full py-2.5 border border-dashed border-amber-300 hover:border-amber-500 bg-amber-50/40 hover:bg-amber-100/60 text-amber-900 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-plus-circle text-amber-600"></i>
+                            <span>+ Tambah Slide Promo Baru</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. NILAI KEUNGGULAN (4 Cards) -->
                 <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
                     <div class="flex items-center gap-3 pb-3.5 border-b border-slate-100">
                         <div class="w-8 h-8 rounded-sm bg-emerald-50 text-emerald-700 flex items-center justify-center text-xs font-bold shrink-0">
-                            4
+                            3
                         </div>
                         <div>
                             <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider font-heading">4 Poin Keunggulan Utama</h3>
@@ -1012,6 +1098,115 @@
                 document.getElementById('thumb_ab').src = url;
                 document.getElementById('mock_ab_img').src = url;
             }
+        }
+    }
+
+    // --- Promo Slides Repeater Functions ---
+    function addNewPromoSlideRow() {
+        const container = document.getElementById('promoSlidesListContainer');
+        const cards = container.querySelectorAll('.promo-slide-item-card');
+        const newIndex = cards.length;
+
+        const card = document.createElement('div');
+        card.className = 'promo-slide-item-card p-4 bg-slate-50/80 border border-slate-200 rounded-sm space-y-3 relative animate-fade-in';
+        card.setAttribute('data-pindex', newIndex);
+        card.innerHTML = `
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                <span class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-grip-vertical text-slate-400 text-xs"></i>
+                    <span>Slide Promo #<span class="promo-num">${newIndex + 1}</span></span>
+                </span>
+                <button type="button" onclick="removePromoSlideRow(this)" class="text-slate-400 hover:text-rose-600 transition p-1 cursor-pointer text-xs" title="Hapus Slide Promo">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="p-3 bg-white border border-slate-200 rounded-sm space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                    <label class="block font-bold text-slate-800">Gambar Banner Promo (Widescreen 21:7 atau 16:6)</label>
+                    <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xs">Max 5MB</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-20 h-10 rounded-xs overflow-hidden border border-slate-300 bg-slate-100 shrink-0">
+                        <img id="thumb_promo_${newIndex}" src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <input type="file" name="promo_slides[${newIndex}][image_file]" accept="image/*" onchange="handlePromoImageFilePreview(this, ${newIndex})" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-amber-600 file:text-white hover:file:bg-amber-700 cursor-pointer" />
+                        <input type="text" name="promo_slides[${newIndex}][image]" id="in_promo_${newIndex}_img" value="" placeholder="Atau paste URL gambar banner..." class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text & Link Inputs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Judul Banner (Opsional)</label>
+                    <input type="text" name="promo_slides[${newIndex}][title]" value="" placeholder="Misal: Diskon Spesial Penerbitan 2026" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white font-semibold" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Teks Tombol Aksi (Opsional)</label>
+                    <input type="text" name="promo_slides[${newIndex}][btn_text]" value="" placeholder="Misal: Konsultasi Sekarang" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Subjudul / Keterangan (Opsional)</label>
+                    <input type="text" name="promo_slides[${newIndex}][subtitle]" value="" placeholder="Deskripsi singkat promo..." class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white" />
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Link URL Tujuan Saat Diklik</label>
+                    <input type="text" name="promo_slides[${newIndex}][url]" value="/layanan" placeholder="Misal: /layanan atau https://wa.me/..." class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
+                </div>
+            </div>
+        `;
+
+        container.appendChild(card);
+        renumberPromoSlides();
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function removePromoSlideRow(btn) {
+        const container = document.getElementById('promoSlidesListContainer');
+        const cards = container.querySelectorAll('.promo-slide-item-card');
+        if (cards.length <= 1) {
+            alert('Minimal harus ada 1 slide promo.');
+            return;
+        }
+        btn.closest('.promo-slide-item-card').remove();
+        renumberPromoSlides();
+    }
+
+    function renumberPromoSlides() {
+        const container = document.getElementById('promoSlidesListContainer');
+        const cards = container.querySelectorAll('.promo-slide-item-card');
+        cards.forEach((card, i) => {
+            card.setAttribute('data-pindex', i);
+            card.querySelector('.promo-num').innerText = (i + 1);
+
+            card.querySelectorAll('input').forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    input.setAttribute('name', name.replace(/promo_slides\[\d+\]/, 'promo_slides[' + i + ']'));
+                }
+                const id = input.getAttribute('id');
+                if (id && id.includes('_promo_')) {
+                    input.setAttribute('id', id.replace(/_promo_\d+_/, '_promo_' + i + '_').replace(/_promo_\d+$/, '_promo_' + i));
+                }
+            });
+
+            const thumb = card.querySelector('img[id^="thumb_promo_"]');
+            if (thumb) thumb.setAttribute('id', 'thumb_promo_' + i);
+        });
+    }
+
+    function handlePromoImageFilePreview(input, index) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                const thumb = document.getElementById('thumb_promo_' + index);
+                if (thumb) thumb.src = dataUrl;
+            };
+            reader.readAsDataURL(input.files[0]);
         }
     }
 

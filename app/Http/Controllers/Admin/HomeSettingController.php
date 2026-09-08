@@ -129,13 +129,30 @@ class HomeSettingController extends Controller
             'home_services_title'   => SiteSetting::get('home_services_title', 'Solusi Lengkap Untuk Kebutuhan Anda'),
         ];
 
-        return view('admin.settings.home', compact('settings', 'services', 'slides'));
+        $rawPromoSlides = SiteSetting::get('home_promo_slides_json', null);
+        $promoSlides = $rawPromoSlides ? json_decode($rawPromoSlides, true) : null;
+        if (!is_array($promoSlides) || empty($promoSlides)) {
+            $promoSlides = [
+                [
+                    'image'    => 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop',
+                    'title'    => 'Layanan Penerbitan & Cetak Buku Ber-ISBN Resmi',
+                    'subtitle' => 'Dukung publikasi karya ilmiah, monograf, buku ajar, dan naskah dakwah bersama PERSIS PERS',
+                    'url'      => '/layanan',
+                    'btn_text' => 'Konsultasi Sekarang',
+                ],
+            ];
+        }
+        $promoActive = SiteSetting::get('home_promo_active', '1') === '1';
+
+        return view('admin.settings.home', compact('settings', 'services', 'slides', 'promoSlides', 'promoActive'));
     }
 
     public function update(Request $request)
     {
         $validated = $request->validate([
             'slides'                 => ['nullable', 'array'],
+            'promo_slides'           => ['nullable', 'array'],
+            'home_promo_active'      => ['nullable', 'string'],
             // 4 Keunggulan
             'home_feat1_title'       => ['required', 'string', 'max:150'],
             'home_feat1_desc'        => ['required', 'string', 'max:255'],
@@ -171,7 +188,7 @@ class HomeSettingController extends Controller
         }
         unset($validated['home_about_image_file']);
 
-        // Handle Dynamic Slides
+        // Handle Dynamic Hero Slides
         if ($request->has('slides')) {
             $slidesInput = $request->input('slides', []);
             $slidesData = [];
@@ -202,6 +219,38 @@ class HomeSettingController extends Controller
             unset($validated['slides']);
         }
 
+        // Handle Dynamic Promo Slides (Di Atas Berita)
+        $promoActive = $request->has('home_promo_active') ? '1' : '0';
+        SiteSetting::set('home_promo_active', $promoActive);
+        unset($validated['home_promo_active']);
+
+        if ($request->has('promo_slides')) {
+            $promoInput = $request->input('promo_slides', []);
+            $promoData = [];
+
+            foreach ($promoInput as $i => $ps) {
+                $imagePath = $ps['image'] ?? '';
+
+                if ($request->hasFile("promo_slides.{$i}.image_file")) {
+                    $path = $request->file("promo_slides.{$i}.image_file")->store('promo_banners', 'public');
+                    $imagePath = '/storage/' . $path;
+                }
+
+                if (!empty($imagePath)) {
+                    $promoData[] = [
+                        'image'    => $imagePath,
+                        'title'    => $ps['title'] ?? '',
+                        'subtitle' => $ps['subtitle'] ?? '',
+                        'url'      => $ps['url'] ?? '',
+                        'btn_text' => $ps['btn_text'] ?? '',
+                    ];
+                }
+            }
+
+            SiteSetting::set('home_promo_slides_json', json_encode(array_values($promoData)));
+            unset($validated['promo_slides']);
+        }
+
         // Save Services JSON
         if ($request->has('services')) {
             $servicesData = array_values($request->input('services', []));
@@ -213,6 +262,6 @@ class HomeSettingController extends Controller
             SiteSetting::set($key, $val ?? '');
         }
 
-        return back()->with('success', 'Semua slide banner, konten, dan daftar layanan beranda berhasil diperbarui!');
+        return back()->with('success', 'Semua slide banner, banner promo, konten, dan daftar layanan beranda berhasil diperbarui!');
     }
 }

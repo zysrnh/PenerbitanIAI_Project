@@ -162,6 +162,22 @@ class HomeController extends Controller
             ];
         }
 
-        return view('landingpage', compact('settings', 'services', 'featuredBooks', 'slides', 'latestArticles'));
+        // Fetch Dynamic Promo Banner Slides (Di Atas Kabar Literasi / Berita)
+        $rawPromoSlides = SiteSetting::get('home_promo_slides_json', null);
+        $promoSlides = $rawPromoSlides ? json_decode($rawPromoSlides, true) : null;
+        if (!is_array($promoSlides) || empty($promoSlides)) {
+            $promoSlides = [
+                [
+                    'image'    => 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop',
+                    'title'    => 'Layanan Penerbitan & Cetak Buku Ber-ISBN Resmi',
+                    'subtitle' => 'Dukung publikasi karya ilmiah, monograf, buku ajar, dan naskah dakwah bersama PERSIS PERS',
+                    'url'      => '/layanan',
+                    'btn_text' => 'Konsultasi Sekarang',
+                ],
+            ];
+        }
+        $promoActive = SiteSetting::get('home_promo_active', '1') === '1';
+
+        return view('landingpage', compact('settings', 'services', 'featuredBooks', 'slides', 'latestArticles', 'promoSlides', 'promoActive'));
     }
 }

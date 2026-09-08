@@ -327,6 +327,80 @@
         </div>
     </section>
 
+    <!-- Section: Banner Promo / Informasi Slider (Di Atas Kabar Literasi / Berita) -->
+    @if(($promoActive ?? true) && isset($promoSlides) && count($promoSlides) > 0)
+    <section class="py-6 sm:py-8 bg-white border-t border-slate-200/70 select-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div id="promo-slider" class="relative w-full aspect-[16/8] sm:aspect-[16/6] md:aspect-[21/7] rounded-sm overflow-hidden border border-slate-200 shadow-xs group bg-[#032c21]">
+                @foreach($promoSlides as $pIdx => $pSlide)
+                    <div class="promo-slide absolute inset-0 transition-opacity duration-500 ease-in-out {{ $pIdx === 0 ? 'opacity-100 z-10 block' : 'opacity-0 z-0 hidden' }}" data-pindex="{{ $pIdx }}">
+                        @if(!empty($pSlide['url']))
+                            <a href="{{ $pSlide['url'] }}" class="block w-full h-full relative group">
+                        @else
+                            <div class="block w-full h-full relative">
+                        @endif
+
+                            <img 
+                                src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
+                                alt="{{ $pSlide['title'] ?? 'Banner Promo PERSIS PERS' }}" 
+                                class="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500" 
+                                loading="lazy"
+                            />
+
+                            @if(!empty(trim($pSlide['title'] ?? '')) || !empty(trim($pSlide['subtitle'] ?? '')))
+                                <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-transparent flex flex-col justify-center px-6 sm:px-10 md:px-14 py-6">
+                                    <div class="max-w-xl space-y-1.5 sm:space-y-2">
+                                        @if(!empty(trim($pSlide['title'] ?? '')))
+                                            <h4 class="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
+                                                {{ $pSlide['title'] }}
+                                            </h4>
+                                        @endif
+                                        @if(!empty(trim($pSlide['subtitle'] ?? '')))
+                                            <p class="text-xs sm:text-sm text-slate-200/90 line-clamp-2 leading-relaxed">
+                                                {{ $pSlide['subtitle'] }}
+                                            </p>
+                                        @endif
+                                        @if(!empty(trim($pSlide['btn_text'] ?? '')))
+                                            <div class="pt-1.5">
+                                                <span class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 bg-lime-400 group-hover:bg-lime-500 text-slate-950 text-[10.5px] sm:text-xs font-black uppercase tracking-wider rounded-xs shadow-md transition">
+                                                    <span>{{ $pSlide['btn_text'] }}</span>
+                                                    <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+
+                        @if(!empty($pSlide['url']))
+                            </a>
+                        @else
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+
+                @if(count($promoSlides) > 1)
+                    <!-- Navigation Arrows -->
+                    <button id="promo-prev" aria-label="Promo Sebelumnya" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-xs bg-black/60 hover:bg-black/90 text-white items-center justify-center transition border border-white/20 shadow-md cursor-pointer hidden sm:flex">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button id="promo-next" aria-label="Promo Selanjutnya" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-xs bg-black/60 hover:bg-black/90 text-white items-center justify-center transition border border-white/20 shadow-md cursor-pointer hidden sm:flex">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+
+                    <!-- Indicators Dots -->
+                    <div class="absolute bottom-3 right-4 z-20 flex items-center gap-1.5">
+                        @foreach($promoSlides as $pIdx => $pSlide)
+                            <button class="promo-dot-indicator {{ $pIdx === 0 ? 'w-5 bg-lime-400' : 'w-2 bg-white/50 hover:bg-white/80' }} h-1.5 rounded-full transition-all duration-300 cursor-pointer" data-pslide="{{ $pIdx }}" aria-label="Promo Slide {{ $pIdx + 1 }}"></button>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+    </section>
+    @endif
+
     <!-- Section: Berita & Artikel Terbaru -->
     @if(isset($latestArticles) && $latestArticles->count() > 0)
     <section id="berita" class="py-12 sm:py-16 bg-slate-50 border-t border-slate-200/80">
@@ -519,10 +593,98 @@
             startTimer();
         }
 
+        function initPromoSlider() {
+            const promoContainer = document.getElementById('promo-slider');
+            if (!promoContainer) return;
+
+            const slides = promoContainer.querySelectorAll('.promo-slide');
+            const prevBtn = document.getElementById('promo-prev');
+            const nextBtn = document.getElementById('promo-next');
+            const dots = promoContainer.querySelectorAll('.promo-dot-indicator');
+            let currentIndex = 0;
+            let slideInterval = null;
+
+            if (slides.length <= 1) return;
+
+            function showPromo(index) {
+                if (index >= slides.length) index = 0;
+                if (index < 0) index = slides.length - 1;
+                currentIndex = index;
+
+                slides.forEach((slide, i) => {
+                    if (i === currentIndex) {
+                        slide.classList.remove('opacity-0', 'z-0', 'hidden');
+                        slide.classList.add('opacity-100', 'z-10', 'block');
+                    } else {
+                        slide.classList.remove('opacity-100', 'z-10', 'block');
+                        slide.classList.add('opacity-0', 'z-0', 'hidden');
+                    }
+                });
+
+                dots.forEach((dot, i) => {
+                    if (i === currentIndex) {
+                        dot.classList.remove('bg-white/50', 'w-2');
+                        dot.classList.add('bg-lime-400', 'w-5');
+                    } else {
+                        dot.classList.remove('bg-lime-400', 'w-5');
+                        dot.classList.add('bg-white/50', 'w-2');
+                    }
+                });
+            }
+
+            function nextPromo() { showPromo(currentIndex + 1); }
+            function prevPromo() { showPromo(currentIndex - 1); }
+
+            function startPromoTimer() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextPromo, 6000);
+            }
+
+            function resetPromoTimer() {
+                clearInterval(slideInterval);
+                startPromoTimer();
+            }
+
+            if (nextBtn) {
+                nextBtn.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    nextPromo();
+                    resetPromoTimer();
+                };
+            }
+
+            if (prevBtn) {
+                prevBtn.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    prevPromo();
+                    resetPromoTimer();
+                };
+            }
+
+            dots.forEach(dot => {
+                dot.onclick = function(e) {
+                    if (e) e.preventDefault();
+                    const idx = parseInt(this.getAttribute('data-pslide'));
+                    showPromo(idx);
+                    resetPromoTimer();
+                };
+            });
+
+            promoContainer.onmouseenter = function() { clearInterval(slideInterval); };
+            promoContainer.onmouseleave = function() { startPromoTimer(); };
+
+            showPromo(0);
+            startPromoTimer();
+        }
+
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initHeroSlider);
+            document.addEventListener('DOMContentLoaded', function() {
+                initHeroSlider();
+                initPromoSlider();
+            });
         } else {
             initHeroSlider();
+            initPromoSlider();
         }
     })();
 </script>
