@@ -14,7 +14,11 @@ class ArticleSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Setup Categories
+        // Clean up any previous wakaf dummy article from articles table
+        Article::where('slug', 'program-wakaf-al-quran-dan-buku')->delete();
+        ArticleCategory::where('slug', 'wakaf-literasi')->delete();
+
+        // 1. Setup Sample Categories
         $catKabar = ArticleCategory::firstOrCreate(
             ['slug' => 'kabar-penerbitan'],
             [
@@ -33,145 +37,11 @@ class ArticleSeeder extends Seeder
             ]
         );
 
-        $catWakaf = ArticleCategory::firstOrCreate(
-            ['slug' => 'wakaf-literasi'],
-            [
-                'name' => 'Wakaf & Literasi',
-                'description' => 'Program wakaf Al-Qur\'an, buku keislaman, dan penyaluran literasi ilmu untuk umat.',
-                'order' => 3,
-            ]
-        );
-
         $author = User::where('role', 'super_admin')->orWhere('role', 'admin')->first() ?? User::first();
         $authorId = $author ? $author->id : null;
 
-        // 2. Setup Default Site Settings for Wakaf
-        if (!SiteSetting::get('wakaf_card_title')) {
-            SiteSetting::set('wakaf_card_title', "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI");
-        }
-        if (!SiteSetting::get('wakaf_bank_name')) {
-            SiteSetting::set('wakaf_bank_name', 'Bank Syariah Indonesia (BSI)');
-        }
-        if (!SiteSetting::get('wakaf_account_no')) {
-            SiteSetting::set('wakaf_account_no', '7148888999');
-        }
-        if (!SiteSetting::get('wakaf_account_name')) {
-            SiteSetting::set('wakaf_account_name', 'PENERBIT PERSIS WAKAF');
-        }
-        if (!SiteSetting::get('wakaf_article_url')) {
-            SiteSetting::set('wakaf_article_url', '/berita/program-wakaf-al-quran-dan-buku');
-        }
-        if (!SiteSetting::get('wakaf_contact_wa')) {
-            SiteSetting::set('wakaf_contact_wa', '6281234567890');
-        }
-        if (!SiteSetting::get('wakaf_active')) {
-            SiteSetting::set('wakaf_active', '1');
-        }
-
-        // 3. Setup Articles (Including Full Official Wakaf Program)
+        // 2. Setup 2 Sample Articles
         $articles = [
-            [
-                'title' => 'Program Wakaf Al-Qur’an dan Buku: Menghidupkan Literasi, Menebarkan Ilmu, Mengalirkan Pahala',
-                'slug' => 'program-wakaf-al-quran-dan-buku',
-                'category_id' => $catWakaf->id,
-                'author_id' => $authorId,
-                'thumbnail' => 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?q=80&w=1200&auto=format&fit=crop',
-                'excerpt' => 'Penerbit Persis menghadirkan Program Wakaf Al-Qur’an dan Buku sebagai ikhtiar untuk memperluas akses umat Islam terhadap Al-Qur’an dan berbagai sumber ilmu pengetahuan yang bermanfaat.',
-                'content' => '<p class="lead font-medium text-slate-800 text-base leading-relaxed"><strong>Penerbit Persis</strong> menghadirkan <strong>Program Wakaf Al-Qur’an dan Buku</strong> sebagai ikhtiar untuk memperluas akses umat Islam terhadap Al-Qur’an dan berbagai sumber ilmu pengetahuan yang bermanfaat.</p>
-
-<p>Program ini membuka kesempatan bagi masyarakat untuk turut berwakaf dalam bentuk Al-Qur’an dan buku-buku keislaman serta keilmuan yang akan dicetak dan disalurkan kepada pihak-pihak yang membutuhkan.</p>
-
-<!-- Rekening Wakaf Box Callout -->
-<div class="my-8 p-6 bg-emerald-50/90 border border-emerald-300 rounded-sm shadow-sm space-y-4">
-    <div class="flex items-center gap-3 pb-3 border-b border-emerald-200">
-        <div class="w-10 h-10 rounded-full bg-[#006830] text-white flex items-center justify-center text-lg shadow-xs">
-            <i class="fa-solid fa-hand-holding-heart"></i>
-        </div>
-        <div>
-            <span class="text-[10px] font-black uppercase tracking-widest text-emerald-800">REKENING RESMI WAKAF</span>
-            <h4 class="text-base font-extrabold text-slate-900 leading-tight">Saluran Wakaf Al-Qur\'an &amp; Buku</h4>
-        </div>
-    </div>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-        <div class="space-y-1 bg-white p-3.5 rounded-sm border border-emerald-200">
-            <span class="text-slate-500 font-medium block">Transfer Bank Syariah:</span>
-            <div class="font-bold text-slate-900 text-sm">Bank Syariah Indonesia (BSI)</div>
-            <div class="text-xs text-slate-600">No. Rekening: <strong class="text-slate-950 font-mono text-sm select-all">7148888999</strong></div>
-            <div class="text-[11px] text-slate-500">Atas Nama: <strong class="text-emerald-900">PENERBIT PERSIS WAKAF</strong></div>
-        </div>
-        <div class="space-y-2 bg-white p-3.5 rounded-sm border border-emerald-200 flex flex-col justify-between">
-            <span class="text-slate-500 font-medium block">Konfirmasi / Layanan Wakaf:</span>
-            <a href="https://wa.me/6281234567890?text=Assalamu%27alaikum%20Admin%20Penerbit%20Persis%2C%20saya%20ingin%20konfirmasi%20Wakaf%20Al-Qur%27an%20dan%20Buku" target="_blank" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white font-bold rounded-xs transition text-xs shadow-xs">
-                <i class="fa-brands fa-whatsapp text-sm text-lime-300"></i>
-                <span>Konfirmasi Wakaf via WhatsApp</span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<h3>📖 Wakaf yang Menghidupkan Ilmu</h3>
-<p>Wakaf yang terkumpul akan digunakan untuk mencetak dan menyediakan Al-Qur’an serta berbagai buku yang memiliki nilai edukatif dan keilmuan.</p>
-<p>Tidak hanya Al-Qur’an, program ini juga mendukung penyediaan buku-buku yang dapat memperkaya wawasan umat dalam bidang <strong>Al-Qur’an, hadis, fikih, akidah, pendidikan, sejarah Islam, dakwah, sosial, ekonomi Islam</strong>, dan berbagai bidang keilmuan lainnya.</p>
-<p>Dengan demikian, wakaf yang diberikan diharapkan tidak hanya menghadirkan mushaf Al-Qur’an, tetapi juga membuka jalan bagi umat untuk membaca, belajar, memahami, dan mengembangkan ilmu.</p>
-
-<h3>🕌 Disalurkan kepada yang Membutuhkan</h3>
-<p>Al-Qur’an dan buku-buku yang dicetak melalui program wakaf ini akan disalurkan kepada berbagai lembaga dan tempat yang membutuhkan, antara lain:</p>
-
-<ul class="space-y-1.5 my-4">
-    <li>📚 <strong>Perpustakaan masjid</strong></li>
-    <li>🕌 <strong>Masjid dan musala</strong></li>
-    <li>🏫 <strong>Pesantren</strong></li>
-    <li>📖 <strong>Madrasah dan lembaga pendidikan Islam</strong></li>
-    <li>🏢 <strong>Lembaga dakwah dan sosial</strong></li>
-    <li>📚 <strong>Perpustakaan sekolah dan perguruan tinggi</strong></li>
-    <li>👨‍👩‍👧‍👦 <strong>Komunitas dan majelis ilmu</strong></li>
-    <li>🌍 <strong>Masyarakat dan daerah yang membutuhkan</strong></li>
-    <li>🏛️ <strong>Lembaga-lembaga Islam lainnya</strong></li>
-</ul>
-
-<p>Penyaluran dilakukan sebagai upaya menghadirkan bahan bacaan yang bermanfaat dan mendukung tumbuhnya budaya membaca serta belajar di tengah umat.</p>
-
-<h3>🌱 Dari Wakaf Menjadi Ilmu yang Terus Mengalir</h3>
-<blockquote class="my-6 p-4 bg-slate-50 border-l-4 border-[#006830] italic text-slate-700 text-sm leading-relaxed rounded-r-sm">
-    "Bayangkan satu Al-Qur’an yang Anda wakafkan kemudian dibaca oleh puluhan, ratusan, bahkan ribuan orang. Bayangkan pula sebuah buku yang Anda ikut wakafkan menjadi sumber ilmu bagi seorang santri, pelajar, guru, dai, mahasiswa, atau masyarakat yang sedang mencari pengetahuan. Setiap kali Al-Qur’an dibaca dan setiap kali ilmu dari buku dipelajari serta diamalkan, insyaallah menjadi bagian dari kebaikan yang terus mengalir."
-</blockquote>
-
-<p>Inilah semangat wakaf ilmu: <em>menghadirkan manfaat yang terus hidup melalui bacaan, pembelajaran, dan pengamalan</em>.</p>
-
-<h3>🤲 Mari Bersama Membangun Peradaban Ilmu</h3>
-<p>Melalui Program Wakaf Al-Qur’an dan Buku Penerbit Persis, mari kita bersama-sama membangun budaya literasi dan memperkuat tradisi keilmuan umat Islam.</p>
-
-<p>Wakaf Anda hari ini dapat menjadi:</p>
-<ul>
-    <li>Al-Qur’an yang dibaca</li>
-    <li>Buku yang dipelajari</li>
-    <li>Ilmu yang diamalkan</li>
-    <li>Kebaikan yang terus dikenang</li>
-</ul>
-
-<div class="my-8 p-6 bg-slate-900 text-white rounded-sm border border-slate-800 text-center space-y-3">
-    <span class="text-xs uppercase tracking-widest text-emerald-400 font-bold font-mono">WAKAF AL-QUR\'AN DAN BUKU ANDA</span>
-    <h4 class="text-lg sm:text-xl font-extrabold text-white font-heading">Bukan sekadar mencetak buku. Bukan sekadar menyalurkan mushaf. Tetapi bersama-sama menghadirkan ilmu untuk umat.</h4>
-    <p class="text-xs text-slate-300 max-w-xl mx-auto">Mari Berwakaf. Mari Tebarkan Al-Qur’an. Mari Wakafkan Ilmu. Mari Bangun Peradaban.</p>
-    <div class="pt-2">
-        <a href="https://wa.me/6281234567890?text=Assalamu%27alaikum%20Admin%20Penerbit%20Persis%2C%20saya%20ingin%20berwakaf%20Al-Qur%27an%20dan%20Buku" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-lime-400 hover:bg-lime-500 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xs transition shadow-md">
-            <i class="fa-brands fa-whatsapp text-sm"></i>
-            <span>Salurkan Wakaf Sekarang</span>
-        </a>
-    </div>
-</div>
-
-<p class="text-center font-bold text-slate-900 text-sm mt-6">
-<strong>Penerbit Persis</strong><br>
-<span class="text-xs text-slate-500 font-normal">Menghadirkan karya, menyebarkan ilmu, dan menebarkan manfaat untuk umat.</span>
-</p>',
-                'status' => 'published',
-                'is_featured' => true,
-                'views_count' => 320,
-                'tags' => 'wakaf alquran, wakaf buku, literasi islam, penerbit persis, amal jariyah',
-                'published_at' => now(),
-            ],
             [
                 'title' => 'Penerbit Persis Buka Layanan Konversi Skripsi & Tesis Menjadi Buku Ber-ISBN Resmi',
                 'slug' => 'penerbit-persis-buka-layanan-konversi-skripsi-tesis-menjadi-buku-ber-isbn-resmi',

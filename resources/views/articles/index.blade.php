@@ -203,23 +203,23 @@
                         </div>
                     </div>
 
-                    <!-- 2. Widget Wakaf Al-Qur'an & Buku (Di Atas Berita Populer) -->
+                    <!-- 3. Widget Sidebar Wakaf Al-Qur'an & Buku (Di Atas Berita Populer) -->
                     @if(($settings['wakaf_active'] ?? '1') === '1')
                         <div class="bg-white rounded-sm border border-emerald-300/80 shadow-2xs overflow-hidden group">
                             <!-- Top Strip Green Accent -->
                             <div class="h-1 bg-[#006830]"></div>
 
                             <div class="p-4 space-y-3.5">
-                                <!-- Card Header (Clickable to Wakaf Article) -->
-                                <a href="{{ $settings['wakaf_article_url'] ?? '/berita/program-wakaf-al-quran-dan-buku' }}" class="block group/link space-y-1">
+                                <!-- Card Header (Opens Modal Popup) -->
+                                <button type="button" onclick="openWakafModal()" class="w-full text-left group/btn space-y-1 cursor-pointer">
                                     <div class="flex items-center gap-1.5">
                                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                         <span class="text-[9.5px] font-black uppercase tracking-widest text-[#006830] font-mono">PROGRAM WAKAF</span>
                                     </div>
-                                    <h3 class="text-xs font-black text-slate-900 group-hover/link:text-emerald-800 transition leading-snug">
+                                    <h3 class="text-xs font-black text-slate-900 group-hover/btn:text-emerald-800 transition leading-snug">
                                         {{ $settings['wakaf_card_title'] ?? "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI" }}
                                     </h3>
-                                </a>
+                                </button>
 
                                 <!-- Bank & Account Detail Box -->
                                 <div class="p-3 bg-slate-50/90 rounded-xs border border-slate-200/90 space-y-2 text-xs">
@@ -245,7 +245,7 @@
 
                                     <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">
                                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">An:</span>
-                                        <span class="text-[11px] font-bold text-slate-700 truncate max-w-[150px]">{{ $settings['wakaf_account_name'] ?? 'PENERBIT PERSIS' }}</span>
+                                        <span class="text-[11px] font-bold text-slate-700 truncate max-w-[150px]">{{ $settings['wakaf_account_name'] ?? 'PENERBIT PERSIS WAKAF' }}</span>
                                     </div>
                                 </div>
 
@@ -264,13 +264,14 @@
 
                                 <!-- CTA Action Buttons -->
                                 <div class="pt-1 space-y-2">
-                                    <a 
-                                        href="{{ $settings['wakaf_article_url'] ?? '/berita/program-wakaf-al-quran-dan-buku' }}" 
-                                        class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-xs transform hover:scale-[1.01] active:scale-98"
+                                    <button 
+                                        type="button" 
+                                        onclick="openWakafModal()" 
+                                        class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-xs transform hover:scale-[1.01] active:scale-98 cursor-pointer"
                                     >
                                         <i class="fa-solid fa-book-open-reader text-xs"></i>
                                         <span>Pelajari &amp; Salurkan</span>
-                                    </a>
+                                    </button>
                                     
                                     @if(!empty($settings['wakaf_contact_wa']))
                                         <a 
@@ -287,7 +288,7 @@
                         </div>
                     @endif
 
-                    <!-- 3. Berita Populer / Terbaru Widget -->
+                    <!-- 4. Berita Populer / Terbaru Widget -->
                     @if($popularArticles->count() > 0)
                         <div class="bg-white rounded-sm border border-slate-200 shadow-2xs overflow-hidden">
                             <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
@@ -326,7 +327,144 @@
         </div>
     </main>
 
+    <!-- 3. MODAL POPUP DIALOG: PROGRAM WAKAF AL-QUR'AN & BUKU -->
+    <div id="wakafProgramModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs transition-opacity duration-300">
+        <div class="bg-white rounded-sm max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-emerald-300 overflow-hidden transform transition-all">
+            
+            <!-- Modal Header -->
+            <div class="bg-[#006830] text-white p-4 sm:p-5 flex items-start justify-between gap-3 shrink-0">
+                <div class="space-y-1">
+                    <span class="text-[10px] font-bold text-emerald-300 uppercase tracking-widest font-mono block">PROGRAM RESMI PENERBIT PERSIS</span>
+                    <h3 class="text-base sm:text-lg font-black font-heading leading-snug text-white">
+                        {{ $settings['wakaf_program_title'] ?? 'PROGRAM WAKAF AL-QUR’AN DAN BUKU' }}
+                    </h3>
+                    <p class="text-xs text-emerald-100">
+                        {{ $settings['wakaf_program_subtitle'] ?? 'Menghidupkan Literasi, Menebarkan Ilmu, Mengalirkan Pahala' }}
+                    </p>
+                </div>
+                <button type="button" onclick="closeWakafModal()" class="w-8 h-8 rounded-xs bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer shrink-0">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-5 sm:p-6 overflow-y-auto space-y-5 text-xs sm:text-sm text-slate-700 leading-relaxed">
+                
+                <!-- Rekening Box Callout -->
+                <div class="p-4 bg-emerald-50/90 border border-emerald-300 rounded-xs space-y-3 shadow-2xs">
+                    <div class="flex items-center gap-2 pb-2 border-b border-emerald-200">
+                        <div class="w-7 h-7 rounded-xs bg-[#006830] text-white flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+                        <div>
+                            <span class="text-[9.5px] font-black uppercase tracking-widest text-[#006830] block">REKENING RESMI WAKAF</span>
+                            <span class="text-xs font-bold text-slate-900">Saluran Transfer &amp; Wakaf Jariyah</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div class="bg-white p-3 rounded-xs border border-emerald-200 space-y-1">
+                            <span class="text-slate-500 text-[11px] block">Transfer Bank Syariah:</span>
+                            <div class="font-bold text-slate-900 text-xs">{{ $settings['wakaf_bank_name'] ?? 'Bank Syariah Indonesia (BSI)' }}</div>
+                            <div class="text-xs flex items-center justify-between gap-2 pt-1 border-t border-slate-100">
+                                <span>No. Rek: <strong class="font-mono text-emerald-950 font-bold select-all">{{ $settings['wakaf_account_no'] ?? '7148888999' }}</strong></span>
+                                <button 
+                                    type="button" 
+                                    onclick="copyWakafRekening('{{ $settings['wakaf_account_no'] ?? '7148888999' }}', this)" 
+                                    class="px-2 py-0.5 rounded-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10.5px] font-bold cursor-pointer"
+                                >
+                                    <i class="fa-regular fa-copy mr-0.5"></i> Salin
+                                </button>
+                            </div>
+                            <div class="text-[10.5px] text-slate-500">Atas Nama: <strong class="text-slate-800">{{ $settings['wakaf_account_name'] ?? 'PENERBIT PERSIS WAKAF' }}</strong></div>
+                        </div>
+
+                        <div class="bg-white p-3 rounded-xs border border-emerald-200 flex flex-col justify-between space-y-2">
+                            <span class="text-slate-500 text-[11px] block">Layanan Konfirmasi Wakaf:</span>
+                            @if(!empty($settings['wakaf_qris_image']))
+                                <button type="button" onclick="openWakafQrisModal('{{ $settings['wakaf_qris_image'] }}')" class="w-full py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xs text-[11px] font-bold border border-slate-300 flex items-center justify-center gap-1.5 cursor-pointer">
+                                    <i class="fa-solid fa-qrcode text-emerald-700"></i> Scan QRIS Wakaf
+                                </button>
+                            @endif
+                            @if(!empty($settings['wakaf_contact_wa']))
+                                <a 
+                                    href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['wakaf_contact_wa']) }}?text={{ urlencode('Assalamu\'alaikum Admin Penerbit Persis, saya ingin berwakaf Al-Qur\'an dan Buku') }}" 
+                                    target="_blank" 
+                                    class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs"
+                                >
+                                    <i class="fa-brands fa-whatsapp text-emerald-300"></i>
+                                    <span>Konfirmasi via WhatsApp</span>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wakaf HTML Full Content -->
+                <div class="space-y-3 prose prose-xs sm:prose-sm max-w-none text-slate-700 leading-relaxed">
+                    @if(!empty($settings['wakaf_content']))
+                        {!! $settings['wakaf_content'] !!}
+                    @else
+                        <p class="lead font-medium text-slate-800"><strong>Penerbit Persis</strong> menghadirkan <strong>Program Wakaf Al-Qur’an dan Buku</strong> sebagai ikhtiar untuk memperluas akses umat Islam terhadap Al-Qur’an dan berbagai sumber ilmu pengetahuan yang bermanfaat.</p>
+                        <p>Program ini membuka kesempatan bagi masyarakat untuk turut berwakaf dalam bentuk Al-Qur’an dan buku-buku keislaman serta keilmuan yang akan dicetak dan disalurkan kepada pihak-pihak yang membutuhkan.</p>
+                    @endif
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-3 sm:p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+                <button type="button" onclick="closeWakafModal()" class="px-4 py-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 rounded-xs text-xs font-bold transition cursor-pointer">
+                    Tutup
+                </button>
+                @if(!empty($settings['wakaf_contact_wa']))
+                    <a 
+                        href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['wakaf_contact_wa']) }}?text={{ urlencode('Assalamu\'alaikum Admin Penerbit Persis, saya ingin berwakaf Al-Qur\'an dan Buku') }}" 
+                        target="_blank" 
+                        class="px-5 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold uppercase tracking-wider transition flex items-center gap-2 shadow-xs cursor-pointer"
+                    >
+                        <i class="fa-brands fa-whatsapp text-sm text-lime-300"></i>
+                        <span>Salurkan Wakaf Sekarang</span>
+                    </a>
+                @endif
+            </div>
+
+        </div>
+    </div>
+
     <script>
+        function openWakafModal() {
+            const modal = document.getElementById('wakafProgramModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeWakafModal() {
+            const modal = document.getElementById('wakafProgramModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close on backdrop click
+        document.getElementById('wakafProgramModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeWakafModal();
+            }
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeWakafModal();
+            }
+        });
+
         function copyWakafRekening(rek, btn) {
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(rek).then(() => {
@@ -352,13 +490,12 @@
         }
 
         function showCopySuccess(btn, rek) {
-            const icon = btn.querySelector('i');
-            if (icon) {
-                icon.className = 'fa-solid fa-check text-emerald-600';
-                setTimeout(() => {
-                    icon.className = 'fa-regular fa-copy';
-                }, 2000);
-            }
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check text-emerald-600"></i> Tersalin!';
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+            }, 2000);
+
             if (typeof Swal !== 'undefined') {
                 Swal.fire({
                     toast: true,

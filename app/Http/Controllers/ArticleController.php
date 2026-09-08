@@ -76,14 +76,16 @@ class ArticleController extends Controller
             'news_promo_desc'    => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
             
             // Wakaf Settings
-            'wakaf_card_title'   => \App\Models\SiteSetting::get('wakaf_card_title', "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI"),
-            'wakaf_bank_name'    => \App\Models\SiteSetting::get('wakaf_bank_name', 'Bank Syariah Indonesia (BSI)'),
-            'wakaf_account_no'   => \App\Models\SiteSetting::get('wakaf_account_no', '7148888999'),
-            'wakaf_account_name' => \App\Models\SiteSetting::get('wakaf_account_name', 'PENERBIT PERSIS WAKAF'),
-            'wakaf_qris_image'   => \App\Models\SiteSetting::get('wakaf_qris_image', ''),
-            'wakaf_article_url'  => \App\Models\SiteSetting::get('wakaf_article_url', '/berita/program-wakaf-al-quran-dan-buku'),
-            'wakaf_contact_wa'   => \App\Models\SiteSetting::get('wakaf_contact_wa', '6281234567890'),
-            'wakaf_active'       => \App\Models\SiteSetting::get('wakaf_active', '1'),
+            'wakaf_card_title'       => \App\Models\SiteSetting::get('wakaf_card_title', "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI"),
+            'wakaf_bank_name'        => \App\Models\SiteSetting::get('wakaf_bank_name', 'Bank Syariah Indonesia (BSI)'),
+            'wakaf_account_no'       => \App\Models\SiteSetting::get('wakaf_account_no', '7148888999'),
+            'wakaf_account_name'     => \App\Models\SiteSetting::get('wakaf_account_name', 'PENERBIT PERSIS WAKAF'),
+            'wakaf_qris_image'       => \App\Models\SiteSetting::get('wakaf_qris_image', ''),
+            'wakaf_contact_wa'       => \App\Models\SiteSetting::get('wakaf_contact_wa', '6281234567890'),
+            'wakaf_active'           => \App\Models\SiteSetting::get('wakaf_active', '1'),
+            'wakaf_program_title'    => \App\Models\SiteSetting::get('wakaf_program_title', 'PROGRAM WAKAF AL-QUR’AN DAN BUKU'),
+            'wakaf_program_subtitle' => \App\Models\SiteSetting::get('wakaf_program_subtitle', 'Menghidupkan Literasi, Menebarkan Ilmu, Mengalirkan Pahala'),
+            'wakaf_content'          => \App\Models\SiteSetting::get('wakaf_content', ''),
         ];
 
         // Sidebar Data
@@ -153,14 +155,16 @@ class ArticleController extends Controller
             'news_promo_desc'    => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
             
             // Wakaf Settings
-            'wakaf_card_title'   => \App\Models\SiteSetting::get('wakaf_card_title', "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI"),
-            'wakaf_bank_name'    => \App\Models\SiteSetting::get('wakaf_bank_name', 'Bank Syariah Indonesia (BSI)'),
-            'wakaf_account_no'   => \App\Models\SiteSetting::get('wakaf_account_no', '7148888999'),
-            'wakaf_account_name' => \App\Models\SiteSetting::get('wakaf_account_name', 'PENERBIT PERSIS WAKAF'),
-            'wakaf_qris_image'   => \App\Models\SiteSetting::get('wakaf_qris_image', ''),
-            'wakaf_article_url'  => \App\Models\SiteSetting::get('wakaf_article_url', '/berita/program-wakaf-al-quran-dan-buku'),
-            'wakaf_contact_wa'   => \App\Models\SiteSetting::get('wakaf_contact_wa', '6281234567890'),
-            'wakaf_active'       => \App\Models\SiteSetting::get('wakaf_active', '1'),
+            'wakaf_card_title'       => \App\Models\SiteSetting::get('wakaf_card_title', "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI"),
+            'wakaf_bank_name'        => \App\Models\SiteSetting::get('wakaf_bank_name', 'Bank Syariah Indonesia (BSI)'),
+            'wakaf_account_no'       => \App\Models\SiteSetting::get('wakaf_account_no', '7148888999'),
+            'wakaf_account_name'     => \App\Models\SiteSetting::get('wakaf_account_name', 'PENERBIT PERSIS WAKAF'),
+            'wakaf_qris_image'       => \App\Models\SiteSetting::get('wakaf_qris_image', ''),
+            'wakaf_contact_wa'       => \App\Models\SiteSetting::get('wakaf_contact_wa', '6281234567890'),
+            'wakaf_active'           => \App\Models\SiteSetting::get('wakaf_active', '1'),
+            'wakaf_program_title'    => \App\Models\SiteSetting::get('wakaf_program_title', 'PROGRAM WAKAF AL-QUR’AN DAN BUKU'),
+            'wakaf_program_subtitle' => \App\Models\SiteSetting::get('wakaf_program_subtitle', 'Menghidupkan Literasi, Menebarkan Ilmu, Mengalirkan Pahala'),
+            'wakaf_content'          => \App\Models\SiteSetting::get('wakaf_content', ''),
         ];
 
         return view('articles.show', compact(

@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kelola Halaman Berita')
+@section('title', 'Kelola Halaman Berita & Wakaf')
 @section('header_title', 'Kelola Konten & Pratinjau Halaman Berita')
 
 @section('content')
@@ -8,12 +8,12 @@
     <div class="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
             <div class="flex items-center gap-2.5">
-                <h3 class="text-lg font-extrabold text-slate-900">Pengaturan Konten Halaman Berita</h3>
+                <h3 class="text-lg font-extrabold text-slate-900">Pengaturan Konten Berita &amp; Wakaf</h3>
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xs text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
                     <span class="w-2 h-2 rounded-xs bg-emerald-500 animate-pulse"></span> Pratinjau Visual Live
                 </span>
             </div>
-            <p class="text-sm text-slate-500 mt-1">Ubah teks banner header halaman berita dengan visualisasi real-time.</p>
+            <p class="text-sm text-slate-500 mt-1">Atur banner berita, rekening bank wakaf, dan popup dialog program wakaf secara real-time.</p>
         </div>
 
         <div class="flex items-center gap-2.5 shrink-0 flex-wrap">
@@ -110,7 +110,7 @@
                     </div>
                 </div>
 
-                <!-- 2. Widget Sidebar Wakaf Al-Qur'an & Buku -->
+                <!-- 2. Widget Sidebar & Rekening Wakaf -->
                 <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-4">
                     <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                         <div class="flex items-center gap-3">
@@ -118,7 +118,7 @@
                                 <i class="fa-solid fa-hand-holding-heart"></i>
                             </div>
                             <div>
-                                <h4 class="text-sm font-bold text-slate-900">Widget Wakaf Al-Qur'an &amp; Buku</h4>
+                                <h4 class="text-sm font-bold text-slate-900">Widget Sidebar &amp; Rekening Bank Wakaf</h4>
                                 <span class="text-[11px] text-slate-400">Muncul di sidebar atas Berita Populer</span>
                             </div>
                         </div>
@@ -172,21 +172,21 @@
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block font-bold text-slate-700 mb-1">Atas Nama Rekening <span class="text-rose-500">*</span></label>
-                            <input 
-                                type="text" 
-                                name="wakaf_account_name" 
-                                id="in_wakaf_an"
-                                value="{{ old('wakaf_account_name', $settings['wakaf_account_name']) }}" 
-                                placeholder="Contoh: PENERBIT PERSIS WAKAF"
-                                required 
-                                oninput="updateNewsPreview()"
-                                class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
-                            />
-                        </div>
-
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Atas Nama Rekening <span class="text-rose-500">*</span></label>
+                                <input 
+                                    type="text" 
+                                    name="wakaf_account_name" 
+                                    id="in_wakaf_an"
+                                    value="{{ old('wakaf_account_name', $settings['wakaf_account_name']) }}" 
+                                    placeholder="Contoh: PENERBIT PERSIS WAKAF"
+                                    required 
+                                    oninput="updateNewsPreview()"
+                                    class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                                />
+                            </div>
+
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">No. WhatsApp Konfirmasi</label>
                                 <input 
@@ -195,18 +195,6 @@
                                     id="in_wakaf_wa"
                                     value="{{ old('wakaf_contact_wa', $settings['wakaf_contact_wa']) }}" 
                                     placeholder="Contoh: 6281234567890"
-                                    class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 font-mono"
-                                />
-                            </div>
-
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1">Link URL Detail Artikel Wakaf</label>
-                                <input 
-                                    type="text" 
-                                    name="wakaf_article_url" 
-                                    id="in_wakaf_url"
-                                    value="{{ old('wakaf_article_url', $settings['wakaf_article_url']) }}" 
-                                    placeholder="/berita/program-wakaf-al-quran-dan-buku"
                                     class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 font-mono"
                                 />
                             </div>
@@ -227,6 +215,59 @@
                                     <input type="text" name="wakaf_qris_image" id="in_wakaf_qris_url" value="{{ $settings['wakaf_qris_image'] }}" placeholder="Atau paste URL gambar QRIS..." class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Popup Modal Dialog Content (Isi Konten Teks Program Wakaf) -->
+                <div class="bg-white rounded-sm border border-slate-200/80 shadow-xs p-5 sm:p-6 space-y-4">
+                    <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
+                        <div class="w-8 h-8 rounded-sm bg-emerald-50 text-emerald-800 flex items-center justify-center text-xs font-bold">
+                            <i class="fa-solid fa-window-restore"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900">Konten Teks Popup Dialog Program Wakaf</h4>
+                            <span class="text-[11px] text-slate-400">Teks lengkap yang tampil saat tombol pada widget ditekan</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3.5 text-xs">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Judul Program di Modal Popup</label>
+                            <input 
+                                type="text" 
+                                name="wakaf_program_title" 
+                                id="in_modal_title"
+                                value="{{ old('wakaf_program_title', $settings['wakaf_program_title']) }}" 
+                                placeholder="PROGRAM WAKAF AL-QUR’AN DAN BUKU"
+                                class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition font-bold"
+                            />
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Subjudul Program di Modal Popup</label>
+                            <input 
+                                type="text" 
+                                name="wakaf_program_subtitle" 
+                                id="in_modal_subtitle"
+                                value="{{ old('wakaf_program_subtitle', $settings['wakaf_program_subtitle']) }}" 
+                                placeholder="Menghidupkan Literasi, Menebarkan Ilmu, Mengalirkan Pahala"
+                                class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                            />
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block font-bold text-slate-700">Teks Penjelasan / Konten Lengkap Wakaf (HTML)</label>
+                                <span class="text-[10px] text-slate-400">Dukungan HTML &amp; Icon</span>
+                            </div>
+                            <textarea 
+                                name="wakaf_content" 
+                                id="in_modal_content"
+                                rows="10" 
+                                placeholder="Tuliskan penjelasan lengkap, poin penyaluran, quote, dll..."
+                                class="w-full px-3 py-2 text-xs rounded-sm border border-slate-300 font-mono text-[11px] focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition"
+                            >{{ old('wakaf_content', $settings['wakaf_content']) }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -313,14 +354,12 @@
                             </div>
                         </div>
 
-                        <!-- QRIS & CTA Button -->
+                        <!-- CTA Button that opens popup in preview -->
                         <div class="pt-1 flex items-center gap-2">
-                            <div class="flex-1">
-                                <button type="button" class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[10.5px] font-bold uppercase tracking-wider transition flex items-center justify-center gap-1.5 shadow-2xs">
-                                    <span>Pelajari &amp; Salurkan</span>
-                                    <i class="fa-solid fa-arrow-right text-[8px]"></i>
-                                </button>
-                            </div>
+                            <button type="button" onclick="previewWakafModal()" class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[10.5px] font-bold uppercase tracking-wider transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
+                                <span>Pelajari &amp; Salurkan (Buka Popup)</span>
+                                <i class="fa-solid fa-arrow-right text-[8px]"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -351,6 +390,35 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    function previewWakafModal() {
+        const title = document.getElementById('in_modal_title').value || 'PROGRAM WAKAF AL-QUR’AN DAN BUKU';
+        const subtitle = document.getElementById('in_modal_subtitle').value || 'Menghidupkan Literasi, Menebarkan Ilmu, Mengalirkan Pahala';
+        const bank = document.getElementById('in_wakaf_bank').value;
+        const rek = document.getElementById('in_wakaf_rek').value;
+        const an = document.getElementById('in_wakaf_an').value;
+        const content = document.getElementById('in_modal_content').value;
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: `<div class="text-left font-black text-slate-900 text-base sm:text-lg border-b pb-2">${title}<br><span class="text-xs font-normal text-slate-500">${subtitle}</span></div>`,
+                html: `
+                    <div class="text-left text-xs text-slate-700 space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+                        <div class="p-3 bg-emerald-50 border border-emerald-300 rounded-xs space-y-1.5">
+                            <div class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Rekening Resmi Wakaf:</div>
+                            <div class="font-bold text-slate-900 text-xs">${bank}</div>
+                            <div class="text-xs text-slate-700">No. Rekening: <strong class="font-mono text-emerald-950">${rek}</strong></div>
+                            <div class="text-[11px] text-slate-600">Atas Nama: <strong>${an}</strong></div>
+                        </div>
+                        <div class="prose prose-xs text-slate-700 leading-relaxed">${content}</div>
+                    </div>
+                `,
+                showCloseButton: true,
+                confirmButtonColor: '#006830',
+                confirmButtonText: 'Tutup Pratinjau',
+                width: '650px'
+            });
+        }
+    }
 </script>
 @endsection
-
