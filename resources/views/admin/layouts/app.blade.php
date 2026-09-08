@@ -62,7 +62,7 @@
         #main-content-wrapper {
             transition: padding-left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .animate-fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
     </style>
 </head>
@@ -833,7 +833,7 @@
     <!-- ========================================================================= -->
     
     <!-- 1. The Floating Action Button (Bottom Right) -->
-    <div class="fixed bottom-6 right-6 z-40 select-none">
+    <div id="adminFloatingChatContainer" class="fixed bottom-6 right-6 z-40 select-none {{ request()->routeIs('admin.settings.home*') ? 'hidden' : '' }}">
         <button 
             type="button" 
             onclick="openAdminMessageDrawer()"

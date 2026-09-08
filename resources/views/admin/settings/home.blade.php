@@ -4,7 +4,14 @@
 @section('header_title', 'Kelola Konten & Slider Halaman Beranda')
 
 @section('content')
-<div class="space-y-4 sm:space-y-5 pb-20">
+<style>
+    /* Sembunyikan widget floating chat WhatsApp admin di halaman ini agar tidak menutupi tombol simpan */
+    #adminFloatingChatBtn, #adminFloatingChatContainer {
+        display: none !important;
+    }
+</style>
+
+<div class="space-y-4 sm:space-y-5 pb-28">
 
     <!-- Top Card Header -->
     <div class="bg-white rounded-sm border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
@@ -442,28 +449,6 @@
             </form>
         </div>
 
-        <!-- Floating Bottom Save Bar (Always Visible & Accessible while Scrolling) -->
-        <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-300 shadow-2xl px-4 py-3 sm:px-6">
-            <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse hidden sm:inline-block"></span>
-                    <span class="text-xs font-extrabold text-slate-900 hidden sm:inline font-heading">Pengaturan Konten Beranda</span>
-                    <span class="text-[11px] text-slate-500 hidden md:inline">• Perubahan langsung tersimpan ke database &amp; beranda</span>
-                </div>
-
-                <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-                    <a href="{{ route('home') }}" target="_blank" class="px-3 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-emerald-700"></i>
-                        <span class="hidden sm:inline">Lihat Web</span>
-                    </a>
-                    <button type="submit" form="homeSettingsForm" class="flex-1 sm:flex-none px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-md cursor-pointer hover:shadow-lg transform active:scale-98">
-                        <i class="fa-solid fa-floppy-disk text-xs"></i>
-                        <span>Simpan Semua Pengaturan</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- RIGHT COLUMN: HIGH-FIDELITY LIVE PREVIEW MOCKUP (6 COLS, STICKY TOP-20) -->
         <div class="xl:col-span-6 sticky top-20 self-start space-y-4 select-none">
             
@@ -636,6 +621,28 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- Floating Bottom Save Bar (Always Fixed to Viewport & Accessible while Scrolling) -->
+    <div class="fixed bottom-0 left-0 lg:left-64 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-300 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] px-4 py-3 sm:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse hidden sm:inline-block"></span>
+                <span class="text-xs font-extrabold text-slate-900 hidden sm:inline font-heading">Pengaturan Konten Beranda</span>
+                <span class="text-[11px] text-slate-500 hidden md:inline">• Perubahan langsung tersimpan ke database &amp; beranda</span>
+            </div>
+
+            <div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                <a href="{{ route('home') }}" target="_blank" class="px-3.5 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 rounded-sm text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-emerald-700"></i>
+                    <span class="hidden sm:inline">Lihat Web</span>
+                </a>
+                <button type="submit" form="homeSettingsForm" class="flex-1 sm:flex-none px-6 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-md cursor-pointer hover:shadow-lg transform active:scale-98">
+                    <i class="fa-solid fa-floppy-disk text-xs"></i>
+                    <span>Simpan Semua Pengaturan</span>
+                </button>
+            </div>
+        </div>
     </div>
 
 </div>
