@@ -258,6 +258,13 @@
                                             <input type="text" name="promo_slides[{{ $pIndex }}][image]" id="in_promo_{{ $pIndex }}_img" value="{{ $pSlide['image'] ?? '' }}" placeholder="Atau paste URL gambar banner..." class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
                                         </div>
                                     </div>
+                                    <div class="pt-1 flex items-center justify-between gap-2 border-t border-slate-100">
+                                        <label class="text-[11px] font-bold text-slate-700">Mode Tampilan Banner:</label>
+                                        <select name="promo_slides[{{ $pIndex }}][fit]" class="text-[11px] px-2 py-1 rounded-sm border border-slate-300 bg-white font-semibold text-slate-800">
+                                            <option value="contain" {{ ($pSlide['fit'] ?? 'contain') === 'contain' ? 'selected' : '' }}>Utuh / No Crop (100% Ukuran Asli)</option>
+                                            <option value="cover" {{ ($pSlide['fit'] ?? '') === 'cover' ? 'selected' : '' }}>Cover / Pangkas (Isi Penuh Kotak)</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <!-- Text & Link Inputs -->
@@ -1157,6 +1164,13 @@
                         <input type="text" name="promo_slides[${newIndex}][image]" id="in_promo_${newIndex}_img" value="" placeholder="Atau paste URL gambar banner..." class="w-full px-2.5 py-1 text-xs rounded-sm border border-slate-300 bg-white font-mono text-[11px]" />
                     </div>
                 </div>
+                <div class="pt-1 flex items-center justify-between gap-2 border-t border-slate-100">
+                    <label class="text-[11px] font-bold text-slate-700">Mode Tampilan Banner:</label>
+                    <select name="promo_slides[${newIndex}][fit]" class="text-[11px] px-2 py-1 rounded-sm border border-slate-300 bg-white font-semibold text-slate-800">
+                        <option value="contain" selected>Utuh / No Crop (100% Ukuran Asli)</option>
+                        <option value="cover">Cover / Pangkas (Isi Penuh Kotak)</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Text & Link Inputs -->
@@ -1203,7 +1217,7 @@
             card.setAttribute('data-pindex', i);
             card.querySelector('.promo-num').innerText = (i + 1);
 
-            card.querySelectorAll('input').forEach(input => {
+            card.querySelectorAll('input, select').forEach(input => {
                 const name = input.getAttribute('name');
                 if (name) {
                     input.setAttribute('name', name.replace(/promo_slides\[\d+\]/, 'promo_slides[' + i + ']'));

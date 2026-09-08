@@ -331,8 +331,11 @@
     @if(($promoActive ?? true) && isset($promoSlides) && count($promoSlides) > 0)
     <section class="py-6 sm:py-8 bg-white border-t border-slate-200/70 select-none">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div id="promo-slider" class="relative w-full aspect-[16/8] sm:aspect-[16/6] md:aspect-[21/7] rounded-sm overflow-hidden border border-slate-200 shadow-xs group bg-[#032c21]">
+            <div id="promo-slider" class="relative w-full aspect-[16/8] sm:aspect-[16/6] md:aspect-[21/8] rounded-sm overflow-hidden border border-slate-200 shadow-xs group bg-[#032c21]">
                 @foreach($promoSlides as $pIdx => $pSlide)
+                    @php
+                        $pFitMode = $pSlide['fit'] ?? 'contain';
+                    @endphp
                     <div class="promo-slide absolute inset-0 transition-opacity duration-500 ease-in-out {{ $pIdx === 0 ? 'opacity-100 z-10 block' : 'opacity-0 z-0 hidden' }}" data-pindex="{{ $pIdx }}">
                         @if(!empty($pSlide['url']))
                             <a href="{{ $pSlide['url'] }}" class="block w-full h-full relative group">
@@ -340,16 +343,37 @@
                             <div class="block w-full h-full relative">
                         @endif
 
-                            <img 
-                                src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
-                                alt="{{ $pSlide['title'] ?? 'Banner Promo PERSIS PERS' }}" 
-                                class="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500" 
-                                loading="lazy"
-                            />
+                            @if($pFitMode === 'cover')
+                                <img 
+                                    src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
+                                    alt="{{ $pSlide['title'] ?? 'Banner Promo PERSIS PERS' }}" 
+                                    class="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500" 
+                                    loading="lazy"
+                                />
+                            @else
+                                <!-- Ambient Blurred Backdrop for 100% complete seamless display -->
+                                <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#032c21]">
+                                    <img 
+                                        src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
+                                        alt="" 
+                                        class="w-full h-full object-cover blur-2xl opacity-40 scale-110"
+                                        aria-hidden="true"
+                                    />
+                                </div>
+                                <!-- 100% Complete Image (No-Crop) -->
+                                <div class="absolute inset-0 z-1 w-full h-full flex items-center justify-center">
+                                    <img 
+                                        src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
+                                        alt="{{ $pSlide['title'] ?? 'Banner Promo PERSIS PERS' }}" 
+                                        class="w-full h-full object-contain object-center group-hover:scale-[1.01] transition-transform duration-500" 
+                                        loading="lazy"
+                                    />
+                                </div>
+                            @endif
 
                             @if(!empty(trim($pSlide['title'] ?? '')) || !empty(trim($pSlide['subtitle'] ?? '')))
-                                <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/45 to-transparent flex flex-col justify-center px-6 sm:px-10 md:px-14 py-6">
-                                    <div class="max-w-xl space-y-1.5 sm:space-y-2">
+                                <div class="absolute inset-0 z-10 bg-gradient-to-r from-black/85 via-black/45 to-transparent flex flex-col justify-center px-6 sm:px-10 md:px-14 py-6 pointer-events-none">
+                                    <div class="max-w-xl space-y-1.5 sm:space-y-2 pointer-events-auto">
                                         @if(!empty(trim($pSlide['title'] ?? '')))
                                             <h4 class="text-base sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
                                                 {{ $pSlide['title'] }}

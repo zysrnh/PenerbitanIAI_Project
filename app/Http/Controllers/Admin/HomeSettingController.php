@@ -239,6 +239,7 @@ class HomeSettingController extends Controller
                 if (!empty($imagePath)) {
                     $promoData[] = [
                         'image'    => $imagePath,
+                        'fit'      => $ps['fit'] ?? 'contain',
                         'title'    => $ps['title'] ?? '',
                         'subtitle' => $ps['subtitle'] ?? '',
                         'url'      => $ps['url'] ?? '',
