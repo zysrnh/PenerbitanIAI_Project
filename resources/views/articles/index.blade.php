@@ -203,6 +203,90 @@
                         </div>
                     </div>
 
+                    <!-- 2. Widget Wakaf Al-Qur'an & Buku (Di Atas Berita Populer) -->
+                    @if(($settings['wakaf_active'] ?? '1') === '1')
+                        <div class="bg-white rounded-sm border border-emerald-300/80 shadow-2xs overflow-hidden group">
+                            <!-- Top Strip Green Accent -->
+                            <div class="h-1 bg-[#006830]"></div>
+
+                            <div class="p-4 space-y-3.5">
+                                <!-- Card Header (Clickable to Wakaf Article) -->
+                                <a href="{{ $settings['wakaf_article_url'] ?? '/berita/program-wakaf-al-quran-dan-buku' }}" class="block group/link space-y-1">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span class="text-[9.5px] font-black uppercase tracking-widest text-[#006830] font-mono">PROGRAM WAKAF</span>
+                                    </div>
+                                    <h3 class="text-xs font-black text-slate-900 group-hover/link:text-emerald-800 transition leading-snug">
+                                        {{ $settings['wakaf_card_title'] ?? "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI" }}
+                                    </h3>
+                                </a>
+
+                                <!-- Bank & Account Detail Box -->
+                                <div class="p-3 bg-slate-50/90 rounded-xs border border-slate-200/90 space-y-2 text-xs">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bank:</span>
+                                        <span class="text-[11px] font-bold text-slate-900 text-right">{{ $settings['wakaf_bank_name'] ?? 'Bank Syariah Indonesia (BSI)' }}</span>
+                                    </div>
+
+                                    <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">
+                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Rek Wakaf:</span>
+                                        <div class="flex items-center gap-1.5">
+                                            <span id="wakafRekNo" class="text-xs font-black font-mono text-emerald-950 bg-emerald-100/80 px-2 py-0.5 rounded-xs select-all">{{ $settings['wakaf_account_no'] ?? '7148888999' }}</span>
+                                            <button 
+                                                type="button" 
+                                                onclick="copyWakafRekening('{{ $settings['wakaf_account_no'] ?? '7148888999' }}', this)" 
+                                                class="p-1 rounded-xs bg-white hover:bg-emerald-50 text-slate-500 hover:text-emerald-800 border border-slate-300 transition cursor-pointer text-[10px]" 
+                                                title="Salin Nomor Rekening"
+                                            >
+                                                <i class="fa-regular fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-slate-200/60">
+                                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">An:</span>
+                                        <span class="text-[11px] font-bold text-slate-700 truncate max-w-[150px]">{{ $settings['wakaf_account_name'] ?? 'PENERBIT PERSIS' }}</span>
+                                    </div>
+                                </div>
+
+                                <!-- QRIS Info (Optional) -->
+                                @if(!empty($settings['wakaf_qris_image']))
+                                    <div class="flex items-center justify-between gap-2 px-3 py-2 bg-emerald-50/50 rounded-xs border border-emerald-200/70 text-xs">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-qrcode text-emerald-800 text-sm"></i>
+                                            <span class="text-[11px] font-bold text-slate-800">Wakaf via QRIS</span>
+                                        </div>
+                                        <button type="button" onclick="openWakafQrisModal('{{ $settings['wakaf_qris_image'] }}')" class="text-[10px] font-bold text-emerald-800 hover:text-emerald-950 underline cursor-pointer">
+                                            Lihat QRIS
+                                        </button>
+                                    </div>
+                                @endif
+
+                                <!-- CTA Action Buttons -->
+                                <div class="pt-1 space-y-2">
+                                    <a 
+                                        href="{{ $settings['wakaf_article_url'] ?? '/berita/program-wakaf-al-quran-dan-buku' }}" 
+                                        class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-xs transform hover:scale-[1.01] active:scale-98"
+                                    >
+                                        <i class="fa-solid fa-book-open-reader text-xs"></i>
+                                        <span>Pelajari &amp; Salurkan</span>
+                                    </a>
+                                    
+                                    @if(!empty($settings['wakaf_contact_wa']))
+                                        <a 
+                                            href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $settings['wakaf_contact_wa']) }}?text={{ urlencode('Assalamu\'alaikum Admin Penerbit Persis, saya ingin konfirmasi Wakaf Al-Qur\'an dan Buku') }}" 
+                                            target="_blank" 
+                                            class="w-full py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 hover:text-emerald-800 rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1.5"
+                                        >
+                                            <i class="fa-brands fa-whatsapp text-emerald-600 text-xs"></i>
+                                            <span>Konfirmasi via WhatsApp</span>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- 3. Berita Populer / Terbaru Widget -->
                     @if($popularArticles->count() > 0)
                         <div class="bg-white rounded-sm border border-slate-200 shadow-2xs overflow-hidden">
@@ -241,4 +325,68 @@
 
         </div>
     </main>
+
+    <script>
+        function copyWakafRekening(rek, btn) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(rek).then(() => {
+                    showCopySuccess(btn, rek);
+                }).catch(() => {
+                    fallbackCopyText(rek, btn);
+                });
+            } else {
+                fallbackCopyText(rek, btn);
+            }
+        }
+
+        function fallbackCopyText(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccess(btn, text);
+            } catch (err) {}
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess(btn, rek) {
+            const icon = btn.querySelector('i');
+            if (icon) {
+                icon.className = 'fa-solid fa-check text-emerald-600';
+                setTimeout(() => {
+                    icon.className = 'fa-regular fa-copy';
+                }, 2000);
+            }
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'No. Rekening Disalin!',
+                    text: rek,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+        }
+
+        function openWakafQrisModal(imgUrl) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'QRIS Wakaf Al-Qur\'an & Buku',
+                    text: 'Scan barcode melalui Mobile Banking atau e-Wallet',
+                    imageUrl: imgUrl,
+                    imageWidth: 260,
+                    imageHeight: 260,
+                    imageAlt: 'QRIS Wakaf Penerbit Persis',
+                    confirmButtonColor: '#006830',
+                    confirmButtonText: 'Tutup'
+                });
+            } else {
+                window.open(imgUrl, '_blank');
+            }
+        }
+    </script>
 @endsection

@@ -67,13 +67,23 @@ class ArticleController extends Controller
             }
         }
 
-        // Settings for Banner & Promo
+        // Settings for Banner, Promo, and Wakaf
         $settings = [
-            'news_banner_badge' => \App\Models\SiteSetting::get('news_banner_badge', 'WARNA LITERASI & WARTA'),
-            'news_banner_title' => \App\Models\SiteSetting::get('news_banner_title', 'Kabar & Artikel Penerbitan'),
-            'news_banner_desc'  => \App\Models\SiteSetting::get('news_banner_desc', 'Temukan warta kegiatan, tips penulisan buku ber-ISBN, agenda workshop, serta pemikiran literasi Islam dari Penerbit Persis.'),
-            'news_promo_title'  => \App\Models\SiteSetting::get('news_promo_title', 'Punya Naskah Buku Sendiri?'),
-            'news_promo_desc'   => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
+            'news_banner_badge'  => \App\Models\SiteSetting::get('news_banner_badge', 'WARNA LITERASI & WARTA'),
+            'news_banner_title'  => \App\Models\SiteSetting::get('news_banner_title', 'Kabar & Artikel Penerbitan'),
+            'news_banner_desc'   => \App\Models\SiteSetting::get('news_banner_desc', 'Temukan warta kegiatan, tips penulisan buku ber-ISBN, agenda workshop, serta pemikiran literasi Islam dari Penerbit Persis.'),
+            'news_promo_title'   => \App\Models\SiteSetting::get('news_promo_title', 'Punya Naskah Buku Sendiri?'),
+            'news_promo_desc'    => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
+            
+            // Wakaf Settings
+            'wakaf_card_title'   => \App\Models\SiteSetting::get('wakaf_card_title', "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI"),
+            'wakaf_bank_name'    => \App\Models\SiteSetting::get('wakaf_bank_name', 'Bank Syariah Indonesia (BSI)'),
+            'wakaf_account_no'   => \App\Models\SiteSetting::get('wakaf_account_no', '7148888999'),
+            'wakaf_account_name' => \App\Models\SiteSetting::get('wakaf_account_name', 'PENERBIT PERSIS WAKAF'),
+            'wakaf_qris_image'   => \App\Models\SiteSetting::get('wakaf_qris_image', ''),
+            'wakaf_article_url'  => \App\Models\SiteSetting::get('wakaf_article_url', '/berita/program-wakaf-al-quran-dan-buku'),
+            'wakaf_contact_wa'   => \App\Models\SiteSetting::get('wakaf_contact_wa', '6281234567890'),
+            'wakaf_active'       => \App\Models\SiteSetting::get('wakaf_active', '1'),
         ];
 
         // Sidebar Data
@@ -136,10 +146,21 @@ class ArticleController extends Controller
         // Sidebar Data
         $categories = ArticleCategory::withCount(['publishedArticles'])->orderBy('order')->get();
         $recentArticles = Article::published()->where('id', '!=', $article->id)->latest('published_at')->take(5)->get();
+        $popularArticles = Article::published()->where('id', '!=', $article->id)->orderByDesc('views_count')->take(5)->get();
 
         $settings = [
-            'news_promo_title' => \App\Models\SiteSetting::get('news_promo_title', 'Ingin Menerbitkan Buku Anda?'),
-            'news_promo_desc'  => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
+            'news_promo_title'   => \App\Models\SiteSetting::get('news_promo_title', 'Ingin Menerbitkan Buku Anda?'),
+            'news_promo_desc'    => \App\Models\SiteSetting::get('news_promo_desc', 'Konsultasikan naskah ilmiah, modul, atau buku keislaman Anda bersama tim profesional Penerbit Persis.'),
+            
+            // Wakaf Settings
+            'wakaf_card_title'   => \App\Models\SiteSetting::get('wakaf_card_title', "WAKAF AL-QUR'AN & BUKU UNTUK GENERASI QUR'ANI"),
+            'wakaf_bank_name'    => \App\Models\SiteSetting::get('wakaf_bank_name', 'Bank Syariah Indonesia (BSI)'),
+            'wakaf_account_no'   => \App\Models\SiteSetting::get('wakaf_account_no', '7148888999'),
+            'wakaf_account_name' => \App\Models\SiteSetting::get('wakaf_account_name', 'PENERBIT PERSIS WAKAF'),
+            'wakaf_qris_image'   => \App\Models\SiteSetting::get('wakaf_qris_image', ''),
+            'wakaf_article_url'  => \App\Models\SiteSetting::get('wakaf_article_url', '/berita/program-wakaf-al-quran-dan-buku'),
+            'wakaf_contact_wa'   => \App\Models\SiteSetting::get('wakaf_contact_wa', '6281234567890'),
+            'wakaf_active'       => \App\Models\SiteSetting::get('wakaf_active', '1'),
         ];
 
         return view('articles.show', compact(
@@ -147,6 +168,7 @@ class ArticleController extends Controller
             'relatedArticles',
             'categories',
             'recentArticles',
+            'popularArticles',
             'settings'
         ));
     }
