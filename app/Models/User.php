@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function canAccessSettings(): bool
     {
-        return $this->isSuperAdmin();
+        return in_array($this->role, ['super_admin', 'admin']);
     }
 
     public function canAccessMessages(): bool

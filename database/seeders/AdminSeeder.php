@@ -80,7 +80,7 @@ class AdminSeeder extends Seeder
         ];
 
         foreach ($admins as $admin) {
-            User::updateOrCreate(
+            User::firstOrCreate(
                 ['email' => $admin['email']],
                 $admin
             );

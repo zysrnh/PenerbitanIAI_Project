@@ -138,10 +138,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::resource('article-categories', \App\Http\Controllers\Admin\ArticleCategoryController::class)->except(['create', 'show', 'edit']);
     });
 
-    // 4. Super Admin Only: User Management & System Settings
+    // 4. Super Admin Only: User Management
     Route::middleware('role:super_admin')->group(function () {
         Route::resource('users', UserController::class);
+    });
 
+    // 5. Super Admin & Admin: Web & Content Settings
+    Route::middleware('role:super_admin,admin')->group(function () {
+        Route::get('/settings', function () { return redirect()->route('admin.settings.home'); })->name('settings.index');
         Route::get('/settings/home', [HomeSettingController::class, 'index'])->name('settings.home');
         Route::put('/settings/home', [HomeSettingController::class, 'update'])->name('settings.home.update');
         Route::get('/settings/catalog', [CatalogSettingController::class, 'index'])->name('settings.catalog');
