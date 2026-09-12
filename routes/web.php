@@ -123,6 +123,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     });
 
     // 3. Publishing, Services, Articles & Catalog (super_admin, admin)
+    Route::middleware('role:super_admin,admin')->group(function () {
         Route::post('/messages/bulk-destroy', [ContactMessageController::class, 'bulkDestroy'])->name('messages.bulk_destroy');
         Route::post('/messages/bulk-status', [ContactMessageController::class, 'bulkStatus'])->name('messages.bulk_status');
         Route::resource('messages', ContactMessageController::class)->only(['index', 'show', 'update', 'destroy']);
