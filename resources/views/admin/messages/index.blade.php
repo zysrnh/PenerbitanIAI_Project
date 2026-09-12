@@ -33,6 +33,30 @@
         </a>
     </div>
 
+    @if(session('success'))
+        <div class="p-3.5 rounded-sm bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between gap-2 shadow-2xs animate-fade-in">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-900 p-1 text-xs cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="p-3.5 rounded-sm bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold flex items-center justify-between gap-2 shadow-2xs animate-fade-in">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-rose-600 text-sm"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-rose-600 hover:text-rose-900 p-1 text-xs cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    @endif
+
     <!-- Filter & Search Bar -->
     <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs p-3.5">
         <form method="GET" action="{{ route('admin.messages.index') }}" id="msgFilterForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-center">
@@ -184,7 +208,7 @@
 
                     <div class="space-y-1 text-xs">
                         <div class="flex items-center gap-2 text-[11px] text-slate-500">
-                            <span class="px-1.5 py-0.2 bg-slate-100 border border-slate-200 text-slate-700 font-semibold rounded-xs">{{ $msg->service ?? 'Konsultasi' }}</span>
+                            <span class="px-1.5 py-0.2 bg-slate-100 border border-slate-200 text-slate-700 font-semibold rounded-xs">{{ $msg->service_category ?? 'Konsultasi' }}</span>
                             <span>•</span>
                             <span class="font-mono text-[10px] text-slate-400">{{ $msg->created_at->format('d/m/Y H:i') }}</span>
                         </div>
@@ -199,12 +223,21 @@
                                 <span>{{ $msg->phone }}</span>
                             </a>
                         @else
-                            <span class="text-[11px] text-slate-400 font-mono">{{ $msg->email }}</span>
+                            <span class="text-[11px] text-slate-400 font-mono truncate max-w-[150px]">{{ $msg->email }}</span>
                         @endif
-                        <a href="{{ route('admin.messages.show', $msg->id) }}" class="px-3 py-1 bg-[#006830] text-white rounded-xs text-xs font-bold shadow-2xs flex items-center gap-1">
-                            <span>Buka Pesan</span>
-                            <i class="fa-solid fa-angle-right text-[9px]"></i>
-                        </a>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <a href="{{ route('admin.messages.show', $msg->id) }}" class="px-3 py-1 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold shadow-2xs flex items-center gap-1 transition">
+                                <span>Detail</span>
+                                <i class="fa-solid fa-angle-right text-[9px]"></i>
+                            </a>
+                            <form method="POST" action="{{ route('admin.messages.destroy', $msg->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesan dari {{ addslashes($msg->name) }}?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="w-7 h-7 flex items-center justify-center border border-rose-200 text-rose-600 hover:bg-rose-50 hover:border-rose-400 rounded-xs text-xs transition cursor-pointer" title="Hapus Pesan">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             @empty
@@ -254,15 +287,15 @@
                             </td>
                             <td class="px-4 py-3 text-center whitespace-nowrap">
                                 @if($msg->status === 'pending')
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 uppercase">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 uppercase font-mono">
                                         <i class="fa-solid fa-clock text-[9px]"></i> Belum Dihubungi
                                     </span>
                                 @elseif($msg->status === 'contacted')
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300 uppercase">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300 uppercase font-mono">
                                         <i class="fa-solid fa-comments text-[9px]"></i> Sudah Dihubungi
                                     </span>
                                 @elseif($msg->status === 'completed')
-                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 uppercase">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-xs text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 uppercase font-mono">
                                         <i class="fa-solid fa-check text-[9px]"></i> Selesai Diproses
                                     </span>
                                 @endif
@@ -272,11 +305,18 @@
                                 <span class="text-[10px] text-slate-400 block mt-0.5">{{ $msg->created_at->format('H:i') }} WIB</span>
                             </td>
                             <td class="px-4 py-3 text-center whitespace-nowrap">
-                                <div class="flex items-center justify-center gap-1">
-                                    <a href="{{ route('admin.messages.show', $msg->id) }}" class="px-2.5 py-1 bg-slate-100 hover:bg-[#006830] text-slate-700 hover:text-white rounded-xs text-xs font-bold transition flex items-center gap-1 shadow-2xs">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <a href="{{ route('admin.messages.show', $msg->id) }}" class="px-2.5 py-1 bg-slate-100 hover:bg-[#006830] text-slate-700 hover:text-white border border-slate-200 hover:border-emerald-700 rounded-xs text-xs font-bold transition flex items-center gap-1 shadow-2xs" title="Lihat Detail Pesan">
                                         <span>Detail</span>
                                         <i class="fa-solid fa-angle-right text-[9px]"></i>
                                     </a>
+                                    <form method="POST" action="{{ route('admin.messages.destroy', $msg->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesan dari {{ addslashes($msg->name) }}?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-6 h-6 flex items-center justify-center border border-slate-200 hover:border-rose-300 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xs text-xs transition cursor-pointer" title="Hapus Pesan">
+                                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
