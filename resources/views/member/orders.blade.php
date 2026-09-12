@@ -1135,7 +1135,12 @@
         // Direct WhatsApp Helper
         function openDirectWhatsAppForOrder() {
             if (!currentDiscussionOrderNumber) return;
-            const waNumber = '6282116116133';
+            @php
+                $ordWaClean = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('contact_whatsapp', '6282116116133'));
+                if (str_starts_with($ordWaClean, '0')) $ordWaClean = '62' . substr($ordWaClean, 1);
+                elseif (str_starts_with($ordWaClean, '8')) $ordWaClean = '62' . $ordWaClean;
+            @endphp
+            const waNumber = @json($ordWaClean);
             const msg = `Assalamualaikum Admin Penerbit Persis, saya ingin berdiskusi mengenai pesanan saya dengan No. Invoice *#${currentDiscussionOrderNumber}*. Mohon bantuannya ya kak. Terima kasih!`;
             window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
         }
@@ -1366,7 +1371,12 @@
                 msg += `${idx + 1}. *${title}* (${it.quantity} eks) - ${it.formatted_subtotal}\n`;
             });
             msg += `\n*Total: ${memberCartData.formatted_total}*\n\nMohon konfirmasi pesanan saya. Terima kasih!`;
-            const waNum = '6282116116133';
+            @php
+                $ordCartWaClean = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('contact_whatsapp', '6282116116133'));
+                if (str_starts_with($ordCartWaClean, '0')) $ordCartWaClean = '62' . substr($ordCartWaClean, 1);
+                elseif (str_starts_with($ordCartWaClean, '8')) $ordCartWaClean = '62' . $ordCartWaClean;
+            @endphp
+            const waNum = @json($ordCartWaClean);
             window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 

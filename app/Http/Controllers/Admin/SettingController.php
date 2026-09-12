@@ -141,6 +141,26 @@ class SettingController extends Controller
             }
         }
 
+        // Clean & synchronize WhatsApp number
+        if (!empty($validated['contact_whatsapp'])) {
+            $rawWa = trim($validated['contact_whatsapp']);
+            $cleanWa = preg_replace('/[^0-9]/', '', $rawWa);
+            if (str_starts_with($cleanWa, '0')) {
+                $waUrl = 'https://wa.me/62' . substr($cleanWa, 1);
+            } elseif (str_starts_with($cleanWa, '62')) {
+                $waUrl = 'https://wa.me/' . $cleanWa;
+            } elseif (str_starts_with($cleanWa, '8')) {
+                $waUrl = 'https://wa.me/62' . $cleanWa;
+            } else {
+                $waUrl = 'https://wa.me/' . $cleanWa;
+            }
+
+            // Sync social_whatsapp if empty or if it was previously pointing to wa.me
+            if (empty($validated['social_whatsapp']) || str_contains($validated['social_whatsapp'], 'wa.me')) {
+                $validated['social_whatsapp'] = $waUrl;
+            }
+        }
+
         foreach ($validated as $key => $val) {
             SiteSetting::set($key, $val);
         }

@@ -202,15 +202,20 @@
             </div>
 
             <!-- Document Footer -->
+            @php
+                $invoiceWaRaw = \App\Models\SiteSetting::get('contact_whatsapp', '082116116133');
+                $invoiceWaClean = preg_replace('/[^0-9]/', '', $invoiceWaRaw);
+                $invoiceWaFormatted = str_starts_with($invoiceWaClean, '0') 
+                    ? '62' . substr($invoiceWaClean, 1) 
+                    : (str_starts_with($invoiceWaClean, '8') ? '62' . $invoiceWaClean : $invoiceWaClean);
+                $waMsg = "Assalamualaikum Redaksi Penerbit Persis, saya telah melakukan pemesanan buku dengan No. Invoice *{$order->order_number}* atas nama *{$order->customer_name}* (Total {$order->formatted_payment}). Mohon info konfirmasi pengiriman naskah/buku ya kak. Terima kasih!";
+                $waShareUrl = "https://wa.me/{$invoiceWaFormatted}?text=" . urlencode($waMsg);
+            @endphp
             <div class="p-5 sm:p-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                 <div class="text-[11px] text-slate-500 text-center sm:text-left">
                     <p class="font-medium text-slate-700">Penerbitan & Percetakan Resmi PENERBIT PERSIS (PERSIS PERS)</p>
-                    <p>Layanan Pelanggan WhatsApp: <strong class="text-slate-800">0821-1611-6133</strong></p>
+                    <p>Layanan Pelanggan WhatsApp: <strong class="text-slate-800">{{ $invoiceWaRaw }}</strong></p>
                 </div>
-                @php
-                    $waMsg = "Assalamualaikum Redaksi Penerbit Persis, saya telah melakukan pemesanan buku dengan No. Invoice *{$order->order_number}* atas nama *{$order->customer_name}* (Total {$order->formatted_payment}). Mohon info konfirmasi pengiriman naskah/buku ya kak. Terima kasih!";
-                    $waShareUrl = "https://wa.me/6282116116133?text=" . urlencode($waMsg);
-                @endphp
 
                 <div class="flex items-center gap-2">
                     @if($order->shipping_status === 'dikirim')

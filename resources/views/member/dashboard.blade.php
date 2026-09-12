@@ -794,10 +794,16 @@
                             </div>
                         </div>
 
+                        @php
+                            $dynamicAdminWaRaw = \App\Models\SiteSetting::get('contact_whatsapp', '082116116133');
+                            $dynamicAdminWaClean = preg_replace('/[^0-9]/', '', $dynamicAdminWaRaw);
+                            if (str_starts_with($dynamicAdminWaClean, '0')) $dynamicAdminWaClean = '62' . substr($dynamicAdminWaClean, 1);
+                            elseif (str_starts_with($dynamicAdminWaClean, '8')) $dynamicAdminWaClean = '62' . $dynamicAdminWaClean;
+                        @endphp
                         <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
-                            <span class="text-[11px] font-mono font-bold text-slate-700">0821-1611-6133</span>
+                            <span class="text-[11px] font-mono font-bold text-slate-700">{{ $dynamicAdminWaRaw }}</span>
                             <button type="button" 
-                                    onclick="contactAdminViaWa('6282116116133', 'Admin Pengiriman & Gudang')"
+                                    onclick="contactAdminViaWa('{{ $dynamicAdminWaClean }}', 'Admin Pengiriman & Gudang')"
                                     class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Chat WhatsApp</span>
@@ -824,9 +830,9 @@
                         </div>
 
                         <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
-                            <span class="text-[11px] font-mono font-bold text-slate-700">0851-1779-7487</span>
+                            <span class="text-[11px] font-mono font-bold text-slate-700">{{ $dynamicAdminWaRaw }}</span>
                             <button type="button" 
-                                    onclick="contactAdminViaWa('6285117797487', 'Admin Redaksi & Naskah')"
+                                    onclick="contactAdminViaWa('{{ $dynamicAdminWaClean }}', 'Admin Redaksi & Naskah')"
                                     class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Chat WhatsApp</span>
@@ -853,9 +859,9 @@
                         </div>
 
                         <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
-                            <span class="text-[11px] font-mono font-bold text-slate-700">0821-1611-6133</span>
+                            <span class="text-[11px] font-mono font-bold text-slate-700">{{ $dynamicAdminWaRaw }}</span>
                             <button type="button" 
-                                    onclick="contactAdminViaWa('6282116116133', 'Admin Keuangan & Faktur')"
+                                    onclick="contactAdminViaWa('{{ $dynamicAdminWaClean }}', 'Admin Keuangan & Faktur')"
                                     class="px-3 py-1.5 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer">
                                 <i class="fa-brands fa-whatsapp text-sm"></i>
                                 <span>Chat WhatsApp</span>
@@ -1223,8 +1229,12 @@
                 const title = it.title || (it.book ? it.book.title : 'Buku');
                 msg += `${idx + 1}. *${title}* (${it.quantity} eks) - ${it.formatted_subtotal}\n`;
             });
-            msg += `\n*Total: ${memberCartData.formatted_total}*\n\nMohon konfirmasi pesanan saya. Terima kasih!`;
-            const waNum = '6282116116133';
+            @php
+                $dashWaClean = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('contact_whatsapp', '6282116116133'));
+                if (str_starts_with($dashWaClean, '0')) $dashWaClean = '62' . substr($dashWaClean, 1);
+                elseif (str_starts_with($dashWaClean, '8')) $dashWaClean = '62' . $dashWaClean;
+            @endphp
+            const waNum = @json($dashWaClean);
             window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 

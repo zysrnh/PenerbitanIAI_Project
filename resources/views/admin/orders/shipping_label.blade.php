@@ -114,7 +114,7 @@
                     Kantor Redaksi PERSIS PERS, Jl. Ciganitri No.2, Bojongsoang, Kab. Bandung 40287
                 </p>
                 <p class="text-[10px] font-mono text-slate-800 font-bold mt-1">
-                    <i class="fa-solid fa-phone text-[8.5px] mr-1"></i>082116116133
+                    <i class="fa-solid fa-phone text-[8.5px] mr-1"></i>{{ \App\Models\SiteSetting::get('contact_whatsapp', \App\Models\SiteSetting::get('contact_phone', '082116116133')) }}
                 </p>
             </div>
 

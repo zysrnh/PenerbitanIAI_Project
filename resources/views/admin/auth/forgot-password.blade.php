@@ -134,7 +134,14 @@
                     <span>Kembali ke Halaman Masuk</span>
                 </a>
                 
-                <a href="https://wa.me/6282116116133?text=Halo%20Admin%20Super,%20saya%20membutuhkan%20bantuan%20reset%20password%20panel%20Penerbit%20Persis." target="_blank" class="text-[11px] text-slate-400 hover:text-emerald-700 transition inline-flex items-center gap-1">
+                @php
+                    $adminSuperWaRaw = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('contact_whatsapp', '082116116133'));
+                    $adminSuperWaClean = str_starts_with($adminSuperWaRaw, '0') 
+                        ? '62' . substr($adminSuperWaRaw, 1) 
+                        : (str_starts_with($adminSuperWaRaw, '8') ? '62' . $adminSuperWaRaw : $adminSuperWaRaw);
+                    $adminSuperWaUrl = "https://wa.me/{$adminSuperWaClean}?text=" . urlencode("Halo Admin Super, saya membutuhkan bantuan reset password panel Penerbit Persis.");
+                @endphp
+                <a href="{{ $adminSuperWaUrl }}" target="_blank" class="text-[11px] text-slate-400 hover:text-emerald-700 transition inline-flex items-center gap-1">
                     <i class="fa-brands fa-whatsapp text-emerald-600"></i>
                     <span>Bantuan Kontak Admin Super</span>
                 </a>

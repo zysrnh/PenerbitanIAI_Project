@@ -600,8 +600,15 @@
                     <p class="font-bold text-emerald-900">Ingin berkonsultasi langsung mengenai paket reseller?</p>
                     <p class="text-emerald-700 mt-0.5">Hubungi Tim Layanan Redaksi &amp; Distribusi Penerbit Persis melalui WhatsApp.</p>
                 </div>
+                @php
+                    $resellerRawWa = preg_replace('/[^0-9]/', '', \App\Models\SiteSetting::get('contact_whatsapp', '082116116133'));
+                    $resellerCleanWa = str_starts_with($resellerRawWa, '0') 
+                        ? '62' . substr($resellerRawWa, 1) 
+                        : (str_starts_with($resellerRawWa, '8') ? '62' . $resellerRawWa : $resellerRawWa);
+                    $resellerWaUrl = "https://wa.me/{$resellerCleanWa}?text=" . urlencode('Assalamualaikum Redaksi Penerbit Persis, saya ingin bertanya mengenai program kemitraan Reseller.');
+                @endphp
                 <a 
-                    href="https://wa.me/6282116116133?text={{ urlencode('Assalamualaikum Redaksi Penerbit Persis, saya ingin bertanya mengenai program kemitraan Reseller.') }}" 
+                    href="{{ $resellerWaUrl }}" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-sm shrink-0 transition flex items-center gap-2 shadow-2xs"

@@ -258,7 +258,14 @@
     $socPinterest = \App\Models\SiteSetting::get('social_pinterest', 'https://pinterest.com');
     $socPinterestActive = \App\Models\SiteSetting::get('social_pinterest_active', '1') === '1';
     
-    $socWhatsapp = \App\Models\SiteSetting::get('social_whatsapp', 'https://wa.me/6282116116133');
+    $contactWaRaw = \App\Models\SiteSetting::get('contact_whatsapp', '082116116133');
+    $cleanContactWa = preg_replace('/[^0-9]/', '', $contactWaRaw);
+    $formattedContactWaUrl = 'https://wa.me/' . (str_starts_with($cleanContactWa, '0') ? '62' . substr($cleanContactWa, 1) : (str_starts_with($cleanContactWa, '8') ? '62' . $cleanContactWa : $cleanContactWa));
+
+    $socWhatsapp = \App\Models\SiteSetting::get('social_whatsapp', $formattedContactWaUrl);
+    if (empty($socWhatsapp) || str_contains($socWhatsapp, '6282116116133')) {
+        $socWhatsapp = $formattedContactWaUrl;
+    }
     $socWhatsappActive = \App\Models\SiteSetting::get('social_whatsapp_active', '1') === '1';
     
     $socTelegram = \App\Models\SiteSetting::get('social_telegram', 'https://t.me');
@@ -329,19 +336,15 @@
 
                     <!-- Quick Contact Badges in Topbar -->
                     <div class="hidden md:flex items-center gap-2 pl-3 border-l border-slate-200">
-                        <a href="{{ $phoneHref }}" 
-                           target="{{ $phoneTarget }}" 
-                           @if($phoneTarget === '_blank') rel="noopener noreferrer" @endif
+                        <a href="{{ $formattedContactWaUrl }}?text={{ urlencode('Assalamualaikum Admin Penerbit Persis, saya ingin berkonsultasi mengenai penerbitan buku.') }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
                            class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-[#006830] hover:bg-[#032c21] text-white border border-emerald-700/80 shadow-2xs transition text-[11px] font-semibold" 
-                           title="{{ $isMobilePhone ? 'WhatsApp Resmi Redaksi' : 'Telepon Kantor' }}">
+                           title="WhatsApp Resmi Redaksi">
                             <span class="w-3.5 h-3.5 rounded-xs bg-emerald-800/60 text-emerald-200 flex items-center justify-center text-[9.5px]">
-                                @if($isMobilePhone)
-                                    <i class="fa-brands fa-whatsapp text-[10px]"></i>
-                                @else
-                                    <i class="fa-solid fa-phone text-[8.5px]"></i>
-                                @endif
+                                <i class="fa-brands fa-whatsapp text-[10px]"></i>
                             </span>
-                            <span class="tracking-tight">{{ $contactPhoneRaw }}</span>
+                            <span class="tracking-tight">{{ $contactWaRaw }}</span>
                         </a>
                         <a href="mailto:{{ $contactEmail }}" 
                            class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-[#032c21] hover:bg-slate-900 text-white border border-emerald-600/70 shadow-2xs transition text-[11px] font-semibold" 
