@@ -177,6 +177,67 @@
         </form>
     </div>
 
+    <!-- Bulk Action Toolbar (Tampil otomatis saat ada checkbox yang dipilih) -->
+    <div id="bulkActionToolbar" class="hidden bg-slate-900 text-white p-3 sm:p-3.5 rounded-sm shadow-md flex flex-wrap items-center justify-between gap-3 animate-fade-in select-none">
+        <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-xs bg-rose-600 text-white flex items-center justify-center text-xs font-bold font-mono" id="selectedCountBadge">0</span>
+            <span class="text-xs font-bold text-slate-100">Pesan Terpilih</span>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+            <!-- Tandai Sudah Dihubungi -->
+            <button 
+                type="button" 
+                onclick="submitBulkStatus('contacted')" 
+                class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            >
+                <i class="fa-solid fa-comments text-xs"></i>
+                <span>Tandai Dihubungi</span>
+            </button>
+
+            <!-- Tandai Selesai -->
+            <button 
+                type="button" 
+                onclick="submitBulkStatus('completed')" 
+                class="px-3 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            >
+                <i class="fa-solid fa-circle-check text-xs"></i>
+                <span>Tandai Selesai</span>
+            </button>
+
+            <!-- Hapus Pesan Terpilih -->
+            <button 
+                type="button" 
+                onclick="confirmBulkDelete()" 
+                class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            >
+                <i class="fa-solid fa-trash-can text-xs"></i>
+                <span>Hapus Terpilih</span>
+            </button>
+
+            <!-- Batal -->
+            <button 
+                type="button" 
+                onclick="cancelBulkSelection()" 
+                class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xs text-xs font-bold transition cursor-pointer"
+            >
+                Batal
+            </button>
+        </div>
+    </div>
+
+    <!-- Hidden Form untuk Bulk Delete -->
+    <form id="bulkDeleteForm" method="POST" action="{{ route('admin.messages.bulk_destroy') }}" class="hidden">
+        @csrf
+        <div id="bulkDeleteInputs"></div>
+    </form>
+
+    <!-- Hidden Form untuk Bulk Status -->
+    <form id="bulkStatusForm" method="POST" action="{{ route('admin.messages.bulk_status') }}" class="hidden">
+        @csrf
+        <input type="hidden" name="status" id="bulkStatusTarget" value="" />
+        <div id="bulkStatusInputs"></div>
+    </form>
+
     <!-- Messages Table Card -->
     <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs overflow-hidden w-full">
         
@@ -186,6 +247,12 @@
                 <div class="p-3.5 space-y-2.5 hover:bg-slate-50/80 transition">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-2 min-w-0">
+                            <input 
+                                type="checkbox" 
+                                class="msg-checkbox w-4 h-4 rounded-xs border-slate-300 text-emerald-700 focus:ring-emerald-700 cursor-pointer shrink-0" 
+                                value="{{ $msg->id }}" 
+                                onchange="handleCheckboxChange()"
+                            />
                             <div class="w-7 h-7 rounded-sm bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
                                 {{ strtoupper(substr($msg->name, 0, 1)) }}
                             </div>
@@ -253,6 +320,15 @@
             <table class="w-full text-left text-xs text-slate-700">
                 <thead class="bg-slate-50 text-slate-600 uppercase text-[10px] font-bold border-b border-slate-200 tracking-wider">
                     <tr>
+                        <th class="px-3 py-3 w-10 text-center">
+                            <input 
+                                type="checkbox" 
+                                id="selectAllCheckbox" 
+                                onchange="toggleSelectAll(this)" 
+                                class="w-4 h-4 rounded-xs border-slate-300 text-emerald-700 focus:ring-emerald-700 cursor-pointer"
+                                title="Pilih Semua di Halaman Ini"
+                            />
+                        </th>
                         <th class="px-4 py-3">Pengirim</th>
                         <th class="px-4 py-3">Layanan &amp; Subjek</th>
                         <th class="px-4 py-3">Pesan Ringkas</th>
@@ -264,6 +340,14 @@
                 <tbody class="divide-y divide-slate-100">
                     @forelse($messages as $msg)
                         <tr class="hover:bg-slate-50/70 transition {{ $msg->status === 'pending' ? 'bg-amber-50/20' : '' }}">
+                            <td class="px-3 py-3 text-center">
+                                <input 
+                                    type="checkbox" 
+                                    class="msg-checkbox w-4 h-4 rounded-xs border-slate-300 text-emerald-700 focus:ring-emerald-700 cursor-pointer" 
+                                    value="{{ $msg->id }}" 
+                                    onchange="handleCheckboxChange()"
+                                />
+                            </td>
                             <td class="px-4 py-3 whitespace-nowrap">
                                 <p class="font-bold text-slate-900">{{ $msg->name }}</p>
                                 <div class="flex items-center gap-2 mt-0.5 text-[11px] text-slate-500">
@@ -322,7 +406,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-12 text-center text-slate-400">
+                            <td colspan="7" class="p-12 text-center text-slate-400">
                                 <div class="w-12 h-12 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center mx-auto text-xl mb-2">
                                     <i class="fa-solid fa-inbox"></i>
                                 </div>
@@ -344,8 +428,104 @@
 
 </div>
 
-<!-- Dropdown Scripts with Bulletproof Event Listeners -->
+<!-- Dropdown & Bulk Action Scripts -->
 <script>
+    function getSelectedCheckboxes() {
+        return Array.from(document.querySelectorAll('.msg-checkbox:checked'));
+    }
+
+    function handleCheckboxChange() {
+        const checked = getSelectedCheckboxes();
+        const allCheckboxes = document.querySelectorAll('.msg-checkbox');
+        const selectAll = document.getElementById('selectAllCheckbox');
+        const toolbar = document.getElementById('bulkActionToolbar');
+        const countBadge = document.getElementById('selectedCountBadge');
+
+        if (countBadge) {
+            countBadge.innerText = checked.length;
+        }
+
+        if (checked.length > 0) {
+            if (toolbar) toolbar.classList.remove('hidden');
+        } else {
+            if (toolbar) toolbar.classList.add('hidden');
+        }
+
+        if (selectAll) {
+            selectAll.checked = (allCheckboxes.length > 0 && checked.length === allCheckboxes.length);
+        }
+    }
+
+    function toggleSelectAll(master) {
+        const checkboxes = document.querySelectorAll('.msg-checkbox');
+        checkboxes.forEach(cb => {
+            cb.checked = master.checked;
+        });
+        handleCheckboxChange();
+    }
+
+    function cancelBulkSelection() {
+        const checkboxes = document.querySelectorAll('.msg-checkbox');
+        checkboxes.forEach(cb => {
+            cb.checked = false;
+        });
+        const selectAll = document.getElementById('selectAllCheckbox');
+        if (selectAll) selectAll.checked = false;
+        handleCheckboxChange();
+    }
+
+    function confirmBulkDelete() {
+        const checked = getSelectedCheckboxes();
+        if (checked.length === 0) {
+            alert('Pilih setidaknya satu pesan untuk dihapus.');
+            return;
+        }
+
+        if (!confirm(`Apakah Anda yakin ingin menghapus ${checked.length} pesan terpilih secara permanen?`)) {
+            return;
+        }
+
+        const container = document.getElementById('bulkDeleteInputs');
+        container.innerHTML = '';
+        checked.forEach(cb => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = cb.value;
+            container.appendChild(input);
+        });
+
+        document.getElementById('bulkDeleteForm').submit();
+    }
+
+    function submitBulkStatus(status) {
+        const checked = getSelectedCheckboxes();
+        if (checked.length === 0) {
+            alert('Pilih setidaknya satu pesan untuk diubah statusnya.');
+            return;
+        }
+
+        const statusLabel = status === 'contacted' ? 'Sudah Dihubungi' : (status === 'completed' ? 'Selesai Diproses' : status);
+        if (!confirm(`Ubah status ${checked.length} pesan terpilih menjadi "${statusLabel}"?`)) {
+            return;
+        }
+
+        const target = document.getElementById('bulkStatusTarget');
+        target.value = status;
+
+        const container = document.getElementById('bulkStatusInputs');
+        container.innerHTML = '';
+        checked.forEach(cb => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = cb.value;
+            container.appendChild(input);
+        });
+
+        document.getElementById('bulkStatusForm').submit();
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const sBtn = document.getElementById('filterStatusBtn');
         const sMenu = document.getElementById('filterStatusMenu');

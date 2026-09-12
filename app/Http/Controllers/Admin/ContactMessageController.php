@@ -172,4 +172,52 @@ class ContactMessageController extends Controller
         $message->delete();
         return redirect()->route('admin.messages.index')->with('success', 'Pesan pengajuan naskah berhasil dihapus.');
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $this->authorizeAccess();
+        $ids = $request->input('ids', []);
+
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+        }
+
+        $ids = array_filter(array_map('intval', (array) $ids));
+
+        if (empty($ids)) {
+            return back()->with('error', 'Pilih setidaknya satu pesan untuk dihapus.');
+        }
+
+        $count = ContactMessage::whereIn('id', $ids)->delete();
+
+        return back()->with('success', "Berhasil menghapus {$count} pesan pengajuan naskah secara massal.");
+    }
+
+    public function bulkStatus(Request $request)
+    {
+        $this->authorizeAccess();
+        $ids = $request->input('ids', []);
+        $status = $request->input('status');
+
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+        }
+
+        $ids = array_filter(array_map('intval', (array) $ids));
+
+        if (empty($ids) || !in_array($status, ['pending', 'contacted', 'completed'])) {
+            return back()->with('error', 'Permintaan perubahan status massal tidak valid.');
+        }
+
+        $count = ContactMessage::whereIn('id', $ids)->update(['status' => $status]);
+
+        $statusLabel = match($status) {
+            'pending' => 'Belum Dihubungi',
+            'contacted' => 'Sudah Dihubungi',
+            'completed' => 'Selesai Diproses',
+            default => $status
+        };
+
+        return back()->with('success', "Berhasil memperbarui status {$count} pesan menjadi \"{$statusLabel}\".");
+    }
 }
