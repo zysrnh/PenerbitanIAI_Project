@@ -11,6 +11,28 @@ class CatalogController extends Controller
 {
     public function index(Request $request)
     {
+        return $this->renderCatalog($request, null);
+    }
+
+    public function show($slug, Request $request)
+    {
+        $activeBook = Book::published()->where('slug', $slug)->first();
+        if (!$activeBook) {
+            $activeBook = Book::published()->where('id', $slug)->first();
+        }
+        if (!$activeBook) {
+            $titleFromSlug = str_replace('-', ' ', $slug);
+            $activeBook = Book::published()->where('title', 'like', "%{$titleFromSlug}%")->first();
+        }
+        if (!$activeBook) {
+            abort(404);
+        }
+
+        return $this->renderCatalog($request, $activeBook);
+    }
+
+    private function renderCatalog(Request $request, ?Book $activeBook = null)
+    {
         $settings = [
             'catalog_banner_badge' => SiteSetting::get('catalog_banner_badge', 'PUBLIKASI RESMI BER-ISBN'),
             'catalog_banner_title' => SiteSetting::get('catalog_banner_title', 'Katalog Buku & Karya Ilmiah'),
@@ -91,7 +113,8 @@ class CatalogController extends Controller
             'settings', 
             'totalBooksCount',
             'allSearchableBooks',
-            'activeCategory'
+            'activeCategory',
+            'activeBook'
         ));
     }
 

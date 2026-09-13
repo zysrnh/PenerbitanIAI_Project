@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Katalog Buku & Karya Ilmiah | PERSIS PERS')
+@section('title', (isset($activeBook) && $activeBook ? $activeBook->title . ' | Katalog Penerbit PERSIS' : 'Katalog Buku & Karya Ilmiah | PERSIS PERS'))
 
 @section('content')
     <style>
@@ -836,12 +836,16 @@
                                 </button>
                             </div>
 
-                            <!-- Alternate Direct WhatsApp & Sample PDF -->
+                            <!-- Alternate Direct WhatsApp & Sample PDF & Share Link -->
                             <div class="flex flex-col sm:flex-row items-center gap-2">
                                 <a id="modalWaOrderBtn" href="#" target="_blank" class="w-full sm:flex-1 py-2 px-3 rounded-sm bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold transition border border-emerald-200 flex items-center justify-center gap-1.5">
                                     <i class="fa-brands fa-whatsapp text-emerald-600"></i>
                                     <span>Pesan via WhatsApp</span>
                                 </a>
+                                <button type="button" id="modalCopyLinkBtn" onclick="copyModalBookLink()" class="w-full sm:w-auto py-2 px-3 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 flex items-center justify-center gap-1.5 cursor-pointer" title="Salin Link Buku Ini">
+                                    <i class="fa-solid fa-link text-slate-500"></i>
+                                    <span id="modalCopyLinkText">Salin Link</span>
+                                </button>
                                 <a id="modalSamplePdfBtn" href="#" target="_blank" class="hidden w-full sm:w-auto py-2 px-3 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 flex items-center justify-center gap-1.5">
                                     <i class="fa-solid fa-file-pdf text-red-600"></i>
                                     <span>Sampel PDF</span>
@@ -1042,10 +1046,23 @@
         let currentModalPhotos = [];
         let currentPhotoIndex = 0;
 
-        function openBookModal(book) {
+        function openBookModal(book, updateUrl = true) {
+            if (!book) return;
             currentModalBook = book;
             currentModalPhotos = [];
             currentPhotoIndex = 0;
+
+            // Sync Browser URL & Title
+            if (updateUrl && (book.slug || book.id)) {
+                const bookSlug = book.slug || book.id;
+                const newUrl = '/katalog/' + encodeURIComponent(bookSlug);
+                if (window.location.pathname !== newUrl) {
+                    window.history.pushState({ bookId: book.id, bookSlug: bookSlug }, '', newUrl);
+                }
+                if (book.title) {
+                    document.title = book.title + ' | Katalog Penerbit PERSIS';
+                }
+            }
 
             document.getElementById('modalTitle').innerText = book.title || '';
             document.getElementById('modalAuthor').innerText = book.author || '';
@@ -1056,6 +1073,10 @@
             document.getElementById('modalYear').innerText = book.year || '2026';
             document.getElementById('modalPrice').innerText = book.price || 'Hubungi Admin';
             document.getElementById('modalSynopsis').innerText = book.synopsis || 'Belum ada sinopsis.';
+
+            // Reset Copy Link Button State
+            const copyText = document.getElementById('modalCopyLinkText');
+            if (copyText) copyText.innerText = 'Salin Link';
 
             const vTitle = document.getElementById('modalVectorTitle');
             const vAuthor = document.getElementById('modalVectorAuthor');
@@ -1167,10 +1188,68 @@
             }
         }
 
-        function closeBookModal() {
+        function closeBookModal(updateUrl = true) {
             const modal = document.getElementById('publicBookModal');
             if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+            if (updateUrl) {
+                if (window.location.pathname !== '/katalog') {
+                    window.history.pushState({}, '', '/katalog' + (window.location.search || ''));
+                }
+                document.title = 'Katalog Buku & Karya Ilmiah | PERSIS PERS';
+            }
+            currentModalBook = null;
         }
+
+        function copyModalBookLink() {
+            if (!currentModalBook) return;
+            const slug = currentModalBook.slug || currentModalBook.id;
+            const fullUrl = window.location.origin + '/katalog/' + encodeURIComponent(slug);
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(fullUrl).then(showCopiedFeedback);
+            } else {
+                const tempInput = document.createElement('input');
+                tempInput.value = fullUrl;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showCopiedFeedback();
+            }
+        }
+
+        function showCopiedFeedback() {
+            const copyText = document.getElementById('modalCopyLinkText');
+            if (copyText) {
+                const original = copyText.innerText;
+                copyText.innerText = '✓ Link Tersalin!';
+                setTimeout(() => { copyText.innerText = original; }, 2000);
+            }
+        }
+
+        // Auto-open preloaded active book if loaded via /katalog/{slug}
+        const preloadedActiveBook = @json($activeBook ?? null);
+        if (preloadedActiveBook) {
+            setTimeout(function() {
+                openBookModal(preloadedActiveBook, false);
+            }, 80);
+        }
+
+        // Handle Browser Navigation (Back / Forward buttons)
+        window.addEventListener('popstate', function(event) {
+            const path = window.location.pathname;
+            if (path.startsWith('/katalog/')) {
+                const slug = decodeURIComponent(path.replace('/katalog/', '').trim());
+                if (slug) {
+                    const found = searchableBooksData.find(b => b.slug === slug || String(b.id) === slug);
+                    if (found) {
+                        openBookModal(found, false);
+                    }
+                }
+            } else if (path === '/katalog') {
+                closeBookModal(false);
+            }
+        });
 
         
         // Modal Quantity Handler
