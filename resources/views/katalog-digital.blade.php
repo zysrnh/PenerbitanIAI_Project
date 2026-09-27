@@ -85,8 +85,7 @@
     }
     .flip-viewport {
         width: 100%;
-        max-width: 980px;
-        height: 600px;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -94,31 +93,17 @@
         margin: 0 auto;
         user-select: none;
     }
-    @media (max-width: 768px) {
-        .flip-viewport {
-            height: 480px;
-            max-width: 100%;
-        }
-    }
     .st-flip-container {
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 104, 48, 0.25);
-        border-radius: 4px;
-        overflow: hidden;
-        background: #fdfbf7;
-    }
-    .page-sheet {
-        background-color: #fdfbf7;
-        box-shadow: inset 0 0 30px rgba(0,0,0,0.03);
-        overflow: hidden;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+        position: relative;
+        background: transparent !important;
     }
-    .page-sheet canvas, .page-sheet img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+    /* Realistic 3D Book Stage Lighting & Spine Shadow */
+    .st-flip-container canvas {
+        filter: drop-shadow(0 22px 35px rgba(0, 0, 0, 0.8)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+        border-radius: 2px;
     }
 </style>
 
@@ -461,15 +446,24 @@
         <div class="flex-1 flex items-center justify-center p-2 sm:p-4 overflow-hidden relative" id="flipbookStageContainer">
             
             <!-- Loading Indicator -->
-            <div id="flipLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/80 text-white z-50">
+            <div id="flipLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/85 text-white z-50">
                 <i class="fa-solid fa-circle-notch fa-spin text-3xl text-emerald-500 mb-3"></i>
-                <p class="text-xs font-bold tracking-wide text-slate-200">Menyiapkan Lembaran Buku Digital...</p>
-                <p class="text-[10px] text-slate-500 mt-1 font-mono">Memuat halaman &amp; efek flip 3D</p>
+                <p id="flipLoadingTitle" class="text-xs font-bold tracking-wide text-slate-200">Menyiapkan Lembaran Buku Digital...</p>
+                <p id="flipLoadingText" class="text-[10px] text-emerald-400 mt-1 font-mono">Memuat halaman PDF &amp; efek flip 3D</p>
             </div>
 
-            <!-- Viewport for StPageFlip or Fallback -->
+            <!-- Floating Navigation Buttons -->
+            <button type="button" onclick="flipbookPrev()" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white flex items-center justify-center shadow-xl transition backdrop-blur-xs border border-slate-700/80 cursor-pointer group active:scale-95" title="Halaman Sebelumnya (Panah Kiri)">
+                <i class="fa-solid fa-chevron-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
+            </button>
+
+            <button type="button" onclick="flipbookNext()" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white flex items-center justify-center shadow-xl transition backdrop-blur-xs border border-slate-700/80 cursor-pointer group active:scale-95" title="Halaman Berikutnya (Panah Kanan)">
+                <i class="fa-solid fa-chevron-right text-sm group-hover:translate-x-0.5 transition-transform"></i>
+            </button>
+
+            <!-- Viewport for StPageFlip Native Engine -->
             <div class="flip-viewport" id="flipbookViewport">
-                <div id="bookFlipInstance"></div>
+                <div id="bookFlipInstance" class="st-flip-container"></div>
             </div>
 
         </div>
@@ -482,7 +476,7 @@
             </div>
 
             <div class="flex items-center gap-2 mx-auto sm:mx-0">
-                <button type="button" onclick="flipbookPrev()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs">
+                <button type="button" onclick="flipbookPrev()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs cursor-pointer">
                     <i class="fa-solid fa-chevron-left text-[10px]"></i>
                     <span class="hidden sm:inline">Sebelumnya</span>
                 </button>
@@ -493,14 +487,16 @@
                     <span id="flipTotalPages" class="text-slate-400">1</span>
                 </div>
 
-                <button type="button" onclick="flipbookNext()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs">
+                <input type="range" id="flipPageSlider" min="1" max="1" value="1" oninput="jumpToPage(this.value)" class="hidden md:block w-24 sm:w-28 accent-emerald-500 h-1 bg-slate-800 rounded-lg cursor-pointer" title="Geser Lembaran Halaman">
+
+                <button type="button" onclick="flipbookNext()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs cursor-pointer">
                     <span class="hidden sm:inline">Berikutnya</span>
                     <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </button>
             </div>
 
             <div class="flex items-center gap-2">
-                <button type="button" id="btnToggleSound" onclick="toggleFlipSound()" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xs transition text-xs flex items-center gap-1" title="Suara Kertas">
+                <button type="button" id="btnToggleSound" onclick="toggleFlipSound()" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xs transition text-xs flex items-center gap-1 cursor-pointer" title="Suara Kertas">
                     <i id="soundIcon" class="fa-solid fa-volume-high text-[11px] text-emerald-400"></i>
                 </button>
             </div>
@@ -637,15 +633,19 @@
     }
 
     // ==============================================================
-    // 2. 3D FLIPBOOK VIEWER ENGINE (CANVAS & REAL PAPER SOUND)
+    // 2. 3D FLIPBOOK VIEWER ENGINE (NATIVE 60FPS CANVAS & REAL SOUND)
     // ==============================================================
+    let currentBookPages = [];
+    let currentBookRatio = 1.414;
+    let resizeTimer = null;
+
     function playPaperTurnSound() {
         if (!flipSoundEnabled) return;
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
             const ctx = new AudioCtx();
-            const bufferSize = ctx.sampleRate * 0.12;
+            const bufferSize = Math.floor(ctx.sampleRate * 0.12);
             const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             const data = buffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) {
@@ -655,9 +655,9 @@
             noise.buffer = buffer;
             const filter = ctx.createBiquadFilter();
             filter.type = 'lowpass';
-            filter.frequency.value = 800;
+            filter.frequency.value = 850;
             const gain = ctx.createGain();
-            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.setValueAtTime(0.18, ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
             noise.connect(filter);
             filter.connect(gain);
@@ -674,12 +674,49 @@
         }
     }
 
+    function calculateBookDimensions(pageRatio) {
+        const stage = document.getElementById('flipbookStageContainer');
+        const maxH = stage ? Math.max(380, stage.clientHeight - 40) : 560;
+        const maxW = stage ? Math.max(300, stage.clientWidth - 50) : 800;
+
+        const isMobile = window.innerWidth < 768;
+
+        let pageHeight, pageWidth;
+
+        if (isMobile) {
+            pageHeight = Math.min(maxH, Math.round(maxW * pageRatio));
+            pageWidth = Math.round(pageHeight / pageRatio);
+            if (pageWidth > maxW) {
+                pageWidth = maxW;
+                pageHeight = Math.round(pageWidth * pageRatio);
+            }
+        } else {
+            // Dual page spread on desktop
+            const availableWidthForOnePage = Math.floor((maxW - 70) / 2);
+            pageHeight = Math.min(maxH, Math.round(availableWidthForOnePage * pageRatio));
+            pageWidth = Math.round(pageHeight / pageRatio);
+            
+            if (pageWidth > availableWidthForOnePage) {
+                pageWidth = availableWidthForOnePage;
+                pageHeight = Math.round(pageWidth * pageRatio);
+            }
+        }
+
+        return {
+            width: Math.max(260, Math.round(pageWidth)),
+            height: Math.max(380, Math.round(pageHeight)),
+            isMobile
+        };
+    }
+
     window.openFlipbookReader = async function(book) {
         const modal = document.getElementById('flipbookModal');
         const titleEl = document.getElementById('modalBookTitle');
         const authorEl = document.getElementById('modalBookAuthor');
         const btnDownload = document.getElementById('btnDownloadPdf');
         const loader = document.getElementById('flipLoading');
+        const loadTitle = document.getElementById('flipLoadingTitle');
+        const loadText = document.getElementById('flipLoadingText');
         const viewport = document.getElementById('flipbookViewport');
 
         if (titleEl) titleEl.innerText = book.title;
@@ -697,6 +734,9 @@
         modal.style.display = 'flex';
         modal.classList.remove('hidden');
         loader.classList.remove('hidden');
+        if (loadTitle) loadTitle.innerText = 'Menyiapkan Lembaran Buku Digital...';
+        if (loadText) loadText.innerText = 'Memuat dokumen PDF & efek 3D...';
+
         viewport.innerHTML = '<div id="bookFlipInstance" class="st-flip-container"></div>';
 
         if (pdfUrl) {
@@ -708,98 +748,148 @@
 
     async function renderPdfToFlipbook(pdfUrl, book) {
         const loader = document.getElementById('flipLoading');
-        const container = document.getElementById('bookFlipInstance');
+        const loadText = document.getElementById('flipLoadingText');
 
         try {
             const loadingTask = window.pdfjsLib.getDocument(pdfUrl);
             const pdfDoc = await loadingTask.promise;
             const totalPages = pdfDoc.numPages;
 
-            document.getElementById('flipTotalPages').innerText = totalPages;
-            container.innerHTML = '';
-
-            for (let i = 1; i <= totalPages; i++) {
-                const page = await pdfDoc.getPage(i);
-                const viewportScale = 1.4;
-                const pageViewport = page.getViewport({ scale: viewportScale });
-
-                const pageDiv = document.createElement('div');
-                pageDiv.className = 'page-sheet';
-
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = pageViewport.width;
-                canvas.height = pageViewport.height;
-
-                await page.render({
-                    canvasContext: context,
-                    viewport: pageViewport
-                }).promise;
-
-                pageDiv.appendChild(canvas);
-                container.appendChild(pageDiv);
+            const slider = document.getElementById('flipPageSlider');
+            if (slider) {
+                slider.max = totalPages;
+                slider.value = 1;
             }
 
-            initPageFlipLibrary(totalPages);
+            // Extract natural aspect ratio from first page
+            const firstPage = await pdfDoc.getPage(1);
+            const unscaledVp = firstPage.getViewport({ scale: 1.0 });
+            currentBookRatio = unscaledVp.height / unscaledVp.width;
+
+            // Optimal crisp resolution
+            const renderScale = Math.min(2.0, Math.max(1.3, 1100 / unscaledVp.width));
+            const images = [];
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (loadText) loadText.innerText = `Memproses halaman ${i} dari ${totalPages}...`;
+                const page = (i === 1) ? firstPage : await pdfDoc.getPage(i);
+                const vp = page.getViewport({ scale: renderScale });
+
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(vp.width);
+                canvas.height = Math.round(vp.height);
+                const ctx = canvas.getContext('2d', { alpha: false });
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                await page.render({
+                    canvasContext: ctx,
+                    viewport: vp
+                }).promise;
+
+                // High quality JPEG data URL for smooth hardware accelerated flip
+                images.push(canvas.toDataURL('image/jpeg', 0.90));
+            }
+
+            currentBookPages = images;
+            initPageFlipWithImages(images, currentBookRatio);
             loader.classList.add('hidden');
 
         } catch (err) {
-            console.warn('PDF.js render error', err);
+            console.warn('PDF.js render warning:', err);
             renderImagesToFlipbook(book);
         }
     }
 
     function renderImagesToFlipbook(book) {
         const loader = document.getElementById('flipLoading');
-        const container = document.getElementById('bookFlipInstance');
-        container.innerHTML = '';
-
         const coverSrc = book.cover_url || (book.cover_image ? ('/storage/' + book.cover_image) : null);
-        const images = coverSrc ? [coverSrc] : [];
+        
+        currentBookRatio = 1.414; // A4 standard ratio
+        const cw = 700;
+        const ch = Math.round(cw * currentBookRatio);
+        const images = [];
 
-        if (images.length === 0) images.push('cover');
-        images.push('info');
-        images.push('back');
+        function createTextPage(heading, title, author, bodyText, footerText) {
+            const canvas = document.createElement('canvas');
+            canvas.width = cw;
+            canvas.height = ch;
+            const ctx = canvas.getContext('2d');
 
-        document.getElementById('flipTotalPages').innerText = images.length;
+            ctx.fillStyle = '#fcfbf7';
+            ctx.fillRect(0, 0, cw, ch);
 
-        images.forEach((imgSrc, idx) => {
-            const pageDiv = document.createElement('div');
-            pageDiv.className = 'page-sheet p-6 text-center';
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(30, 30, cw - 60, ch - 60);
 
-            if (imgSrc.startsWith('/')) {
-                const img = document.createElement('img');
-                img.src = imgSrc;
-                img.className = 'w-full h-full object-contain';
-                pageDiv.appendChild(img);
-            } else {
-                pageDiv.innerHTML = `
-                    <div class="w-full h-full border border-slate-200 p-6 flex flex-col justify-between bg-white text-slate-800">
-                        <div class="border-b border-emerald-700/30 pb-2">
-                            <span class="text-xs font-bold text-emerald-800 uppercase tracking-widest font-heading">PERSIS PERS PRESS</span>
-                        </div>
-                        <div class="my-auto space-y-2">
-                            <h3 class="font-black text-base text-slate-900 font-heading">${book.title}</h3>
-                            <p class="text-xs text-slate-500 font-medium">${book.author}</p>
-                            <div class="w-8 h-0.5 bg-emerald-600 mx-auto my-3"></div>
-                            <p class="text-xs text-slate-600 leading-relaxed max-w-sm mx-auto">${book.synopsis || 'Khazanah buku digital dan publikasi ilmiah berstandar akademik.'}</p>
-                        </div>
-                        <div class="border-t border-slate-100 pt-2 flex justify-between text-[10px] text-slate-400 font-mono">
-                            <span>Kategori: ${book.category || '-'}</span>
-                            <span>Halaman ${idx + 1}</span>
-                        </div>
-                    </div>
-                `;
+            ctx.fillStyle = '#006830';
+            ctx.font = 'bold 20px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(heading || 'PERSIS PERS PRESS', cw / 2, 85);
+
+            ctx.strokeStyle = '#006830';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(80, 105);
+            ctx.lineTo(cw - 80, 105);
+            ctx.stroke();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 26px sans-serif';
+            wrapText(ctx, title || '', cw / 2, 220, cw - 140, 36);
+
+            ctx.fillStyle = '#059669';
+            ctx.font = 'italic 18px sans-serif';
+            ctx.fillText(author || '', cw / 2, 340);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillRect(cw / 2 - 40, 375, 80, 3);
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '16px sans-serif';
+            wrapText(ctx, bodyText || '', cw / 2, 430, cw - 160, 26);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(footerText || 'PERSIS PERS - E-Library Digital', cw / 2, ch - 70);
+
+            return canvas.toDataURL('image/jpeg', 0.90);
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
             }
+            ctx.fillText(line, x, y);
+        }
 
-            container.appendChild(pageDiv);
-        });
+        if (coverSrc) {
+            images.push(coverSrc);
+        } else {
+            images.push(createTextPage('PERSIS PERS PRESS', book.title, book.author, book.synopsis || 'Koleksi Publikasi Ilmiah & Keislaman Terbitan PERSIS PERS.', 'Halaman Sampul Depan'));
+        }
 
-        initPageFlipLibrary(images.length);
+        images.push(createTextPage('KETERANGAN BUKU DIGITAL', book.title, 'Penulis: ' + (book.author || '-'), 'Kategori: ' + (book.category || '-') + '\nTahun: ' + (book.year || '-') + '\n\n' + (book.synopsis || 'Diterbitkan secara resmi oleh PERSIS PERS Bandung.'), 'Halaman Informasi'));
+        images.push(createTextPage('PERSIS PERS BANDUNG', 'Khazanah Intelektual Islam', 'Menebar Pencerahan & Integrasi Keilmuan', 'Kunjungi katalog lengkap di: penerbitan.iaibandung.ac.id', 'Sampul Belakang'));
+
+        currentBookPages = images;
+        initPageFlipWithImages(images, currentBookRatio);
         loader.classList.add('hidden');
     }
 
-    function initPageFlipLibrary(pageCount) {
+    function initPageFlipWithImages(images, pageRatio) {
         if (pageFlipInstance) {
             try { pageFlipInstance.destroy(); } catch(e) {}
             pageFlipInstance = null;
@@ -808,30 +898,41 @@
         const container = document.getElementById('bookFlipInstance');
         if (!container) return;
 
+        const totalPages = images.length;
+        document.getElementById('flipTotalPages').innerText = totalPages;
+        const slider = document.getElementById('flipPageSlider');
+        if (slider) slider.max = totalPages;
+
+        const dims = calculateBookDimensions(pageRatio);
+
         if (window.St && window.St.PageFlip) {
-            const isMobile = window.innerWidth < 768;
             pageFlipInstance = new window.St.PageFlip(container, {
-                width: isMobile ? 360 : 440,
-                height: isMobile ? 500 : 580,
-                size: 'stretch',
-                minWidth: 280,
-                maxWidth: 550,
-                minHeight: 400,
-                maxHeight: 700,
-                maxShadowOpacity: 0.5,
+                width: dims.width,
+                height: dims.height,
+                size: 'fixed',
+                minWidth: 260,
+                maxWidth: 600,
+                minHeight: 380,
+                maxHeight: 850,
+                maxShadowOpacity: 0.6,
                 showCover: true,
                 mobileScrollSupport: false,
-                autoSize: true,
+                usePortrait: true,
+                flippingTime: 700,
+                swipeDistance: 20,
+                clickEventForward: true,
                 useMouseEvents: true,
-                swipeDistance: 30
+                drawShadow: true
             });
 
-            const sheets = container.querySelectorAll('.page-sheet');
-            pageFlipInstance.loadFromHTML(sheets);
+            // Native high-performance image loading
+            pageFlipInstance.loadFromImages(images);
 
             pageFlipInstance.on('flip', (e) => {
                 playPaperTurnSound();
-                document.getElementById('flipCurrentPage').innerText = (e.data + 1);
+                const cur = e.data + 1;
+                document.getElementById('flipCurrentPage').innerText = cur;
+                if (slider) slider.value = cur;
             });
 
             pageFlipInstance.on('changeState', (e) => {
@@ -839,6 +940,15 @@
             });
         }
     }
+
+    window.jumpToPage = function(val) {
+        if (pageFlipInstance) {
+            const idx = parseInt(val) - 1;
+            if (idx >= 0) {
+                pageFlipInstance.turnToPage(idx);
+            }
+        }
+    };
 
     window.flipbookNext = function() {
         if (pageFlipInstance) pageFlipInstance.flipNext();
@@ -868,10 +978,24 @@
         }
     };
 
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const modal = document.getElementById('flipbookModal');
+            if (modal && modal.style.display !== 'none' && currentBookPages.length > 0 && pageFlipInstance) {
+                const currentPage = pageFlipInstance.getCurrentPageIndex();
+                initPageFlipWithImages(currentBookPages, currentBookRatio);
+                if (pageFlipInstance && currentPage > 0) {
+                    try { pageFlipInstance.turnToPage(currentPage); } catch(e) {}
+                }
+            }
+        }, 300);
+    });
+
     document.addEventListener('keydown', function(e) {
         const modal = document.getElementById('flipbookModal');
         if (modal && !modal.classList.contains('hidden') && modal.style.display !== 'none') {
-            if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+            if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
                 e.preventDefault();
                 flipbookNext();
             } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
