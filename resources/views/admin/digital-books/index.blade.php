@@ -320,55 +320,96 @@
                     </div>
                 </div>
 
-                <!-- 4. Upload Cover & PDF File Section -->
+                <!-- 4. Upload Cover & PDF File Section (With Live Interactive Preview) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     
-                    <!-- Cover Image Upload -->
-                    <div class="p-3 bg-slate-50 rounded-sm border border-slate-200 space-y-2">
-                        <div class="flex items-center justify-between">
+                    <!-- Cover Image Upload & Preview Card -->
+                    <div class="p-3 bg-slate-50 rounded-xs border border-slate-200 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                                 <i class="fa-solid fa-image text-emerald-600"></i> Sampul / Cover Buku
                             </span>
-                            <span id="cover_status_badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">Pilih Foto</span>
+                            <span id="cover_status_badge" class="text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-slate-200 text-slate-600">Pilih Foto</span>
                         </div>
-                        <label for="in_cover_image" class="flex items-center gap-3 p-2 bg-white border border-dashed border-slate-300 hover:border-emerald-500 rounded-sm cursor-pointer transition">
-                            <div id="cover_thumb_preview" class="w-10 h-14 bg-slate-100 rounded-xs flex items-center justify-center text-slate-400 overflow-hidden shrink-0 border border-slate-200">
-                                <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+
+                        <div class="flex gap-3 items-center bg-white p-2.5 rounded-xs border border-slate-200">
+                            <!-- Visual Cover Frame Preview (Solid 3:4 aspect ratio) -->
+                            <div id="cover_thumb_preview" class="w-16 h-22 sm:w-20 sm:h-28 bg-slate-100 rounded-xs border border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden shrink-0 shadow-2xs relative group">
+                                <i class="fa-solid fa-book-open text-2xl text-slate-300"></i>
+                                <span class="text-[8px] text-slate-400 mt-1 font-semibold uppercase tracking-wider">Cover</span>
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <p id="cover_name_display" class="text-xs font-semibold text-slate-700 truncate">Pilih gambar cover...</p>
-                                <p class="text-[10px] text-slate-400 font-mono">JPG, PNG, WebP (Maks. 10MB)</p>
+
+                            <!-- Controls & File Info -->
+                            <div class="flex-1 min-w-0 space-y-1.5">
+                                <div>
+                                    <p id="cover_name_display" class="text-xs font-bold text-slate-800 truncate">Belum ada cover dipilih</p>
+                                    <p class="text-[10.5px] text-slate-500">Format: JPG, PNG, WebP</p>
+                                    <p class="text-[10px] text-slate-400 font-mono">Ukuran maks: 10 MB</p>
+                                </div>
+
+                                <div class="flex items-center gap-1.5 pt-1">
+                                    <label for="in_cover_image" class="px-2.5 py-1 text-[11px] font-bold bg-emerald-700 hover:bg-emerald-800 text-white rounded-xs cursor-pointer inline-flex items-center gap-1 transition">
+                                        <i class="fa-solid fa-folder-open text-[10px]"></i>
+                                        <span id="cover_btn_label">Pilih Gambar</span>
+                                    </label>
+                                    <button type="button" id="btn_clear_cover" onclick="clearCoverSelection()" class="hidden px-2 py-1 text-[11px] font-bold bg-slate-100 hover:bg-rose-50 text-rose-600 rounded-xs border border-slate-200 transition" title="Batal pilih gambar">
+                                        <i class="fa-solid fa-trash-can text-[10px]"></i> Reset
+                                    </button>
+                                </div>
+                                <input type="file" name="cover_image" id="in_cover_image" accept="image/*" class="hidden" onchange="handleCoverChange(this)" />
                             </div>
-                            <input type="file" name="cover_image" id="in_cover_image" accept="image/*" class="hidden" onchange="handleCoverChange(this)" />
-                        </label>
+                        </div>
                     </div>
 
-                    <!-- PDF Document Upload -->
-                    <div class="p-3 bg-emerald-50/60 rounded-sm border border-emerald-200 space-y-2">
-                        <div class="flex items-center justify-between">
+                    <!-- PDF Document Upload & Preview Action -->
+                    <div class="p-3 bg-emerald-50/50 rounded-xs border border-emerald-200 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2">
                             <span class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
                                 <i class="fa-solid fa-file-pdf text-emerald-700"></i> Dokumen PDF (Flipbook)
                             </span>
-                            <span id="pdf_status_badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">Belum Ada PDF</span>
+                            <span id="pdf_status_badge" class="text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-slate-200 text-slate-600">Belum Ada PDF</span>
                         </div>
-                        <label for="in_pdf_file" class="flex items-center gap-3 p-2 bg-white border border-dashed border-emerald-300 hover:border-emerald-600 rounded-sm cursor-pointer transition">
-                            <div class="w-10 h-14 bg-emerald-100/70 text-emerald-700 rounded-xs flex items-center justify-center text-lg shrink-0 border border-emerald-200">
-                                <i class="fa-solid fa-file-arrow-up"></i>
+
+                        <div class="flex gap-3 items-center bg-white p-2.5 rounded-xs border border-emerald-200">
+                            <!-- Visual PDF Icon Frame Preview -->
+                            <div id="pdf_thumb_preview" class="w-16 h-22 sm:w-20 sm:h-28 bg-emerald-50 rounded-xs border border-emerald-200 flex flex-col items-center justify-center text-emerald-600 shrink-0 shadow-2xs">
+                                <i class="fa-solid fa-file-pdf text-3xl text-emerald-700"></i>
+                                <span class="text-[8px] font-bold uppercase tracking-wider text-emerald-800 mt-1">PDF File</span>
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <p id="pdf_name_display" class="text-xs font-semibold text-slate-700 truncate">Pilih dokumen PDF...</p>
-                                <p class="text-[10px] text-slate-400 font-mono">Format .pdf (Maks. 100MB)</p>
+
+                            <!-- Controls, File Info & Live Preview Button -->
+                            <div class="flex-1 min-w-0 space-y-1.5">
+                                <div>
+                                    <p id="pdf_name_display" class="text-xs font-bold text-slate-800 truncate">Belum ada PDF dipilih</p>
+                                    <p id="pdf_size_display" class="text-[10.5px] text-slate-500">Maks. 100 MB per file</p>
+                                </div>
+
+                                <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                                    <label for="in_pdf_file" class="px-2.5 py-1 text-[11px] font-bold bg-[#006830] hover:bg-[#032c21] text-white rounded-xs cursor-pointer inline-flex items-center gap-1 transition">
+                                        <i class="fa-solid fa-upload text-[10px]"></i>
+                                        <span id="pdf_btn_label">Pilih Dokumen</span>
+                                    </label>
+
+                                    <!-- Live Preview Button for PDF (Works for both newly chosen local file & existing uploaded file) -->
+                                    <a id="btn_preview_pdf" href="#" target="_blank" class="hidden px-2.5 py-1 text-[11px] font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300 rounded-xs inline-flex items-center gap-1 transition">
+                                        <i class="fa-solid fa-eye text-[10px]"></i>
+                                        <span>Preview PDF</span>
+                                    </a>
+
+                                    <button type="button" id="btn_clear_pdf" onclick="clearPdfSelection()" class="hidden px-2 py-1 text-[11px] font-bold bg-slate-100 hover:bg-rose-50 text-rose-600 rounded-xs border border-slate-200 transition" title="Batal pilih PDF">
+                                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                    </button>
+                                </div>
+                                <input type="file" name="pdf_file" id="in_pdf_file" accept="application/pdf" class="hidden" onchange="handlePdfChange(this)" />
+
+                                <!-- Edit Mode: Option to delete existing PDF -->
+                                <div id="pdf_active_box" class="hidden pt-1">
+                                    <label class="inline-flex items-center gap-1 text-[10.5px] font-semibold text-rose-600 cursor-pointer">
+                                        <input type="checkbox" name="remove_pdf" id="in_remove_pdf" value="1" class="w-3.5 h-3.5 rounded-xs" />
+                                        <span>Hapus PDF Tersimpan</span>
+                                    </label>
+                                </div>
                             </div>
-                            <input type="file" name="pdf_file" id="in_pdf_file" accept="application/pdf" class="hidden" onchange="handlePdfChange(this)" />
-                        </label>
-                        <div id="pdf_active_box" class="hidden flex items-center justify-between pt-0.5 text-xs">
-                            <a id="pdf_active_link" href="#" target="_blank" class="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
-                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> Lihat PDF Saat Ini
-                            </a>
-                            <label class="flex items-center gap-1 text-[11px] font-semibold text-rose-600 cursor-pointer">
-                                <input type="checkbox" name="remove_pdf" id="in_remove_pdf" value="1" />
-                                <span>Hapus PDF</span>
-                            </label>
                         </div>
                     </div>
 
@@ -407,6 +448,10 @@
 </div>
 
 <script>
+    let currentLocalPdfBlobUrl = null;
+    let originalServerPdfUrl = null;
+    let originalServerCoverUrl = null;
+
     function openCreateModal() {
         const form = document.getElementById('digitalBookForm');
         form.action = "{{ route('admin.digital-books.store') }}";
@@ -415,14 +460,10 @@
         document.getElementById('formMethod').value = 'POST';
         document.getElementById('modalHeaderTitle').innerText = 'Tambah Buku Digital Baru';
 
-        // Reset previews
-        document.getElementById('cover_name_display').innerText = 'Pilih gambar cover...';
-        document.getElementById('cover_status_badge').innerText = 'Pilih Foto';
-        document.getElementById('cover_thumb_preview').innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-base"></i>';
-
-        document.getElementById('pdf_name_display').innerText = 'Pilih dokumen PDF...';
-        document.getElementById('pdf_status_badge').innerText = 'Belum Ada PDF';
-        document.getElementById('pdf_active_box').classList.add('hidden');
+        originalServerPdfUrl = null;
+        originalServerCoverUrl = null;
+        clearCoverSelection();
+        clearPdfSelection();
 
         const modal = document.getElementById('digitalBookModal');
         modal.classList.remove('hidden');
@@ -453,37 +494,34 @@
         const feat = document.getElementById('in_featured');
         if (feat) feat.checked = Boolean(book.is_featured);
 
-        // Setup Cover preview
+        // Reset local selection first
+        clearCoverSelection();
+        clearPdfSelection();
+
+        // Setup existing Cover preview
         if (book.cover_image) {
-            const coverUrl = book.cover_image.startsWith('http') ? book.cover_image : ('/storage/' + book.cover_image);
-            document.getElementById('cover_thumb_preview').innerHTML = '<img src="' + coverUrl + '" class="w-full h-full object-cover" />';
+            originalServerCoverUrl = book.cover_image.startsWith('http') ? book.cover_image : ('/storage/' + book.cover_image);
+            document.getElementById('cover_thumb_preview').innerHTML = '<img src="' + originalServerCoverUrl + '" class="w-full h-full object-cover" alt="Cover Preview" />';
             document.getElementById('cover_name_display').innerText = book.cover_image.split('/').pop();
             document.getElementById('cover_status_badge').innerText = 'Terpasang';
-        } else {
-            document.getElementById('cover_thumb_preview').innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-base"></i>';
-            document.getElementById('cover_name_display').innerText = 'Pilih gambar cover...';
-            document.getElementById('cover_status_badge').innerText = 'Belum Ada';
+            document.getElementById('cover_status_badge').className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+            document.getElementById('cover_btn_label').innerText = 'Ganti Cover';
         }
 
-        // Setup PDF preview
-        const pdfBox = document.getElementById('pdf_active_box');
-        const pdfLink = document.getElementById('pdf_active_link');
-        const pdfBadge = document.getElementById('pdf_status_badge');
-        const removePdf = document.getElementById('in_remove_pdf');
-        if (removePdf) removePdf.checked = false;
-
+        // Setup existing PDF preview
         if (book.pdf_file) {
-            const pdfUrl = book.pdf_file.startsWith('http') ? book.pdf_file : ('/storage/' + book.pdf_file);
-            pdfBox.classList.remove('hidden');
-            pdfLink.href = pdfUrl;
-            pdfBadge.innerText = 'PDF Terpasang';
-            pdfBadge.className = 'text-[9px] px-1.5 py-0.2 rounded font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+            originalServerPdfUrl = book.pdf_file.startsWith('http') ? book.pdf_file : ('/storage/' + book.pdf_file);
             document.getElementById('pdf_name_display').innerText = book.pdf_file.split('/').pop();
-        } else {
-            pdfBox.classList.add('hidden');
-            pdfBadge.innerText = 'Belum Ada PDF';
-            pdfBadge.className = 'text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600';
-            document.getElementById('pdf_name_display').innerText = 'Pilih dokumen PDF...';
+            document.getElementById('pdf_size_display').innerText = 'Tersimpan di server';
+            document.getElementById('pdf_status_badge').innerText = 'PDF Terpasang';
+            document.getElementById('pdf_status_badge').className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+            document.getElementById('pdf_btn_label').innerText = 'Ganti PDF';
+
+            const btnPreview = document.getElementById('btn_preview_pdf');
+            btnPreview.href = originalServerPdfUrl;
+            btnPreview.classList.remove('hidden');
+
+            document.getElementById('pdf_active_box').classList.remove('hidden');
         }
 
         const modal = document.getElementById('digitalBookModal');
@@ -492,6 +530,10 @@
     }
 
     function closeModal() {
+        if (currentLocalPdfBlobUrl) {
+            URL.revokeObjectURL(currentLocalPdfBlobUrl);
+            currentLocalPdfBlobUrl = null;
+        }
         const modal = document.getElementById('digitalBookModal');
         modal.classList.add('hidden');
         modal.classList.remove('flex');
@@ -502,11 +544,35 @@
         if (file) {
             document.getElementById('cover_name_display').innerText = file.name;
             document.getElementById('cover_status_badge').innerText = 'Siap Diunggah';
+            document.getElementById('cover_status_badge').className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-emerald-600 text-white';
+            document.getElementById('cover_btn_label').innerText = 'Ganti';
+            document.getElementById('btn_clear_cover').classList.remove('hidden');
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('cover_thumb_preview').innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover" />';
+                document.getElementById('cover_thumb_preview').innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover" alt="Cover Preview" />';
             };
             reader.readAsDataURL(file);
+        }
+    }
+
+    function clearCoverSelection() {
+        const input = document.getElementById('in_cover_image');
+        if (input) input.value = '';
+
+        if (originalServerCoverUrl) {
+            document.getElementById('cover_thumb_preview').innerHTML = '<img src="' + originalServerCoverUrl + '" class="w-full h-full object-cover" alt="Cover Preview" />';
+            document.getElementById('cover_status_badge').innerText = 'Terpasang';
+            document.getElementById('cover_status_badge').className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+            document.getElementById('cover_btn_label').innerText = 'Ganti Cover';
+            document.getElementById('btn_clear_cover').classList.add('hidden');
+        } else {
+            document.getElementById('cover_thumb_preview').innerHTML = '<i class="fa-solid fa-book-open text-2xl text-slate-300"></i><span class="text-[8px] text-slate-400 mt-1 font-semibold uppercase tracking-wider">Cover</span>';
+            document.getElementById('cover_name_display').innerText = 'Belum ada cover dipilih';
+            document.getElementById('cover_status_badge').innerText = 'Pilih Foto';
+            document.getElementById('cover_status_badge').className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-slate-200 text-slate-600';
+            document.getElementById('cover_btn_label').innerText = 'Pilih Gambar';
+            document.getElementById('btn_clear_cover').classList.add('hidden');
         }
     }
 
@@ -518,11 +584,62 @@
                 input.value = '';
                 return;
             }
+
+            if (currentLocalPdfBlobUrl) {
+                URL.revokeObjectURL(currentLocalPdfBlobUrl);
+            }
+            currentLocalPdfBlobUrl = URL.createObjectURL(file);
+
             const mb = (file.size / (1024 * 1024)).toFixed(2);
-            document.getElementById('pdf_name_display').innerText = file.name + ' (' + mb + ' MB)';
+            document.getElementById('pdf_name_display').innerText = file.name;
+            document.getElementById('pdf_size_display').innerText = 'Ukuran: ' + mb + ' MB (PDF Siap Diunggah)';
+
             const badge = document.getElementById('pdf_status_badge');
             badge.innerText = 'Siap Diunggah';
-            badge.className = 'text-[9px] px-1.5 py-0.2 rounded font-bold bg-emerald-700 text-white';
+            badge.className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-emerald-600 text-white';
+
+            document.getElementById('pdf_btn_label').innerText = 'Ganti';
+            document.getElementById('btn_clear_pdf').classList.remove('hidden');
+
+            const btnPreview = document.getElementById('btn_preview_pdf');
+            btnPreview.href = currentLocalPdfBlobUrl;
+            btnPreview.classList.remove('hidden');
+        }
+    }
+
+    function clearPdfSelection() {
+        const input = document.getElementById('in_pdf_file');
+        if (input) input.value = '';
+
+        if (currentLocalPdfBlobUrl) {
+            URL.revokeObjectURL(currentLocalPdfBlobUrl);
+            currentLocalPdfBlobUrl = null;
+        }
+
+        const btnPreview = document.getElementById('btn_preview_pdf');
+        const clearBtn = document.getElementById('btn_clear_pdf');
+        const removePdf = document.getElementById('in_remove_pdf');
+        if (removePdf) removePdf.checked = false;
+
+        if (originalServerPdfUrl) {
+            document.getElementById('pdf_name_display').innerText = originalServerPdfUrl.split('/').pop();
+            document.getElementById('pdf_size_display').innerText = 'Tersimpan di server';
+            document.getElementById('pdf_status_badge').innerText = 'PDF Terpasang';
+            document.getElementById('pdf_status_badge').className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+            document.getElementById('pdf_btn_label').innerText = 'Ganti PDF';
+            btnPreview.href = originalServerPdfUrl;
+            btnPreview.classList.remove('hidden');
+            clearBtn.classList.add('hidden');
+            document.getElementById('pdf_active_box').classList.remove('hidden');
+        } else {
+            document.getElementById('pdf_name_display').innerText = 'Belum ada PDF dipilih';
+            document.getElementById('pdf_size_display').innerText = 'Maks. 100 MB per file';
+            document.getElementById('pdf_status_badge').innerText = 'Belum Ada PDF';
+            document.getElementById('pdf_status_badge').className = 'text-[9px] px-1.5 py-0.5 rounded-xs font-bold bg-slate-200 text-slate-600';
+            document.getElementById('pdf_btn_label').innerText = 'Pilih Dokumen';
+            btnPreview.classList.add('hidden');
+            clearBtn.classList.add('hidden');
+            document.getElementById('pdf_active_box').classList.add('hidden');
         }
     }
 </script>
