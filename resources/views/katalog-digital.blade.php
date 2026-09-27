@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Katalog Buku Digital & Perpustakaan Interaktif | PERSIS PERS')
+@section('title', 'Katalog Buku Digital | PERSIS PERS')
 
 @section('content')
 <style>
@@ -119,19 +119,18 @@
 <div class="space-y-8 pb-16">
     
     <!-- Top Hero Banner (Signature PERSIS PERS Style) -->
-    <section class="bg-gradient-to-r from-[#032c21] via-[#006830] to-[#032c21] text-white py-8 sm:py-10 border-b border-emerald-900/60 relative overflow-hidden select-none">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section class="bg-brand-950 text-white py-12 sm:py-14 border-b border-brand-900 relative overflow-hidden select-none animate-fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-cascade-up">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs font-bold uppercase tracking-wider mb-2">
-                        <i class="fa-solid fa-book-open-reader text-xs"></i>
-                        <span>E-Library Digital &bull; 3D Page Flip</span>
-                    </div>
-                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight leading-tight">
-                        Katalog Buku Digital &amp; Perpustakaan
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2">
+                        PUBLIKASI RESMI DIGITAL
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-heading tracking-tight leading-tight">
+                        Katalog Buku Digital
                     </h1>
-                    <p class="text-xs sm:text-sm text-emerald-100/90 max-w-2xl mt-1.5 leading-relaxed">
-                        Koleksi literatur keislaman, modul riset, dan karya ilmiah digital terbitan PERSIS PERS. Dilengkapi fitur animasi buka lembaran buku (*3D Flipbook*) langsung di browser.
+                    <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mt-1.5 leading-relaxed">
+                        Koleksi literatur keislaman, modul riset, dan karya ilmiah digital terbitan PERSIS PERS yang dapat dibaca secara interaktif di browser.
                     </p>
                 </div>
 
@@ -141,7 +140,7 @@
                         <span class="text-xl sm:text-2xl font-black font-mono text-white">{{ $totalDigitalBooks }}</span>
                     </div>
                     <div class="px-4 py-2.5 bg-emerald-900/50 border border-emerald-400/30 rounded-sm backdrop-blur-xs text-center">
-                        <span class="text-xs text-emerald-200 font-bold block uppercase tracking-wider">Flipbook Ready</span>
+                        <span class="text-xs text-emerald-200 font-bold block uppercase tracking-wider">Tersedia Baca</span>
                         <span class="text-xl sm:text-2xl font-black font-mono text-amber-300">{{ $totalWithPdf }}</span>
                     </div>
                 </div>
