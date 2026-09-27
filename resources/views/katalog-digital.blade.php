@@ -1005,12 +1005,15 @@
     function updateZoomTransform() {
         const viewport = document.getElementById('flipbookViewport');
         const zoomText = document.getElementById('zoomLevelText');
+        const bookInstanceEl = document.getElementById('bookFlipInstance');
         if (zoomText) zoomText.innerText = Math.round(currentZoomScale * 100) + '%';
 
         if (viewport) {
             if (currentZoomScale > 1.0) {
                 viewport.classList.add('is-zoomed');
                 viewport.style.transform = `scale(${currentZoomScale}) translate(${panTranslateX}px, ${panTranslateY}px)`;
+                // Matikan deteksi mouse/touch langsung pada lembaran canvas agar StPageFlip TIDAK membalik halaman saat digeser
+                if (bookInstanceEl) bookInstanceEl.style.pointerEvents = 'none';
             } else {
                 viewport.classList.remove('is-zoomed');
                 viewport.classList.remove('is-dragging');
@@ -1018,6 +1021,8 @@
                 panTranslateX = 0;
                 panTranslateY = 0;
                 viewport.style.transform = '';
+                // Aktifkan kembali deteksi tarik kertas saat skala normal 100%
+                if (bookInstanceEl) bookInstanceEl.style.pointerEvents = '';
             }
         }
     }
@@ -1041,21 +1046,22 @@
         updateZoomTransform();
     };
 
-    // Pan Dragging Setup
+    // Pan Dragging Setup (Murni untuk Menjelajah Teks Buku Saat Zoom)
     const stageEl = document.getElementById('flipbookStageContainer');
     const viewportEl = document.getElementById('flipbookViewport');
 
     if (stageEl && viewportEl) {
+        // Gunakan Capture Phase (true) agar event mousedown tidak pernah sampai ke engine PageFlip saat zoom
         stageEl.addEventListener('mousedown', (e) => {
-            // Hanya aktifkan pan drag jika sedang di-zoom dan bukan klik tombol panah
             if (currentZoomScale > 1.0 && (e.button === 0 || e.button === 1) && !e.target.closest('button')) {
                 isPanning = true;
                 panStartX = e.clientX - (panTranslateX * currentZoomScale);
                 panStartY = e.clientY - (panTranslateY * currentZoomScale);
                 viewportEl.classList.add('is-dragging');
                 e.preventDefault();
+                e.stopPropagation();
             }
-        });
+        }, true);
 
         window.addEventListener('mousemove', (e) => {
             if (isPanning && currentZoomScale > 1.0) {
@@ -1146,7 +1152,7 @@
         }, 200);
     });
 
-    // Touch Swipe Gestures for Mobile
+    // Touch Swipe Gestures for Mobile & Touch Pan saat Zoom
     let touchStartX = 0;
     let touchStartY = 0;
     const stageContainerEl = document.getElementById('flipbookStageContainer');
@@ -1155,10 +1161,27 @@
             if (e.touches && e.touches.length > 0) {
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
+                if (currentZoomScale > 1.0) {
+                    isPanning = true;
+                    panStartX = e.touches[0].clientX - (panTranslateX * currentZoomScale);
+                    panStartY = e.touches[0].clientY - (panTranslateY * currentZoomScale);
+                }
+            }
+        }, { passive: true });
+
+        stageContainerEl.addEventListener('touchmove', (e) => {
+            if (isPanning && currentZoomScale > 1.0 && e.touches && e.touches.length > 0) {
+                panTranslateX = (e.touches[0].clientX - panStartX) / currentZoomScale;
+                panTranslateY = (e.touches[0].clientY - panStartY) / currentZoomScale;
+                viewportEl.style.transform = `scale(${currentZoomScale}) translate(${panTranslateX}px, ${panTranslateY}px)`;
             }
         }, { passive: true });
 
         stageContainerEl.addEventListener('touchend', (e) => {
+            if (currentZoomScale > 1.0) {
+                isPanning = false;
+                return; // KUNCI: Jangan pernah membalik halaman saat sedang di-zoom!
+            }
             if (e.changedTouches && e.changedTouches.length > 0) {
                 const diffX = e.changedTouches[0].clientX - touchStartX;
                 const diffY = e.changedTouches[0].clientY - touchStartY;
