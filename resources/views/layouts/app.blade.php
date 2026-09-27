@@ -460,6 +460,10 @@
 
                     <a href="{{ route('reseller') }}" class="{{ request()->routeIs('reseller*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">RESELLER &amp; AGEN</a>
                     <a href="{{ route('katalog') }}" class="{{ request()->routeIs('katalog') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KATALOG BUKU</a>
+                    <a href="{{ route('katalog.digital') }}" class="{{ request()->routeIs('katalog.digital*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition flex items-center gap-1">
+                        <span>BUKU DIGITAL</span>
+                        <span class="px-1 py-0.2 rounded-xs bg-emerald-100 text-[#006830] text-[9px] font-black uppercase">Flip</span>
+                    </a>
                     <a href="{{ route('berita.index') }}" class="{{ request()->routeIs('berita*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">BERITA</a>
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
@@ -628,8 +632,11 @@
             <a href="{{ route('reseller') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('reseller*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-solid fa-handshake text-emerald-700 text-xs mr-2 w-4"></i> Reseller &amp; Agen
             </a>
-            <a href="{{ route('katalog') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
+            <a href="{{ route('katalog') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('katalog') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-solid fa-book-open text-emerald-700 text-xs mr-2 w-4"></i> Katalog Buku
+            </a>
+            <a href="{{ route('katalog.digital') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('katalog.digital*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
+                <i class="fa-solid fa-book-open-reader text-emerald-700 text-xs mr-2 w-4"></i> Buku Digital (Flipbook)
             </a>
             <a href="{{ route('berita.index') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('berita*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-regular fa-newspaper text-emerald-700 text-xs mr-2 w-4"></i> Berita &amp; Artikel
