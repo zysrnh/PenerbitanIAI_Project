@@ -409,41 +409,41 @@
 <!-- ========================================================== -->
 <!-- 3D FLIPBOOK VIEWER MODAL (IMMERSIVE READING EXPERIENCE)   -->
 <!-- ========================================================== -->
-<div id="flipbookModal" class="fixed inset-0 z-[99999] bg-black/90 hidden items-center justify-center p-2 sm:p-4 select-none animate-fade-in" style="display: none;">
-    <div class="w-full max-w-5xl h-[94vh] flex flex-col justify-between bg-slate-950 rounded-sm border border-slate-800 shadow-2xl overflow-hidden relative">
+<div id="flipbookModal" class="fixed inset-0 z-[99999] bg-black/95 hidden items-center justify-center p-0 sm:p-3 md:p-6 select-none animate-fade-in" style="display: none;">
+    <div class="w-full max-w-5xl h-[100dvh] sm:h-[94vh] flex flex-col justify-between bg-slate-950 rounded-none sm:rounded-sm border-0 sm:border border-slate-800 shadow-2xl overflow-hidden relative">
         
         <!-- Top Toolbar -->
-        <div class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between text-white shrink-0">
-            <div class="flex items-center gap-3 min-w-0 pr-3">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+        <div class="bg-slate-900 border-b border-slate-800 px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between text-white shrink-0">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
+                <span class="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                 <div class="min-w-0">
                     <h3 id="modalBookTitle" class="text-xs sm:text-sm font-black text-white truncate font-heading">
                         Judul Buku Digital
                     </h3>
-                    <p id="modalBookAuthor" class="text-[10.5px] text-emerald-400 truncate">
+                    <p id="modalBookAuthor" class="text-[10px] sm:text-[10.5px] text-emerald-400 truncate">
                         Penulis Buku
                     </p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 shrink-0">
-                <a id="btnDownloadPdf" href="#" target="_blank" class="hidden px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 border border-slate-700" title="Buka / Unduh File PDF Asli">
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <a id="btnDownloadPdf" href="#" target="_blank" class="hidden px-2 sm:px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 border border-slate-700" title="Buka / Unduh File PDF Asli">
                     <i class="fa-solid fa-file-arrow-down text-emerald-400 text-xs"></i>
                     <span class="hidden sm:inline">PDF Asli</span>
                 </a>
                 
-                <button type="button" onclick="toggleFlipbookFullscreen()" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xs text-xs transition" title="Layar Penuh">
+                <button type="button" onclick="toggleFlipbookFullscreen()" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xs text-xs transition cursor-pointer" title="Layar Penuh">
                     <i class="fa-solid fa-expand"></i>
                 </button>
 
-                <button type="button" onclick="closeFlipbookModal()" class="w-8 h-8 rounded-xs bg-rose-600/80 hover:bg-rose-600 text-white flex items-center justify-center text-xs transition cursor-pointer" title="Tutup Pembaca (Esc)">
+                <button type="button" onclick="closeFlipbookModal()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-xs bg-rose-600/80 hover:bg-rose-600 text-white flex items-center justify-center text-xs transition cursor-pointer" title="Tutup Pembaca (Esc)">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
         </div>
 
         <!-- Middle: Flipbook Stage Area -->
-        <div class="flex-1 flex items-center justify-center p-2 sm:p-4 overflow-hidden relative" id="flipbookStageContainer">
+        <div class="flex-1 flex items-center justify-center p-1 sm:p-4 overflow-hidden relative touch-pan-y" id="flipbookStageContainer">
             
             <!-- Loading Indicator -->
             <div id="flipLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/85 text-white z-50">
@@ -452,12 +452,12 @@
                 <p id="flipLoadingText" class="text-[10px] text-emerald-400 mt-1 font-mono">Memuat halaman PDF &amp; efek flip 3D</p>
             </div>
 
-            <!-- Floating Navigation Buttons -->
-            <button type="button" onclick="flipbookPrev()" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white flex items-center justify-center shadow-xl transition backdrop-blur-xs border border-slate-700/80 cursor-pointer group active:scale-95" title="Halaman Sebelumnya (Panah Kiri)">
+            <!-- Floating Navigation Buttons (Desktop only, never block text on mobile!) -->
+            <button type="button" onclick="flipbookPrev()" class="hidden md:flex absolute left-3 lg:left-5 top-1/2 -translate-y-1/2 z-40 w-11 h-11 rounded-full bg-slate-900/85 hover:bg-emerald-600 text-white items-center justify-center shadow-xl transition backdrop-blur-xs border border-slate-700/80 cursor-pointer group active:scale-95" title="Halaman Sebelumnya (Panah Kiri)">
                 <i class="fa-solid fa-chevron-left text-sm group-hover:-translate-x-0.5 transition-transform"></i>
             </button>
 
-            <button type="button" onclick="flipbookNext()" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900/80 hover:bg-emerald-600 text-white flex items-center justify-center shadow-xl transition backdrop-blur-xs border border-slate-700/80 cursor-pointer group active:scale-95" title="Halaman Berikutnya (Panah Kanan)">
+            <button type="button" onclick="flipbookNext()" class="hidden md:flex absolute right-3 lg:right-5 top-1/2 -translate-y-1/2 z-40 w-11 h-11 rounded-full bg-slate-900/85 hover:bg-emerald-600 text-white items-center justify-center shadow-xl transition backdrop-blur-xs border border-slate-700/80 cursor-pointer group active:scale-95" title="Halaman Berikutnya (Panah Kanan)">
                 <i class="fa-solid fa-chevron-right text-sm group-hover:translate-x-0.5 transition-transform"></i>
             </button>
 
@@ -469,19 +469,19 @@
         </div>
 
         <!-- Bottom Controls Bar -->
-        <div class="bg-slate-900 border-t border-slate-800 px-4 py-2.5 flex items-center justify-between text-white shrink-0 text-xs">
-            <div class="hidden sm:flex items-center gap-2 text-slate-400 text-[11px]">
+        <div class="bg-slate-900 border-t border-slate-800 px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between text-white shrink-0 text-xs">
+            <div class="hidden lg:flex items-center gap-2 text-slate-400 text-[11px]">
                 <i class="fa-solid fa-hand-pointer text-emerald-400"></i>
                 <span>Tarik sudut kertas atau klik tombol panah</span>
             </div>
 
-            <div class="flex items-center gap-2 mx-auto sm:mx-0">
-                <button type="button" onclick="flipbookPrev()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs cursor-pointer">
+            <div class="flex items-center gap-1.5 sm:gap-2 mx-auto lg:mx-0">
+                <button type="button" onclick="flipbookPrev()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs cursor-pointer text-xs">
                     <i class="fa-solid fa-chevron-left text-[10px]"></i>
-                    <span class="hidden sm:inline">Sebelumnya</span>
+                    <span class="inline">Sebelumnya</span>
                 </button>
 
-                <div class="px-3 py-1 bg-slate-950 border border-slate-800 rounded-xs font-mono font-bold text-emerald-400 text-xs flex items-center gap-1.5">
+                <div class="px-2.5 sm:px-3 py-1 bg-slate-950 border border-slate-800 rounded-xs font-mono font-bold text-emerald-400 text-xs flex items-center gap-1">
                     <span id="flipCurrentPage">1</span>
                     <span class="text-slate-600">/</span>
                     <span id="flipTotalPages" class="text-slate-400">1</span>
@@ -489,8 +489,8 @@
 
                 <input type="range" id="flipPageSlider" min="1" max="1" value="1" oninput="jumpToPage(this.value)" class="hidden md:block w-24 sm:w-28 accent-emerald-500 h-1 bg-slate-800 rounded-lg cursor-pointer" title="Geser Lembaran Halaman">
 
-                <button type="button" onclick="flipbookNext()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs cursor-pointer">
-                    <span class="hidden sm:inline">Berikutnya</span>
+                <button type="button" onclick="flipbookNext()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs cursor-pointer text-xs">
+                    <span class="inline">Berikutnya</span>
                     <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </button>
             </div>
@@ -676,24 +676,32 @@
 
     function calculateBookDimensions(pageRatio) {
         const stage = document.getElementById('flipbookStageContainer');
-        const maxH = stage ? Math.max(380, stage.clientHeight - 40) : 560;
-        const maxW = stage ? Math.max(300, stage.clientWidth - 50) : 800;
+        const stageW = stage ? stage.clientWidth : window.innerWidth;
+        const stageH = stage ? stage.clientHeight : window.innerHeight;
 
-        const isMobile = window.innerWidth < 768;
+        const isMobile = stageW < 768;
 
         let pageHeight, pageWidth;
 
         if (isMobile) {
-            pageHeight = Math.min(maxH, Math.round(maxW * pageRatio));
-            pageWidth = Math.round(pageHeight / pageRatio);
-            if (pageWidth > maxW) {
-                pageWidth = maxW;
-                pageHeight = Math.round(pageWidth * pageRatio);
+            // Mobile: Single portrait page fitting the stage screen nicely with max readability
+            const availableW = Math.max(220, stageW - 12);
+            const availableH = Math.max(300, stageH - 12);
+
+            pageWidth = availableW;
+            pageHeight = Math.round(pageWidth * pageRatio);
+
+            if (pageHeight > availableH) {
+                pageHeight = availableH;
+                pageWidth = Math.round(pageHeight / pageRatio);
             }
         } else {
-            // Dual page spread on desktop
-            const availableWidthForOnePage = Math.floor((maxW - 70) / 2);
-            pageHeight = Math.min(maxH, Math.round(availableWidthForOnePage * pageRatio));
+            // Desktop: Dual page spread
+            const availableW = Math.max(500, stageW - 80);
+            const availableH = Math.max(380, stageH - 24);
+
+            const availableWidthForOnePage = Math.floor(availableW / 2);
+            pageHeight = Math.min(availableH, Math.round(availableWidthForOnePage * pageRatio));
             pageWidth = Math.round(pageHeight / pageRatio);
             
             if (pageWidth > availableWidthForOnePage) {
@@ -703,8 +711,8 @@
         }
 
         return {
-            width: Math.max(260, Math.round(pageWidth)),
-            height: Math.max(380, Math.round(pageHeight)),
+            width: Math.max(200, Math.round(pageWidth)),
+            height: Math.max(280, Math.round(pageHeight)),
             isMobile
         };
     }
@@ -991,6 +999,46 @@
             }
         }, 300);
     });
+
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            const modal = document.getElementById('flipbookModal');
+            if (modal && modal.style.display !== 'none' && currentBookPages.length > 0 && pageFlipInstance) {
+                const currentPage = pageFlipInstance.getCurrentPageIndex();
+                initPageFlipWithImages(currentBookPages, currentBookRatio);
+                if (pageFlipInstance && currentPage > 0) {
+                    try { pageFlipInstance.turnToPage(currentPage); } catch(e) {}
+                }
+            }
+        }, 200);
+    });
+
+    // Touch Swipe Gestures for Mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const stageContainerEl = document.getElementById('flipbookStageContainer');
+    if (stageContainerEl) {
+        stageContainerEl.addEventListener('touchstart', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        stageContainerEl.addEventListener('touchend', (e) => {
+            if (e.changedTouches && e.changedTouches.length > 0) {
+                const diffX = e.changedTouches[0].clientX - touchStartX;
+                const diffY = e.changedTouches[0].clientY - touchStartY;
+                if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                    if (diffX < 0) {
+                        flipbookNext();
+                    } else {
+                        flipbookPrev();
+                    }
+                }
+            }
+        }, { passive: true });
+    }
 
     document.addEventListener('keydown', function(e) {
         const modal = document.getElementById('flipbookModal');
