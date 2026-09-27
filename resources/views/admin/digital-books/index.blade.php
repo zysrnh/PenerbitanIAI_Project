@@ -251,140 +251,151 @@
 </div>
 
 <!-- MODAL FORM TAMBAH / EDIT BUKU DIGITAL -->
-<div id="digitalBookModal" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-3 sm:p-4 overflow-y-auto backdrop-blur-xs select-none">
+<div id="digitalBookModal" class="fixed inset-0 z-50 bg-black/75 hidden items-center justify-center p-2 sm:p-4 overflow-hidden backdrop-blur-xs select-none">
     <div class="bg-white rounded-sm max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden relative my-auto max-h-[92vh] flex flex-col animate-fade-in-up">
         
-        <!-- Header -->
+        <!-- Header (Pinned top) -->
         <div class="bg-[#032c21] text-white px-5 py-3.5 flex items-center justify-between border-b border-emerald-950 shrink-0">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-book-open-reader text-emerald-400 text-sm"></i>
-                <h3 id="modalHeaderTitle" class="text-sm font-extrabold uppercase tracking-wider font-heading">
+                <h3 id="modalHeaderTitle" class="text-xs sm:text-sm font-extrabold uppercase tracking-wider font-heading">
                     Tambah Buku Digital Baru
                 </h3>
             </div>
-            <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-white transition text-base">
+            <button type="button" onclick="closeModal()" class="w-7 h-7 rounded-xs bg-emerald-900/60 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition text-sm cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
-        <!-- Body Form -->
-        <form id="digitalBookForm" action="{{ route('admin.digital-books.store') }}" method="POST" enctype="multipart/form-data" class="p-5 sm:p-6 space-y-4 overflow-y-auto">
+        <!-- Form wrapping the scrollable body and pinned footer -->
+        <form id="digitalBookForm" action="{{ route('admin.digital-books.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col flex-1 min-h-0 overflow-hidden m-0">
             @csrf
             <input type="hidden" name="_method" id="formMethod" value="POST" />
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="sm:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Judul Buku Digital <span class="text-rose-500">*</span></label>
-                    <input type="text" name="title" id="in_title" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Contoh: Metodologi Penelitian Studi Islam" />
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Nama Penulis / Muallif <span class="text-rose-500">*</span></label>
-                    <input type="text" name="author" id="in_author" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Contoh: Dr. H. Ahmad Fauzi, M.Ag." />
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Buku <span class="text-rose-500">*</span></label>
-                    <input type="text" name="category" id="in_category" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 font-medium" placeholder="Contoh: Buku Ajar / Studi Islam / Tafsir" />
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Tahun Terbit <span class="text-rose-500">*</span></label>
-                    <input type="text" name="year" id="in_year" value="2026" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 font-mono text-center font-bold" />
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Halaman Buku <span class="text-rose-500">*</span></label>
-                    <input type="text" name="pages" id="in_pages" placeholder="240 hlm" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 text-center font-bold" />
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Bahasa Pengantar</label>
-                    <input type="text" name="language" id="in_language" value="Indonesia" class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 font-medium" />
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Status Publikasi</label>
-                    <select name="status" id="in_status" class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 bg-white font-medium">
-                        <option value="published">Tayang (Published)</option>
-                        <option value="draft">Draf (Disimpan Dulu)</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Upload Cover & PDF File Section -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
+            <!-- Scrollable Content Body -->
+            <div class="p-5 sm:p-6 space-y-4 overflow-y-auto flex-1">
                 
-                <!-- 1. Cover Image Upload -->
-                <div class="p-3.5 bg-slate-50 rounded-sm border border-slate-200 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                            <i class="fa-solid fa-image text-emerald-600"></i> Sampul / Cover Buku
-                        </span>
-                        <span id="cover_status_badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">Pilih Foto</span>
-                    </div>
-                    <label for="in_cover_image" class="flex items-center gap-3 p-2 bg-white border border-dashed border-slate-300 hover:border-emerald-500 rounded-sm cursor-pointer transition">
-                        <div id="cover_thumb_preview" class="w-10 h-14 bg-slate-100 rounded-xs flex items-center justify-center text-slate-400 overflow-hidden shrink-0">
-                            <i class="fa-solid fa-cloud-arrow-up text-base"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p id="cover_name_display" class="text-xs font-semibold text-slate-700 truncate">Pilih gambar cover...</p>
-                            <p class="text-[10px] text-slate-400 font-mono">JPG, PNG, WebP (Maks. 10MB)</p>
-                        </div>
-                        <input type="file" name="cover_image" id="in_cover_image" accept="image/*" class="hidden" onchange="handleCoverChange(this)" />
-                    </label>
+                <!-- 1. Title -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Judul Buku Digital <span class="text-rose-500">*</span></label>
+                    <input type="text" name="title" id="in_title" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 font-medium transition" placeholder="Contoh: Metodologi Penelitian Studi Islam & Integrasi Sains" />
                 </div>
 
-                <!-- 2. PDF Document Upload -->
-                <div class="p-3.5 bg-emerald-50/70 rounded-sm border border-emerald-200/90 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-pdf text-emerald-700"></i> Dokumen PDF (Flipbook)
-                        </span>
-                        <span id="pdf_status_badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">Belum Ada PDF</span>
+                <!-- 2. Author & Category -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Nama Penulis / Muallif <span class="text-rose-500">*</span></label>
+                        <input type="text" name="author" id="in_author" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 font-medium transition" placeholder="Contoh: Dr. H. Ahmad Fauzi, M.Ag." />
                     </div>
-                    <label for="in_pdf_file" class="flex items-center gap-3 p-2 bg-white border border-dashed border-emerald-300 hover:border-emerald-600 rounded-sm cursor-pointer transition">
-                        <div class="w-10 h-10 bg-emerald-100/70 text-emerald-700 rounded-xs flex items-center justify-center text-base shrink-0">
-                            <i class="fa-solid fa-file-arrow-up"></i>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Buku <span class="text-rose-500">*</span></label>
+                        <input type="text" name="category" id="in_category" required class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 font-medium transition" placeholder="Contoh: Buku Ajar / Studi Islam / Turats" />
+                    </div>
+                </div>
+
+                <!-- 3. Metadata 4-Column Responsive Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50/80 p-3 rounded-sm border border-slate-200">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Tahun Terbit <span class="text-rose-500">*</span></label>
+                        <input type="text" name="year" id="in_year" value="2026" required class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 font-mono text-center font-bold bg-white" />
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Jml Halaman <span class="text-rose-500">*</span></label>
+                        <input type="text" name="pages" id="in_pages" placeholder="240 hlm" required class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 text-center font-bold bg-white" />
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Bahasa Pengantar</label>
+                        <input type="text" name="language" id="in_language" value="Indonesia" class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 font-medium bg-white text-center" />
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Status Publikasi</label>
+                        <select name="status" id="in_status" class="w-full px-2 py-1.5 text-xs rounded-sm border border-slate-300 bg-white font-medium cursor-pointer">
+                            <option value="published">Tayang (Published)</option>
+                            <option value="draft">Draf (Disimpan)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 4. Upload Cover & PDF File Section -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    
+                    <!-- Cover Image Upload -->
+                    <div class="p-3 bg-slate-50 rounded-sm border border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                                <i class="fa-solid fa-image text-emerald-600"></i> Sampul / Cover Buku
+                            </span>
+                            <span id="cover_status_badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">Pilih Foto</span>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <p id="pdf_name_display" class="text-xs font-semibold text-slate-700 truncate">Pilih dokumen PDF...</p>
-                            <p class="text-[10px] text-slate-400 font-mono">Format .pdf (Maks. 100MB)</p>
-                        </div>
-                        <input type="file" name="pdf_file" id="in_pdf_file" accept="application/pdf" class="hidden" onchange="handlePdfChange(this)" />
-                    </label>
-                    <div id="pdf_active_box" class="hidden flex items-center justify-between pt-0.5 text-xs">
-                        <a id="pdf_active_link" href="#" target="_blank" class="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
-                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> Lihat PDF Saat Ini
-                        </a>
-                        <label class="flex items-center gap-1 text-[11px] font-semibold text-rose-600 cursor-pointer">
-                            <input type="checkbox" name="remove_pdf" id="in_remove_pdf" value="1" />
-                            <span>Hapus PDF</span>
+                        <label for="in_cover_image" class="flex items-center gap-3 p-2 bg-white border border-dashed border-slate-300 hover:border-emerald-500 rounded-sm cursor-pointer transition">
+                            <div id="cover_thumb_preview" class="w-10 h-14 bg-slate-100 rounded-xs flex items-center justify-center text-slate-400 overflow-hidden shrink-0 border border-slate-200">
+                                <i class="fa-solid fa-cloud-arrow-up text-base"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p id="cover_name_display" class="text-xs font-semibold text-slate-700 truncate">Pilih gambar cover...</p>
+                                <p class="text-[10px] text-slate-400 font-mono">JPG, PNG, WebP (Maks. 10MB)</p>
+                            </div>
+                            <input type="file" name="cover_image" id="in_cover_image" accept="image/*" class="hidden" onchange="handleCoverChange(this)" />
                         </label>
                     </div>
+
+                    <!-- PDF Document Upload -->
+                    <div class="p-3 bg-emerald-50/60 rounded-sm border border-emerald-200 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-pdf text-emerald-700"></i> Dokumen PDF (Flipbook)
+                            </span>
+                            <span id="pdf_status_badge" class="text-[9px] px-1.5 py-0.2 rounded font-bold bg-slate-200 text-slate-600">Belum Ada PDF</span>
+                        </div>
+                        <label for="in_pdf_file" class="flex items-center gap-3 p-2 bg-white border border-dashed border-emerald-300 hover:border-emerald-600 rounded-sm cursor-pointer transition">
+                            <div class="w-10 h-14 bg-emerald-100/70 text-emerald-700 rounded-xs flex items-center justify-center text-lg shrink-0 border border-emerald-200">
+                                <i class="fa-solid fa-file-arrow-up"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p id="pdf_name_display" class="text-xs font-semibold text-slate-700 truncate">Pilih dokumen PDF...</p>
+                                <p class="text-[10px] text-slate-400 font-mono">Format .pdf (Maks. 100MB)</p>
+                            </div>
+                            <input type="file" name="pdf_file" id="in_pdf_file" accept="application/pdf" class="hidden" onchange="handlePdfChange(this)" />
+                        </label>
+                        <div id="pdf_active_box" class="hidden flex items-center justify-between pt-0.5 text-xs">
+                            <a id="pdf_active_link" href="#" target="_blank" class="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> Lihat PDF Saat Ini
+                            </a>
+                            <label class="flex items-center gap-1 text-[11px] font-semibold text-rose-600 cursor-pointer">
+                                <input type="checkbox" name="remove_pdf" id="in_remove_pdf" value="1" />
+                                <span>Hapus PDF</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 5. Synopsis -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Sinopsis / Ringkasan Buku</label>
+                    <textarea name="synopsis" id="in_synopsis" rows="2" class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 leading-relaxed font-medium transition" placeholder="Deskripsi ringkas mengenai isi dan pembahasan buku digital..."></textarea>
+                </div>
+
+                <!-- 6. Featured Checkbox -->
+                <div class="p-2.5 bg-slate-50 rounded-sm border border-slate-200">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox" name="is_featured" id="in_featured" value="1" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500" />
+                        <span class="text-xs font-bold text-slate-800">🌟 Tampilkan Sebagai Koleksi Unggulan Digital (Featured)</span>
+                    </label>
                 </div>
 
             </div>
 
-            <!-- Synopsis & Options -->
-            <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Sinopsis / Ringkasan Buku</label>
-                <textarea name="synopsis" id="in_synopsis" rows="3" class="w-full px-3.5 py-2 text-xs rounded-sm border border-slate-300 focus:outline-hidden focus:border-emerald-600 leading-relaxed" placeholder="Deskripsi ringkas mengenai isi dan pembahasan buku digital..."></textarea>
-            </div>
-
-            <div class="p-3 bg-slate-50 rounded-sm border border-slate-200">
-                <label class="flex items-center gap-2 cursor-pointer select-none">
-                    <input type="checkbox" name="is_featured" id="in_featured" value="1" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500" />
-                    <span class="text-xs font-bold text-slate-800">🌟 Tampilkan Sebagai Koleksi Unggulan Digital (Featured)</span>
-                </label>
-            </div>
-
-            <!-- Footer Action Buttons -->
-            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
-                <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-sm bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+            <!-- Sticky Pinned Footer Action Bar (Always fully visible!) -->
+            <div class="bg-slate-50 px-5 py-3.5 border-t border-slate-200 flex items-center justify-end gap-2.5 shrink-0">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-sm bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold border border-slate-300 transition cursor-pointer">
                     Batal
                 </button>
-                <button type="submit" class="px-5 py-2 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs">
+                <button type="submit" class="px-5 py-2 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold transition flex items-center gap-2 shadow-xs cursor-pointer">
                     <i class="fa-solid fa-floppy-disk"></i>
                     <span>Simpan Buku Digital</span>
                 </button>
