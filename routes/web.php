@@ -69,6 +69,7 @@ Route::get('/katalog/{slug}', [CatalogController::class, 'show'])->name('katalog
 Route::get('/katalog-digital', [\App\Http\Controllers\DigitalBookController::class, 'index'])->name('katalog.digital');
 Route::get('/katalog-digital/{slug}', [\App\Http\Controllers\DigitalBookController::class, 'show'])->name('katalog.digital.show');
 Route::get('/api/books/search', [CatalogController::class, 'searchApi'])->name('api.books.search');
+Route::get('/api/digital-books/search', [\App\Http\Controllers\DigitalBookController::class, 'searchApi'])->name('api.digital-books.search');
 Route::get('/berita', [\App\Http\Controllers\ArticleController::class, 'index'])->name('berita.index');
 Route::get('/berita/{slug}', [\App\Http\Controllers\ArticleController::class, 'show'])->name('berita.show');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
@@ -135,6 +136,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class);
         Route::post('/books/bulk-destroy', [BookController::class, 'bulkDestroy'])->name('books.bulk_destroy');
         Route::resource('books', BookController::class);
+
+        Route::post('/digital-books/bulk-destroy', [\App\Http\Controllers\Admin\DigitalBookController::class, 'bulkDestroy'])->name('digital-books.bulk_destroy');
+        Route::resource('digital-books', \App\Http\Controllers\Admin\DigitalBookController::class);
 
         // News & Articles Management (WordPress-like CMS)
         Route::post('/articles/upload-image', [\App\Http\Controllers\Admin\ArticleController::class, 'uploadEditorImage'])->name('articles.upload_image');

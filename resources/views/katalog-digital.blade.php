@@ -4,50 +4,78 @@
 
 @section('content')
 <style>
-    /* 1. Perspective & 3D Stage */
-    .digital-stage-3d {
-        perspective: 1200px;
+    /* 1. Perspective & 3D Stage (Identik dengan Signature Katalog Buku) */
+    .animate-cascade-up {
+        animation: cascadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
     }
-    .digital-book-card {
+    @keyframes cascadeUp {
+        0% { opacity: 0; transform: translateY(18px) scale(0.97); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .persis-book-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 4px;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        border-radius: 3px;
+        transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
-    .digital-book-card:hover {
-        border-color: #006830;
+    .persis-book-card:hover {
+        border-color: #047857;
         transform: translateY(-4px);
-        box-shadow: 0 16px 32px -8px rgba(0, 104, 48, 0.16), 0 2px 6px rgba(0,0,0,0.04);
+        box-shadow: 0 16px 30px -8px rgba(4, 120, 87, 0.15), 0 2px 6px rgba(0,0,0,0.04);
     }
-    .digital-cover-3d {
+    .book-cover-stage-3d {
+        perspective: 800px;
+    }
+    .book-cover-3d {
         transform-style: preserve-3d;
         transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
-        box-shadow: 6px 8px 18px -3px rgba(0, 0, 0, 0.28), 1px 1px 4px rgba(0,0,0,0.1);
+        box-shadow: 6px 8px 16px -2px rgba(0, 0, 0, 0.25), 1px 1px 4px rgba(0,0,0,0.1);
     }
-    .digital-book-card:hover .digital-cover-3d {
-        transform: rotateY(-16deg) rotateX(5deg) translateY(-3px) scale(1.02);
-        box-shadow: 14px 22px 28px -4px rgba(0, 0, 0, 0.38), 3px 3px 8px rgba(0,0,0,0.15);
+    .persis-book-card:hover .book-cover-3d {
+        transform: rotateY(-18deg) rotateX(6deg) translateY(-4px) scale(1.03);
+        box-shadow: 14px 20px 28px -4px rgba(0, 0, 0, 0.38), 3px 3px 8px rgba(0,0,0,0.15);
     }
-    .book-spine-line {
+    .book-spine-strip {
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         width: 7px;
-        background: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.35) 100%);
-        border-right: 1px solid rgba(0,0,0,0.15);
+        background: linear-gradient(90deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3) 100%);
+        border-right: 1px solid rgba(0,0,0,0.12);
         z-index: 10;
     }
-    .book-edge-paper {
+    .book-paper-edge {
         position: absolute;
         right: 0;
-        top: 3px;
-        bottom: 3px;
-        width: 4px;
+        top: 4px;
+        bottom: 4px;
+        width: 3.5px;
         background: repeating-linear-gradient(180deg, #f8fafc, #f8fafc 1.5px, #cbd5e1 1.5px, #cbd5e1 3px);
         border-left: 1px solid #94a3b8;
         border-radius: 0 2px 2px 0;
         z-index: 5;
+    }
+
+    /* Sidebar Category Links */
+    .cat-link {
+        transition: background-color 0.18s ease, color 0.18s ease;
+    }
+    .cat-link:hover {
+        background-color: #f0fdf4;
+        color: #006830;
+    }
+    .cat-active {
+        background-color: #006830 !important;
+        color: #ffffff !important;
+        font-weight: 700;
+    }
+    .cat-active span, .cat-active i {
+        color: #ffffff !important;
     }
 
     /* 2. Realistic Flipbook Modal Viewer */
@@ -72,10 +100,8 @@
             max-width: 100%;
         }
     }
-
-    /* StPageFlip Styling */
     .st-flip-container {
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 40px rgba(0, 104, 48, 0.2);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 104, 48, 0.25);
         border-radius: 4px;
         overflow: hidden;
         background: #fdfbf7;
@@ -94,391 +120,306 @@
         height: 100%;
         object-fit: contain;
     }
-
-    /* Fallback CSS 3D Book Page */
-    .css-flip-spread {
-        perspective: 1800px;
-        display: flex;
-        width: 100%;
-        height: 100%;
-        max-width: 860px;
-        max-height: 580px;
-        background: #1e293b;
-        border-radius: 6px;
-        padding: 12px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    }
-    .css-flip-page {
-        flex: 1;
-        background: #fdfbf7;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.06);
-        border-radius: 3px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        padding: 16px;
-        position: relative;
-    }
-    .css-flip-page.left {
-        border-right: 1px solid #cbd5e1;
-        box-shadow: inset -10px 0 20px -5px rgba(0,0,0,0.1);
-    }
-    .css-flip-page.right {
-        border-left: 1px solid #cbd5e1;
-        box-shadow: inset 10px 0 20px -5px rgba(0,0,0,0.1);
-    }
 </style>
 
-<!-- Top Banner Section (Signature Islamic Green) -->
-<section class="bg-gradient-to-r from-[#032c21] via-[#006830] to-[#032c21] text-white py-8 sm:py-12 border-b border-emerald-900/60 relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#34d399 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="space-y-8 pb-16">
     
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs font-bold uppercase tracking-wider mb-2">
-                    <i class="fa-solid fa-book-open-reader text-xs"></i>
-                    <span>E-Library &amp; Interactive Flipbook</span>
-                </div>
-                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight leading-tight">
-                    Katalog Buku &amp; Perpustakaan Digital
-                </h1>
-                <p class="text-xs sm:text-sm text-emerald-100/90 max-w-2xl mt-1.5 leading-relaxed">
-                    Akses koleksi buku ilmiah, modul ajar, dan khazanah literatur keislaman terbitan PERSIS PERS dengan animasi membalik lembaran kertas (*3D Page Flip*) layaknya buku fisik.
-                </p>
-            </div>
-
-            <!-- Stats Highlight -->
-            <div class="flex items-center gap-3 shrink-0">
-                <div class="px-4 py-2.5 bg-black/25 border border-white/10 rounded-sm backdrop-blur-xs text-center">
-                    <span class="text-xs text-emerald-300 font-bold block uppercase tracking-wider">Total Judul</span>
-                    <span class="text-xl sm:text-2xl font-black font-mono text-white">{{ $totalDigitalBooks }}</span>
-                </div>
-                <div class="px-4 py-2.5 bg-emerald-900/50 border border-emerald-400/30 rounded-sm backdrop-blur-xs text-center">
-                    <span class="text-xs text-emerald-200 font-bold block uppercase tracking-wider">Flipbook Ready</span>
-                    <span class="text-xl sm:text-2xl font-black font-mono text-amber-300">{{ $totalWithPdf }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Search Bar Inside Banner -->
-        <div class="mt-6 max-w-2xl">
-            <form action="{{ route('katalog.digital') }}" method="GET" class="relative flex items-center">
-                @if(request('kategori'))
-                    <input type="hidden" name="kategori" value="{{ request('kategori') }}" />
-                @endif
-                <div class="relative w-full">
-                    <input type="text" 
-                           name="q" 
-                           value="{{ request('q') }}" 
-                           placeholder="Cari judul buku, topik keislaman, atau nama penulis..." 
-                           class="w-full pl-10 pr-24 py-3 bg-white text-slate-800 text-xs sm:text-sm rounded-sm shadow-lg border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-emerald-400 font-medium placeholder:text-slate-400" />
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    
-                    @if(request('q'))
-                        <a href="{{ route('katalog.digital', ['kategori' => request('kategori')]) }}" class="absolute right-20 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs px-2" title="Hapus">
-                            <i class="fa-solid fa-xmark"></i>
-                        </a>
-                    @endif
-
-                    <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition shadow-xs">
-                        Cari
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-
-<!-- Main Container with 2-Column Sidebar Layout (Inspirasi perpustakaanislamdigital.com) -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-        
-        <!-- SIDEBAR: KATEGORI KITAB & BUKU (Left Column) -->
-        <aside class="lg:col-span-1 space-y-6">
-            
-            <!-- Category Navigation Card -->
-            <div class="bg-white rounded-sm border border-slate-200/90 shadow-2xs overflow-hidden">
-                <div class="bg-[#006830] px-4 py-3 text-white flex items-center justify-between">
-                    <h3 class="font-bold text-xs uppercase tracking-wider font-heading flex items-center gap-2">
-                        <i class="fa-solid fa-layer-group text-emerald-300"></i>
-                        <span>Kategori Buku</span>
-                    </h3>
-                    <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-mono font-bold">{{ count($categoryStats) }} Bidang</span>
-                </div>
-
-                <div class="p-2 divide-y divide-slate-100 text-xs">
-                    <!-- Semua Kategori -->
-                    <a href="{{ route('katalog.digital', array_merge(request()->except('kategori', 'page'))) }}" 
-                       class="flex items-center justify-between px-3 py-2.5 rounded-xs transition {{ ($activeCategory === 'all' || empty($activeCategory)) ? 'bg-emerald-50 text-[#006830] font-bold border-l-4 border-[#006830]' : 'text-slate-700 hover:bg-slate-50 font-medium' }}">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-book-bookmark {{ ($activeCategory === 'all' || empty($activeCategory)) ? 'text-emerald-700' : 'text-slate-400' }} text-xs"></i>
-                            <span>Semua Kategori</span>
-                        </span>
-                        <span class="font-mono text-[11px] {{ ($activeCategory === 'all' || empty($activeCategory)) ? 'text-emerald-800 font-bold' : 'text-slate-400' }}">{{ $totalDigitalBooks }}</span>
-                    </a>
-
-                    <!-- Category Items Loop -->
-                    @foreach($categoryStats as $cat)
-                        <a href="{{ route('katalog.digital', array_merge(request()->except('kategori', 'page'), ['kategori' => $cat->category])) }}" 
-                           class="flex items-center justify-between px-3 py-2.5 rounded-xs transition {{ ($activeCategory === $cat->category) ? 'bg-emerald-50 text-[#006830] font-bold border-l-4 border-[#006830]' : 'text-slate-700 hover:bg-slate-50 font-medium' }}">
-                            <span class="flex items-center gap-2 truncate pr-2">
-                                <i class="fa-regular fa-folder {{ ($activeCategory === $cat->category) ? 'text-emerald-700 font-bold' : 'text-slate-400' }} text-xs"></i>
-                                <span class="truncate">{{ $cat->category }}</span>
-                            </span>
-                            <span class="font-mono text-[11px] {{ ($activeCategory === $cat->category) ? 'text-emerald-800 font-bold' : 'text-slate-400' }} shrink-0">{{ $cat->count }}</span>
-                        </a>
-                    @endforeach
-                </div>
-
-                <!-- PDF Only Filter Toggle -->
-                <div class="p-3 bg-slate-50 border-t border-slate-100">
-                    <a href="{{ route('katalog.digital', array_merge(request()->except('pdf_only', 'page'), request()->boolean('pdf_only') ? [] : ['pdf_only' => 1])) }}" 
-                       class="flex items-center justify-between text-xs font-semibold {{ request()->boolean('pdf_only') ? 'text-emerald-800' : 'text-slate-600 hover:text-emerald-700' }}">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check {{ request()->boolean('pdf_only') ? 'text-emerald-600' : 'text-slate-300' }}"></i>
-                            <span>Hanya dengan File PDF</span>
-                        </span>
-                        <span class="text-[10px] px-1.5 py-0.5 rounded font-mono {{ request()->boolean('pdf_only') ? 'bg-emerald-200 text-emerald-900 font-bold' : 'bg-slate-200 text-slate-600' }}">
-                            {{ request()->boolean('pdf_only') ? 'ON' : 'OFF' }}
-                        </span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Quick Guide Card -->
-            <div class="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-sm border border-emerald-200 p-4 shadow-2xs text-xs space-y-2.5">
-                <div class="flex items-center gap-2 text-emerald-900 font-bold">
-                    <i class="fa-solid fa-circle-info text-emerald-700 text-sm"></i>
-                    <span>Panduan Membaca Flipbook</span>
-                </div>
-                <ul class="space-y-2 text-slate-600 text-[11px] leading-relaxed">
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-computer-mouse text-emerald-600 text-xs mt-0.5"></i>
-                        <span><strong>Klik / Tarik Sudut:</strong> Geser sudut lembaran halaman buku dengan kursor untuk membalik halaman.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-mobile-screen text-emerald-600 text-xs mt-0.5"></i>
-                        <span><strong>Geser di Ponsel:</strong> Sentuh dan usap layar ke kanan atau ke kiri untuk membuka lembaran berikutnya.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <i class="fa-solid fa-expand text-emerald-600 text-xs mt-0.5"></i>
-                        <span><strong>Layar Penuh:</strong> Gunakan tombol fullscreen di bar kontrol untuk kenyamanan membaca optimal.</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Callout: Ingin Terbitkan Buku Sendiri? -->
-            <div class="bg-[#032c21] rounded-sm p-4 text-white text-xs space-y-2 shadow-2xs border border-emerald-900">
-                <span class="text-[9px] uppercase tracking-wider font-bold text-amber-400 block">Layanan Redaksi PERSIS</span>
-                <h4 class="font-bold text-sm leading-snug">Punya Naskah Buku Sendiri?</h4>
-                <p class="text-[11px] text-emerald-200 leading-relaxed">
-                    Terbitkan karya ilmiah, modul, atau monograf Anda bersama Penerbit PERSIS ber-ISBN resmi.
-                </p>
-                <a href="{{ url('/kontak') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xs text-[11px] font-bold transition shadow-xs mt-1">
-                    <span>Konsultasi Naskah</span>
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
-            </div>
-
-        </aside>
-
-        <!-- MAIN CONTENT: RAK KOLEKSI & GRID BUKU DIGITAL (Right Column) -->
-        <div class="lg:col-span-3 space-y-8">
-
-            <!-- Featured / Koleksi Populer Section -->
-            @if($popularBooks->count() > 0 && !request('q') && ($activeCategory === 'all' || empty($activeCategory)))
-                <div class="bg-white rounded-sm border border-slate-200/90 p-4 sm:p-5 shadow-2xs">
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-[#006830]"></span>
-                            <h2 class="text-sm sm:text-base font-extrabold text-slate-900 uppercase tracking-tight font-heading">
-                                Koleksi Unggulan &amp; Kitab Digital Pilihan
-                            </h2>
-                        </div>
-                        <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">Pratinjau Animasi Tersedia</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        @foreach($popularBooks->take(3) as $pop)
-                            @php
-                                $popCover = null;
-                                if ($pop->cover_image) {
-                                    $popCover = str_starts_with($pop->cover_image, 'http') ? $pop->cover_image : asset('storage/' . $pop->cover_image);
-                                }
-                            @endphp
-                            <div class="digital-book-card p-3 flex flex-col justify-between group">
-                                <div class="digital-stage-3d w-28 sm:w-32 aspect-[3/4.2] mx-auto mb-3 cursor-pointer" onclick="openFlipbookReader({{ json_encode($pop) }})">
-                                    <div class="digital-cover-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 border border-slate-300">
-                                        <div class="book-spine-line"></div>
-                                        <div class="book-edge-paper"></div>
-                                        @if($popCover)
-                                            <img src="{{ $popCover }}" alt="{{ $pop->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                        @endif
-                                        <div class="w-full h-full bg-[#032c21] p-2 flex flex-col justify-between text-white text-[7px]" style="{{ $popCover ? 'display:none;' : '' }}">
-                                            <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
-                                            <span class="font-black text-[8px] leading-tight line-clamp-3">{{ $pop->title }}</span>
-                                            <span class="text-slate-300 truncate text-[6.5px]">{{ $pop->author }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-1 text-center">
-                                    <span class="text-[9px] font-bold text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200">
-                                        {{ $pop->category }}
-                                    </span>
-                                    <h4 class="text-xs font-bold text-slate-900 line-clamp-2 leading-tight group-hover:text-emerald-800 transition cursor-pointer" onclick="openFlipbookReader({{ json_encode($pop) }})">
-                                        {{ $pop->title }}
-                                    </h4>
-                                    <p class="text-[10px] text-slate-400 truncate">{{ $pop->author }}</p>
-                                </div>
-
-                                <button type="button" 
-                                        onclick="openFlipbookReader({{ json_encode($pop) }})" 
-                                        class="mt-3 w-full py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer">
-                                    <i class="fa-solid fa-book-open-reader text-[10px]"></i>
-                                    <span>Buka Flipbook</span>
-                                </button>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
-            <!-- Main Catalog Grid Header -->
-            <div class="bg-white rounded-sm border border-slate-200/90 p-4 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <!-- Top Hero Banner (Signature PERSIS PERS Style) -->
+    <section class="bg-gradient-to-r from-[#032c21] via-[#006830] to-[#032c21] text-white py-8 sm:py-10 border-b border-emerald-900/60 relative overflow-hidden select-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h2 class="text-base sm:text-lg font-black text-slate-900 font-heading">
-                        Daftar Koleksi Buku Digital
-                        @if($activeCategory !== 'all' && !empty($activeCategory))
-                            <span class="text-emerald-700 font-bold">&bull; {{ $activeCategory }}</span>
-                        @endif
-                    </h2>
-                    <p class="text-xs text-slate-500 mt-0.5">
-                        Menampilkan <strong>{{ $books->total() }}</strong> judul buku. Klik tombol <strong>Buka Flipbook</strong> untuk membaca dengan animasi kertas realistis.
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs font-bold uppercase tracking-wider mb-2">
+                        <i class="fa-solid fa-book-open-reader text-xs"></i>
+                        <span>E-Library Digital &bull; 3D Page Flip</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black font-heading tracking-tight leading-tight">
+                        Katalog Buku Digital &amp; Perpustakaan
+                    </h1>
+                    <p class="text-xs sm:text-sm text-emerald-100/90 max-w-2xl mt-1.5 leading-relaxed">
+                        Koleksi literatur keislaman, modul riset, dan karya ilmiah digital terbitan PERSIS PERS. Dilengkapi fitur animasi buka lembaran buku (*3D Flipbook*) langsung di browser.
                     </p>
                 </div>
 
-                @if(request('q') || request('kategori') || request('pdf_only'))
-                    <a href="{{ route('katalog.digital') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-700 rounded-sm text-xs font-bold transition shrink-0 self-start sm:self-auto">
-                        <i class="fa-solid fa-rotate-left text-[10px]"></i>
-                        <span>Reset Filter</span>
-                    </a>
-                @endif
+                <div class="flex items-center gap-3 shrink-0">
+                    <div class="px-4 py-2.5 bg-black/25 border border-white/10 rounded-sm backdrop-blur-xs text-center">
+                        <span class="text-xs text-emerald-300 font-bold block uppercase tracking-wider">Total Judul</span>
+                        <span class="text-xl sm:text-2xl font-black font-mono text-white">{{ $totalDigitalBooks }}</span>
+                    </div>
+                    <div class="px-4 py-2.5 bg-emerald-900/50 border border-emerald-400/30 rounded-sm backdrop-blur-xs text-center">
+                        <span class="text-xs text-emerald-200 font-bold block uppercase tracking-wider">Flipbook Ready</span>
+                        <span class="text-xl sm:text-2xl font-black font-mono text-amber-300">{{ $totalWithPdf }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Grid with Identical Left Sidebar Layout -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- ============================================== -->
+            <!-- LEFT SIDEBAR (Identik dengan Katalog Utama)   -->
+            <!-- ============================================== -->
+            <div class="lg:col-span-3 space-y-6 animate-cascade-up" style="animation-delay: 100ms;">
+                
+                <!-- 1. Search Widget with Live Instant Autocomplete Dropdown -->
+                <div class="bg-white p-3.5 rounded-sm border border-slate-200 shadow-sm relative z-30">
+                    <form id="digitalSearchForm" action="{{ route('katalog.digital') }}#daftar-buku" method="GET" class="relative" autocomplete="off">
+                        <input 
+                            type="search" 
+                            name="q" 
+                            id="digitalSearchInput" 
+                            autocomplete="off" 
+                            autocorrect="off" 
+                            autocapitalize="off" 
+                            spellcheck="false"
+                            value="{{ request('q') }}" 
+                            placeholder="Cari judul, penulis, topik..." 
+                            class="w-full pl-8 pr-8 py-2 text-xs rounded-sm border border-slate-200 focus:outline-hidden focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 font-medium transition"
+                        />
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                        
+                        <!-- Clear Input Button -->
+                        <button 
+                            type="button" 
+                            id="clearSearchBtn" 
+                            onclick="clearDigitalSearch()" 
+                            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 text-xs"
+                            title="Hapus pencarian"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+
+                        <!-- Autocomplete Dropdown Panel (Persis Screenshot 2) -->
+                        <div 
+                            id="autocompleteDropdown" 
+                            style="position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 99999; background-color: #ffffff;"
+                            class="hidden bg-white rounded-sm shadow-2xl border-2 border-emerald-700/40 overflow-hidden divide-y divide-slate-100 max-h-80 overflow-y-auto ring-4 ring-black/10"
+                        >
+                            <div id="autocompleteResultsList" class="p-1 space-y-1"></div>
+                            
+                            <div class="p-2 bg-slate-50 text-center border-t border-slate-100">
+                                <button 
+                                    type="submit" 
+                                    class="w-full py-1.5 px-3 bg-emerald-50 hover:bg-emerald-700 text-emerald-800 hover:text-white font-bold rounded-xs text-[11px] transition flex items-center justify-center gap-1.5 cursor-pointer"
+                                >
+                                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i>
+                                    <span id="autocompleteSubmitLabel">Lihat Semua Hasil Pencarian</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2. Kategori Widget (Identik dengan Katalog Utama) -->
+                <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-sm">
+                    <div class="bg-[#032c21] text-white px-4 py-3 font-extrabold text-xs uppercase tracking-wider flex items-center justify-between border-b border-emerald-900">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-list-ul text-emerald-400"></i> Kategori Digital
+                        </span>
+                        <span class="text-[10px] bg-white/10 px-1.5 py-0.5 rounded-xs font-mono text-emerald-300">{{ $totalDigitalBooks }}</span>
+                    </div>
+
+                    <div class="divide-y divide-slate-100 text-xs font-semibold text-slate-700">
+                        <!-- Semua Koleksi -->
+                        <a href="{{ route('katalog.digital') }}#daftar-buku" class="cat-link flex items-center justify-between px-4 py-2.5 {{ (!request('kategori') || request('kategori') === 'all') && !request('pdf_only') ? 'cat-active' : '' }}">
+                            <span>Semua Koleksi</span>
+                            <i class="fa-solid fa-angle-right text-[10px] {{ (!request('kategori') || request('kategori') === 'all') && !request('pdf_only') ? 'text-white' : 'text-slate-400' }}"></i>
+                        </a>
+
+                        <!-- Koleksi Unggulan -->
+                        <a href="{{ route('katalog.digital', ['kategori' => 'Unggulan']) }}#daftar-buku" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Unggulan' ? 'cat-active' : '' }}">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full {{ request('kategori') === 'Unggulan' ? 'bg-white' : 'bg-amber-500' }}"></span> Koleksi Unggulan
+                            </span>
+                            <i class="fa-solid fa-angle-right text-[10px] {{ request('kategori') === 'Unggulan' ? 'text-white' : 'text-slate-400' }}"></i>
+                        </a>
+
+                        <!-- Buku Baru -->
+                        <a href="{{ route('katalog.digital', ['kategori' => 'Buku Baru']) }}#daftar-buku" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === 'Buku Baru' ? 'cat-active' : '' }}">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full {{ request('kategori') === 'Buku Baru' ? 'bg-white' : 'bg-emerald-500' }}"></span> Terbitan Terbaru (2026)
+                            </span>
+                            <i class="fa-solid fa-angle-right text-[10px] {{ request('kategori') === 'Buku Baru' ? 'text-white' : 'text-slate-400' }}"></i>
+                        </a>
+
+                        <!-- Loop Kategori Dinamis -->
+                        @foreach($categoryStats as $cStat)
+                            <a href="{{ route('katalog.digital', ['kategori' => $cStat->category]) }}#daftar-buku" class="cat-link flex items-center justify-between px-4 py-2.5 {{ request('kategori') === $cStat->category ? 'cat-active' : '' }}">
+                                <span class="truncate pr-2">{{ $cStat->category }}</span>
+                                <span class="font-mono text-[10.5px] px-1.5 py-0.2 rounded-xs {{ request('kategori') === $cStat->category ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500' }}">
+                                    {{ $cStat->count }}
+                                </span>
+                            </a>
+                        @endforeach
+                    </div>
+
+                    <!-- Filter PDF Only -->
+                    <div class="p-3 bg-slate-50 border-t border-slate-100">
+                        <a href="{{ route('katalog.digital', array_merge(request()->except('pdf_only', 'page'), request()->boolean('pdf_only') ? [] : ['pdf_only' => 1])) }}" 
+                           class="flex items-center justify-between text-xs font-semibold {{ request()->boolean('pdf_only') ? 'text-emerald-800' : 'text-slate-600 hover:text-emerald-700' }}">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-file-pdf {{ request()->boolean('pdf_only') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
+                                <span>Hanya Dokumen PDF</span>
+                            </span>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded font-mono {{ request()->boolean('pdf_only') ? 'bg-emerald-200 text-emerald-900 font-bold' : 'bg-slate-200 text-slate-600' }}">
+                                {{ request()->boolean('pdf_only') ? 'ON' : 'OFF' }}
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3. Panduan Membaca Flipbook Widget -->
+                <div class="bg-gradient-to-br from-emerald-50 to-slate-50 rounded-sm border border-emerald-200 p-4 shadow-2xs text-xs space-y-2.5">
+                    <div class="flex items-center gap-2 text-[#006830] font-bold">
+                        <i class="fa-solid fa-circle-info text-emerald-700"></i>
+                        <span>Panduan 3D Flipbook</span>
+                    </div>
+                    <ul class="space-y-1.5 text-slate-600 text-[11px] leading-relaxed">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-computer-mouse text-emerald-600 text-xs mt-0.5"></i>
+                            <span>Klik atau tarik sudut kertas untuk membalik halaman.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-mobile-screen text-emerald-600 text-xs mt-0.5"></i>
+                            <span>Usap layar (swipe) jika membaca di ponsel atau tablet.</span>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
 
-            <!-- Books Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                @forelse($books as $book)
-                    @php
-                        $coverUrl = null;
-                        if ($book->cover_image) {
-                            $coverUrl = str_starts_with($book->cover_image, 'http') ? $book->cover_image : asset('storage/' . $book->cover_image);
-                        }
-                    @endphp
-                    <div class="digital-book-card p-4 flex flex-col justify-between group">
-                        
-                        <!-- Top Metadata & 3D Cover Display -->
-                        <div>
-                            <div class="flex items-center justify-between gap-2 mb-3">
-                                <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 truncate">
-                                    {{ $book->category }}
-                                </span>
-                                @if($book->sample_pdf)
-                                    <span class="px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1 shrink-0" title="File PDF Siap Dibaca">
-                                        <i class="fa-solid fa-file-pdf text-[8px] text-emerald-700"></i>
-                                        <span>PDF Ready</span>
-                                    </span>
-                                @else
-                                    <span class="px-1.5 py-0.5 rounded-xs text-[9px] font-medium bg-slate-100 text-slate-500 border border-slate-200 shrink-0">
-                                        Sample
-                                    </span>
-                                @endif
-                            </div>
+            <!-- ============================================== -->
+            <!-- RIGHT MAIN: RAK BUKU & LISTING                -->
+            <!-- ============================================== -->
+            <div class="lg:col-span-9 space-y-6" id="daftar-buku">
+                
+                <!-- Section Header with Count & Reset -->
+                <div class="bg-white p-4 rounded-sm border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-base font-extrabold text-slate-900 font-heading">
+                            Daftar Koleksi Buku Digital
+                            @if(request('kategori') && request('kategori') !== 'all')
+                                <span class="text-emerald-700 font-bold">&bull; {{ request('kategori') }}</span>
+                            @endif
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-0.5">
+                            Menampilkan <strong>{{ $digitalBooks->total() }}</strong> judul buku digital.
+                        </p>
+                    </div>
 
-                            <!-- 3D Perspective Stage -->
-                            <div class="digital-stage-3d w-36 aspect-[3/4.2] mx-auto py-2 cursor-pointer" onclick="openFlipbookReader({{ json_encode($book) }})" title="Klik untuk Buka Buku">
-                                <div class="digital-cover-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 border border-slate-300">
-                                    <div class="book-spine-line"></div>
-                                    <div class="book-edge-paper"></div>
+                    @if(request('q') || request('kategori') || request('pdf_only'))
+                        <a href="{{ route('katalog.digital') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-700 rounded-sm text-xs font-bold transition self-start sm:self-auto">
+                            <i class="fa-solid fa-rotate-left text-[10px]"></i>
+                            <span>Reset Filter</span>
+                        </a>
+                    @endif
+                </div>
 
-                                    @if($coverUrl)
-                                        <img src="{{ $coverUrl }}" alt="{{ $book->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <!-- Book Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    @forelse($digitalBooks as $book)
+                        @php
+                            $coverUrl = $book->cover_url;
+                            $pdfUrl = $book->pdf_url;
+                        @endphp
+                        <div class="persis-book-card p-4">
+                            
+                            <!-- Top Details & 3D Cover -->
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-3">
+                                    <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 truncate">
+                                        {{ $book->category }}
+                                    </span>
+                                    @if($pdfUrl)
+                                        <span class="px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1 shrink-0" title="File PDF Siap Dibaca">
+                                            <i class="fa-solid fa-file-pdf text-[8px] text-emerald-700"></i>
+                                            <span>PDF Ready</span>
+                                        </span>
                                     @endif
+                                </div>
 
-                                    <div class="w-full h-full bg-[#032c21] p-3 pl-4 flex flex-col justify-between text-white text-[8px]" style="{{ $coverUrl ? 'display:none;' : '' }}">
-                                        <div class="flex justify-between items-center border-b border-white/20 pb-1">
-                                            <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
-                                            <span class="text-slate-300 font-mono text-[7px]">{{ $book->year }}</span>
+                                <!-- 3D Perspective Stage -->
+                                <div class="book-cover-stage-3d w-36 aspect-[3/4.2] mx-auto py-2 cursor-pointer" onclick="openFlipbookReader({{ json_encode($book) }})" title="Klik untuk Buka Buku (Flipbook)">
+                                    <div class="book-cover-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 border border-slate-300">
+                                        <div class="book-spine-strip"></div>
+                                        <div class="book-paper-edge"></div>
+
+                                        @if($coverUrl)
+                                            <img src="{{ $coverUrl }}" alt="{{ $book->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                        @endif
+
+                                        <div class="w-full h-full bg-[#032c21] p-3 pl-4 flex flex-col justify-between text-white text-[8px]" style="{{ $coverUrl ? 'display:none;' : '' }}">
+                                            <div class="flex justify-between items-center border-b border-white/20 pb-1">
+                                                <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
+                                                <span class="text-slate-300 font-mono text-[7px]">{{ $book->year }}</span>
+                                            </div>
+                                            <div class="my-auto text-center py-1">
+                                                <span class="font-black text-[9px] leading-tight line-clamp-3">{{ $book->title }}</span>
+                                            </div>
+                                            <div class="border-t border-white/20 pt-1 text-center">
+                                                <span class="text-slate-300 truncate text-[7px] block">{{ $book->author }}</span>
+                                            </div>
                                         </div>
-                                        <div class="my-auto text-center py-1">
-                                            <span class="font-black text-[9px] leading-tight line-clamp-3">{{ $book->title }}</span>
-                                        </div>
-                                        <div class="border-t border-white/20 pt-1 text-center">
-                                            <span class="text-slate-300 truncate text-[7px] block">{{ $book->author }}</span>
-                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Info -->
+                                <div class="mt-3 space-y-1">
+                                    <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug hover:text-emerald-800 transition cursor-pointer" onclick="openFlipbookReader({{ json_encode($book) }})">
+                                        {{ $book->title }}
+                                    </h3>
+                                    <p class="text-[11px] text-slate-500 truncate flex items-center gap-1.5">
+                                        <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600"></i>
+                                        <span>{{ $book->author }}</span>
+                                    </p>
+                                    <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono pt-1">
+                                        <span>{{ $book->pages ?: '240 hlm' }}</span>
+                                        <span>{{ $book->year }}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Book Info -->
-                            <div class="mt-3 space-y-1">
-                                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug group-hover:text-emerald-800 transition cursor-pointer" onclick="openFlipbookReader({{ json_encode($book) }})">
-                                    {{ $book->title }}
-                                </h3>
-                                <p class="text-[11px] text-slate-500 truncate flex items-center gap-1.5">
-                                    <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600"></i>
-                                    <span>{{ $book->author }}</span>
-                                </p>
-                                <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono pt-1">
-                                    <span>{{ $book->pages ?: '240 hlm' }}</span>
-                                    <span>ISBN: {{ $book->isbn ? substr($book->isbn, 0, 13) . '...' : '-' }}</span>
-                                </div>
+                            <!-- Action Button -->
+                            <div class="pt-4 border-t border-slate-100 mt-3">
+                                <button type="button" 
+                                        onclick="openFlipbookReader({{ json_encode($book) }})" 
+                                        class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+                                    <i class="fa-solid fa-book-open-reader text-xs"></i>
+                                    <span>Buka &amp; Baca (Flipbook)</span>
+                                </button>
                             </div>
-                        </div>
 
-                        <!-- Action Buttons -->
-                        <div class="pt-4 border-t border-slate-100 space-y-1.5 mt-3">
-                            <button type="button" 
-                                    onclick="openFlipbookReader({{ json_encode($book) }})" 
-                                    class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
-                                <i class="fa-solid fa-book-open-reader text-xs"></i>
-                                <span>Buka &amp; Baca (Flipbook)</span>
-                            </button>
-                            
-                            <a href="{{ route('katalog.show', $book->slug) }}" 
-                               class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xs text-[11px] font-semibold transition flex items-center justify-center gap-1 border border-slate-200">
-                                <i class="fa-solid fa-circle-info text-[10px] text-slate-400"></i>
-                                <span>Lihat Spesifikasi &amp; Cetak</span>
+                        </div>
+                    @empty
+                        <div class="col-span-full bg-white rounded-sm border border-slate-200 p-12 text-center text-slate-400 space-y-3">
+                            <i class="fa-solid fa-book-open text-4xl text-slate-300"></i>
+                            <h4 class="text-sm font-bold text-slate-700">Belum ada buku digital yang sesuai</h4>
+                            <p class="text-xs text-slate-400 max-w-sm mx-auto">
+                                Coba kata kunci lain atau tambahkan buku digital baru di Panel Admin.
+                            </p>
+                            <a href="{{ route('katalog.digital') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 text-white rounded-sm text-xs font-bold transition">
+                                Lihat Semua Koleksi
                             </a>
                         </div>
+                    @endforelse
+                </div>
 
+                <!-- Pagination -->
+                @if($digitalBooks->hasPages())
+                    <div class="p-4 bg-white rounded-sm border border-slate-200 flex items-center justify-end shadow-2xs">
+                        {{ $digitalBooks->links() }}
                     </div>
-                @empty
-                    <div class="col-span-full bg-white rounded-sm border border-slate-200 p-12 text-center text-slate-400 space-y-3">
-                        <i class="fa-solid fa-book-open text-4xl text-slate-300"></i>
-                        <h4 class="text-sm font-bold text-slate-700">Tidak ada buku yang sesuai dengan pencarian</h4>
-                        <p class="text-xs text-slate-400 max-w-sm mx-auto">
-                            Coba ubah kata kunci pencarian atau pilih kategori lain di sidebar kiri.
-                        </p>
-                        <a href="{{ route('katalog.digital') }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 text-white rounded-sm text-xs font-bold transition">
-                            Lihat Semua Koleksi
-                        </a>
-                    </div>
-                @endforelse
+                @endif
+
             </div>
 
-            <!-- Pagination -->
-            @if($books->hasPages())
-                <div class="p-4 bg-white rounded-sm border border-slate-200 flex items-center justify-end shadow-2xs">
-                    {{ $books->links() }}
-                </div>
-            @endif
-
         </div>
-
     </div>
-</main>
+
+</div>
 
 <!-- ========================================================== -->
 <!-- 3D FLIPBOOK VIEWER MODAL (IMMERSIVE READING EXPERIENCE)   -->
@@ -528,7 +469,6 @@
 
             <!-- Viewport for StPageFlip or Fallback -->
             <div class="flip-viewport" id="flipbookViewport">
-                <!-- StPageFlip or Fallback Spread will be injected here dynamically -->
                 <div id="bookFlipInstance"></div>
             </div>
 
@@ -536,14 +476,11 @@
 
         <!-- Bottom Controls Bar -->
         <div class="bg-slate-900 border-t border-slate-800 px-4 py-2.5 flex items-center justify-between text-white shrink-0 text-xs">
-            
-            <!-- Left Info -->
             <div class="hidden sm:flex items-center gap-2 text-slate-400 text-[11px]">
                 <i class="fa-solid fa-hand-pointer text-emerald-400"></i>
                 <span>Tarik sudut kertas atau klik tombol panah</span>
             </div>
 
-            <!-- Center Navigation Buttons -->
             <div class="flex items-center gap-2 mx-auto sm:mx-0">
                 <button type="button" onclick="flipbookPrev()" class="px-3 py-1.5 bg-slate-800 hover:bg-emerald-700 text-white rounded-xs font-bold transition flex items-center gap-1 border border-slate-700 shadow-2xs">
                     <i class="fa-solid fa-chevron-left text-[10px]"></i>
@@ -562,13 +499,11 @@
                 </button>
             </div>
 
-            <!-- Right Options -->
             <div class="flex items-center gap-2">
                 <button type="button" id="btnToggleSound" onclick="toggleFlipSound()" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xs transition text-xs flex items-center gap-1" title="Suara Kertas">
                     <i id="soundIcon" class="fa-solid fa-volume-high text-[11px] text-emerald-400"></i>
                 </button>
             </div>
-
         </div>
 
     </div>
@@ -579,18 +514,131 @@
 <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
 
 <script>
-    // Set PDF.js worker
     if (window.pdfjsLib) {
         window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     }
 
     let pageFlipInstance = null;
-    let flipbookCurrentBook = null;
     let flipSoundEnabled = true;
-    let fallbackPages = [];
-    let fallbackCurrentIndex = 0;
 
-    // Web Audio Paper Flip Sound Synthesizer (Realistic & 0 external audio files needed!)
+    // ==============================================================
+    // 1. LIVE AUTOCOMPLETE SEARCH (PERSIS SCREENSHOT 2 KATALOG UTAMA)
+    // ==============================================================
+    const digitalSearchInput = document.getElementById('digitalSearchInput');
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    const autocompleteList = document.getElementById('autocompleteResultsList');
+    const autocompleteSubmitLabel = document.getElementById('autocompleteSubmitLabel');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+    let acDebounceTimer = null;
+    let acResults = [];
+
+    function clearDigitalSearch() {
+        if (digitalSearchInput) {
+            digitalSearchInput.value = '';
+            digitalSearchInput.focus();
+        }
+        hideAutocomplete();
+        if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
+    }
+
+    function showAutocomplete() {
+        if (autocompleteDropdown) autocompleteDropdown.classList.remove('hidden');
+    }
+
+    function hideAutocomplete() {
+        if (autocompleteDropdown) autocompleteDropdown.classList.add('hidden');
+    }
+
+    if (digitalSearchInput) {
+        digitalSearchInput.addEventListener('input', function() {
+            const q = this.value.trim();
+            if (clearSearchBtn) {
+                if (q.length > 0) clearSearchBtn.classList.remove('hidden');
+                else clearSearchBtn.classList.add('hidden');
+            }
+
+            clearTimeout(acDebounceTimer);
+            if (q.length < 1) {
+                hideAutocomplete();
+                return;
+            }
+
+            acDebounceTimer = setTimeout(() => {
+                fetch('{{ route('api.digital-books.search') }}?q=' + encodeURIComponent(q))
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data || !data.success || !data.books) {
+                            hideAutocomplete();
+                            return;
+                        }
+
+                        acResults = data.books;
+                        autocompleteList.innerHTML = '';
+
+                        if (acResults.length === 0) {
+                            autocompleteList.innerHTML = `
+                                <div class="p-3 text-center text-xs text-slate-400">
+                                    <i class="fa-solid fa-magnifying-glass text-slate-300 text-lg block mb-1"></i>
+                                    Tidak ada buku digital untuk "${q}"
+                                </div>
+                            `;
+                        } else {
+                            acResults.forEach(book => {
+                                const row = document.createElement('div');
+                                row.className = 'flex items-center gap-2.5 px-3 py-2.5 cursor-pointer hover:bg-emerald-50 transition border-b border-slate-100 last:border-0';
+
+                                const coverSrc = book.cover_url;
+                                const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                const titleHL = (book.title || '').replace(new RegExp('(' + esc + ')', 'gi'),
+                                    '<mark class="bg-amber-100 text-amber-900 font-bold rounded-xs px-0.5">$1</mark>');
+
+                                row.innerHTML = `
+                                    <div class="w-9 h-12 rounded-xs overflow-hidden shrink-0 border border-slate-200 bg-[#032c21]">
+                                        ${coverSrc ? `<img src="${coverSrc}" class="w-full h-full object-cover" />` : `<div class="w-full h-full flex items-center justify-center text-emerald-400 text-[7px] font-bold p-1 text-center">PERSIS</div>`}
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 rounded-xs">${book.category || 'Digital'}</span>
+                                        <h5 class="text-xs font-bold text-slate-900 truncate mt-0.5">${titleHL}</h5>
+                                        <p class="text-[10px] text-slate-400 truncate">${book.author || ''}</p>
+                                    </div>
+                                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold shrink-0">
+                                        <i class="fa-solid fa-book-open-reader text-[9px]"></i> Baca
+                                    </span>
+                                `;
+
+                                row.addEventListener('click', function() {
+                                    openFlipbookReader(book);
+                                    hideAutocomplete();
+                                });
+
+                                autocompleteList.appendChild(row);
+                            });
+                        }
+
+                        if (autocompleteSubmitLabel) {
+                            autocompleteSubmitLabel.innerText = acResults.length > 0
+                                ? 'Lihat Semua ' + acResults.length + ' Hasil'
+                                : 'Cari "' + q + '" di Semua Buku Digital';
+                        }
+
+                        showAutocomplete();
+                    })
+                    .catch(() => hideAutocomplete());
+            }, 250);
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#digitalSearchForm')) {
+                hideAutocomplete();
+            }
+        });
+    }
+
+    // ==============================================================
+    // 2. 3D FLIPBOOK VIEWER ENGINE (CANVAS & REAL PAPER SOUND)
+    // ==============================================================
     function playPaperTurnSound() {
         if (!flipSoundEnabled) return;
         try {
@@ -626,9 +674,7 @@
         }
     }
 
-    // Open Modal and Load Book
     window.openFlipbookReader = async function(book) {
-        flipbookCurrentBook = book;
         const modal = document.getElementById('flipbookModal');
         const titleEl = document.getElementById('modalBookTitle');
         const authorEl = document.getElementById('modalBookAuthor');
@@ -639,9 +685,11 @@
         if (titleEl) titleEl.innerText = book.title;
         if (authorEl) authorEl.innerText = book.author + ' (' + book.category + ')';
 
-        if (book.sample_pdf) {
+        const pdfUrl = book.pdf_url || (book.pdf_file ? (book.pdf_file.startsWith('http') ? book.pdf_file : '/storage/' + book.pdf_file) : null);
+
+        if (pdfUrl) {
             btnDownload.classList.remove('hidden');
-            btnDownload.href = '/storage/' + book.sample_pdf;
+            btnDownload.href = pdfUrl;
         } else {
             btnDownload.classList.add('hidden');
         }
@@ -651,15 +699,13 @@
         loader.classList.remove('hidden');
         viewport.innerHTML = '<div id="bookFlipInstance" class="st-flip-container"></div>';
 
-        // Check if book has a valid PDF
-        if (book.sample_pdf) {
-            await renderPdfToFlipbook('/storage/' + book.sample_pdf, book);
+        if (pdfUrl) {
+            await renderPdfToFlipbook(pdfUrl, book);
         } else {
             renderImagesToFlipbook(book);
         }
     };
 
-    // Render PDF with PDF.js into Flipbook Canvas Pages
     async function renderPdfToFlipbook(pdfUrl, book) {
         const loader = document.getElementById('flipLoading');
         const container = document.getElementById('bookFlipInstance');
@@ -670,11 +716,8 @@
             const totalPages = pdfDoc.numPages;
 
             document.getElementById('flipTotalPages').innerText = totalPages;
-
             container.innerHTML = '';
-            const pageCanvases = [];
 
-            // Render each page of PDF to an HTML5 Canvas
             for (let i = 1; i <= totalPages; i++) {
                 const page = await pdfDoc.getPage(i);
                 const viewportScale = 1.4;
@@ -701,33 +744,24 @@
             loader.classList.add('hidden');
 
         } catch (err) {
-            console.warn('PDF.js render failed, switching to image fallback', err);
+            console.warn('PDF.js render error', err);
             renderImagesToFlipbook(book);
         }
     }
 
-    // Render Image Slides Fallback (Cover, Inside, Back)
     function renderImagesToFlipbook(book) {
         const loader = document.getElementById('flipLoading');
         const container = document.getElementById('bookFlipInstance');
         container.innerHTML = '';
 
-        const images = [];
-        if (book.cover_image) images.push('/storage/' + book.cover_image);
-        if (book.inside_preview_image) images.push('/storage/' + book.inside_preview_image);
-        if (book.additional_image) images.push('/storage/' + book.additional_image);
-        if (book.back_cover_image) images.push('/storage/' + book.back_cover_image);
+        const coverSrc = book.cover_url || (book.cover_image ? ('/storage/' + book.cover_image) : null);
+        const images = coverSrc ? [coverSrc] : [];
 
-        if (images.length === 0) {
-            // Generate dummy rich book spreads
-            images.push('cover');
-            images.push('page1');
-            images.push('page2');
-            images.push('back');
-        }
+        if (images.length === 0) images.push('cover');
+        images.push('info');
+        images.push('back');
 
-        const total = images.length;
-        document.getElementById('flipTotalPages').innerText = total;
+        document.getElementById('flipTotalPages').innerText = images.length;
 
         images.forEach((imgSrc, idx) => {
             const pageDiv = document.createElement('div');
@@ -748,10 +782,10 @@
                             <h3 class="font-black text-base text-slate-900 font-heading">${book.title}</h3>
                             <p class="text-xs text-slate-500 font-medium">${book.author}</p>
                             <div class="w-8 h-0.5 bg-emerald-600 mx-auto my-3"></div>
-                            <p class="text-xs text-slate-600 leading-relaxed max-w-sm mx-auto">${book.synopsis || 'Khazanah literatur keislaman dan publikasi ilmiah berstandar akademik.'}</p>
+                            <p class="text-xs text-slate-600 leading-relaxed max-w-sm mx-auto">${book.synopsis || 'Khazanah buku digital dan publikasi ilmiah berstandar akademik.'}</p>
                         </div>
                         <div class="border-t border-slate-100 pt-2 flex justify-between text-[10px] text-slate-400 font-mono">
-                            <span>ISBN: ${book.isbn || '-'}</span>
+                            <span>Kategori: ${book.category || '-'}</span>
                             <span>Halaman ${idx + 1}</span>
                         </div>
                     </div>
@@ -761,11 +795,10 @@
             container.appendChild(pageDiv);
         });
 
-        initPageFlipLibrary(total);
+        initPageFlipLibrary(images.length);
         loader.classList.add('hidden');
     }
 
-    // Initialize StPageFlip Library Engine
     function initPageFlipLibrary(pageCount) {
         if (pageFlipInstance) {
             try { pageFlipInstance.destroy(); } catch(e) {}
@@ -775,7 +808,6 @@
         const container = document.getElementById('bookFlipInstance');
         if (!container) return;
 
-        // Check if StPageFlip class is loaded
         if (window.St && window.St.PageFlip) {
             const isMobile = window.innerWidth < 768;
             pageFlipInstance = new window.St.PageFlip(container, {
@@ -799,86 +831,21 @@
 
             pageFlipInstance.on('flip', (e) => {
                 playPaperTurnSound();
-                const cur = e.data + 1;
-                document.getElementById('flipCurrentPage').innerText = cur;
+                document.getElementById('flipCurrentPage').innerText = (e.data + 1);
             });
 
             pageFlipInstance.on('changeState', (e) => {
-                if (e.data === 'flipping') {
-                    playPaperTurnSound();
-                }
+                if (e.data === 'flipping') playPaperTurnSound();
             });
-
-        } else {
-            // Native Lightweight CSS 3D Spread Fallback
-            console.log('StPageFlip not available from CDN, running CSS 3D Spread fallback');
-            initCssFlipFallback(pageCount);
         }
     }
 
-    // Fallback: Pure CSS Spread Viewer
-    function initCssFlipFallback(pageCount) {
-        const container = document.getElementById('bookFlipInstance');
-        const sheets = Array.from(container.querySelectorAll('.page-sheet'));
-        fallbackPages = sheets;
-        fallbackCurrentIndex = 0;
-        renderCssFallbackSpread();
-    }
-
-    function renderCssFallbackSpread() {
-        const viewport = document.getElementById('flipbookViewport');
-        const curEl = document.getElementById('flipCurrentPage');
-        if (curEl) curEl.innerText = (fallbackCurrentIndex + 1);
-
-        const leftSheet = fallbackPages[fallbackCurrentIndex];
-        const rightSheet = fallbackPages[fallbackCurrentIndex + 1] || null;
-
-        viewport.innerHTML = `
-            <div class="css-flip-spread animate-fade-in">
-                <div class="css-flip-page left" id="cssLeftPage"></div>
-                <div class="css-flip-page right" id="cssRightPage"></div>
-            </div>
-        `;
-
-        if (leftSheet) {
-            document.getElementById('cssLeftPage').appendChild(leftSheet.cloneNode(true));
-        }
-        if (rightSheet) {
-            document.getElementById('cssRightPage').appendChild(rightSheet.cloneNode(true));
-        } else {
-            document.getElementById('cssRightPage').innerHTML = `
-                <div class="w-full h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
-                    <i class="fa-solid fa-bookmark text-3xl mb-2 text-emerald-700"></i>
-                    <p class="font-bold text-xs text-slate-700 font-heading">PERSIS PERS PRESS</p>
-                    <p class="text-[11px] text-slate-500 mt-1">Akhir dari pratinjau halaman buku.</p>
-                </div>
-            `;
-        }
-    }
-
-    // Flip Controls
     window.flipbookNext = function() {
-        if (pageFlipInstance) {
-            pageFlipInstance.flipNext();
-        } else if (fallbackPages.length > 0) {
-            if (fallbackCurrentIndex + 2 < fallbackPages.length) {
-                fallbackCurrentIndex += 2;
-                playPaperTurnSound();
-                renderCssFallbackSpread();
-            }
-        }
+        if (pageFlipInstance) pageFlipInstance.flipNext();
     };
 
     window.flipbookPrev = function() {
-        if (pageFlipInstance) {
-            pageFlipInstance.flipPrev();
-        } else if (fallbackPages.length > 0) {
-            if (fallbackCurrentIndex >= 2) {
-                fallbackCurrentIndex -= 2;
-                playPaperTurnSound();
-                renderCssFallbackSpread();
-            }
-        }
+        if (pageFlipInstance) pageFlipInstance.flipPrev();
     };
 
     window.closeFlipbookModal = function() {
@@ -901,7 +868,6 @@
         }
     };
 
-    // Keyboard Shortcuts (Arrow keys & Escape)
     document.addEventListener('keydown', function(e) {
         const modal = document.getElementById('flipbookModal');
         if (modal && !modal.classList.contains('hidden') && modal.style.display !== 'none') {
@@ -918,7 +884,6 @@
         }
     });
 
-    // Auto open if activeBook passed via URL (?baca=slug)
     @if(isset($activeBook) && $activeBook)
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
+use App\Models\DigitalBook;
 use Illuminate\Http\Request;
 
 class DigitalBookController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Book::published()->latest();
+        $query = DigitalBook::published()->latest();
 
         // 1. Search Query
         if ($request->filled('q')) {
@@ -17,41 +17,45 @@ class DigitalBookController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
                   ->orWhere('author', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%")
-                  ->orWhere('isbn', 'like', "%{$search}%");
+                  ->orWhere('category', 'like', "%{$search}%");
             });
         }
 
         // 2. Category Filter
         $activeCategory = $request->get('kategori', 'all');
-        if ($activeCategory !== 'all' && !empty($activeCategory)) {
+        if ($activeCategory === 'Buku Baru') {
+            $query->where('year', '>=', date('Y'));
+        } elseif ($activeCategory === 'Best Seller' || $activeCategory === 'Unggulan') {
+            $query->where('is_featured', true);
+        } elseif ($activeCategory !== 'all' && !empty($activeCategory)) {
             $query->where('category', $activeCategory);
         }
 
-        // 3. Optional filter: only with PDF
+        // 3. PDF Only Filter
         if ($request->boolean('pdf_only')) {
-            $query->whereNotNull('sample_pdf');
+            $query->whereNotNull('pdf_file');
         }
 
-        $books = $query->paginate(12)->withQueryString();
+        $digitalBooks = $query->paginate(12)->withQueryString();
 
-        // Distinct Categories with Book Count
-        $categoryStats = Book::published()
+        // Categories Stats
+        $categoryStats = DigitalBook::published()
             ->select('category')
             ->selectRaw('count(*) as count')
             ->groupBy('category')
             ->orderBy('category')
             ->get();
 
-        $totalDigitalBooks = Book::published()->count();
-        $totalWithPdf = Book::published()->whereNotNull('sample_pdf')->count();
+        $totalDigitalBooks = DigitalBook::published()->count();
+        $totalWithPdf = DigitalBook::published()->whereNotNull('pdf_file')->count();
+        $totalFeatured = DigitalBook::published()->where('is_featured', true)->count();
+        $totalNew = DigitalBook::published()->where('year', '>=', date('Y'))->count();
 
-        // Popular / Featured Kitab / Digital Books
-        $popularBooks = Book::published()
+        // Featured / Popular Digital Books
+        $popularBooks = DigitalBook::published()
             ->where(function($q) {
-                $q->where('is_best_seller', true)
-                  ->orWhere('is_new_release', true)
-                  ->orWhereNotNull('sample_pdf');
+                $q->where('is_featured', true)
+                  ->orWhereNotNull('pdf_file');
             })
             ->take(6)
             ->get();
@@ -60,15 +64,17 @@ class DigitalBookController extends Controller
         $activeBook = null;
         if ($request->filled('baca')) {
             $slug = $request->baca;
-            $activeBook = Book::published()->where('slug', $slug)->orWhere('id', $slug)->first();
+            $activeBook = DigitalBook::published()->where('slug', $slug)->orWhere('id', $slug)->first();
         }
 
         return view('katalog-digital', compact(
-            'books',
+            'digitalBooks',
             'categoryStats',
             'activeCategory',
             'totalDigitalBooks',
             'totalWithPdf',
+            'totalFeatured',
+            'totalNew',
             'popularBooks',
             'activeBook'
         ));
@@ -76,18 +82,83 @@ class DigitalBookController extends Controller
 
     public function show($slug, Request $request)
     {
-        $activeBook = Book::published()->where('slug', $slug)->first();
+        $activeBook = DigitalBook::published()->where('slug', $slug)->first();
         if (!$activeBook) {
-            $activeBook = Book::published()->where('id', $slug)->first();
+            $activeBook = DigitalBook::published()->where('id', $slug)->first();
         }
         if (!$activeBook) {
             $titleFromSlug = str_replace('-', ' ', $slug);
-            $activeBook = Book::published()->where('title', 'like', "%{$titleFromSlug}%")->first();
+            $activeBook = DigitalBook::published()->where('title', 'like', "%{$titleFromSlug}%")->first();
         }
         if (!$activeBook) {
             return redirect()->route('katalog.digital');
         }
 
         return redirect()->route('katalog.digital', ['baca' => $activeBook->slug]);
+    }
+
+    /**
+     * Live Instant Autocomplete Search API for Digital Books
+     */
+    public function searchApi(Request $request)
+    {
+        try {
+            $q = trim((string) $request->input('q', ''));
+
+            if (empty($q) || mb_strlen($q) < 1) {
+                return response()->json([
+                    'success' => true,
+                    'count'   => 0,
+                    'books'   => [],
+                ]);
+            }
+
+            $searchTerms = array_filter(explode(' ', $q));
+
+            $query = DigitalBook::published();
+            $query->where(function ($sub) use ($searchTerms) {
+                foreach ($searchTerms as $term) {
+                    $term = str_replace(['%', '_'], ['\%', '\_'], $term);
+                    $sub->where(function ($w) use ($term) {
+                        $w->where('title', 'like', "%{$term}%")
+                          ->orWhere('author', 'like', "%{$term}%")
+                          ->orWhere('category', 'like', "%{$term}%");
+                    });
+                }
+            });
+
+            $books = $query->take(8)->get()->map(function ($book) {
+                $coverUrl = $book->cover_url;
+                $pdfUrl = $book->pdf_url;
+
+                return [
+                    'id'              => $book->id,
+                    'title'           => $book->title,
+                    'slug'            => $book->slug,
+                    'author'          => $book->author ?: 'Penulis PERSIS',
+                    'category'        => $book->category ?: 'Studi Islam',
+                    'year'            => $book->year ?: '2026',
+                    'pages'           => $book->pages ?: '-',
+                    'cover_url'       => $coverUrl,
+                    'pdf_url'         => $pdfUrl,
+                    'has_pdf'         => !empty($book->pdf_file),
+                    'is_featured'     => (bool)$book->is_featured,
+                    'reader_url'      => route('katalog.digital', ['baca' => $book->slug]),
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'count'   => $books->count(),
+                'books'   => $books,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'count'   => 0,
+                'books'   => [],
+                'message' => $e->getMessage(),
+            ], 200);
+        }
     }
 }
