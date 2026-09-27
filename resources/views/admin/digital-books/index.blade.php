@@ -302,8 +302,11 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Jml Halaman <span class="text-rose-500">*</span></label>
-                        <input type="text" name="pages" id="in_pages" placeholder="240 hlm" required class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 text-center font-bold bg-white" />
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-[11px] font-bold text-slate-700">Jml Halaman <span class="text-rose-500">*</span></label>
+                            <span id="pages_auto_badge" class="hidden text-[8.5px] text-emerald-800 font-extrabold bg-emerald-100 px-1 py-0.2 rounded-xs border border-emerald-300">Auto PDF</span>
+                        </div>
+                        <input type="text" name="pages" id="in_pages" placeholder="Otomatis dari PDF" required class="w-full px-2.5 py-1.5 text-xs rounded-sm border border-slate-300 text-center font-bold bg-white transition focus:border-emerald-600 focus:outline-hidden" />
                     </div>
 
                     <div>
@@ -447,7 +450,13 @@
     </div>
 </div>
 
+<!-- PDF.js Engine untuk membaca metadata PDF & auto-count halaman di background -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
+    if (window.pdfjsLib) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+
     let currentLocalPdfBlobUrl = null;
     let originalServerPdfUrl = null;
     let originalServerCoverUrl = null;
@@ -464,6 +473,9 @@
         originalServerCoverUrl = null;
         clearCoverSelection();
         clearPdfSelection();
+
+        const autoBadge = document.getElementById('pages_auto_badge');
+        if (autoBadge) autoBadge.classList.add('hidden');
 
         const modal = document.getElementById('digitalBookModal');
         modal.classList.remove('hidden');
@@ -490,6 +502,9 @@
         setVal('in_language', book.language || 'Indonesia');
         setVal('in_status', book.status || 'published');
         setVal('in_synopsis', book.synopsis || '');
+
+        const autoBadge = document.getElementById('pages_auto_badge');
+        if (autoBadge) autoBadge.classList.add('hidden');
 
         const feat = document.getElementById('in_featured');
         if (feat) feat.checked = Boolean(book.is_featured);
@@ -604,6 +619,49 @@
             const btnPreview = document.getElementById('btn_preview_pdf');
             btnPreview.href = currentLocalPdfBlobUrl;
             btnPreview.classList.remove('hidden');
+
+            // --- AUTO READ JUMLAH HALAMAN DARI PDF ---
+            const pagesInput = document.getElementById('in_pages');
+            const autoBadge = document.getElementById('pages_auto_badge');
+
+            if (pagesInput) {
+                pagesInput.value = '';
+                pagesInput.placeholder = 'Membaca...';
+
+                const arrayReader = new FileReader();
+                arrayReader.onload = async function() {
+                    try {
+                        const typedarray = new Uint8Array(this.result);
+                        if (window.pdfjsLib) {
+                            const loadingTask = pdfjsLib.getDocument({
+                                data: typedarray,
+                                cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+                                cMapPacked: true
+                            });
+                            const pdf = await loadingTask.promise;
+                            if (pdf.numPages && pdf.numPages > 0) {
+                                pagesInput.value = pdf.numPages + ' hlm';
+                                if (autoBadge) autoBadge.classList.remove('hidden');
+                                return;
+                            }
+                        }
+
+                        // Fallback cepat regex jika diperlukan
+                        const text = new TextDecoder('latin1').decode(typedarray.slice(0, Math.min(typedarray.length, 250000)));
+                        const match = text.match(/\/Count\s+(\d+)/);
+                        if (match && match[1]) {
+                            pagesInput.value = match[1] + ' hlm';
+                            if (autoBadge) autoBadge.classList.remove('hidden');
+                        } else {
+                            pagesInput.placeholder = 'Contoh: 240 hlm';
+                        }
+                    } catch (err) {
+                        console.warn('Gagal membaca halaman PDF:', err);
+                        pagesInput.placeholder = 'Contoh: 240 hlm';
+                    }
+                };
+                arrayReader.readAsArrayBuffer(file);
+            }
         }
     }
 
@@ -619,6 +677,8 @@
         const btnPreview = document.getElementById('btn_preview_pdf');
         const clearBtn = document.getElementById('btn_clear_pdf');
         const removePdf = document.getElementById('in_remove_pdf');
+        const autoBadge = document.getElementById('pages_auto_badge');
+        if (autoBadge) autoBadge.classList.add('hidden');
         if (removePdf) removePdf.checked = false;
 
         if (originalServerPdfUrl) {
