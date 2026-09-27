@@ -92,6 +92,15 @@
         position: relative;
         margin: 0 auto;
         user-select: none;
+        transform-origin: center center;
+        transition: transform 0.15s ease-out;
+    }
+    .flip-viewport.is-zoomed {
+        cursor: grab;
+    }
+    .flip-viewport.is-dragging {
+        cursor: grabbing !important;
+        transition: none !important;
     }
     .st-flip-container {
         display: flex;
@@ -427,6 +436,19 @@
             </div>
 
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <!-- Zoom Controls -->
+                <div class="flex items-center bg-slate-800 rounded-xs border border-slate-700 p-0.5">
+                    <button type="button" onclick="zoomFlipbook(-0.25)" class="w-6 sm:w-7 h-6 sm:h-7 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 rounded-xs transition text-xs cursor-pointer active:scale-95" title="Perkecil Tampilan (-)">
+                        <i class="fa-solid fa-magnifying-glass-minus text-[10px] sm:text-[11px]"></i>
+                    </button>
+                    <button type="button" onclick="resetFlipbookZoom()" id="btnResetZoom" class="px-1.5 sm:px-2 h-6 sm:h-7 flex items-center justify-center font-mono font-bold text-[10px] sm:text-[11px] text-emerald-400 hover:text-emerald-300 hover:bg-slate-700 rounded-xs transition cursor-pointer" title="Klik untuk Reset ke 100%">
+                        <span id="zoomLevelText">100%</span>
+                    </button>
+                    <button type="button" onclick="zoomFlipbook(0.25)" class="w-6 sm:w-7 h-6 sm:h-7 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 rounded-xs transition text-xs cursor-pointer active:scale-95" title="Perbesar Tampilan (+)">
+                        <i class="fa-solid fa-magnifying-glass-plus text-[10px] sm:text-[11px]"></i>
+                    </button>
+                </div>
+
                 <a id="btnDownloadPdf" href="#" target="_blank" class="hidden px-2 sm:px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 border border-slate-700" title="Buka / Unduh File PDF Asli">
                     <i class="fa-solid fa-file-arrow-down text-emerald-400 text-xs"></i>
                     <span class="hidden sm:inline">PDF Asli</span>
@@ -730,6 +752,10 @@
         if (titleEl) titleEl.innerText = book.title;
         if (authorEl) authorEl.innerText = book.author + ' (' + book.category + ')';
 
+        if (typeof resetFlipbookZoom === 'function') {
+            resetFlipbookZoom();
+        }
+
         const pdfUrl = book.pdf_url || (book.pdf_file ? (book.pdf_file.startsWith('http') ? book.pdf_file : '/storage/' + book.pdf_file) : null);
 
         if (pdfUrl) {
@@ -966,10 +992,117 @@
         if (pageFlipInstance) pageFlipInstance.flipPrev();
     };
 
+    // ==============================================================
+    // FLIPBOOK ZOOM & PAN CONTROLS (ENHANCED READABILITY)
+    // ==============================================================
+    let currentZoomScale = 1.0;
+    let panTranslateX = 0;
+    let panTranslateY = 0;
+    let isPanning = false;
+    let panStartX = 0;
+    let panStartY = 0;
+
+    function updateZoomTransform() {
+        const viewport = document.getElementById('flipbookViewport');
+        const zoomText = document.getElementById('zoomLevelText');
+        if (zoomText) zoomText.innerText = Math.round(currentZoomScale * 100) + '%';
+
+        if (viewport) {
+            if (currentZoomScale > 1.0) {
+                viewport.classList.add('is-zoomed');
+                viewport.style.transform = `scale(${currentZoomScale}) translate(${panTranslateX}px, ${panTranslateY}px)`;
+            } else {
+                viewport.classList.remove('is-zoomed');
+                viewport.classList.remove('is-dragging');
+                currentZoomScale = 1.0;
+                panTranslateX = 0;
+                panTranslateY = 0;
+                viewport.style.transform = '';
+            }
+        }
+    }
+
+    window.zoomFlipbook = function(step) {
+        let newScale = Math.round((currentZoomScale + step) * 100) / 100;
+        if (newScale < 0.8) newScale = 0.8;
+        if (newScale > 2.5) newScale = 2.5;
+        currentZoomScale = newScale;
+        if (currentZoomScale <= 1.0) {
+            panTranslateX = 0;
+            panTranslateY = 0;
+        }
+        updateZoomTransform();
+    };
+
+    window.resetFlipbookZoom = function() {
+        currentZoomScale = 1.0;
+        panTranslateX = 0;
+        panTranslateY = 0;
+        updateZoomTransform();
+    };
+
+    // Pan Dragging Setup
+    const stageEl = document.getElementById('flipbookStageContainer');
+    const viewportEl = document.getElementById('flipbookViewport');
+
+    if (stageEl && viewportEl) {
+        stageEl.addEventListener('mousedown', (e) => {
+            // Hanya aktifkan pan drag jika sedang di-zoom dan bukan klik tombol panah
+            if (currentZoomScale > 1.0 && (e.button === 0 || e.button === 1) && !e.target.closest('button')) {
+                isPanning = true;
+                panStartX = e.clientX - (panTranslateX * currentZoomScale);
+                panStartY = e.clientY - (panTranslateY * currentZoomScale);
+                viewportEl.classList.add('is-dragging');
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isPanning && currentZoomScale > 1.0) {
+                panTranslateX = (e.clientX - panStartX) / currentZoomScale;
+                panTranslateY = (e.clientY - panStartY) / currentZoomScale;
+                viewportEl.style.transform = `scale(${currentZoomScale}) translate(${panTranslateX}px, ${panTranslateY}px)`;
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isPanning) {
+                isPanning = false;
+                if (viewportEl) viewportEl.classList.remove('is-dragging');
+            }
+        });
+
+        // Double click to zoom in / reset
+        stageEl.addEventListener('dblclick', (e) => {
+            if (e.target.closest('button')) return;
+            if (currentZoomScale <= 1.0) {
+                currentZoomScale = 1.5;
+            } else {
+                currentZoomScale = 1.0;
+                panTranslateX = 0;
+                panTranslateY = 0;
+            }
+            updateZoomTransform();
+        });
+
+        // Mouse Wheel Zoom with Ctrl
+        stageEl.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomFlipbook(0.15);
+                } else {
+                    zoomFlipbook(-0.15);
+                }
+            }
+        }, { passive: false });
+    }
+
     window.closeFlipbookModal = function() {
         const modal = document.getElementById('flipbookModal');
         modal.style.display = 'none';
         modal.classList.add('hidden');
+        resetFlipbookZoom();
         if (pageFlipInstance) {
             try { pageFlipInstance.destroy(); } catch(e) {}
             pageFlipInstance = null;
