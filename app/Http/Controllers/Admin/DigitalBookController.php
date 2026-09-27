@@ -68,40 +68,20 @@ class DigitalBookController extends Controller
             $cover = $request->file('cover_image');
             $ext = strtolower($cover->getClientOriginalExtension() ?: 'jpg');
             $filename = Str::random(30) . '.' . $ext;
+            $relPath = 'digital-books/covers/' . $filename;
 
-            $dir1 = public_path('storage/digital-books/covers');
-            $dir2 = storage_path('app/public/digital-books/covers');
-            if (!file_exists($dir1)) @mkdir($dir1, 0777, true);
-            if (!file_exists($dir2)) @mkdir($dir2, 0777, true);
-
-            $dest1 = $dir1 . '/' . $filename;
-            $dest2 = $dir2 . '/' . $filename;
-            $cover->move($dir1, $filename);
-            @copy($dest1, $dest2);
-            @chmod($dest1, 0644);
-            @chmod($dest2, 0644);
-
-            $validated['cover_image'] = 'digital-books/covers/' . $filename;
+            $this->saveFileToAllStorageTargets($cover, $relPath);
+            $validated['cover_image'] = $relPath;
         }
 
         // 2. PDF File Upload
         if ($request->hasFile('pdf_file')) {
             $pdf = $request->file('pdf_file');
             $pdfName = Str::random(30) . '.pdf';
+            $relPdfPath = 'digital-books/pdfs/' . $pdfName;
 
-            $pdfDir1 = public_path('storage/digital-books/pdfs');
-            $pdfDir2 = storage_path('app/public/digital-books/pdfs');
-            if (!file_exists($pdfDir1)) @mkdir($pdfDir1, 0777, true);
-            if (!file_exists($pdfDir2)) @mkdir($pdfDir2, 0777, true);
-
-            $dest1 = $pdfDir1 . '/' . $pdfName;
-            $dest2 = $pdfDir2 . '/' . $pdfName;
-            $pdf->move($pdfDir1, $pdfName);
-            @copy($dest1, $dest2);
-            @chmod($dest1, 0644);
-            @chmod($dest2, 0644);
-
-            $validated['pdf_file'] = 'digital-books/pdfs/' . $pdfName;
+            $this->saveFileToAllStorageTargets($pdf, $relPdfPath);
+            $validated['pdf_file'] = $relPdfPath;
         }
 
         DigitalBook::create($validated);
@@ -133,56 +113,33 @@ class DigitalBookController extends Controller
             $cover = $request->file('cover_image');
             $ext = strtolower($cover->getClientOriginalExtension() ?: 'jpg');
             $filename = Str::random(30) . '.' . $ext;
-
-            $dir1 = public_path('storage/digital-books/covers');
-            $dir2 = storage_path('app/public/digital-books/covers');
-            if (!file_exists($dir1)) @mkdir($dir1, 0777, true);
-            if (!file_exists($dir2)) @mkdir($dir2, 0777, true);
+            $relPath = 'digital-books/covers/' . $filename;
 
             // Delete old cover
             if ($digitalBook->cover_image) {
-                if (file_exists(public_path('storage/' . $digitalBook->cover_image))) @unlink(public_path('storage/' . $digitalBook->cover_image));
-                if (file_exists(storage_path('app/public/' . $digitalBook->cover_image))) @unlink(storage_path('app/public/' . $digitalBook->cover_image));
+                $this->deleteFileFromAllStorageTargets($digitalBook->cover_image);
             }
 
-            $dest1 = $dir1 . '/' . $filename;
-            $dest2 = $dir2 . '/' . $filename;
-            $cover->move($dir1, $filename);
-            @copy($dest1, $dest2);
-            @chmod($dest1, 0644);
-            @chmod($dest2, 0644);
-
-            $validated['cover_image'] = 'digital-books/covers/' . $filename;
+            $this->saveFileToAllStorageTargets($cover, $relPath);
+            $validated['cover_image'] = $relPath;
         }
 
         // 2. PDF File Update
         if ($request->hasFile('pdf_file')) {
             $pdf = $request->file('pdf_file');
             $pdfName = Str::random(30) . '.pdf';
-
-            $pdfDir1 = public_path('storage/digital-books/pdfs');
-            $pdfDir2 = storage_path('app/public/digital-books/pdfs');
-            if (!file_exists($pdfDir1)) @mkdir($pdfDir1, 0777, true);
-            if (!file_exists($pdfDir2)) @mkdir($pdfDir2, 0777, true);
+            $relPdfPath = 'digital-books/pdfs/' . $pdfName;
 
             // Delete old PDF
             if ($digitalBook->pdf_file) {
-                if (file_exists(public_path('storage/' . $digitalBook->pdf_file))) @unlink(public_path('storage/' . $digitalBook->pdf_file));
-                if (file_exists(storage_path('app/public/' . $digitalBook->pdf_file))) @unlink(storage_path('app/public/' . $digitalBook->pdf_file));
+                $this->deleteFileFromAllStorageTargets($digitalBook->pdf_file);
             }
 
-            $dest1 = $pdfDir1 . '/' . $pdfName;
-            $dest2 = $pdfDir2 . '/' . $pdfName;
-            $pdf->move($pdfDir1, $pdfName);
-            @copy($dest1, $dest2);
-            @chmod($dest1, 0644);
-            @chmod($dest2, 0644);
-
-            $validated['pdf_file'] = 'digital-books/pdfs/' . $pdfName;
+            $this->saveFileToAllStorageTargets($pdf, $relPdfPath);
+            $validated['pdf_file'] = $relPdfPath;
         } elseif ($request->boolean('remove_pdf')) {
             if ($digitalBook->pdf_file) {
-                if (file_exists(public_path('storage/' . $digitalBook->pdf_file))) @unlink(public_path('storage/' . $digitalBook->pdf_file));
-                if (file_exists(storage_path('app/public/' . $digitalBook->pdf_file))) @unlink(storage_path('app/public/' . $digitalBook->pdf_file));
+                $this->deleteFileFromAllStorageTargets($digitalBook->pdf_file);
             }
             $validated['pdf_file'] = null;
         }
@@ -230,13 +187,72 @@ class DigitalBookController extends Controller
                 if (file_exists(public_path('storage/' . $b->cover_image))) @unlink(public_path('storage/' . $b->cover_image));
                 if (file_exists(storage_path('app/public/' . $b->cover_image))) @unlink(storage_path('app/public/' . $b->cover_image));
             }
+            if ($b->cover_image) {
+                $this->deleteFileFromAllStorageTargets($b->cover_image);
+            }
             if ($b->pdf_file) {
-                if (file_exists(public_path('storage/' . $b->pdf_file))) @unlink(public_path('storage/' . $b->pdf_file));
-                if (file_exists(storage_path('app/public/' . $b->pdf_file))) @unlink(storage_path('app/public/' . $b->pdf_file));
+                $this->deleteFileFromAllStorageTargets($b->pdf_file);
             }
             $b->delete();
         }
 
         return back()->with('success', "Berhasil menghapus {$count} buku digital secara massal.");
+    }
+
+    /**
+     * Helper to get all candidate storage directories across local & cPanel hosting environments.
+     */
+    protected function getStorageBaseDirs(): array
+    {
+        return array_unique([
+            public_path('storage'),
+            storage_path('app/public'),
+            base_path('public_html/storage'),
+            base_path('../public_html/storage'),
+            '/home/persisp1/public_html/storage',
+        ]);
+    }
+
+    /**
+     * Save an uploaded file across all existing storage directories.
+     */
+    protected function saveFileToAllStorageTargets($file, string $relativePath): void
+    {
+        $firstSaved = null;
+
+        foreach ($this->getStorageBaseDirs() as $baseDir) {
+            try {
+                $fullTarget = $baseDir . '/' . $relativePath;
+                $targetDir = dirname($fullTarget);
+
+                if (!file_exists($targetDir)) {
+                    @mkdir($targetDir, 0777, true);
+                }
+
+                if (!$firstSaved) {
+                    $file->move($targetDir, basename($fullTarget));
+                    $firstSaved = $fullTarget;
+                } else {
+                    @copy($firstSaved, $fullTarget);
+                }
+
+                @chmod($fullTarget, 0644);
+            } catch (\Throwable $e) {
+                // Ignore inaccessible paths
+            }
+        }
+    }
+
+    /**
+     * Delete a relative file path across all candidate storage directories.
+     */
+    protected function deleteFileFromAllStorageTargets(string $relativePath): void
+    {
+        foreach ($this->getStorageBaseDirs() as $baseDir) {
+            $path = $baseDir . '/' . $relativePath;
+            if (file_exists($path) && !is_dir($path)) {
+                @unlink($path);
+            }
+        }
     }
 }

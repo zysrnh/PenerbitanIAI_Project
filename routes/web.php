@@ -31,32 +31,44 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/storage/{path}', function ($path) {
-    // 1. Path di standard public/storage/$path
-    $pathsToCheck = [
-        public_path('storage/' . $path),
-        storage_path('app/public/' . $path),
-        base_path('public_html/storage/' . $path),
-        base_path('../public_html/storage/' . $path),
-        public_path($path),
-        public_path('images/' . $path),
-    ];
+    // Normalisasi url decode dan ganti spasi
+    $cleanPath = urldecode($path);
+    $variants = array_unique([
+        $cleanPath,
+        str_replace(' ', '-', $cleanPath),
+        str_replace('-', ' ', $cleanPath),
+    ]);
 
-    foreach ($pathsToCheck as $candidate) {
-        if (file_exists($candidate) && !is_dir($candidate)) {
-            $mimeType = match (strtolower(pathinfo($candidate, PATHINFO_EXTENSION))) {
-                'pdf' => 'application/pdf',
-                'jpg', 'jpeg' => 'image/jpeg',
-                'png' => 'image/png',
-                'webp' => 'image/webp',
-                'svg' => 'image/svg+xml',
-                default => mime_content_type($candidate) ?: 'application/octet-stream',
-            };
+    $baseDirs = array_unique([
+        '/home/persisp1/public_html/storage',
+        base_path('public_html/storage'),
+        base_path('../public_html/storage'),
+        base_path('../storage'),
+        public_path('storage'),
+        storage_path('app/public'),
+        public_path(),
+        public_path('images'),
+    ]);
 
-            return response()->file($candidate, [
-                'Content-Type' => $mimeType,
-                'Content-Disposition' => 'inline; filename="' . basename($candidate) . '"',
-                'Access-Control-Allow-Origin' => '*',
-            ]);
+    foreach ($variants as $var) {
+        foreach ($baseDirs as $dir) {
+            $candidate = rtrim($dir, '/') . '/' . ltrim($var, '/');
+            if (file_exists($candidate) && !is_dir($candidate)) {
+                $mimeType = match (strtolower(pathinfo($candidate, PATHINFO_EXTENSION))) {
+                    'pdf' => 'application/pdf',
+                    'jpg', 'jpeg' => 'image/jpeg',
+                    'png' => 'image/png',
+                    'webp' => 'image/webp',
+                    'svg' => 'image/svg+xml',
+                    default => mime_content_type($candidate) ?: 'application/octet-stream',
+                };
+
+                return response()->file($candidate, [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'inline; filename="' . basename($candidate) . '"',
+                    'Access-Control-Allow-Origin' => '*',
+                ]);
+            }
         }
     }
 
@@ -144,6 +156,54 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
         Route::post('/digital-books/bulk-destroy', [\App\Http\Controllers\Admin\DigitalBookController::class, 'bulkDestroy'])->name('digital-books.bulk_destroy');
         Route::resource('digital-books', \App\Http\Controllers\Admin\DigitalBookController::class);
+
+        // Fix Storage Helper Route
+        Route::get('/fix-storage', function () {
+            $report = [];
+            $targets = [
+                '/home/persisp1/public_html/storage/digital-books/covers',
+                '/home/persisp1/public_html/storage/digital-books/pdfs',
+                base_path('public_html/storage/digital-books/covers'),
+                base_path('public_html/storage/digital-books/pdfs'),
+                public_path('storage/digital-books/covers'),
+                public_path('storage/digital-books/pdfs'),
+            ];
+
+            foreach ($targets as $dir) {
+                if (!file_exists($dir)) {
+                    $ok = @mkdir($dir, 0777, true);
+                    $report[] = "Membuat folder: {$dir} => " . ($ok ? 'BERHASIL' : 'GAGAL');
+                } else {
+                    $report[] = "Folder sudah ada: {$dir}";
+                }
+                @chmod($dir, 0777);
+            }
+
+            // Sync existing files from storage/app/public to all targets
+            $sourceBase = storage_path('app/public/digital-books');
+            if (file_exists($sourceBase)) {
+                $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sourceBase, \FilesystemIterator::SKIP_DOTS));
+                $copyCount = 0;
+                foreach ($files as $f) {
+                    if ($f->isFile()) {
+                        $rel = str_replace($sourceBase, '', $f->getPathname());
+                        $dest = '/home/persisp1/public_html/storage/digital-books' . $rel;
+                        @mkdir(dirname($dest), 0777, true);
+                        if (@copy($f->getPathname(), $dest)) {
+                            $copyCount++;
+                            @chmod($dest, 0644);
+                        }
+                    }
+                }
+                $report[] = "Tersinkron {$copyCount} file dari Laravel storage ke public_html/storage.";
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Sinkronisasi Storage Selesai!',
+                'details' => $report,
+            ]);
+        })->name('storage.fix');
 
         // News & Articles Management (WordPress-like CMS)
         Route::post('/articles/upload-image', [\App\Http\Controllers\Admin\ArticleController::class, 'uploadEditorImage'])->name('articles.upload_image');
