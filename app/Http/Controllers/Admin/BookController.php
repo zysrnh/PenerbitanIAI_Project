@@ -38,7 +38,6 @@ class BookController extends Controller
         return view('admin.books.index', compact('books', 'totalBooks', 'newReleasesCount', 'bestSellersCount', 'categories'));
     }
 
-    
     public function create()
     {
         return redirect()->route('admin.books.index', ['open_create' => 1]);
@@ -111,28 +110,39 @@ class BookController extends Controller
             }
         }
 
-        // Safe PDF Upload via move
+        // Safe PDF Upload via move (sync dual storage path)
         if ($request->hasFile('sample_pdf')) {
             $pdfFile = $request->file('sample_pdf');
             $pdfExt = strtolower($pdfFile->getClientOriginalExtension() ?: 'pdf');
 
             if ($pdfExt !== 'pdf') {
-                return back()->withErrors(['sample_pdf' => 'File dokumen sampel harus berformat PDF.'])->withInput();
+                return back()->withErrors(['sample_pdf' => 'File dokumen buku/sampel harus berformat PDF.'])->withInput();
             }
 
-            $sampleDir = public_path('storage/books/samples');
-            if (!file_exists($sampleDir)) {
-                @mkdir($sampleDir, 0755, true);
+            $sampleDir1 = public_path('storage/books/samples');
+            $sampleDir2 = storage_path('app/public/books/samples');
+            if (!file_exists($sampleDir1)) {
+                @mkdir($sampleDir1, 0777, true);
+            }
+            if (!file_exists($sampleDir2)) {
+                @mkdir($sampleDir2, 0777, true);
             }
 
             $pdfName = Str::random(30) . '.pdf';
-            $pdfFile->move($sampleDir, $pdfName);
+            $dest1 = $sampleDir1 . '/' . $pdfName;
+            $dest2 = $sampleDir2 . '/' . $pdfName;
+
+            $pdfFile->move($sampleDir1, $pdfName);
+            @copy($dest1, $dest2);
+            @chmod($dest1, 0644);
+            @chmod($dest2, 0644);
+
             $validated['sample_pdf'] = 'books/samples/' . $pdfName;
         }
 
         Book::create($validated);
 
-        return back()->with('success', 'Buku baru "' . $validated['title'] . '" berhasil ditambahkan dengan foto lengkap.');
+        return back()->with('success', 'Buku baru "' . $validated['title'] . '" berhasil ditambahkan.');
     }
 
     public function update(Request $request, Book $book)
@@ -200,35 +210,61 @@ class BookController extends Controller
             }
         }
 
-        // Safe PDF Upload Update
+        // Safe PDF Upload Update (sync dual storage path)
         if ($request->hasFile('sample_pdf')) {
             $pdfFile = $request->file('sample_pdf');
             $pdfExt = strtolower($pdfFile->getClientOriginalExtension() ?: 'pdf');
 
             if ($pdfExt !== 'pdf') {
-                return back()->withErrors(['sample_pdf' => 'File dokumen sampel harus berformat PDF.'])->withInput();
+                return back()->withErrors(['sample_pdf' => 'File dokumen buku/sampel harus berformat PDF.'])->withInput();
             }
 
-            $sampleDir = public_path('storage/books/samples');
-            if (!file_exists($sampleDir)) {
-                @mkdir($sampleDir, 0755, true);
+            $sampleDir1 = public_path('storage/books/samples');
+            $sampleDir2 = storage_path('app/public/books/samples');
+            if (!file_exists($sampleDir1)) {
+                @mkdir($sampleDir1, 0777, true);
+            }
+            if (!file_exists($sampleDir2)) {
+                @mkdir($sampleDir2, 0777, true);
             }
 
-            if ($book->sample_pdf && file_exists(public_path('storage/' . $book->sample_pdf))) {
-                @unlink(public_path('storage/' . $book->sample_pdf));
+            if ($book->sample_pdf) {
+                if (file_exists(public_path('storage/' . $book->sample_pdf))) {
+                    @unlink(public_path('storage/' . $book->sample_pdf));
+                }
+                if (file_exists(storage_path('app/public/' . $book->sample_pdf))) {
+                    @unlink(storage_path('app/public/' . $book->sample_pdf));
+                }
             }
 
             $pdfName = Str::random(30) . '.pdf';
-            $pdfFile->move($sampleDir, $pdfName);
+            $dest1 = $sampleDir1 . '/' . $pdfName;
+            $dest2 = $sampleDir2 . '/' . $pdfName;
+
+            $pdfFile->move($sampleDir1, $pdfName);
+            @copy($dest1, $dest2);
+            @chmod($dest1, 0644);
+            @chmod($dest2, 0644);
+
             $validated['sample_pdf'] = 'books/samples/' . $pdfName;
+        } elseif ($request->boolean('remove_sample_pdf')) {
+            if ($book->sample_pdf) {
+                if (file_exists(public_path('storage/' . $book->sample_pdf))) {
+                    @unlink(public_path('storage/' . $book->sample_pdf));
+                }
+                if (file_exists(storage_path('app/public/' . $book->sample_pdf))) {
+                    @unlink(storage_path('app/public/' . $book->sample_pdf));
+                }
+            }
+            $validated['sample_pdf'] = null;
         }
 
         $book->update($validated);
 
-        return back()->with('success', 'Data & foto buku "' . $book->title . '" berhasil diperbarui.');
+        return back()->with('success', 'Data buku "' . $book->title . '" berhasil diperbarui.');
     }
 
-        public function bulkDestroy(Request $request)
+    public function bulkDestroy(Request $request)
     {
         $ids = $request->input('ids', []);
         if (empty($ids) && $request->filled('ids_json')) {
@@ -268,9 +304,12 @@ class BookController extends Controller
             if ($book->$slot && file_exists(public_path('storage/' . $book->$slot))) {
                 @unlink(public_path('storage/' . $book->$slot));
             }
+            if ($book->$slot && file_exists(storage_path('app/public/' . $book->$slot))) {
+                @unlink(storage_path('app/public/' . $book->$slot));
+            }
         }
         $book->delete();
 
-        return back()->with('success', 'Buku "' . $title . '" beserta foto-fotonya berhasil dihapus.');
+        return back()->with('success', 'Buku "' . $title . '" beserta file-filenya berhasil dihapus.');
     }
 }

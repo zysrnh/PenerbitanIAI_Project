@@ -309,9 +309,16 @@
                                 <span class="font-mono font-black text-emerald-800 text-xs">
                                     {{ $book->formatted_price }}
                                 </span>
-                                <span class="text-[10px] text-slate-400 font-mono">
-                                    {{ $book->page_count ? $book->page_count . ' hlm' : '-' }}
-                                </span>
+                                <div class="flex items-center gap-1.5">
+                                    @if($book->sample_pdf)
+                                        <span class="px-1.5 py-0.2 rounded-xs text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                            <i class="fa-solid fa-file-pdf text-[8px]"></i> PDF Flipbook
+                                        </span>
+                                    @endif
+                                    <span class="text-[10px] text-slate-400 font-mono">
+                                        {{ $book->pages ?: ($book->page_count ? $book->page_count . ' hlm' : '-') }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -445,6 +452,17 @@
                                 <div class="text-[10px] text-slate-400 font-semibold flex items-center gap-1">
                                     <i class="fa-solid fa-images text-emerald-600"></i>
                                     <span>4 Foto Terunggah</span>
+                                </div>
+                                <div class="pt-0.5">
+                                    @if($book->sample_pdf)
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300" title="File PDF Digital Terpasang">
+                                            <i class="fa-solid fa-file-pdf text-[9px]"></i> PDF Flipbook
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-xs text-[9px] font-medium bg-slate-100 text-slate-400 border border-slate-200" title="Belum ada file PDF">
+                                            <i class="fa-solid fa-file text-[8px]"></i> Tanpa PDF
+                                        </span>
+                                    @endif
                                 </div>
                             </td>
 
@@ -627,6 +645,38 @@
                                     <input type="file" name="additional_image" id="in_inside2" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'inside2')" />
                                 </label>
 
+                            </div>
+                        </div>
+
+                        <!-- 5. Dokumen PDF Digital (Flipbook Reader) -->
+                        <div class="p-3.5 bg-emerald-50/70 rounded-sm border border-emerald-200/90 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-extrabold text-emerald-950 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-pdf text-emerald-700 text-sm"></i> Dokumen PDF Digital (Flipbook)
+                                </span>
+                                <span id="pdf_status_badge" class="text-[9.5px] px-2 py-0.5 rounded-xs font-bold bg-slate-200 text-slate-700">Belum Ada PDF</span>
+                            </div>
+                            <p class="text-[11px] text-slate-600 leading-normal">
+                                File PDF ini otomatis dibuka dengan <strong>animasi membalik buku (3D Flipbook)</strong> di katalog digital.
+                            </p>
+                            <label for="in_sample_pdf" class="relative flex items-center gap-3 p-2.5 bg-white border border-dashed border-emerald-300 hover:border-emerald-600 rounded-sm cursor-pointer transition group">
+                                <div class="w-9 h-9 rounded-sm bg-emerald-100/70 text-emerald-700 flex items-center justify-center shrink-0 text-base group-hover:scale-105 transition">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p id="pdf_filename_display" class="text-xs font-bold text-slate-800 truncate">Pilih file PDF naskah...</p>
+                                    <p class="text-[10px] text-slate-400 font-mono">Format: .pdf (Maks. 50MB)</p>
+                                </div>
+                                <input type="file" name="sample_pdf" id="in_sample_pdf" accept="application/pdf" class="hidden" onchange="handlePdfSelection(this)" />
+                            </label>
+                            <div id="pdf_active_preview_box" class="hidden flex items-center justify-between pt-1 text-xs">
+                                <a id="pdf_view_link" href="#" target="_blank" class="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-900 transition">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> Lihat PDF Terpasang
+                                </a>
+                                <label class="flex items-center gap-1.5 text-rose-600 hover:text-rose-800 cursor-pointer select-none text-[11px] font-semibold">
+                                    <input type="checkbox" name="remove_sample_pdf" id="in_remove_pdf" value="1" onchange="toggleRemovePdfState(this)" />
+                                    <span>Hapus PDF</span>
+                                </label>
                             </div>
                         </div>
 
@@ -1022,6 +1072,22 @@
 
             currentPhotoObj = { cover: null, back: null, inside1: null, inside2: null };
             resetThumbnails();
+
+            // Reset PDF input
+            const pdfInput = document.getElementById('in_sample_pdf');
+            if (pdfInput) pdfInput.value = '';
+            const pdfBadge = document.getElementById('pdf_status_badge');
+            if (pdfBadge) {
+                pdfBadge.innerText = 'Belum Ada PDF';
+                pdfBadge.className = 'text-[9.5px] px-2 py-0.5 rounded-xs font-bold bg-slate-200 text-slate-700';
+            }
+            const pdfDisplay = document.getElementById('pdf_filename_display');
+            if (pdfDisplay) pdfDisplay.innerText = 'Pilih file PDF naskah...';
+            const pdfPreviewBox = document.getElementById('pdf_active_preview_box');
+            if (pdfPreviewBox) pdfPreviewBox.classList.add('hidden');
+            const removePdfChk = document.getElementById('in_remove_pdf');
+            if (removePdfChk) removePdfChk.checked = false;
+
             switchVisualizerTab('cover');
             updateVisualizerLive();
 
@@ -1091,6 +1157,34 @@
             setThumbPreview('inside1', currentPhotoObj.inside1);
             setThumbPreview('inside2', currentPhotoObj.inside2);
 
+            // Setup PDF input & preview for edit
+            const pdfInput = document.getElementById('in_sample_pdf');
+            if (pdfInput) pdfInput.value = '';
+            const pdfBadge = document.getElementById('pdf_status_badge');
+            const pdfDisplay = document.getElementById('pdf_filename_display');
+            const pdfPreviewBox = document.getElementById('pdf_active_preview_box');
+            const pdfLink = document.getElementById('pdf_view_link');
+            const removePdfChk = document.getElementById('in_remove_pdf');
+            if (removePdfChk) removePdfChk.checked = false;
+
+            if (book.sample_pdf) {
+                if (pdfBadge) {
+                    pdfBadge.innerText = 'PDF Terpasang';
+                    pdfBadge.className = 'text-[9.5px] px-2 py-0.5 rounded-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+                }
+                const pdfName = book.sample_pdf.split('/').pop();
+                if (pdfDisplay) pdfDisplay.innerText = 'File: ' + pdfName;
+                if (pdfPreviewBox) pdfPreviewBox.classList.remove('hidden');
+                if (pdfLink) pdfLink.href = resolvePhotoUrl(book.sample_pdf);
+            } else {
+                if (pdfBadge) {
+                    pdfBadge.innerText = 'Belum Ada PDF';
+                    pdfBadge.className = 'text-[9.5px] px-2 py-0.5 rounded-xs font-bold bg-slate-200 text-slate-700';
+                }
+                if (pdfDisplay) pdfDisplay.innerText = 'Pilih file PDF naskah...';
+                if (pdfPreviewBox) pdfPreviewBox.classList.add('hidden');
+            }
+
             switchVisualizerTab('cover');
             updateVisualizerLive();
 
@@ -1098,6 +1192,44 @@
             if (modal) {
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
+            }
+        }
+
+        function handlePdfSelection(input) {
+            const file = input.files ? input.files[0] : null;
+            const nameDisplay = document.getElementById('pdf_filename_display');
+            const badge = document.getElementById('pdf_status_badge');
+            if (file) {
+                if (!file.name.toLowerCase().endsWith('.pdf')) {
+                    alert('File dokumen harus berformat PDF!');
+                    input.value = '';
+                    return;
+                }
+                if (nameDisplay) {
+                    const mbSize = (file.size / (1024 * 1024)).toFixed(2);
+                    nameDisplay.innerText = file.name + ' (' + mbSize + ' MB)';
+                }
+                if (badge) {
+                    badge.innerText = 'Siap Diunggah';
+                    badge.className = 'text-[9.5px] px-2 py-0.5 rounded-xs font-bold bg-emerald-700 text-white';
+                }
+                const removePdfChk = document.getElementById('in_remove_pdf');
+                if (removePdfChk) removePdfChk.checked = false;
+            }
+        }
+
+        function toggleRemovePdfState(chk) {
+            const badge = document.getElementById('pdf_status_badge');
+            if (chk.checked) {
+                if (badge) {
+                    badge.innerText = 'Akan Dihapus';
+                    badge.className = 'text-[9.5px] px-2 py-0.5 rounded-xs font-bold bg-rose-600 text-white';
+                }
+            } else {
+                if (badge) {
+                    badge.innerText = 'PDF Terpasang';
+                    badge.className = 'text-[9.5px] px-2 py-0.5 rounded-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+                }
             }
         }
 
