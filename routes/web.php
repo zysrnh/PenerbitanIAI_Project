@@ -31,28 +31,33 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/storage/{path}', function ($path) {
-    // 1. Check in public/storage/$path
-    $publicStorage = public_path('storage/' . $path);
-    if (file_exists($publicStorage) && !is_dir($publicStorage)) {
-        return response()->file($publicStorage);
-    }
+    // 1. Path di standard public/storage/$path
+    $pathsToCheck = [
+        public_path('storage/' . $path),
+        storage_path('app/public/' . $path),
+        base_path('public_html/storage/' . $path),
+        base_path('../public_html/storage/' . $path),
+        public_path($path),
+        public_path('images/' . $path),
+    ];
 
-    // 2. Check in storage/app/public/$path
-    $storageApp = storage_path('app/public/' . $path);
-    if (file_exists($storageApp) && !is_dir($storageApp)) {
-        return response()->file($storageApp);
-    }
+    foreach ($pathsToCheck as $candidate) {
+        if (file_exists($candidate) && !is_dir($candidate)) {
+            $mimeType = match (strtolower(pathinfo($candidate, PATHINFO_EXTENSION))) {
+                'pdf' => 'application/pdf',
+                'jpg', 'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'webp' => 'image/webp',
+                'svg' => 'image/svg+xml',
+                default => mime_content_type($candidate) ?: 'application/octet-stream',
+            };
 
-    // 3. Check in public/$path directly
-    $publicDirect = public_path($path);
-    if (file_exists($publicDirect) && !is_dir($publicDirect)) {
-        return response()->file($publicDirect);
-    }
-
-    // 4. Check in public/images/$path
-    $publicImages = public_path('images/' . $path);
-    if (file_exists($publicImages) && !is_dir($publicImages)) {
-        return response()->file($publicImages);
+            return response()->file($candidate, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . basename($candidate) . '"',
+                'Access-Control-Allow-Origin' => '*',
+            ]);
+        }
     }
 
     abort(404);

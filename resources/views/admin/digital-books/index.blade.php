@@ -5,6 +5,34 @@
 @section('content')
 <div class="space-y-5">
     
+    @if(session('success'))
+        <div class="p-3.5 bg-emerald-50 border border-emerald-300 rounded-sm text-xs font-bold text-emerald-900 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-emerald-600 text-sm"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-950 text-xs">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    @endif
+
+    @if(session('error') || $errors->any())
+        <div class="p-3.5 bg-rose-50 border border-rose-300 rounded-sm text-xs font-bold text-rose-900 space-y-1">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation text-rose-600 text-sm"></i>
+                <span>{{ session('error') ?? 'Terjadi kesalahan saat menyimpan data:' }}</span>
+            </div>
+            @if($errors->any())
+                <ul class="list-disc list-inside pl-5 font-normal text-[11.5px] text-rose-800">
+                    @foreach($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+    @endif
+
     <!-- Top Header -->
     <div class="bg-white rounded-sm border border-slate-200/90 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
         <div>
@@ -481,6 +509,16 @@
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     }
+
+    @if($errors->any())
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('digitalBookModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        });
+    @endif
 
     function openEditModal(book) {
         const form = document.getElementById('digitalBookForm');

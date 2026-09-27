@@ -44,7 +44,7 @@
                 <i class="fa-solid fa-house text-xs"></i>
                 <span>Beranda Utama</span>
             </a>
-            <a href="{{ route('catalog.index') }}" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
+            <a href="{{ route('katalog') }}" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs">
                 <i class="fa-solid fa-book-open text-xs text-emerald-700"></i>
                 <span>Katalog Buku</span>
             </a>
