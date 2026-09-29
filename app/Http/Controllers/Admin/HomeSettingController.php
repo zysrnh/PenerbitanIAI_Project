@@ -10,29 +10,41 @@ use Illuminate\Support\Str;
 class HomeSettingController extends Controller
 {
     /**
-     * Helper to safely save uploaded files to both public/storage and storage/app/public
+     * Helper to safely save uploaded files to all potential storage locations (app/public, public/storage, public_html)
      */
     private function saveUploadedFile($file, string $folder): string
     {
-        $dir1 = public_path('storage/' . $folder);
-        $dir2 = storage_path('app/public/' . $folder);
-
-        if (!file_exists($dir1)) {
-            @mkdir($dir1, 0777, true);
-        }
-        if (!file_exists($dir2)) {
-            @mkdir($dir2, 0777, true);
-        }
-
         $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
         $filename = Str::random(30) . '.' . $ext;
-        $dest1 = $dir1 . '/' . $filename;
-        $dest2 = $dir2 . '/' . $filename;
 
-        $file->move($dir1, $filename);
-        @copy($dest1, $dest2);
-        @chmod($dest1, 0644);
-        @chmod($dest2, 0644);
+        $primaryDir = storage_path('app/public/' . $folder);
+        if (!file_exists($primaryDir)) {
+            @mkdir($primaryDir, 0777, true);
+        }
+
+        $primaryFile = $primaryDir . '/' . $filename;
+        $file->move($primaryDir, $filename);
+        @chmod($primaryFile, 0644);
+
+        $targetDirs = [
+            public_path('storage/' . $folder),
+            base_path('public_html/storage/' . $folder),
+            base_path('../public_html/storage/' . $folder),
+            '/home/persisp1/public_html/storage/' . $folder,
+        ];
+
+        foreach ($targetDirs as $dir) {
+            if ($dir !== $primaryDir) {
+                if (!file_exists($dir)) {
+                    @mkdir($dir, 0777, true);
+                }
+                if (file_exists($dir)) {
+                    $dest = $dir . '/' . $filename;
+                    @copy($primaryFile, $dest);
+                    @chmod($dest, 0644);
+                }
+            }
+        }
 
         return '/storage/' . $folder . '/' . $filename;
     }
@@ -207,7 +219,7 @@ class HomeSettingController extends Controller
             'services'               => ['nullable', 'array'],
         ]);
 
-        // Handle File Upload for About image with dual-sync storage
+        // Handle File Upload for About image with robust multi-storage sync
         if ($request->hasFile('home_about_image_file')) {
             $validated['home_about_image'] = $this->saveUploadedFile($request->file('home_about_image_file'), 'banners');
         } elseif (!empty($request->input('home_about_image'))) {
@@ -215,16 +227,24 @@ class HomeSettingController extends Controller
         }
         unset($validated['home_about_image_file']);
 
-        // Handle Dynamic Hero Slides with dual-sync storage
+        // Handle Dynamic Hero Slides with robust multi-storage sync
         if ($request->has('slides')) {
             $slidesInput = $request->input('slides', []);
+            $slideFiles = $request->file('slides', []);
             $slidesData = [];
 
             foreach ($slidesInput as $i => $slide) {
                 $imagePath = $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop';
 
+                $uploadedFile = null;
                 if ($request->hasFile("slides.{$i}.image_file")) {
-                    $imagePath = $this->saveUploadedFile($request->file("slides.{$i}.image_file"), 'banners');
+                    $uploadedFile = $request->file("slides.{$i}.image_file");
+                } elseif (isset($slideFiles[$i]['image_file']) && $slideFiles[$i]['image_file'] instanceof \Illuminate\Http\UploadedFile) {
+                    $uploadedFile = $slideFiles[$i]['image_file'];
+                }
+
+                if ($uploadedFile && $uploadedFile->isValid()) {
+                    $imagePath = $this->saveUploadedFile($uploadedFile, 'banners');
                 }
 
                 $slidesData[] = [
@@ -245,20 +265,28 @@ class HomeSettingController extends Controller
             unset($validated['slides']);
         }
 
-        // Handle Dynamic Promo Slides (Di Atas Berita) with dual-sync storage
+        // Handle Dynamic Promo Slides (Di Atas Berita) with robust multi-storage sync
         $promoActive = $request->has('home_promo_active') ? '1' : '0';
         SiteSetting::set('home_promo_active', $promoActive);
         unset($validated['home_promo_active']);
 
         if ($request->has('promo_slides')) {
             $promoInput = $request->input('promo_slides', []);
+            $promoFiles = $request->file('promo_slides', []);
             $promoData = [];
 
             foreach ($promoInput as $i => $ps) {
                 $imagePath = $ps['image'] ?? '';
 
+                $uploadedFile = null;
                 if ($request->hasFile("promo_slides.{$i}.image_file")) {
-                    $imagePath = $this->saveUploadedFile($request->file("promo_slides.{$i}.image_file"), 'promo_banners');
+                    $uploadedFile = $request->file("promo_slides.{$i}.image_file");
+                } elseif (isset($promoFiles[$i]['image_file']) && $promoFiles[$i]['image_file'] instanceof \Illuminate\Http\UploadedFile) {
+                    $uploadedFile = $promoFiles[$i]['image_file'];
+                }
+
+                if ($uploadedFile && $uploadedFile->isValid()) {
+                    $imagePath = $this->saveUploadedFile($uploadedFile, 'promo_banners');
                 }
 
                 if (!empty($imagePath)) {
