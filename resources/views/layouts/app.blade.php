@@ -430,7 +430,7 @@
                 
                 <!-- Brand Logo -->
                 <a href="{{ url('/') }}" class="flex items-center py-1 group" title="PERSIS PERS">
-                    <img src="{{ asset('images/logo/logo_persis_pers_full_official.png') }}?v={{ time() }}" alt="PERSIS PERS" class="h-10 sm:h-14 lg:h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
+                    <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PERSIS PERS" class="h-10 sm:h-14 lg:h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
                 </a>
 
                 <!-- Desktop Nav Menu -->
@@ -792,8 +792,8 @@
                 <!-- Brand Info -->
                 <div class="md:col-span-4 space-y-4">
                     <div class="flex items-center">
-                        <a href="{{ url('/') }}" title="PENERBIT PERSIS">
-                            <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}?v={{ time() }}" alt="PENERBIT PERSIS" class="h-14 sm:h-16 w-auto object-contain" />
+                        <a href="{{ url('/') }}" title="PENERBIT PERSIS" class="inline-flex items-center bg-white/95 hover:bg-white px-3 py-1.5 rounded-sm shadow-sm transition">
+                            <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PENERBIT PERSIS" class="h-10 sm:h-12 w-auto object-contain" />
                         </a>
                     </div>
                     <p class="text-xs text-slate-400 leading-relaxed">

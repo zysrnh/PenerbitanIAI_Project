@@ -53,9 +53,9 @@
     <div class="w-full max-w-sm my-auto animate-smooth-in space-y-4">
         
         <!-- Official Logo Header -->
-        <div class="text-center space-y-1.5">
-            <a href="{{ url('/') }}" class="inline-block transition-transform duration-300 hover:scale-105 active:scale-95" title="PERSIS PERS">
-                <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-12 sm:h-14 w-auto mx-auto object-contain" />
+        <div class="text-center space-y-2">
+            <a href="{{ url('/') }}" class="inline-block transition-transform duration-300 hover:scale-105 active:scale-95 bg-white/95 px-4 py-2 rounded-sm shadow-md" title="PERSIS PERS">
+                <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PERSIS PERS" class="h-10 sm:h-12 w-auto mx-auto object-contain" />
             </a>
             <p class="text-xs text-slate-400 font-medium tracking-tight">Pemulihan Kata Sandi Admin</p>
         </div>
