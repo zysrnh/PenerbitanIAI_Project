@@ -792,8 +792,8 @@
                 <!-- Brand Info -->
                 <div class="md:col-span-4 space-y-4">
                     <div class="flex items-center">
-                        <a href="{{ url('/') }}" title="PENERBIT PERSIS" class="inline-flex items-center bg-white/95 hover:bg-white px-3 py-1.5 rounded-sm shadow-sm transition">
-                            <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PENERBIT PERSIS" class="h-10 sm:h-12 w-auto object-contain" />
+                        <a href="{{ url('/') }}" title="PENERBIT PERSIS" class="inline-flex items-center transition hover:opacity-90">
+                            <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PENERBIT PERSIS" class="h-12 sm:h-14 w-auto object-contain" />
                         </a>
                     </div>
                     <p class="text-xs text-slate-400 leading-relaxed">

@@ -82,7 +82,7 @@
         <div class="p-5">
             <!-- Brand Header -->
             <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-between lg:justify-center">
-                <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center transition hover:opacity-90 bg-white/95 px-3 py-1.5 rounded-sm shadow-sm" title="PENERBIT PERSIS">
+                <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center transition hover:opacity-90" title="PENERBIT PERSIS">
                     <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PENERBIT PERSIS" class="h-9 w-auto object-contain" />
                 </a>
                 <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-sm hover:bg-white/10 transition" title="Tutup Menu">
