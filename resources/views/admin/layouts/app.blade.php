@@ -83,7 +83,7 @@
             <!-- Brand Header -->
             <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-between lg:justify-center">
                 <a href="{{ route('admin.dashboard') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
+                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}?v={{ time() }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
                 </a>
                 <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-sm hover:bg-white/10 transition" title="Tutup Menu">
                     <i class="fa-solid fa-xmark text-base"></i>
