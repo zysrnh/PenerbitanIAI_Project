@@ -458,6 +458,18 @@
             </div>
 
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <!-- Direct PDF Button -->
+                <a id="btnDirectPdfOpen" href="#" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition items-center gap-1.5 border border-slate-700 cursor-pointer" title="Buka File PDF Asli di Tab Baru (Cepat)">
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10.5px] text-emerald-400"></i>
+                    <span class="hidden md:inline">Buka PDF</span>
+                </a>
+
+                <!-- Share Link Button -->
+                <button type="button" onclick="copyBookShareLink()" class="px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer" title="Salin Link Tautan Buku ini">
+                    <i class="fa-solid fa-share-nodes text-[10.5px] text-emerald-400"></i>
+                    <span id="copyBookLinkText" class="hidden md:inline">Bagikan</span>
+                </button>
+
                 <!-- Zoom Controls -->
                 <div class="flex items-center bg-slate-800 rounded-xs border border-slate-700 p-0.5">
                     <button type="button" onclick="zoomFlipbook(-0.25)" class="w-6 sm:w-7 h-6 sm:h-7 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-700 rounded-xs transition text-xs cursor-pointer active:scale-95" title="Perkecil Tampilan (-)">
@@ -490,10 +502,16 @@
         <div class="flex-1 flex items-center justify-center p-1 sm:p-4 overflow-hidden relative touch-pan-y" id="flipbookStageContainer">
             
             <!-- Loading Indicator -->
-            <div id="flipLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/85 text-white z-50">
+            <div id="flipLoading" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/90 text-white z-50 p-4 text-center">
                 <i class="fa-solid fa-circle-notch fa-spin text-3xl text-emerald-500 mb-3"></i>
-                <p id="flipLoadingTitle" class="text-xs font-bold tracking-wide text-slate-200">Menyiapkan Lembaran Buku Digital...</p>
-                <p id="flipLoadingText" class="text-[10px] text-emerald-400 mt-1 font-mono">Memuat halaman PDF &amp; efek flip 3D</p>
+                <p id="flipLoadingTitle" class="text-xs sm:text-sm font-bold tracking-wide text-slate-200">Menyiapkan Lembaran Buku Digital...</p>
+                <p id="flipLoadingText" class="text-[10.5px] sm:text-xs text-emerald-400 mt-1 font-mono">Memuat halaman PDF &amp; efek flip 3D</p>
+                <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-center">
+                    <a id="btnLoadingOpenDirectPdf" href="#" target="_blank" rel="noopener noreferrer" class="hidden px-3.5 py-2 rounded-xs bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold transition items-center gap-2 shadow-md">
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                        <span>Buku Tebal? Buka PDF Langsung di Tab Baru</span>
+                    </a>
+                </div>
             </div>
 
             <!-- Floating Navigation Buttons (Desktop only, never block text on mobile!) -->
@@ -994,6 +1012,24 @@
         }
     };
 
+    window.copyBookShareLink = function() {
+        if (!window.currentReadingBook) return;
+        try {
+            const url = new URL(window.location.origin + window.location.pathname);
+            url.searchParams.set('baca', window.currentReadingBook.id);
+            navigator.clipboard.writeText(url.toString()).then(() => {
+                const lbl = document.getElementById('copyBookLinkText');
+                if (lbl) {
+                    const prev = lbl.innerText;
+                    lbl.innerText = 'Link Tersalin!';
+                    setTimeout(() => { lbl.innerText = prev; }, 2500);
+                }
+            });
+        } catch(e) {
+            console.error('Gagal salin link:', e);
+        }
+    };
+
     window.openFlipbookReader = async function(book) {
         if (typeof book === 'string') {
             book = window.decodeBookData(book);
@@ -1002,10 +1038,19 @@
 
         window.currentReadingBook = book;
 
+        // Update URL query param ?baca=ID (agar link bisa di-copy langsung dari address bar)
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('baca', book.id);
+            window.history.replaceState({}, '', url.toString());
+        } catch(e) {}
+
         const modal = document.getElementById('flipbookModal');
         const titleEl = document.getElementById('modalBookTitle');
         const authorEl = document.getElementById('modalBookAuthor');
         const btnDownload = document.getElementById('btnDownloadPdf');
+        const btnDirect = document.getElementById('btnDirectPdfOpen');
+        const btnLoadingDirect = document.getElementById('btnLoadingOpenDirectPdf');
         const loader = document.getElementById('flipLoading');
         const loadTitle = document.getElementById('flipLoadingTitle');
         const loadText = document.getElementById('flipLoadingText');
@@ -1027,6 +1072,20 @@
             } else {
                 btnDownload.classList.add('hidden');
             }
+        }
+
+        if (pdfUrl) {
+            if (btnDirect) {
+                btnDirect.classList.remove('hidden');
+                btnDirect.href = pdfUrl;
+            }
+            if (btnLoadingDirect) {
+                btnLoadingDirect.classList.remove('hidden');
+                btnLoadingDirect.href = pdfUrl;
+            }
+        } else {
+            if (btnDirect) btnDirect.classList.add('hidden');
+            if (btnLoadingDirect) btnLoadingDirect.classList.add('hidden');
         }
 
         if (modal) {
@@ -1376,8 +1435,15 @@
 
     window.closeFlipbookModal = function() {
         const modal = document.getElementById('flipbookModal');
-        modal.style.display = 'none';
-        modal.classList.add('hidden');
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+        }
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('baca');
+            window.history.replaceState({}, '', url.toString());
+        } catch(e) {}
         resetFlipbookZoom();
         if (pageFlipInstance) {
             try { pageFlipInstance.destroy(); } catch(e) {}
@@ -1647,6 +1713,26 @@
             submitBtn.innerHTML = originalText;
         }
     };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const bacaId = params.get('baca');
+            if (bacaId) {
+                setTimeout(function() {
+                    let found = false;
+                    document.querySelectorAll('[data-book]').forEach(el => {
+                        if (found) return;
+                        const b = window.decodeBookData(el.getAttribute('data-book'));
+                        if (b && (b.id == bacaId || b.id === parseInt(bacaId, 10))) {
+                            found = true;
+                            window.openFlipbookReader(b);
+                        }
+                    });
+                }, 350);
+            }
+        } catch(e) {}
+    });
 
     @if(isset($activeBook) && $activeBook)
         document.addEventListener('DOMContentLoaded', function() {
