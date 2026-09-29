@@ -681,7 +681,7 @@
                     
                     <div class="relative pt-1">
                         <span class="absolute left-2.5 top-3.5 text-xs font-bold text-slate-400 font-mono">Rp</span>
-                        <input type="number" id="customNominalInput" value="50000" min="1000" step="1000" oninput="handleCustomNominalChange(this.value)" placeholder="Atau ketik nominal lainnya..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xs border border-slate-300 bg-white font-mono font-bold text-slate-900 focus:outline-hidden focus:border-emerald-700" />
+                        <input type="text" inputmode="numeric" id="customNominalInput" value="50.000" oninput="handleCustomNominalChange(this)" placeholder="Atau ketik nominal lainnya..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xs border border-slate-300 bg-white font-mono font-bold text-slate-900 focus:outline-hidden focus:border-emerald-700" />
                     </div>
                 </div>
 
@@ -1531,21 +1531,43 @@
         }
     };
 
+    window.formatNumberWithDots = function(num) {
+        if (!num && num !== 0) return '';
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
     window.pickNominal = function(amount, btn) {
         document.querySelectorAll('.nominal-chip').forEach(el => {
             el.className = 'nominal-chip py-1.5 px-2 rounded-xs border border-slate-300 bg-white hover:border-emerald-600 font-bold text-slate-800 transition cursor-pointer text-center';
         });
-        btn.className = 'nominal-chip py-1.5 px-2 rounded-xs border border-emerald-700 bg-emerald-50 text-emerald-900 font-bold text-center transition cursor-pointer';
+        if (btn) {
+            btn.className = 'nominal-chip py-1.5 px-2 rounded-xs border border-emerald-700 bg-emerald-50 text-emerald-900 font-bold text-center transition cursor-pointer';
+        }
         
-        document.getElementById('customNominalInput').value = amount;
-        document.getElementById('formAmount').value = amount;
+        const formatted = window.formatNumberWithDots(amount);
+        const input = document.getElementById('customNominalInput');
+        if (input) input.value = formatted;
+        
+        const formAmt = document.getElementById('formAmount');
+        if (formAmt) formAmt.value = amount;
     };
 
-    window.handleCustomNominalChange = function(val) {
+    window.handleCustomNominalChange = function(inputEl) {
         document.querySelectorAll('.nominal-chip').forEach(el => {
             el.className = 'nominal-chip py-1.5 px-2 rounded-xs border border-slate-300 bg-white hover:border-emerald-600 font-bold text-slate-800 transition cursor-pointer text-center';
         });
-        document.getElementById('formAmount').value = val || 0;
+
+        let rawVal = inputEl.value.replace(/\D/g, '');
+        if (rawVal) {
+            const num = parseInt(rawVal, 10);
+            inputEl.value = window.formatNumberWithDots(num);
+            const formAmt = document.getElementById('formAmount');
+            if (formAmt) formAmt.value = num;
+        } else {
+            inputEl.value = '';
+            const formAmt = document.getElementById('formAmount');
+            if (formAmt) formAmt.value = 0;
+        }
     };
 
     window.toggleDonationForm = function() {
