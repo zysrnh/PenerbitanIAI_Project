@@ -1000,6 +1000,8 @@
         }
         if (!book) return;
 
+        window.currentReadingBook = book;
+
         const modal = document.getElementById('flipbookModal');
         const titleEl = document.getElementById('modalBookTitle');
         const authorEl = document.getElementById('modalBookAuthor');
@@ -1009,8 +1011,8 @@
         const loadText = document.getElementById('flipLoadingText');
         const viewport = document.getElementById('flipbookViewport');
 
-        if (titleEl) titleEl.innerText = book.title;
-        if (authorEl) authorEl.innerText = book.author + ' (' + book.category + ')';
+        if (titleEl) titleEl.innerText = book.title || 'Buku Digital';
+        if (authorEl) authorEl.innerText = (book.author || 'PERSIS PERS') + (book.category ? ' (' + book.category + ')' : '');
 
         if (typeof resetFlipbookZoom === 'function') {
             resetFlipbookZoom();
@@ -1018,20 +1020,28 @@
 
         const pdfUrl = book.pdf_url || (book.pdf_file ? (book.pdf_file.startsWith('http') ? book.pdf_file : '/storage/' + book.pdf_file) : null);
 
-        if (pdfUrl) {
-            btnDownload.classList.remove('hidden');
-            btnDownload.href = pdfUrl;
-        } else {
-            btnDownload.classList.add('hidden');
+        if (btnDownload) {
+            if (pdfUrl) {
+                btnDownload.classList.remove('hidden');
+                btnDownload.href = pdfUrl;
+            } else {
+                btnDownload.classList.add('hidden');
+            }
         }
 
-        modal.style.display = 'flex';
-        modal.classList.remove('hidden');
-        loader.classList.remove('hidden');
+        if (modal) {
+            modal.style.display = 'flex';
+            modal.classList.remove('hidden');
+        }
+        if (loader) {
+            loader.classList.remove('hidden');
+        }
         if (loadTitle) loadTitle.innerText = 'Menyiapkan Lembaran Buku Digital...';
         if (loadText) loadText.innerText = 'Memuat dokumen PDF & efek 3D...';
 
-        viewport.innerHTML = '<div id="bookFlipInstance" class="st-flip-container"></div>';
+        if (viewport) {
+            viewport.innerHTML = '<div id="bookFlipInstance" class="st-flip-container"></div>';
+        }
 
         if (pdfUrl) {
             await renderPdfToFlipbook(pdfUrl, book);
