@@ -75,6 +75,49 @@ Route::get('/storage/{path}', function ($path) {
     abort(404);
 })->where('path', '.*')->name('storage.file_serve');
 
+Route::get('/images/{path}', function ($path) {
+    $cleanPath = urldecode($path);
+    $variants = array_unique([
+        $cleanPath,
+        str_replace(' ', '-', $cleanPath),
+        str_replace('-', ' ', $cleanPath),
+    ]);
+
+    $baseDirs = array_unique([
+        '/home/persisp1/public_html/images',
+        base_path('public_html/images'),
+        base_path('../public_html/images'),
+        base_path('public/images'),
+        public_path('images'),
+        base_path('images'),
+    ]);
+
+    foreach ($variants as $var) {
+        foreach ($baseDirs as $dir) {
+            $candidate = rtrim($dir, '/') . '/' . ltrim($var, '/');
+            if (file_exists($candidate) && !is_dir($candidate)) {
+                $mimeType = match (strtolower(pathinfo($candidate, PATHINFO_EXTENSION))) {
+                    'jpg', 'jpeg' => 'image/jpeg',
+                    'png' => 'image/png',
+                    'webp' => 'image/webp',
+                    'svg' => 'image/svg+xml',
+                    'gif' => 'image/gif',
+                    default => mime_content_type($candidate) ?: 'application/octet-stream',
+                };
+
+                return response()->file($candidate, [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'inline; filename="' . basename($candidate) . '"',
+                    'Access-Control-Allow-Origin' => '*',
+                    'Cache-Control' => 'public, max-age=86400',
+                ]);
+            }
+        }
+    }
+
+    abort(404);
+})->where('path', '.*')->name('images.file_serve');
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/layanan/{slug}', [\App\Http\Controllers\ServiceController::class, 'show'])->name('layanan.show');
