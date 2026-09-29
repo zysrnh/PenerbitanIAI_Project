@@ -12,6 +12,10 @@
                 @php
                     $isClean = ($slide['type'] ?? 'standard') === 'clean' || (empty($slide['title']) && empty($slide['desc']));
                     $fitMode = $slide['fit'] ?? ($isClean ? 'contain' : 'cover');
+                    $slideImg = $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop';
+                    if (!empty($slideImg) && !str_starts_with($slideImg, 'http') && !str_starts_with($slideImg, '//')) {
+                        $slideImg = asset(ltrim($slideImg, '/'));
+                    }
                 @endphp
                 <div class="slide absolute inset-0 transition-opacity duration-500 ease-in-out {{ $index === 0 ? 'opacity-100 z-10 block' : 'opacity-0 z-0 hidden' }}" data-index="{{ $index }}">
                     
@@ -19,7 +23,7 @@
                         <!-- Ambient Blurred Backdrop for seamless 100% full look -->
                         <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#032c21]">
                             <img 
-                                src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
+                                src="{{ $slideImg }}" 
                                 alt="" 
                                 class="w-full h-full object-cover blur-2xl opacity-40 scale-110"
                                 aria-hidden="true"
@@ -28,7 +32,7 @@
                         <!-- 100% Complete Image (No-Crop) -->
                         <div class="absolute inset-0 z-1 w-full h-full flex items-center justify-center">
                             <img 
-                                src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
+                                src="{{ $slideImg }}" 
                                 alt="Banner Slide {{ $index + 1 }}" 
                                 class="w-full h-full object-contain object-center"
                             />
@@ -37,7 +41,7 @@
                         <!-- 100% Full Width & Full Height Background Image (Cover Mode) -->
                         <div class="absolute inset-0 z-0 w-full h-full">
                             <img 
-                                src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" 
+                                src="{{ $slideImg }}" 
                                 alt="Banner Slide {{ $index + 1 }}" 
                                 class="w-full h-full object-cover object-center"
                             />
@@ -186,8 +190,14 @@
                                 {{ $settings['home_about_desc'] ?? 'Merupakan unit layanan Penerbitan dan Percetakan yang berkomitmen mendukung penyebaran ilmu pengetahuan dan karya berkualitas bagi akademisi dan masyarakat.' }}
                             </div>
                             <div class="col-span-5 sm:col-span-4 h-24 sm:h-28 rounded-xs overflow-hidden bg-slate-100 border border-slate-200">
+                                @php
+                                    $aboutImg = $settings['home_about_image'] ?? 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop';
+                                    if (!empty($aboutImg) && !str_starts_with($aboutImg, 'http') && !str_starts_with($aboutImg, '//')) {
+                                        $aboutImg = asset(ltrim($aboutImg, '/'));
+                                    }
+                                @endphp
                                 <img 
-                                    src="{{ $settings['home_about_image'] ?? 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop' }}" 
+                                    src="{{ $aboutImg }}" 
                                     alt="Kantor Redaksi Persis Pers" 
                                     class="w-full h-full object-cover"
                                 />
@@ -335,6 +345,10 @@
                 @foreach($promoSlides as $pIdx => $pSlide)
                     @php
                         $pFitMode = $pSlide['fit'] ?? 'contain';
+                        $pSlideImg = $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop';
+                        if (!empty($pSlideImg) && !str_starts_with($pSlideImg, 'http') && !str_starts_with($pSlideImg, '//')) {
+                            $pSlideImg = asset(ltrim($pSlideImg, '/'));
+                        }
                     @endphp
                     <div class="promo-slide absolute inset-0 transition-opacity duration-500 ease-in-out {{ $pIdx === 0 ? 'opacity-100 z-10 block' : 'opacity-0 z-0 hidden' }}" data-pindex="{{ $pIdx }}">
                         @if(!empty($pSlide['url']))
@@ -345,7 +359,7 @@
 
                             @if($pFitMode === 'cover')
                                 <img 
-                                    src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
+                                    src="{{ $pSlideImg }}" 
                                     alt="{{ $pSlide['title'] ?? 'Banner Promo PERSIS PERS' }}" 
                                     class="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-500" 
                                     loading="lazy"
@@ -354,7 +368,7 @@
                                 <!-- Ambient Blurred Backdrop for 100% complete seamless display -->
                                 <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-[#032c21]">
                                     <img 
-                                        src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
+                                        src="{{ $pSlideImg }}" 
                                         alt="" 
                                         class="w-full h-full object-cover blur-2xl opacity-40 scale-110"
                                         aria-hidden="true"
@@ -363,7 +377,7 @@
                                 <!-- 100% Complete Image (No-Crop) -->
                                 <div class="absolute inset-0 z-1 w-full h-full flex items-center justify-center">
                                     <img 
-                                        src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" 
+                                        src="{{ $pSlideImg }}" 
                                         alt="{{ $pSlide['title'] ?? 'Banner Promo PERSIS PERS' }}" 
                                         class="w-full h-full object-contain object-center group-hover:scale-[1.01] transition-transform duration-500" 
                                         loading="lazy"
@@ -447,8 +461,14 @@
                     <article class="bg-white rounded-sm border border-slate-200/90 shadow-2xs hover:shadow-md transition overflow-hidden flex flex-col justify-between group">
                         <div>
                             <a href="{{ route('berita.show', $art->slug) }}" class="block aspect-[16/9] overflow-hidden bg-slate-100 relative">
+                                @php
+                                    $artThumb = $art->thumbnail ?: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop';
+                                    if (!empty($artThumb) && !str_starts_with($artThumb, 'http') && !str_starts_with($artThumb, '//')) {
+                                        $artThumb = asset(ltrim($artThumb, '/'));
+                                    }
+                                @endphp
                                 <img 
-                                    src="{{ $art->thumbnail ?: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop' }}" 
+                                    src="{{ $artThumb }}" 
                                     alt="{{ $art->title }}" 
                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
                                     loading="lazy"

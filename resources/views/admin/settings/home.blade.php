@@ -130,7 +130,13 @@
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <div class="w-16 h-12 rounded-xs overflow-hidden border border-slate-300 bg-slate-100 shrink-0">
-                                            <img id="thumb_s_{{ $i }}" src="{{ $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop' }}" class="w-full h-full object-cover" />
+                                            @php
+                                                $sThumb = $slide['image'] ?? 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1600&auto=format&fit=crop';
+                                                if (!empty($sThumb) && !str_starts_with($sThumb, 'http') && !str_starts_with($sThumb, '//')) {
+                                                    $sThumb = asset(ltrim($sThumb, '/'));
+                                                }
+                                            @endphp
+                                            <img id="thumb_s_{{ $i }}" src="{{ $sThumb }}" class="w-full h-full object-cover" />
                                         </div>
                                         <div class="flex-1 space-y-1.5">
                                             <input type="file" name="slides[{{ $i }}][image_file]" accept="image/*" onchange="handleSlideImageFilePreview(this, {{ $i }})" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-[#006830] file:text-white hover:file:bg-[#032c21] cursor-pointer" />
@@ -251,7 +257,13 @@
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <div class="w-20 h-10 rounded-xs overflow-hidden border border-slate-300 bg-slate-100 shrink-0">
-                                            <img id="thumb_promo_{{ $pIndex }}" src="{{ $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop' }}" class="w-full h-full object-cover" />
+                                            @php
+                                                $pThumb = $pSlide['image'] ?? 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?q=80&w=1600&auto=format&fit=crop';
+                                                if (!empty($pThumb) && !str_starts_with($pThumb, 'http') && !str_starts_with($pThumb, '//')) {
+                                                    $pThumb = asset(ltrim($pThumb, '/'));
+                                                }
+                                            @endphp
+                                            <img id="thumb_promo_{{ $pIndex }}" src="{{ $pThumb }}" class="w-full h-full object-cover" />
                                         </div>
                                         <div class="flex-1 space-y-1">
                                             <input type="file" name="promo_slides[{{ $pIndex }}][image_file]" accept="image/*" onchange="handlePromoImageFilePreview(this, {{ $pIndex }})" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-amber-600 file:text-white hover:file:bg-amber-700 cursor-pointer" />
@@ -432,7 +444,13 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="w-16 h-12 rounded-xs overflow-hidden border border-slate-300 bg-slate-200 shrink-0">
-                                    <img id="thumb_ab" src="{{ $settings['home_about_image'] }}" class="w-full h-full object-cover" />
+                                    @php
+                                        $abThumb = $settings['home_about_image'] ?? 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop';
+                                        if (!empty($abThumb) && !str_starts_with($abThumb, 'http') && !str_starts_with($abThumb, '//')) {
+                                            $abThumb = asset(ltrim($abThumb, '/'));
+                                        }
+                                    @endphp
+                                    <img id="thumb_ab" src="{{ $abThumb }}" class="w-full h-full object-cover" />
                                 </div>
                                 <div class="flex-1 space-y-1.5">
                                     <input type="file" name="home_about_image_file" id="in_file_ab" accept="image/*" onchange="handleImageFilePreview(this, 'ab')" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10.5px] file:font-bold file:bg-[#006830] file:text-white hover:file:bg-[#032c21] cursor-pointer" />

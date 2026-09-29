@@ -11,6 +11,34 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    /**
+     * Helper to safely save uploaded files to both public/storage and storage/app/public
+     */
+    private function saveUploadedFile($file, string $folder): string
+    {
+        $dir1 = public_path('storage/' . $folder);
+        $dir2 = storage_path('app/public/' . $folder);
+
+        if (!file_exists($dir1)) {
+            @mkdir($dir1, 0777, true);
+        }
+        if (!file_exists($dir2)) {
+            @mkdir($dir2, 0777, true);
+        }
+
+        $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $filename = Str::random(30) . '.' . $ext;
+        $dest1 = $dir1 . '/' . $filename;
+        $dest2 = $dir2 . '/' . $filename;
+
+        $file->move($dir1, $filename);
+        @copy($dest1, $dest2);
+        @chmod($dest1, 0644);
+        @chmod($dest2, 0644);
+
+        return '/storage/' . $folder . '/' . $filename;
+    }
+
     public function index(Request $request)
     {
         $search = trim($request->input('search', ''));
@@ -105,8 +133,7 @@ class ArticleController extends Controller
 
         // Handle Thumbnail Upload
         if ($request->hasFile('thumbnail_file')) {
-            $path = $request->file('thumbnail_file')->store('articles/thumbnails', 'public');
-            $validated['thumbnail'] = '/storage/' . $path;
+            $validated['thumbnail'] = $this->saveUploadedFile($request->file('thumbnail_file'), 'articles/thumbnails');
         }
 
         // Auto-extract excerpt from content if not provided
@@ -187,8 +214,7 @@ class ArticleController extends Controller
         }
 
         if ($request->hasFile('thumbnail_file')) {
-            $path = $request->file('thumbnail_file')->store('articles/thumbnails', 'public');
-            $validated['thumbnail'] = '/storage/' . $path;
+            $validated['thumbnail'] = $this->saveUploadedFile($request->file('thumbnail_file'), 'articles/thumbnails');
         }
 
         $validated['is_featured'] = $request->has('is_featured');
@@ -228,10 +254,10 @@ class ArticleController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('articles/content', 'public');
+            $url = $this->saveUploadedFile($request->file('image'), 'articles/content');
             return response()->json([
                 'success' => true,
-                'url'     => '/storage/' . $path,
+                'url'     => $url,
             ]);
         }
 

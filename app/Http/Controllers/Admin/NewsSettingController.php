@@ -5,9 +5,38 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class NewsSettingController extends Controller
 {
+    /**
+     * Helper to safely save uploaded files to both public/storage and storage/app/public
+     */
+    private function saveUploadedFile($file, string $folder): string
+    {
+        $dir1 = public_path('storage/' . $folder);
+        $dir2 = storage_path('app/public/' . $folder);
+
+        if (!file_exists($dir1)) {
+            @mkdir($dir1, 0777, true);
+        }
+        if (!file_exists($dir2)) {
+            @mkdir($dir2, 0777, true);
+        }
+
+        $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $filename = Str::random(30) . '.' . $ext;
+        $dest1 = $dir1 . '/' . $filename;
+        $dest2 = $dir2 . '/' . $filename;
+
+        $file->move($dir1, $filename);
+        @copy($dest1, $dest2);
+        @chmod($dest1, 0644);
+        @chmod($dest2, 0644);
+
+        return '/storage/' . $folder . '/' . $filename;
+    }
+
     public function index()
     {
         $settings = [
@@ -52,8 +81,7 @@ class NewsSettingController extends Controller
         ]);
 
         if ($request->hasFile('wakaf_qris_file')) {
-            $path = $request->file('wakaf_qris_file')->store('wakaf', 'public');
-            $validated['wakaf_qris_image'] = '/storage/' . $path;
+            $validated['wakaf_qris_image'] = $this->saveUploadedFile($request->file('wakaf_qris_file'), 'wakaf');
         }
         unset($validated['wakaf_qris_file']);
 
