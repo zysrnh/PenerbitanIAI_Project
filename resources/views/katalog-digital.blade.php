@@ -317,6 +317,19 @@
                         @php
                             $coverUrl = $book->cover_url;
                             $pdfUrl = $book->pdf_url;
+                            $bookPayload = [
+                                'id' => $book->id,
+                                'title' => $book->title,
+                                'author' => $book->author,
+                                'category' => $book->category,
+                                'year' => $book->year,
+                                'pages' => $book->pages,
+                                'synopsis' => $book->synopsis,
+                                'cover_url' => $coverUrl,
+                                'pdf_url' => $pdfUrl,
+                                'pdf_file' => $book->pdf_file,
+                            ];
+                            $encodedBook = base64_encode(json_encode($bookPayload));
                         @endphp
                         <div class="persis-book-card p-4">
                             
@@ -335,7 +348,7 @@
                                 </div>
 
                                 <!-- 3D Perspective Stage -->
-                                <div class="book-cover-stage-3d w-36 aspect-[3/4.2] mx-auto py-2 cursor-pointer" onclick="openFlipbookReader({{ json_encode($book) }})" title="Klik untuk Buka Buku (Flipbook)">
+                                <div class="book-cover-stage-3d w-36 aspect-[3/4.2] mx-auto py-2 cursor-pointer" data-book="{{ $encodedBook }}" onclick="openFlipbookFromEncoded(this.getAttribute('data-book'))" title="Klik untuk Buka Buku (Flipbook)">
                                     <div class="book-cover-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 border border-slate-300">
                                         <div class="book-spine-strip"></div>
                                         <div class="book-paper-edge"></div>
@@ -361,7 +374,7 @@
 
                                 <!-- Book Info -->
                                 <div class="mt-3 space-y-1">
-                                    <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug hover:text-emerald-800 transition cursor-pointer" onclick="openFlipbookReader({{ json_encode($book) }})">
+                                    <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug hover:text-emerald-800 transition cursor-pointer" data-book="{{ $encodedBook }}" onclick="openFlipbookFromEncoded(this.getAttribute('data-book'))">
                                         {{ $book->title }}
                                     </h3>
                                     <p class="text-[11px] text-slate-500 truncate flex items-center gap-1.5">
@@ -378,14 +391,16 @@
                             <!-- Action Buttons: Buka Baca & Download/Dukung -->
                             <div class="pt-3 border-t border-slate-100 mt-3 grid grid-cols-2 gap-2">
                                 <button type="button" 
-                                        onclick="openFlipbookReader({{ json_encode($book) }})" 
+                                        data-book="{{ $encodedBook }}"
+                                        onclick="openFlipbookFromEncoded(this.getAttribute('data-book'))" 
                                         class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                                         title="Buka &amp; Baca Flipbook">
                                     <i class="fa-solid fa-book-open-reader text-xs"></i>
                                     <span>Baca Buku</span>
                                 </button>
                                 <button type="button" 
-                                        onclick="openDownloadDonationModal({{ json_encode($book) }})" 
+                                        data-book="{{ $encodedBook }}"
+                                        onclick="openDownloadFromEncoded(this.getAttribute('data-book'))" 
                                         class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                                         title="Download Buku &amp; Dukung Penerbitan">
                                     <i class="fa-solid fa-download text-xs text-emerald-700"></i>
@@ -945,7 +960,46 @@
         };
     }
 
+    window.decodeBookData = function(data) {
+        if (!data) return null;
+        if (typeof data === 'object') return data;
+        try {
+            const decoded = decodeURIComponent(escape(atob(data)));
+            return JSON.parse(decoded);
+        } catch (e1) {
+            try {
+                return JSON.parse(atob(data));
+            } catch (e2) {
+                try {
+                    return JSON.parse(data);
+                } catch (e3) {
+                    console.error('Gagal decode data buku:', e3);
+                    return null;
+                }
+            }
+        }
+    };
+
+    window.openFlipbookFromEncoded = function(encoded) {
+        const book = window.decodeBookData(encoded);
+        if (book) {
+            window.openFlipbookReader(book);
+        }
+    };
+
+    window.openDownloadFromEncoded = function(encoded) {
+        const book = window.decodeBookData(encoded);
+        if (book) {
+            window.openDownloadDonationModal(book);
+        }
+    };
+
     window.openFlipbookReader = async function(book) {
+        if (typeof book === 'string') {
+            book = window.decodeBookData(book);
+        }
+        if (!book) return;
+
         const modal = document.getElementById('flipbookModal');
         const titleEl = document.getElementById('modalBookTitle');
         const authorEl = document.getElementById('modalBookAuthor');
@@ -1424,6 +1478,9 @@
     let currentDonationBook = null;
 
     window.openDownloadDonationModal = function(book) {
+        if (typeof book === 'string') {
+            book = window.decodeBookData(book);
+        }
         if (!book) return;
         currentDonationBook = book;
         
