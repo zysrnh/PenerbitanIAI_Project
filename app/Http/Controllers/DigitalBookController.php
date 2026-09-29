@@ -67,6 +67,18 @@ class DigitalBookController extends Controller
             $activeBook = DigitalBook::published()->where('slug', $slug)->orWhere('id', $slug)->first();
         }
 
+        // Donation Settings from SiteSetting
+        $donationSettings = [
+            'active'       => \App\Models\SiteSetting::get('donation_active', '1') === '1',
+            'title'        => \App\Models\SiteSetting::get('donation_title', 'Dukung Penerbitan Buku Islam'),
+            'desc'         => \App\Models\SiteSetting::get('donation_desc', 'Buku ini dapat diakses dan diunduh secara digital. Jika buku ini bermanfaat bagi Anda, mari ikut mendukung Persis Pers agar dapat terus menerbitkan dan menyebarluaskan karya-karya keislaman.'),
+            'qris_image'   => \App\Models\SiteSetting::get('donation_qris_image', ''),
+            'bank_name'    => \App\Models\SiteSetting::get('donation_bank_name', 'Bank Syariah Indonesia (BSI)'),
+            'bank_account' => \App\Models\SiteSetting::get('donation_bank_account', '7148888999'),
+            'bank_holder'  => \App\Models\SiteSetting::get('donation_bank_holder', 'PENERBIT PERSIS DONASI'),
+            'wa_contact'   => \App\Models\SiteSetting::get('donation_wa_contact', '6285978006263'),
+        ];
+
         return view('katalog-digital', compact(
             'digitalBooks',
             'categoryStats',
@@ -76,7 +88,8 @@ class DigitalBookController extends Controller
             'totalFeatured',
             'totalNew',
             'popularBooks',
-            'activeBook'
+            'activeBook',
+            'donationSettings'
         ));
     }
 

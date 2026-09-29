@@ -177,6 +177,10 @@
                             <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
                             <span>Buku Digital (Flipbook)</span>
                         </a>
+                        <a href="{{ route('admin.donations.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.donations.index') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <i class="fa-solid fa-hand-holding-heart w-4 text-center"></i>
+                            <span>Donasi Digital &amp; Unduh</span>
+                        </a>
                         @endif
 
                         @if(Auth::user()->canAccessArticles())

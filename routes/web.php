@@ -92,6 +92,10 @@ Route::get('/berita/{slug}', [\App\Http\Controllers\ArticleController::class, 's
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
 Route::post('/kontak/kirim', [ContactController::class, 'store'])->name('kontak.store')->middleware('throttle:6,1');
 
+// Donation & Digital Download Public Routes
+Route::post('/donasi/kirim', [\App\Http\Controllers\DonationController::class, 'store'])->name('donasi.store')->middleware('throttle:15,1');
+Route::get('/katalog-digital/download/{slug}', [\App\Http\Controllers\DonationController::class, 'download'])->name('katalog.digital.download');
+
 /*
 |--------------------------------------------------------------------------
 | Auth Routes
@@ -156,6 +160,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
         Route::post('/digital-books/bulk-destroy', [\App\Http\Controllers\Admin\DigitalBookController::class, 'bulkDestroy'])->name('digital-books.bulk_destroy');
         Route::resource('digital-books', \App\Http\Controllers\Admin\DigitalBookController::class);
+
+        // Donations Management
+        Route::get('/donations', [\App\Http\Controllers\Admin\DonationController::class, 'index'])->name('donations.index');
+        Route::patch('/donations/{donation}/status', [\App\Http\Controllers\Admin\DonationController::class, 'updateStatus'])->name('donations.status');
+        Route::delete('/donations/{donation}', [\App\Http\Controllers\Admin\DonationController::class, 'destroy'])->name('donations.destroy');
+        Route::get('/settings/donations', [\App\Http\Controllers\Admin\DonationController::class, 'settings'])->name('donations.settings');
+        Route::put('/settings/donations', [\App\Http\Controllers\Admin\DonationController::class, 'updateSettings'])->name('donations.settings.update');
 
         // Fix Storage Helper Route
         Route::get('/fix-storage', function () {

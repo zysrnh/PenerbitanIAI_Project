@@ -375,13 +375,21 @@
                                 </div>
                             </div>
 
-                            <!-- Action Button -->
-                            <div class="pt-4 border-t border-slate-100 mt-3">
+                            <!-- Action Buttons: Buka Baca & Download/Dukung -->
+                            <div class="pt-3 border-t border-slate-100 mt-3 grid grid-cols-2 gap-2">
                                 <button type="button" 
                                         onclick="openFlipbookReader({{ json_encode($book) }})" 
-                                        class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-2 shadow-2xs cursor-pointer">
+                                        class="w-full py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                                        title="Buka &amp; Baca Flipbook">
                                     <i class="fa-solid fa-book-open-reader text-xs"></i>
-                                    <span>Buka &amp; Baca (Flipbook)</span>
+                                    <span>Baca Buku</span>
+                                </button>
+                                <button type="button" 
+                                        onclick="openDownloadDonationModal({{ json_encode($book) }})" 
+                                        class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                                        title="Download Buku &amp; Dukung Penerbitan">
+                                    <i class="fa-solid fa-download text-xs text-emerald-700"></i>
+                                    <span>Download</span>
                                 </button>
                             </div>
 
@@ -448,10 +456,10 @@
                     </button>
                 </div>
 
-                <a id="btnDownloadPdf" href="#" target="_blank" class="hidden px-2 sm:px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 border border-slate-700" title="Buka / Unduh File PDF Asli">
-                    <i class="fa-solid fa-file-arrow-down text-emerald-400 text-xs"></i>
-                    <span class="hidden sm:inline">PDF Asli</span>
-                </a>
+                <button type="button" onclick="openDownloadDonationModal(window.currentReadingBook)" class="px-2.5 sm:px-3 py-1.5 rounded-xs bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer" title="Download Buku &amp; Dukung Penerbitan">
+                    <i class="fa-solid fa-download text-xs"></i>
+                    <span class="hidden sm:inline">Download</span>
+                </button>
                 
                 <button type="button" onclick="toggleFlipbookFullscreen()" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xs text-xs transition cursor-pointer" title="Layar Penuh">
                     <i class="fa-solid fa-expand"></i>
@@ -521,6 +529,205 @@
                     <i id="soundIcon" class="fa-solid fa-volume-high text-[11px] text-emerald-400"></i>
                 </button>
             </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- MODAL DOWNLOAD BUKU & DUKUNG PENERBITAN (DONASI DIGITAL)  -->
+<!-- ========================================================== -->
+<div id="downloadDonationModal" class="fixed inset-0 z-[999999] bg-slate-950/80 backdrop-blur-xs hidden items-center justify-center p-3 sm:p-4 select-none animate-fade-in" style="display: none;">
+    <div class="bg-white rounded-sm border border-slate-300 w-full max-w-xl max-h-[92vh] flex flex-col justify-between shadow-2xl overflow-hidden animate-cascade-up">
+        
+        <!-- Modal Top Bar -->
+        <div class="bg-[#032c21] px-4 py-3 sm:px-5 sm:py-3.5 text-white flex items-center justify-between shrink-0 border-b border-white/10">
+            <div class="flex items-center gap-3 min-w-0 pr-2">
+                <div class="w-8 h-8 rounded-xs bg-emerald-700/80 flex items-center justify-center text-white shrink-0 text-sm">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div class="min-w-0">
+                    <h3 id="donModalBookTitle" class="text-xs sm:text-sm font-black text-white truncate font-heading">
+                        Download Buku Digital
+                    </h3>
+                    <p id="donModalBookAuthor" class="text-[10px] text-emerald-300 truncate">
+                        Persis Pers
+                    </p>
+                </div>
+            </div>
+
+            <button type="button" onclick="closeDownloadDonationModal()" class="w-7 h-7 bg-white/10 hover:bg-rose-600 text-white rounded-xs flex items-center justify-center transition cursor-pointer text-xs" title="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Modal Body (Scrollable) -->
+        <div class="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs">
+
+            <!-- Ajakan Dukung Penerbitan -->
+            <div class="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-sm space-y-2">
+                <div class="flex items-center gap-2 text-[#006830] font-black text-xs">
+                    <i class="fa-solid fa-heart text-rose-500"></i>
+                    <span>{{ $donationSettings['title'] ?? 'Dukung Penerbitan Buku Islam' }}</span>
+                </div>
+                <p class="text-slate-600 text-[11px] leading-relaxed">
+                    {{ $donationSettings['desc'] ?? 'Buku ini dapat diakses dan diunduh secara digital. Jika buku ini bermanfaat bagi Anda, mari ikut mendukung Persis Pers agar dapat terus menerbitkan dan menyebarluaskan karya-karya keislaman.' }}
+                </p>
+                
+                <div class="pt-2 border-t border-emerald-200/80">
+                    <span class="text-[10px] font-bold text-emerald-900 uppercase block mb-1.5">Dukungan Anda disalurkan untuk:</span>
+                    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[10.5px] text-slate-700">
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-emerald-700 text-[9px]"></i><span>Penerbitan buku Islam</span></li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-emerald-700 text-[9px]"></i><span>Digitalisasi &amp; sebar buku</span></li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-emerald-700 text-[9px]"></i><span>Karya ulama &amp; cendekiawan</span></li>
+                        <li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-emerald-700 text-[9px]"></i><span>Wakaf buku ke perpustakaan</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Donation Options Card -->
+            <div class="bg-white border border-slate-200 rounded-sm p-3.5 sm:p-4 space-y-3.5">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <span class="font-bold text-slate-800 text-xs">Pilih Metode Donasi:</span>
+                    <span class="text-[10px] text-slate-400 font-medium">*Donasi bersifat sukarela</span>
+                </div>
+
+                <!-- Method Switcher Tab -->
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" id="tabBtnQris" onclick="switchDonationTab('qris')" class="py-2 px-3 rounded-xs font-bold text-xs flex items-center justify-center gap-2 border transition cursor-pointer bg-[#006830] text-white border-[#006830]">
+                        <i class="fa-solid fa-qrcode text-xs"></i>
+                        <span>Scan QRIS</span>
+                    </button>
+                    <button type="button" id="tabBtnTransfer" onclick="switchDonationTab('transfer')" class="py-2 px-3 rounded-xs font-bold text-xs flex items-center justify-center gap-2 border transition cursor-pointer bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200">
+                        <i class="fa-solid fa-building-columns text-xs"></i>
+                        <span>Transfer Bank</span>
+                    </button>
+                </div>
+
+                <!-- 1. TAB QRIS CONTENT -->
+                <div id="contentTabQris" class="space-y-3">
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xs flex flex-col sm:flex-row items-center gap-3">
+                        <div class="w-32 h-32 bg-white p-1 border border-slate-300 rounded-xs flex items-center justify-center shrink-0 shadow-2xs">
+                            @php
+                                $qrisUrl = $donationSettings['qris_image'] ?? '';
+                                if (!empty($qrisUrl) && !str_starts_with($qrisUrl, 'http') && !str_starts_with($qrisUrl, '//')) {
+                                    $qrisUrl = asset(ltrim($qrisUrl, '/'));
+                                }
+                            @endphp
+                            <img src="{{ $qrisUrl ?: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PERSIS-PERS-DONASI' }}" alt="QRIS PERSIS PERS" class="w-full h-full object-contain" />
+                        </div>
+                        <div class="text-left space-y-1">
+                            <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">QRIS Persis Pers</span>
+                            <h4 class="font-extrabold text-slate-900 text-xs sm:text-sm">Scan untuk Berdonasi</h4>
+                            <p class="text-[11px] text-slate-500 leading-snug">
+                                Buka GoPay, OVO, Dana, ShopeePay, BCA, Mandiri, BSI, atau m-banking Anda lalu scan barcode di samping.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. TAB TRANSFER CONTENT -->
+                <div id="contentTabTransfer" class="hidden space-y-3">
+                    <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xs space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10.5px] font-bold text-slate-500 uppercase">{{ $donationSettings['bank_name'] ?? 'Bank Syariah Indonesia (BSI)' }}</span>
+                            <span class="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-1.5 py-0.5 rounded-xs">Rekening Resmi</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                            <span id="bankAccountNum" class="text-base font-black text-slate-900 font-mono tracking-wider">{{ $donationSettings['bank_account'] ?? '7148888999' }}</span>
+                            <button type="button" onclick="copyBankAccountNumber()" class="px-2.5 py-1 bg-white border border-slate-300 hover:border-emerald-700 text-slate-700 hover:text-emerald-800 rounded-xs text-xs font-bold transition flex items-center gap-1 cursor-pointer" id="btnCopyAccount">
+                                <i class="fa-regular fa-copy text-[10px]"></i>
+                                <span id="copyTextLabel">Salin</span>
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-slate-600 font-semibold">
+                            a.n. <span class="text-slate-900 font-bold">{{ $donationSettings['bank_holder'] ?? 'PENERBIT PERSIS DONASI' }}</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Nominal Chips Selector -->
+                <div class="space-y-2 pt-1">
+                    <label class="block text-[11px] font-bold text-slate-700">Pilih Nominal Donasi:</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs">
+                        <button type="button" onclick="pickNominal(10000, this)" class="nominal-chip py-1.5 px-2 rounded-xs border border-slate-300 bg-white hover:border-emerald-600 font-bold text-slate-800 transition cursor-pointer text-center">
+                            Rp 10.000
+                        </button>
+                        <button type="button" onclick="pickNominal(25000, this)" class="nominal-chip py-1.5 px-2 rounded-xs border border-slate-300 bg-white hover:border-emerald-600 font-bold text-slate-800 transition cursor-pointer text-center">
+                            Rp 25.000
+                        </button>
+                        <button type="button" onclick="pickNominal(50000, this)" class="nominal-chip py-1.5 px-2 rounded-xs border border-emerald-700 bg-emerald-50 text-emerald-900 font-bold text-center transition cursor-pointer">
+                            Rp 50.000
+                        </button>
+                        <button type="button" onclick="pickNominal(100000, this)" class="nominal-chip py-1.5 px-2 rounded-xs border border-slate-300 bg-white hover:border-emerald-600 font-bold text-slate-800 transition cursor-pointer text-center">
+                            Rp 100.000
+                        </button>
+                    </div>
+                    
+                    <div class="relative pt-1">
+                        <span class="absolute left-2.5 top-3.5 text-xs font-bold text-slate-400 font-mono">Rp</span>
+                        <input type="number" id="customNominalInput" value="50000" min="1000" step="1000" oninput="handleCustomNominalChange(this.value)" placeholder="Atau ketik nominal lainnya..." class="w-full pl-9 pr-3 py-2 text-xs rounded-xs border border-slate-300 bg-white font-mono font-bold text-slate-900 focus:outline-hidden focus:border-emerald-700" />
+                    </div>
+                </div>
+
+                <!-- Form Konfirmasi Donatur (Collapsible / Terbuka) -->
+                <div class="pt-2 border-t border-slate-100">
+                    <button type="button" onclick="toggleDonationForm()" class="w-full py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-xs text-xs font-bold transition flex items-center justify-between px-3 cursor-pointer">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-receipt text-emerald-700"></i>
+                            <span id="btnToggleFormLabel">Konfirmasi Data Donasi (Opsional)</span>
+                        </span>
+                        <i id="formChevron" class="fa-solid fa-chevron-down text-[10px] text-emerald-700 transition-transform"></i>
+                    </button>
+
+                    <form id="donationConfirmForm" onsubmit="submitDonationData(event)" class="hidden space-y-2.5 pt-3 animate-fade-in">
+                        <input type="hidden" id="formBookId" name="digital_book_id" value="" />
+                        <input type="hidden" id="formPaymentMethod" name="payment_method" value="qris" />
+                        <input type="hidden" id="formAmount" name="amount" value="50000" />
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-0.5 text-[11px]">Nama Donatur / Hamba Allah <span class="text-rose-500">*</span></label>
+                                <input type="text" name="donor_name" id="donorNameInput" required placeholder="Nama Anda / Hamba Allah" class="w-full px-2.5 py-1.5 text-xs rounded-xs border border-slate-300 bg-white" />
+                            </div>
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-0.5 text-[11px]">No. WhatsApp (Opsional)</label>
+                                <input type="text" name="donor_phone" placeholder="08xxxxxxxxxx" class="w-full px-2.5 py-1.5 text-xs rounded-xs border border-slate-300 bg-white font-mono" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-0.5 text-[11px]">Catatan / Doa Singkat (Opsional)</label>
+                            <input type="text" name="notes" placeholder="Tuliskan doa atau pesan untuk kemajuan literasi Islam..." class="w-full px-2.5 py-1.5 text-xs rounded-xs border border-slate-300 bg-white" />
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-0.5 text-[11px]">Upload Bukti Transfer / Scan (Opsional)</label>
+                            <input type="file" name="proof_file" accept="image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-xs file:border-0 file:text-[10px] file:font-bold file:bg-slate-200 file:text-slate-800 hover:file:bg-slate-300 cursor-pointer" />
+                        </div>
+
+                        <div class="pt-1">
+                            <button type="submit" id="btnSubmitDonation" class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm cursor-pointer">
+                                <i class="fa-solid fa-heart text-rose-300"></i>
+                                <span>Kirim Konfirmasi Donasi &amp; Unduh Buku</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Modal Bottom / Direct Free Download Action -->
+        <div class="bg-slate-100 p-3 sm:p-4 border-t border-slate-200 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+            <span class="text-[11px] text-slate-500 text-center sm:text-left">
+                Mau langsung mengunduh tanpa donasi? Silakan klik tombol di samping.
+            </span>
+            <button type="button" onclick="directDownloadCurrentBook()" class="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-2 shrink-0 shadow-2xs cursor-pointer">
+                <i class="fa-solid fa-download text-xs text-lime-400"></i>
+                <span>Download Buku Sekarang</span>
+            </button>
         </div>
 
     </div>
@@ -1210,6 +1417,147 @@
             }
         }
     });
+
+    // ==============================================================
+    // 3. MODAL DOWNLOAD & DONASI DIGITAL LOGIC
+    // ==============================================================
+    let currentDonationBook = null;
+
+    window.openDownloadDonationModal = function(book) {
+        if (!book) return;
+        currentDonationBook = book;
+        
+        document.getElementById('donModalBookTitle').innerText = book.title || 'Buku Digital Persis Pers';
+        document.getElementById('donModalBookAuthor').innerText = (book.author || 'PERSIS PERS') + ' • ' + (book.category || 'Buku Digital');
+        document.getElementById('formBookId').value = book.id || '';
+        
+        const modal = document.getElementById('downloadDonationModal');
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+    };
+
+    window.closeDownloadDonationModal = function() {
+        const modal = document.getElementById('downloadDonationModal');
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
+    };
+
+    window.switchDonationTab = function(method) {
+        const qrisBtn = document.getElementById('tabBtnQris');
+        const tfBtn = document.getElementById('tabBtnTransfer');
+        const qrisContent = document.getElementById('contentTabQris');
+        const tfContent = document.getElementById('contentTabTransfer');
+        const methodInput = document.getElementById('formPaymentMethod');
+
+        if (method === 'qris') {
+            qrisBtn.className = 'py-2 px-3 rounded-xs font-bold text-xs flex items-center justify-center gap-2 border transition cursor-pointer bg-[#006830] text-white border-[#006830]';
+            tfBtn.className = 'py-2 px-3 rounded-xs font-bold text-xs flex items-center justify-center gap-2 border transition cursor-pointer bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200';
+            qrisContent.classList.remove('hidden');
+            tfContent.classList.add('hidden');
+            methodInput.value = 'qris';
+        } else {
+            tfBtn.className = 'py-2 px-3 rounded-xs font-bold text-xs flex items-center justify-center gap-2 border transition cursor-pointer bg-[#006830] text-white border-[#006830]';
+            qrisBtn.className = 'py-2 px-3 rounded-xs font-bold text-xs flex items-center justify-center gap-2 border transition cursor-pointer bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200';
+            tfContent.classList.remove('hidden');
+            qrisContent.classList.add('hidden');
+            methodInput.value = 'transfer';
+        }
+    };
+
+    window.pickNominal = function(amount, btn) {
+        document.querySelectorAll('.nominal-chip').forEach(el => {
+            el.className = 'nominal-chip py-1.5 px-2 rounded-xs border border-slate-300 bg-white hover:border-emerald-600 font-bold text-slate-800 transition cursor-pointer text-center';
+        });
+        btn.className = 'nominal-chip py-1.5 px-2 rounded-xs border border-emerald-700 bg-emerald-50 text-emerald-900 font-bold text-center transition cursor-pointer';
+        
+        document.getElementById('customNominalInput').value = amount;
+        document.getElementById('formAmount').value = amount;
+    };
+
+    window.handleCustomNominalChange = function(val) {
+        document.querySelectorAll('.nominal-chip').forEach(el => {
+            el.className = 'nominal-chip py-1.5 px-2 rounded-xs border border-slate-300 bg-white hover:border-emerald-600 font-bold text-slate-800 transition cursor-pointer text-center';
+        });
+        document.getElementById('formAmount').value = val || 0;
+    };
+
+    window.toggleDonationForm = function() {
+        const form = document.getElementById('donationConfirmForm');
+        const chevron = document.getElementById('formChevron');
+        if (form.classList.contains('hidden')) {
+            form.classList.remove('hidden');
+            chevron.style.transform = 'rotate(180deg)';
+            const input = document.getElementById('donorNameInput');
+            if (input) input.focus();
+        } else {
+            form.classList.add('hidden');
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    };
+
+    window.copyBankAccountNumber = function() {
+        const num = document.getElementById('bankAccountNum').innerText.trim();
+        navigator.clipboard.writeText(num).then(() => {
+            const label = document.getElementById('copyTextLabel');
+            label.innerText = 'Tersalin!';
+            setTimeout(() => { label.innerText = 'Salin'; }, 2500);
+        });
+    };
+
+    window.directDownloadCurrentBook = function() {
+        if (!currentDonationBook) return;
+        const pdfUrl = currentDonationBook.pdf_url || (currentDonationBook.pdf_file ? (currentDonationBook.pdf_file.startsWith('http') ? currentDonationBook.pdf_file : '/storage/' + currentDonationBook.pdf_file) : null);
+        if (pdfUrl) {
+            window.open(pdfUrl, '_blank');
+        } else if (currentDonationBook.slug) {
+            window.open('/katalog-digital/download/' + currentDonationBook.slug, '_blank');
+        } else {
+            alert('File PDF buku ini sedang disiapkan oleh admin.');
+        }
+        closeDownloadDonationModal();
+    };
+
+    window.submitDonationData = async function(e) {
+        e.preventDefault();
+        const form = document.getElementById('donationConfirmForm');
+        const submitBtn = document.getElementById('btnSubmitDonation');
+        const originalText = submitBtn.innerHTML;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan Donasi...';
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch("{{ route('donasi.store') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            const res = await response.json();
+            if (res.success) {
+                alert(res.message || 'Jazakumullah Khairan Katsiran! Donasi Anda telah kami catat.');
+                form.reset();
+                closeDownloadDonationModal();
+                if (res.download_url) {
+                    window.open(res.download_url, '_blank');
+                } else {
+                    directDownloadCurrentBook();
+                }
+            } else {
+                alert(res.message || 'Terjadi kesalahan saat menyimpan donasi.');
+            }
+        } catch (err) {
+            alert('Gagal mengirim konfirmasi donasi. Silakan periksa koneksi internet.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    };
 
     @if(isset($activeBook) && $activeBook)
         document.addEventListener('DOMContentLoaded', function() {
