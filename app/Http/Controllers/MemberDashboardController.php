@@ -89,12 +89,14 @@ class MemberDashboardController extends Controller
         $digitalBooks = $query->paginate(12)->withQueryString();
         $totalBookmarks = DigitalBookBookmark::where('user_id', $user->id)->count();
 
-        // Category stats for member's bookmarks
-        $categoryStats = $user->bookmarkedDigitalBooks()
-            ->published()
-            ->select('category')
+        // Category stats for member's bookmarks (raw query to avoid GROUP BY strict mode issue)
+        $categoryStats = \Illuminate\Support\Facades\DB::table('digital_books')
+            ->join('digital_book_bookmarks', 'digital_books.id', '=', 'digital_book_bookmarks.digital_book_id')
+            ->where('digital_book_bookmarks.user_id', $user->id)
+            ->where('digital_books.status', 'published')
+            ->select('digital_books.category')
             ->selectRaw('count(*) as count')
-            ->groupBy('category')
+            ->groupBy('digital_books.category')
             ->get();
 
         // Active Flipbook to Read
