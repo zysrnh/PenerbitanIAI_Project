@@ -139,9 +139,9 @@
                             @endif
                         </a>
 
-                        <a href="{{ route('katalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
-                            <i class="fa-solid fa-book-open w-4 text-center"></i>
-                            <span>Katalog Buku</span>
+                        <a href="{{ route('katalog.digital') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                            <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
+                            <span>Buku Digital</span>
                         </a>
                     </div>
                 </div>
@@ -220,10 +220,10 @@
                     <span>Website Utama</span>
                 </a>
 
-                <a href="{{ route('katalog') }}" 
+                <a href="{{ route('katalog.digital') }}" 
                     class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold transition shadow-2xs">
-                    <i class="fa-solid fa-book-open text-[10px]"></i>
-                    <span>Katalog</span>
+                    <i class="fa-solid fa-book-open-reader text-[10px]"></i>
+                    <span>Buku Digital</span>
                 </a>
 
                 <!-- Member Cart Header Button -->
@@ -384,9 +384,9 @@
                     </div>
 
                     <div class="flex items-center gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
-                        <a href="{{ route('katalog') }}" class="flex-1 sm:flex-none px-3.5 py-2 bg-[#006830] hover:bg-[#032c21] text-white border border-emerald-400/30 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
-                            <i class="fa-solid fa-book-open text-xs"></i>
-                            <span>Buka Katalog</span>
+                        <a href="{{ route('katalog.digital') }}" class="flex-1 sm:flex-none px-3.5 py-2 bg-[#006830] hover:bg-[#032c21] text-white border border-emerald-400/30 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
+                            <i class="fa-solid fa-book-open-reader text-xs"></i>
+                            <span>Buka Buku Digital</span>
                         </a>
                         <a href="{{ route('member.profile') }}" class="px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 border border-white/15">
                             <i class="fa-solid fa-user-gear text-xs"></i>
@@ -486,16 +486,16 @@
             <!-- 4. Layanan Cepat Member (3 Clean Cards) -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 
-                <!-- Card 1: Katalog Publikasi -->
-                <a href="{{ route('katalog') }}" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
+                <!-- Card 1: Buku Digital (Flipbook) -->
+                <a href="{{ route('katalog.digital') }}" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
                     <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition">
-                        <i class="fa-solid fa-book-bookmark"></i>
+                        <i class="fa-solid fa-book-open-reader"></i>
                     </div>
                     <div class="min-w-0 flex-1">
                         <h3 class="font-extrabold text-xs sm:text-sm text-slate-900 font-heading group-hover:text-emerald-800 transition">
-                            Katalog Publikasi
+                            Buku Digital (Flipbook)
                         </h3>
-                        <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-2">Cari monograf riset, modul ajar, dan buku ber-ISBN resmi</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-2">Baca interaktif flipbook dan unduh e-book resmi PERSIS PERS</p>
                     </div>
                 </a>
 
@@ -608,12 +608,12 @@
             <span class="text-[10px] mt-0.5 tracking-tight">Pesanan</span>
         </a>
 
-        <!-- 3. Katalog Buku -->
-        <a href="{{ route('katalog') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
+        <!-- 3. Buku Digital -->
+        <a href="{{ route('katalog.digital') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
             <div class="relative">
-                <i class="fa-solid fa-book-open text-base"></i>
+                <i class="fa-solid fa-book-open-reader text-base"></i>
             </div>
-            <span class="text-[10px] mt-0.5 tracking-tight">Katalog</span>
+            <span class="text-[10px] mt-0.5 tracking-tight">Buku Digital</span>
         </a>
 
         <!-- 4. WhatsApp Redaksi -->

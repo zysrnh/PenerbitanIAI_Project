@@ -121,9 +121,9 @@
                             @endif
                         </a>
 
-                        <a href="{{ route('katalog') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
-                            <i class="fa-solid fa-book-open w-4 text-center"></i>
-                            <span>Katalog Buku</span>
+                        <a href="{{ route('katalog.digital') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                            <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
+                            <span>Buku Digital</span>
                         </a>
                     </div>
                 </div>
@@ -568,12 +568,12 @@
             <span class="text-[10px] mt-0.5 tracking-tight">Pesanan</span>
         </a>
 
-        <!-- 3. Katalog Buku -->
-        <a href="{{ route('katalog') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
+        <!-- 3. Buku Digital -->
+        <a href="{{ route('katalog.digital') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
             <div class="relative">
-                <i class="fa-solid fa-book-open text-base"></i>
+                <i class="fa-solid fa-book-open-reader text-base"></i>
             </div>
-            <span class="text-[10px] mt-0.5 tracking-tight">Katalog</span>
+            <span class="text-[10px] mt-0.5 tracking-tight">Buku Digital</span>
         </a>
 
         <!-- 4. WhatsApp Redaksi -->
