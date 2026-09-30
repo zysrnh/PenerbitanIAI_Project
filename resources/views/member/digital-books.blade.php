@@ -53,6 +53,49 @@
         .brand-dark { background-color: #032c21; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Signature 3D Realistic Book Cover */
+        .persis-book-card {
+            transition: all 0.3s ease;
+        }
+        .persis-book-card:hover {
+            border-color: #047857;
+            transform: translateY(-4px);
+            box-shadow: 0 16px 30px -8px rgba(4, 120, 87, 0.15), 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .book-cover-stage-3d {
+            perspective: 800px;
+        }
+        .book-cover-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+            box-shadow: 6px 8px 16px -2px rgba(0, 0, 0, 0.25), 1px 1px 4px rgba(0,0,0,0.1);
+        }
+        .persis-book-card:hover .book-cover-3d {
+            transform: rotateY(-18deg) rotateX(6deg) translateY(-4px) scale(1.03);
+            box-shadow: 14px 20px 28px -4px rgba(0, 0, 0, 0.38), 3px 3px 8px rgba(0,0,0,0.15);
+        }
+        .book-spine-strip {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 7px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.35) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.3) 100%);
+            border-right: 1px solid rgba(0,0,0,0.12);
+            z-index: 10;
+        }
+        .book-paper-edge {
+            position: absolute;
+            right: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 3.5px;
+            background: repeating-linear-gradient(180deg, #f8fafc, #f8fafc 1.5px, #cbd5e1 1.5px, #cbd5e1 3px);
+            border-left: 1px solid #94a3b8;
+            border-radius: 0 2px 2px 0;
+            z-index: 5;
+        }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 antialiased bg-slate-100 flex flex-col lg:flex-row">
@@ -346,7 +389,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                     @foreach($digitalBooks as $book)
                         @php
-                            $coverUrl = $book->cover_url ?: asset('images/default-book.png');
+                            $coverUrl = $book->cover_url ?: null;
                             $pdfUrl = $book->pdf_url;
                             $encodedBook = base64_encode(json_encode([
                                 'id' => $book->id,
@@ -355,105 +398,100 @@
                                 'pdf_url' => $pdfUrl,
                             ]));
                         @endphp
-                        <div class="bg-white rounded-sm border border-slate-200 overflow-hidden shadow-2xs hover:shadow-md transition flex flex-col justify-between group">
+                        <div class="persis-book-card bg-white rounded-sm border border-slate-200/90 p-3 sm:p-4 flex flex-col justify-between transition-all duration-300 shadow-2xs group">
                             
-                            <!-- Cover & Badges -->
-                            <div class="relative bg-slate-100 aspect-[3/4] overflow-hidden border-b border-slate-100">
-                                <img 
-                                    src="{{ $coverUrl }}" 
-                                    alt="{{ $book->title }}" 
-                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                                    loading="lazy"
-                                />
-
-                                <!-- Category Badge -->
-                                <span class="absolute top-2 left-2 px-2 py-0.5 rounded-xs bg-slate-900/80 backdrop-blur-xs text-white text-[9.5px] font-bold font-mono tracking-wider uppercase">
-                                    {{ $book->category }}
-                                </span>
-
-                                <!-- Quick Actions Floating Overlay -->
-                                <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-3">
+                            <div>
+                                <!-- Top Bar: Category & PDF Badge -->
+                                <div class="flex items-center justify-between gap-1.5 mb-2.5">
+                                    <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold font-mono tracking-wider uppercase bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                        {{ $book->category }}
+                                    </span>
                                     @if($pdfUrl)
-                                        <button 
-                                            type="button" 
-                                            onclick="openFlipbookFromEncoded('{{ $encodedBook }}')"
-                                            class="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-sm text-xs font-bold shadow-md transition cursor-pointer"
-                                            title="Baca Flipbook Sekarang"
-                                        >
-                                            <i class="fa-solid fa-book-open-reader"></i>
-                                        </button>
-                                        <button 
-                                            type="button" 
-                                            onclick="openDownloadFromEncoded('{{ $encodedBook }}')"
-                                            class="p-2.5 bg-white hover:bg-slate-100 text-slate-800 rounded-sm text-xs font-bold shadow-md transition cursor-pointer"
-                                            title="Unduh File PDF"
-                                        >
-                                            <i class="fa-solid fa-download"></i>
-                                        </button>
-                                    @else
-                                        <a 
-                                            href="{{ route('katalog.digital.show', $book->slug) }}" 
-                                            class="p-2.5 bg-white text-slate-800 rounded-sm text-xs font-bold shadow-md transition"
-                                            title="Lihat Detail Buku"
-                                        >
-                                            <i class="fa-solid fa-circle-info"></i>
-                                        </a>
+                                        <span class="px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1" title="File PDF Siap Dibaca">
+                                            <i class="fa-solid fa-file-pdf text-[8px] text-red-600"></i>
+                                            <span>PDF</span>
+                                        </span>
                                     @endif
+                                </div>
+
+                                <!-- 3D Perspective Stage -->
+                                <div class="bg-slate-50/80 rounded-xs py-4 px-2 border border-slate-100 flex items-center justify-center">
+                                    <div class="book-cover-stage-3d w-28 sm:w-36 aspect-[3/4.2] mx-auto cursor-pointer" data-book="{{ $encodedBook }}" onclick="openFlipbookFromEncoded(this.getAttribute('data-book'))" title="Klik untuk Buka Flipbook">
+                                        <div class="book-cover-3d relative w-full h-full rounded-xs overflow-hidden bg-slate-900 border border-slate-300">
+                                            <div class="book-spine-strip"></div>
+                                            <div class="book-paper-edge"></div>
+
+                                            @if($coverUrl)
+                                                <img src="{{ $coverUrl }}" alt="{{ $book->title }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                            @endif
+
+                                            <div class="w-full h-full bg-[#032c21] p-3 pl-4 flex flex-col justify-between text-white text-[8px]" style="{{ $coverUrl ? 'display:none;' : '' }}">
+                                                <div class="flex justify-between items-center border-b border-white/20 pb-1">
+                                                    <span class="text-emerald-300 font-bold truncate">PERSIS PERS</span>
+                                                    <span class="text-slate-300 font-mono text-[7px]">{{ $book->year }}</span>
+                                                </div>
+                                                <div class="my-auto text-center py-1">
+                                                    <span class="font-black text-[9px] leading-tight line-clamp-3">{{ $book->title }}</span>
+                                                </div>
+                                                <div class="border-t border-white/20 pt-1 text-center">
+                                                    <span class="text-slate-300 truncate text-[7px] block">{{ $book->author }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Book Info -->
+                                <div class="mt-3 space-y-1">
+                                    <h4 class="font-bold text-xs sm:text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-emerald-800 transition cursor-pointer" title="{{ $book->title }}" data-book="{{ $encodedBook }}" onclick="openFlipbookFromEncoded(this.getAttribute('data-book'))">
+                                        {{ $book->title }}
+                                    </h4>
+                                    <p class="text-[11px] text-slate-500 truncate flex items-center gap-1.5">
+                                        <i class="fa-solid fa-pen-nib text-[9px] text-emerald-600"></i>
+                                        <span>{{ $book->author ?: 'Redaksi PERSIS PERS' }}</span>
+                                    </p>
+                                    <div class="flex items-center justify-between text-[10.5px] text-slate-400 font-mono pt-1">
+                                        <span><i class="fa-regular fa-file-lines mr-1"></i>{{ $book->pages ? $book->pages . ' Hlm' : 'E-Book' }}</span>
+                                        <span>{{ $book->year ?: '-' }}</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Content Info -->
-                            <div class="p-3.5 flex-1 flex flex-col justify-between space-y-3">
-                                <div class="space-y-1">
-                                    <h4 class="font-bold text-xs sm:text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-emerald-800 transition" title="{{ $book->title }}">
-                                        {{ $book->title }}
-                                    </h4>
-                                    <p class="text-[11px] text-slate-500 truncate">
-                                        <i class="fa-solid fa-pen-nib text-[9px] text-slate-400 mr-1"></i>{{ $book->author ?: 'Redaksi PERSIS PERS' }}
-                                    </p>
-                                </div>
+                            <!-- Action Buttons -->
+                            <div class="pt-3 border-t border-slate-100 mt-3 grid grid-cols-2 gap-1.5">
+                                @if($pdfUrl)
+                                    <button 
+                                        type="button" 
+                                        data-book="{{ $encodedBook }}"
+                                        onclick="openFlipbookFromEncoded(this.getAttribute('data-book'))"
+                                        class="w-full py-1.5 px-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer shadow-2xs"
+                                        title="Baca e-Flipbook Interaktif"
+                                    >
+                                        <i class="fa-solid fa-book-open text-[10px]"></i>
+                                        <span>Baca</span>
+                                    </button>
+                                @else
+                                    <a 
+                                        href="{{ route('katalog.digital.show', $book->slug) }}" 
+                                        class="w-full py-1.5 px-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1"
+                                    >
+                                        <span>Detail</span>
+                                    </a>
+                                @endif
 
-                                <div class="pt-2 border-t border-slate-100 space-y-2">
-                                    <div class="flex items-center justify-between text-[10.5px] text-slate-500 font-mono">
-                                        <span><i class="fa-regular fa-file-pdf mr-1"></i>{{ $book->pages ? $book->pages . ' Hal' : 'PDF' }}</span>
-                                        <span>{{ $book->year ?: '-' }}</span>
-                                    </div>
-
-                                    <!-- Main Action Buttons -->
-                                    <div class="grid grid-cols-2 gap-1.5 pt-1">
-                                        @if($pdfUrl)
-                                            <button 
-                                                type="button" 
-                                                onclick="openFlipbookFromEncoded('{{ $encodedBook }}')"
-                                                class="w-full py-1.5 px-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                                            >
-                                                <i class="fa-solid fa-book-open text-[10px]"></i>
-                                                <span>Baca</span>
-                                            </button>
-                                        @else
-                                            <a 
-                                                href="{{ route('katalog.digital.show', $book->slug) }}" 
-                                                class="w-full py-1.5 px-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xs text-[11px] font-bold transition flex items-center justify-center gap-1"
-                                            >
-                                                <span>Detail</span>
-                                            </a>
-                                        @endif
-
-                                        <!-- Remove Bookmark Button -->
-                                        <form method="POST" action="{{ route('member.digital_books.remove', $book->id) }}" onsubmit="return confirm('Hapus buku ini dari daftar bacaan tersimpan?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button 
-                                                type="submit" 
-                                                class="w-full py-1.5 px-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 rounded-xs text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer"
-                                                title="Hapus dari Bookmark"
-                                            >
-                                                <i class="fa-solid fa-trash-can text-[10px]"></i>
-                                                <span>Hapus</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+                                <!-- Remove Bookmark Button -->
+                                <form method="POST" action="{{ route('member.digital_books.remove', $book->id) }}" onsubmit="return confirm('Hapus buku ini dari daftar bacaan tersimpan?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button 
+                                        type="submit" 
+                                        class="w-full py-1.5 px-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 rounded-xs text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer"
+                                        title="Hapus dari Bookmark"
+                                    >
+                                        <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                        <span>Hapus</span>
+                                    </button>
+                                </form>
                             </div>
 
                         </div>
