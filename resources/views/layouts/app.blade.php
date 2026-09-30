@@ -1520,7 +1520,23 @@
             window.open(waUrl, '_blank');
         };
 
-        // Submit Checkout Form & Generate Real-time QRIS
+        // Copy Bank Account Number Helper
+        window.copyBankNumberToClipboard = function() {
+            const numEl = document.getElementById('qrisBankNumberText');
+            if (!numEl) return;
+            const text = numEl.textContent.trim();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Nomor Rekening (' + text + ') berhasil disalin!');
+                }).catch(() => {
+                    prompt('Salin nomor rekening berikut:', text);
+                });
+            } else {
+                prompt('Salin nomor rekening berikut:', text);
+            }
+        };
+
+        // Submit Checkout Form & Generate Real-time QRIS / Manual Payment
         window.submitCheckoutQris = function() {
             const name = document.getElementById('chkCustomerName').value.trim();
             const phone = document.getElementById('chkCustomerPhone').value.trim();
@@ -1536,7 +1552,7 @@
             const btn = document.getElementById('btnProcessQris');
             const originalBtnHtml = btn.innerHTML;
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i> <span>Membuat Kode QRIS...</span>';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i> <span>Memproses Pesanan...</span>';
 
             fetch(window.PERSIS_CART.routes.checkoutQris, {
                 method: 'POST',
@@ -1561,12 +1577,11 @@
                 if (resData && resData.success) {
                     currentOrderNumber = resData.order_number;
 
-                    // Switch to Step 2 QRIS
+                    // Switch to Step 2
                     document.getElementById('checkoutStepForm').classList.add('hidden');
                     document.getElementById('checkoutStepQris').classList.remove('hidden');
-                    document.getElementById('checkoutModalTitle').textContent = 'Pembayaran QRIS';
 
-                    // Populate Data
+                    // Populate Common Data
                     document.getElementById('qrisImageDisplay').src = resData.qr_image_url;
                     document.getElementById('qrisOrderNumber').textContent = '#' + resData.order_number;
                     document.getElementById('qrisSubtotalText').textContent = resData.formatted_subtotal || resData.formatted_amount;
@@ -1578,13 +1593,91 @@
                     window.renderCartDrawerUI({ items: [], count: 0, total: 0, formatted_total: 'Rp 0' });
                     window.updateCartBadges(0);
 
-                    // Start Countdown (15 minutes)
-                    startQrisCountdown(15 * 60);
+                    // MODE MANUAL VS GATEWAY ADAPTATION
+                    if (resData.mode === 'manual') {
+                        document.getElementById('checkoutModalTitle').textContent = 'Konfirmasi Pembayaran Pesanan';
 
-                    // Start Auto-poll status
-                    startQrisPolling(resData.order_number);
+                        // Status Banner (Informative Green)
+                        const banner = document.getElementById('qrisStatusBanner');
+                        const icon = document.getElementById('qrisStatusIcon');
+                        const statusTxt = document.getElementById('qrisStatusText');
+                        if (banner) {
+                            banner.className = 'p-2.5 bg-emerald-50 border border-emerald-200 rounded-xs flex items-center justify-center gap-2 text-xs font-semibold text-emerald-900';
+                            if (icon) icon.className = 'fa-solid fa-circle-check text-emerald-700';
+                            if (statusTxt) statusTxt.textContent = 'Pesanan Berhasil Dibuat! Silakan selesaikan pembayaran.';
+                        }
+
+                        // Bank Info (Show if available)
+                        const bankBox = document.getElementById('qrisBankTransferBox');
+                        if (resData.bank_number && bankBox) {
+                            document.getElementById('qrisBankNameText').textContent = resData.bank_name || 'Bank Transfer';
+                            document.getElementById('qrisBankNumberText').textContent = resData.bank_number;
+                            document.getElementById('qrisBankHolderText').textContent = 'a.n ' + (resData.bank_holder || 'PENERBIT PERSIS PERS');
+                            if (resData.instructions) {
+                                document.getElementById('qrisManualInstructionsText').textContent = resData.instructions;
+                            }
+                            bankBox.classList.remove('hidden');
+                        } else if (bankBox) {
+                            bankBox.classList.add('hidden');
+                        }
+
+                        // WhatsApp Action Button
+                        const waWrap = document.getElementById('qrisWaButtonWrap');
+                        const waBtn = document.getElementById('qrisWaDirectBtn');
+                        if (waWrap && waBtn && resData.wa_url) {
+                            waBtn.href = resData.wa_url;
+                            waWrap.classList.remove('hidden');
+                        }
+
+                        // Hide fee row if 0
+                        const feeRow = document.getElementById('qrisFeeRow');
+                        if (feeRow) feeRow.classList.add('hidden');
+
+                        // Hide Countdown & Auto-polling
+                        const countdownWrap = document.getElementById('qrisCountdownWrap');
+                        if (countdownWrap) countdownWrap.classList.add('hidden');
+                        const checkBtn = document.getElementById('btnManualCheckStatus');
+                        if (checkBtn) checkBtn.classList.add('hidden');
+
+                        if (qrisPollInterval) clearInterval(qrisPollInterval);
+                        if (qrisCountdownTimer) clearInterval(qrisCountdownTimer);
+
+                    } else {
+                        // MODE GATEWAY (PAKASIR AUTOMATIC)
+                        document.getElementById('checkoutModalTitle').textContent = 'Pembayaran QRIS Realtime';
+
+                        const banner = document.getElementById('qrisStatusBanner');
+                        const icon = document.getElementById('qrisStatusIcon');
+                        const statusTxt = document.getElementById('qrisStatusText');
+                        if (banner) {
+                            banner.className = 'p-2.5 bg-emerald-50 border border-emerald-200 rounded-xs flex items-center justify-center gap-2 text-xs font-semibold text-emerald-900';
+                            if (icon) icon.className = 'fa-solid fa-spinner fa-spin text-emerald-700';
+                            if (statusTxt) statusTxt.textContent = 'Menunggu pembayaran... (Terdeteksi otomatis)';
+                        }
+
+                        const bankBox = document.getElementById('qrisBankTransferBox');
+                        if (bankBox) bankBox.classList.add('hidden');
+
+                        const waWrap = document.getElementById('qrisWaButtonWrap');
+                        if (waWrap) waWrap.classList.add('hidden');
+
+                        const feeRow = document.getElementById('qrisFeeRow');
+                        if (feeRow) feeRow.classList.remove('hidden');
+
+                        const countdownWrap = document.getElementById('qrisCountdownWrap');
+                        if (countdownWrap) countdownWrap.classList.remove('hidden');
+                        const checkBtn = document.getElementById('btnManualCheckStatus');
+                        if (checkBtn) checkBtn.classList.remove('hidden');
+
+                        // Start Countdown (15 minutes)
+                        startQrisCountdown(15 * 60);
+
+                        // Start Auto-poll status
+                        startQrisPolling(resData.order_number);
+                    }
+
                 } else {
-                    alert(resData.message || 'Gagal membuat transaksi QRIS. Silakan coba lagi.');
+                    alert(resData.message || 'Gagal memproses transaksi. Silakan coba lagi.');
                 }
             })
             .catch(err => {
@@ -1750,13 +1843,13 @@
                 </div>
             </div>
 
-            <!-- STEP 2: LIVE DYNAMIC QRIS SCREEN -->
+            <!-- STEP 2: LIVE PAYMENT SCREEN (GATEWAY OR MANUAL QRIS) -->
             <div id="checkoutStepQris" class="p-5 overflow-y-auto space-y-3 flex-1 hidden text-center text-xs">
                 
                 <!-- Status Banner -->
                 <div id="qrisStatusBanner" class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xs flex items-center justify-center gap-2 text-xs font-semibold text-emerald-900">
-                    <i class="fa-solid fa-spinner fa-spin text-emerald-700"></i>
-                    <span>Menunggu pembayaran... (Terdeteksi otomatis)</span>
+                    <i id="qrisStatusIcon" class="fa-solid fa-spinner fa-spin text-emerald-700"></i>
+                    <span id="qrisStatusText">Menunggu pembayaran... (Terdeteksi otomatis)</span>
                 </div>
 
                 <!-- QRIS Box -->
@@ -1775,6 +1868,27 @@
                     </div>
                 </div>
 
+                <!-- Rekening Bank Alternatif (Khusus Mode Manual) -->
+                <div id="qrisBankTransferBox" class="p-3 bg-emerald-50/70 rounded-xs border border-emerald-200 text-left space-y-1.5 max-w-xs mx-auto hidden">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-emerald-900 uppercase">Transfer Bank Manual</span>
+                        <span id="qrisBankNameText" class="text-[10.5px] font-bold text-slate-800 font-mono">BSI</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-white p-2 rounded-xs border border-emerald-200/80">
+                        <div>
+                            <span class="text-[9.5px] text-slate-400 block">No. Rekening:</span>
+                            <span id="qrisBankNumberText" class="font-mono font-bold text-xs text-slate-900 select-all">-</span>
+                            <span id="qrisBankHolderText" class="text-[10px] text-slate-500 block">a.n PENERBIT PERSIS PERS</span>
+                        </div>
+                        <button type="button" onclick="copyBankNumberToClipboard()" class="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-xs text-[10px] font-bold transition cursor-pointer" title="Salin No. Rekening">
+                            <i class="fa-regular fa-copy mr-1"></i>Salin
+                        </button>
+                    </div>
+                    <p id="qrisManualInstructionsText" class="text-[10px] text-slate-600 leading-snug">
+                        Silakan scan QRIS atau transfer ke rekening di atas, lalu klik tombol hijau di bawah untuk kirim bukti.
+                    </p>
+                </div>
+
                 <!-- Amount Details -->
                 <div class="p-3 bg-slate-50 rounded-xs border border-slate-200 text-left space-y-1 text-xs max-w-xs mx-auto">
                     <div class="flex justify-between text-slate-600">
@@ -1785,7 +1899,7 @@
                         <span>Subtotal:</span>
                         <span id="qrisSubtotalText" class="font-mono text-slate-800">Rp 0</span>
                     </div>
-                    <div class="flex justify-between text-slate-600">
+                    <div id="qrisFeeRow" class="flex justify-between text-slate-600">
                         <span>Biaya QRIS:</span>
                         <span id="qrisFeeText" class="font-mono text-slate-800">Rp 0</span>
                     </div>
@@ -1795,14 +1909,22 @@
                     </div>
                 </div>
 
-                <!-- Countdown Timer -->
-                <div class="text-center text-[11px] text-slate-400">
+                <!-- Countdown Timer (Khusus Mode Gateway) -->
+                <div id="qrisCountdownWrap" class="text-center text-[11px] text-slate-400">
                     Batas waktu pembayaran: <span id="qrisCountdownTimer" class="font-bold font-mono text-slate-800">15:00</span>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Action Button: Kirim Bukti WA (Khusus Mode Manual) -->
+                <div id="qrisWaButtonWrap" class="hidden max-w-xs mx-auto pt-1">
+                    <a id="qrisWaDirectBtn" href="#" target="_blank" class="w-full py-2.5 px-4 bg-[#25D366] hover:bg-[#1EBE5D] text-white rounded-sm text-xs font-bold shadow-xs transition flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-base"></i>
+                        <span>Kirim Bukti Pembayaran ke WA Admin &rarr;</span>
+                    </a>
+                </div>
+
+                <!-- Action Buttons Bottom -->
                 <div class="pt-1 flex items-center justify-center gap-2">
-                    <button type="button" onclick="window.manualCheckPaymentStatus()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-medium transition cursor-pointer shadow-2xs">
+                    <button type="button" id="btnManualCheckStatus" onclick="window.manualCheckPaymentStatus()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-sm text-xs font-medium transition cursor-pointer shadow-2xs">
                         <i class="fa-solid fa-arrows-rotate mr-1 text-slate-400"></i> Cek Status
                     </button>
                     <a id="qrisInvoiceDirectBtn" href="#" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-sm text-xs font-semibold transition">

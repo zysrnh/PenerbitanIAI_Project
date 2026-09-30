@@ -19,7 +19,7 @@ use App\Models\Book;
 class PaymentController extends Controller
 {
     /**
-     * Create QRIS transaction via Pakasir API
+     * Create Order & Process Payment (Gateway Real-Time or Manual QRIS)
      */
     public function createQrisPayment(Request $request)
     {
@@ -76,7 +76,113 @@ class PaymentController extends Controller
         // Generate unique Order Number
         $orderNumber = 'INV-' . date('Ymd') . '-' . strtoupper(Str::random(5));
 
-        // Pakasir Credentials
+        // Check Payment Mode (gateway vs manual)
+        $paymentMode = SiteSetting::get('catalog_payment_mode', 'gateway');
+
+        // =========================================================================
+        // MODE A: MANUAL QRIS & REKENING BANK (TEMPEL QRIS & KONFIRMASI WA)
+        // =========================================================================
+        if ($paymentMode === 'manual') {
+            try {
+                $manualQrisPath = SiteSetting::get('catalog_manual_qris_image', '');
+                $bankName = SiteSetting::get('catalog_manual_bank_name', 'Bank Syariah Indonesia (BSI)');
+                $bankNumber = SiteSetting::get('catalog_manual_bank_number', '');
+                $bankHolder = SiteSetting::get('catalog_manual_bank_holder', 'PENERBIT PERSIS PERS');
+                $instructions = SiteSetting::get('catalog_manual_instructions', 'Scan QRIS atau transfer ke rekening bank di bawah ini, lalu klik tombol Kirim Bukti Pembayaran ke WhatsApp Admin.');
+
+                // WhatsApp Confirmation URL Generator
+                $waNumber = SiteSetting::get('catalog_manual_wa_number', SiteSetting::get('contact_whatsapp', '6281234567890'));
+                $cleanWa = preg_replace('/[^0-9]/', '', (string)$waNumber);
+                if (str_starts_with($cleanWa, '0')) {
+                    $cleanWa = '62' . substr($cleanWa, 1);
+                }
+
+                $itemListText = '';
+                foreach ($itemsSnapshot as $idx => $it) {
+                    $itemListText .= ($idx + 1) . ". " . $it['title'] . " (" . $it['quantity'] . "x) - Rp " . number_format($it['subtotal'], 0, ',', '.') . "\n";
+                }
+
+                $waMsg = "Halo Admin Penerbit PERSIS, saya sudah memesan buku di website dan ingin mengirimkan *Bukti Transfer/Pembayaran*:\n\n"
+                       . "📋 *No. Invoice:* #" . $orderNumber . "\n"
+                       . "👤 *Nama:* " . $request->input('customer_name') . "\n"
+                       . "📱 *No. WhatsApp:* " . $request->input('customer_phone') . "\n"
+                       . "📍 *Alamat Pengiriman:* " . $request->input('customer_address') . "\n\n"
+                       . "📚 *Rincian Buku:*\n" . $itemListText . "\n"
+                       . "💰 *Total Pembayaran:* Rp " . number_format($totalAmount, 0, ',', '.') . "\n\n"
+                       . "Mohon untuk diverifikasi dan diproses pengirimannya. Terima kasih!";
+
+                $waUrl = "https://api.whatsapp.com/send?phone=" . $cleanWa . "&text=" . urlencode($waMsg);
+
+                // Save Order to Database
+                $order = Order::create([
+                    'order_number'      => $orderNumber,
+                    'user_id'           => $userId,
+                    'customer_name'     => $request->input('customer_name'),
+                    'customer_email'    => $request->input('customer_email', Auth::user()->email ?? null),
+                    'customer_phone'    => $request->input('customer_phone'),
+                    'customer_address'  => $request->input('customer_address'),
+                    'total_amount'      => $totalAmount,
+                    'fee'               => 0,
+                    'total_payment'     => $totalAmount,
+                    'payment_method'    => 'qris_manual',
+                    'payment_status'    => 'pending',
+                    'gateway_project'   => 'manual',
+                    'payment_qr_string' => null,
+                    'expired_at'        => now()->addDays(2),
+                    'items_json'        => $itemsSnapshot,
+                    'notes'             => $request->input('notes'),
+                    'shipping_status'   => 'menunggu_proses',
+                ]);
+
+                // Clear Cart
+                CartItem::where('user_id', $userId)->delete();
+
+                // Send Order Notification Email to Admin
+                try {
+                    $recipientEmail = SiteSetting::get('notification_recipient_email', 'info@penerbitpersis.com');
+                    if (!empty($recipientEmail)) {
+                        Mail::to($recipientEmail)->send(new NewOrderAdminMail($order));
+                    }
+                } catch (\Throwable $mailErr) {
+                    Log::warning('Order notification email failed: ' . $mailErr->getMessage());
+                }
+
+                $qrImageUrl = !empty($manualQrisPath) ? asset($manualQrisPath) : asset('images/logo/logopersin.png');
+
+                return response()->json([
+                    'success'                 => true,
+                    'mode'                    => 'manual',
+                    'order_id'                => $order->id,
+                    'order_number'            => $orderNumber,
+                    'total_amount'            => $totalAmount,
+                    'formatted_amount'        => 'Rp ' . number_format($totalAmount, 0, ',', '.'),
+                    'fee'                     => 0,
+                    'formatted_fee'           => 'Rp 0',
+                    'total_payment'           => $totalAmount,
+                    'formatted_total_payment' => 'Rp ' . number_format($totalAmount, 0, ',', '.'),
+                    'formatted_total'         => 'Rp ' . number_format($totalAmount, 0, ',', '.'),
+                    'qr_image_url'            => $qrImageUrl,
+                    'bank_name'               => $bankName,
+                    'bank_number'             => $bankNumber,
+                    'bank_holder'             => $bankHolder,
+                    'instructions'            => $instructions,
+                    'wa_url'                  => $waUrl,
+                    'invoice_url'             => route('order.invoice', $orderNumber),
+                ]);
+
+            } catch (\Exception $e) {
+                Log::error('Manual Checkout Exception: ' . $e->getMessage());
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan sistem saat memproses pesanan: ' . $e->getMessage(),
+                ], 500);
+            }
+        }
+
+        // =========================================================================
+        // MODE B: PAYMENT GATEWAY OTOMATIS (PAKASIR QRIS REAL-TIME)
+        // =========================================================================
         $projectSlug = env('PAKASIR_PROJECT', 'payment-gateway-penerbit-pers');
         $apiKey = env('PAKASIR_API_KEY', 'Dh71KlS9BiHSQ7FeunxXKGeh3rX1O39d');
 
@@ -100,7 +206,7 @@ class PaymentController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Gagal membuat tagihan QRIS. Silakan gunakan pemesanan via WhatsApp atau coba beberapa saat lagi.',
+                    'message' => 'Gagal membuat tagihan QRIS otomatis. Silakan hubungi admin via WhatsApp atau coba beberapa saat lagi.',
                 ], 500);
             }
 
@@ -150,19 +256,21 @@ class PaymentController extends Controller
             $qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=10&data=' . urlencode($qrString);
 
             return response()->json([
-                'success'           => true,
-                'order_id'          => $order->id,
-                'order_number'      => $orderNumber,
-                'total_amount'      => $totalAmount,
-                'formatted_amount'  => 'Rp ' . number_format($totalAmount, 0, ',', '.'),
-                'fee'               => $fee,
-                'formatted_fee'     => 'Rp ' . number_format($fee, 0, ',', '.'),
-                'total_payment'     => $totalPayment,
-                'formatted_total'   => 'Rp ' . number_format($totalPayment, 0, ',', '.'),
-                'qr_string'         => $qrString,
-                'qr_image_url'      => $qrImageUrl,
-                'expired_at'        => $expiredAt,
-                'invoice_url'       => route('order.invoice', $orderNumber),
+                'success'                 => true,
+                'mode'                    => 'gateway',
+                'order_id'                => $order->id,
+                'order_number'            => $orderNumber,
+                'total_amount'            => $totalAmount,
+                'formatted_amount'        => 'Rp ' . number_format($totalAmount, 0, ',', '.'),
+                'fee'                     => $fee,
+                'formatted_fee'           => 'Rp ' . number_format($fee, 0, ',', '.'),
+                'total_payment'           => $totalPayment,
+                'formatted_total_payment' => 'Rp ' . number_format($totalPayment, 0, ',', '.'),
+                'formatted_total'         => 'Rp ' . number_format($totalPayment, 0, ',', '.'),
+                'qr_string'               => $qrString,
+                'qr_image_url'            => $qrImageUrl,
+                'expired_at'              => $expiredAt,
+                'invoice_url'             => route('order.invoice', $orderNumber),
             ]);
 
         } catch (\Exception $e) {
@@ -195,6 +303,15 @@ class PaymentController extends Controller
                 'success'        => true,
                 'payment_status' => 'completed',
                 'paid_at'        => $order->paid_at ? $order->paid_at->format('d M Y H:i') : null,
+                'invoice_url'    => route('order.invoice', $orderNumber),
+            ]);
+        }
+
+        // If manual payment method, return current status
+        if ($order->payment_method === 'qris_manual' || $order->gateway_project === 'manual') {
+            return response()->json([
+                'success'        => true,
+                'payment_status' => $order->payment_status,
                 'invoice_url'    => route('order.invoice', $orderNumber),
             ]);
         }
@@ -314,10 +431,6 @@ class PaymentController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    /**
-     * Show Order Invoice Page
-     */
-    
     /**
      * Process Payment Success actions (Update DB & Send Confirmation Emails)
      */
