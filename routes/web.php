@@ -130,6 +130,7 @@ Route::get('/katalog-digital', [\App\Http\Controllers\DigitalBookController::cla
 Route::get('/katalog-digital/{slug}', [\App\Http\Controllers\DigitalBookController::class, 'show'])->name('katalog.digital.show');
 Route::get('/api/books/search', [CatalogController::class, 'searchApi'])->name('api.books.search');
 Route::get('/api/digital-books/search', [\App\Http\Controllers\DigitalBookController::class, 'searchApi'])->name('api.digital-books.search');
+Route::post('/katalog-digital/bookmark/{id}', [\App\Http\Controllers\DigitalBookController::class, 'toggleBookmark'])->name('katalog.digital.bookmark')->middleware('throttle:60,1');
 Route::get('/berita', [\App\Http\Controllers\ArticleController::class, 'index'])->name('berita.index');
 Route::get('/berita/{slug}', [\App\Http\Controllers\ArticleController::class, 'show'])->name('berita.show');
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
@@ -316,6 +317,8 @@ Route::post('/member/logout', [MemberAuthController::class, 'logout'])->name('me
 
 Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(function () {
     Route::get('/dashboard',        [MemberDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/buku-digital',     [MemberDashboardController::class, 'digitalBooks'])->name('digital_books');
+    Route::delete('/buku-digital/{id}', [MemberDashboardController::class, 'removeDigitalBookBookmark'])->name('digital_books.remove');
     Route::get('/pesanan',          [MemberDashboardController::class, 'orders'])->name('orders');
     Route::post('/pesanan/{orderNumber}/terima', [MemberDashboardController::class, 'confirmReceived'])->name('orders.confirm_received');
     Route::post('/pesanan/{orderNumber}/messages', [MemberDashboardController::class, 'sendOrderMessage'])->name('orders.message');

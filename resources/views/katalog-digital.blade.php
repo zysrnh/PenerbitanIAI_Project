@@ -339,12 +339,27 @@
                                     <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 truncate">
                                         {{ $book->category }}
                                     </span>
-                                    @if($pdfUrl)
-                                        <span class="px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1 shrink-0" title="File PDF Siap Dibaca">
-                                            <i class="fa-solid fa-file-pdf text-[8px] text-emerald-700"></i>
-                                            <span>PDF Ready</span>
-                                        </span>
-                                    @endif
+                                    
+                                    <div class="flex items-center gap-1.5 shrink-0">
+                                        @php
+                                            $isBookmarked = in_array($book->id, $bookmarkedIds ?? []);
+                                        @endphp
+                                        <button type="button" 
+                                                onclick="toggleBookBookmark({{ $book->id }}, this)" 
+                                                class="px-2 py-0.5 rounded-xs border transition flex items-center gap-1 text-[9.5px] font-bold cursor-pointer select-none {{ $isBookmarked ? 'bg-amber-500 text-white border-amber-600 shadow-2xs' : 'bg-white hover:bg-slate-50 text-slate-600 border-slate-200' }}" 
+                                                title="{{ $isBookmarked ? 'Tersimpan di Buku Digital Saya (Klik untuk batal)' : 'Simpan / Bookmark ke Buku Digital Saya' }}"
+                                                data-bookmarked="{{ $isBookmarked ? '1' : '0' }}">
+                                            <i class="{{ $isBookmarked ? 'fa-solid' : 'fa-regular' }} fa-bookmark {{ $isBookmarked ? 'text-white' : 'text-amber-500' }}"></i>
+                                            <span class="bookmark-btn-label">{{ $isBookmarked ? 'Tersimpan' : 'Simpan' }}</span>
+                                        </button>
+
+                                        @if($pdfUrl)
+                                            <span class="px-1.5 py-0.5 rounded-xs text-[9px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1" title="File PDF Siap Dibaca">
+                                                <i class="fa-solid fa-file-pdf text-[8px] text-emerald-700"></i>
+                                                <span>PDF</span>
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
 
                                 <!-- 3D Perspective Stage -->
@@ -1713,6 +1728,102 @@
             submitBtn.innerHTML = originalText;
         }
     };
+
+    // =========================================================================
+    // MEMBER BOOKMARK TOGGLE HANDLER
+    // =========================================================================
+    window.toggleBookBookmark = async function(bookId, btnEl) {
+        if (!bookId) return;
+
+        const originalHtml = btnEl.innerHTML;
+        btnEl.disabled = true;
+
+        try {
+            const response = await fetch(`/katalog-digital/bookmark/${bookId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 401) {
+                const res = await response.json();
+                if (confirm(res.message || 'Silakan login sebagai member untuk menyimpan buku ini ke Buku Digital Saya. Masuk sekarang?')) {
+                    window.location.href = res.login_url || "{{ route('member.login') }}";
+                }
+                btnEl.disabled = false;
+                btnEl.innerHTML = originalHtml;
+                return;
+            }
+
+            const res = await response.json();
+            btnEl.disabled = false;
+
+            if (res.success) {
+                const isBookmarked = res.bookmarked;
+                btnEl.setAttribute('data-bookmarked', isBookmarked ? '1' : '0');
+
+                if (isBookmarked) {
+                    btnEl.className = 'px-2 py-0.5 rounded-xs border transition flex items-center gap-1 text-[9.5px] font-bold cursor-pointer select-none bg-amber-500 text-white border-amber-600 shadow-2xs animate-pulse';
+                    btnEl.innerHTML = '<i class="fa-solid fa-bookmark text-white"></i> <span class="bookmark-btn-label">Tersimpan</span>';
+                    btnEl.title = 'Tersimpan di Buku Digital Saya (Klik untuk batal)';
+                    setTimeout(() => btnEl.classList.remove('animate-pulse'), 1000);
+                } else {
+                    btnEl.className = 'px-2 py-0.5 rounded-xs border transition flex items-center gap-1 text-[9.5px] font-bold cursor-pointer select-none bg-white hover:bg-slate-50 text-slate-600 border-slate-200';
+                    btnEl.innerHTML = '<i class="fa-regular fa-bookmark text-amber-500"></i> <span class="bookmark-btn-label">Simpan</span>';
+                    btnEl.title = 'Simpan / Bookmark ke Buku Digital Saya';
+                }
+
+                // Show Toast Notification
+                showBookmarkToast(res.message, isBookmarked, res.member_url);
+            } else {
+                alert(res.message || 'Gagal mengubah bookmark.');
+                btnEl.innerHTML = originalHtml;
+            }
+        } catch (err) {
+            btnEl.disabled = false;
+            btnEl.innerHTML = originalHtml;
+            console.error('Bookmark error:', err);
+            alert('Terjadi kesalahan jaringan saat memproses bookmark.');
+        }
+    };
+
+    function showBookmarkToast(message, isAdded, memberUrl) {
+        let toast = document.getElementById('bookmarkToastNotification');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'bookmarkToastNotification';
+            toast.className = 'fixed bottom-5 right-5 z-[9999] max-w-sm bg-slate-900 text-white p-3.5 rounded-sm shadow-2xl border border-slate-700 flex items-center gap-3 transition-all duration-300 transform translate-y-10 opacity-0';
+            document.body.appendChild(toast);
+        }
+
+        const iconHtml = isAdded 
+            ? '<div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0"><i class="fa-solid fa-bookmark text-xs"></i></div>'
+            : '<div class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 border border-slate-700 flex items-center justify-center shrink-0"><i class="fa-regular fa-bookmark text-xs"></i></div>';
+
+        const actionBtnHtml = isAdded && memberUrl 
+            ? `<a href="${memberUrl}" class="ml-auto px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xs text-[10px] font-bold shrink-0 transition flex items-center gap-1"><span>Buku Saya</span><i class="fa-solid fa-arrow-right text-[8px]"></i></a>`
+            : '';
+
+        toast.innerHTML = `
+            ${iconHtml}
+            <div class="min-w-0 flex-1">
+                <p class="text-xs font-bold text-slate-100 leading-snug">${message}</p>
+            </div>
+            ${actionBtnHtml}
+        `;
+
+        toast.classList.remove('translate-y-10', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+
+        if (window._bookmarkToastTimer) clearTimeout(window._bookmarkToastTimer);
+        window._bookmarkToastTimer = setTimeout(() => {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-10', 'opacity-0');
+        }, 4000);
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         try {

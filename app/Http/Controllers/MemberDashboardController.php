@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Book;
+use App\Models\DigitalBook;
+use App\Models\DigitalBookBookmark;
 use App\Models\Order;
 use App\Models\SiteSetting;
 use App\Mail\OrderCompletedAdminMail;
@@ -40,6 +42,9 @@ class MemberDashboardController extends Controller
         $countShipping = $userOrders->where('payment_status', 'completed')->where('shipping_status', 'dikirim')->count();
         $countCompleted = $userOrders->where('shipping_status', 'selesai')->count();
 
+        // Total Member Digital Books Bookmarks
+        $totalMemberBookmarks = DigitalBookBookmark::where('user_id', $user->id)->count();
+
         return view('member.dashboard', compact(
             'user', 
             'totalBooks', 
@@ -52,8 +57,92 @@ class MemberDashboardController extends Controller
             'countPending',
             'countProcessing',
             'countShipping',
-            'countCompleted'
+            'countCompleted',
+            'totalMemberBookmarks'
         ));
+    }
+
+    /**
+     * Member Bookmarked Digital Books List
+     */
+    public function digitalBooks(Request $request)
+    {
+        $user = Auth::user();
+        $contactWa = SiteSetting::get('contact_whatsapp', '6282116116133');
+
+        $query = $user->bookmarkedDigitalBooks()->published()->latest('digital_book_bookmarks.created_at');
+
+        if ($request->filled('q')) {
+            $search = trim($request->q);
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('author', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%");
+            });
+        }
+
+        $activeCategory = $request->get('kategori', 'all');
+        if ($activeCategory !== 'all' && !empty($activeCategory)) {
+            $query->where('category', $activeCategory);
+        }
+
+        $digitalBooks = $query->paginate(12)->withQueryString();
+        $totalBookmarks = DigitalBookBookmark::where('user_id', $user->id)->count();
+
+        // Category stats for member's bookmarks
+        $categoryStats = $user->bookmarkedDigitalBooks()
+            ->published()
+            ->select('category')
+            ->selectRaw('count(*) as count')
+            ->groupBy('category')
+            ->get();
+
+        // Active Flipbook to Read
+        $activeBook = null;
+        if ($request->filled('baca')) {
+            $slug = $request->baca;
+            $activeBook = DigitalBook::published()->where('slug', $slug)->orWhere('id', $slug)->first();
+        }
+
+        $donationSettings = [
+            'active'       => SiteSetting::get('donation_active', '1') === '1',
+            'title'        => SiteSetting::get('donation_title', 'Dukung Penerbitan Buku Islam'),
+            'desc'         => SiteSetting::get('donation_desc', 'Buku ini dapat diakses dan diunduh secara digital. Jika buku ini bermanfaat bagi Anda, mari ikut mendukung Persis Pers agar dapat terus menerbitkan karya keislaman.'),
+            'qris_image'   => SiteSetting::get('donation_qris_image', ''),
+            'bank_name'    => SiteSetting::get('donation_bank_name', 'Bank Syariah Indonesia (BSI)'),
+            'bank_account' => SiteSetting::get('donation_bank_account', '7148888999'),
+            'bank_holder'  => SiteSetting::get('donation_bank_holder', 'PENERBIT PERSIS DONASI'),
+            'wa_contact'   => SiteSetting::get('donation_wa_contact', '6285978006263'),
+        ];
+
+        return view('member.digital-books', compact(
+            'user',
+            'digitalBooks',
+            'totalBookmarks',
+            'categoryStats',
+            'activeCategory',
+            'activeBook',
+            'donationSettings',
+            'contactWa'
+        ));
+    }
+
+    /**
+     * Remove Digital Book Bookmark from Member Collection
+     */
+    public function removeDigitalBookBookmark($id)
+    {
+        $user = Auth::user();
+        $bookmark = DigitalBookBookmark::where('user_id', $user->id)
+            ->where('digital_book_id', $id)
+            ->first();
+
+        if ($bookmark) {
+            $bookmark->delete();
+            return back()->with('success', 'Buku digital berhasil dihapus dari koleksi Anda.');
+        }
+
+        return back()->with('error', 'Buku digital tidak ditemukan di koleksi Anda.');
     }
 
     public function orders(Request $request)
@@ -141,7 +230,6 @@ class MemberDashboardController extends Controller
         return redirect()->route('member.orders')->with('success', 'Terima kasih! Pesanan #' . $order->order_number . ' telah dikonfirmasi diterima.');
     }
 
-    
     /**
      * Send message from Customer/Member to Admin
      */

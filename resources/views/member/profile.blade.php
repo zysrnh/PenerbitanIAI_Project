@@ -121,7 +121,7 @@
                             @endif
                         </a>
 
-                        <a href="{{ route('katalog.digital') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                        <a href="{{ route('member.digital_books') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
                             <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
                             <span>Buku Digital</span>
                         </a>
@@ -569,7 +569,7 @@
         </a>
 
         <!-- 3. Buku Digital -->
-        <a href="{{ route('katalog.digital') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
+        <a href="{{ route('member.digital_books') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
             <div class="relative">
                 <i class="fa-solid fa-book-open-reader text-base"></i>
             </div>

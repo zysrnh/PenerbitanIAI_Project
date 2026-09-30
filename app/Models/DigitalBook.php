@@ -41,6 +41,18 @@ class DigitalBook extends Model
         });
     }
 
+    public function bookmarks()
+    {
+        return $this->hasMany(DigitalBookBookmark::class, 'digital_book_id');
+    }
+
+    public function isBookmarkedBy($user): bool
+    {
+        if (!$user) return false;
+        $userId = is_numeric($user) ? $user : $user->id;
+        return $this->bookmarks()->where('user_id', $userId)->exists();
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', 'published');

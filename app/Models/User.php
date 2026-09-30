@@ -80,6 +80,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Digital Book Bookmarks Relation
+     */
+    public function digitalBookBookmarks()
+    {
+        return $this->hasMany(DigitalBookBookmark::class);
+    }
+
+    public function bookmarkedDigitalBooks()
+    {
+        return $this->belongsToMany(DigitalBook::class, 'digital_book_bookmarks', 'user_id', 'digital_book_id')->withTimestamps();
+    }
+
+    /**
      * Get the role display label.
      */
     public function getRoleLabelAttribute(): string

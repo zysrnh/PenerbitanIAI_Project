@@ -139,9 +139,14 @@
                             @endif
                         </a>
 
-                        <a href="{{ route('katalog.digital') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
-                            <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
-                            <span>Buku Digital</span>
+                        <a href="{{ route('member.digital_books') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
+                                <span>Buku Digital</span>
+                            </div>
+                            @if(($totalMemberBookmarks ?? 0) > 0)
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-slate-900 font-mono">{{ $totalMemberBookmarks }}</span>
+                            @endif
                         </a>
                     </div>
                 </div>
@@ -384,7 +389,7 @@
                     </div>
 
                     <div class="flex items-center gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t sm:border-t-0 border-white/10">
-                        <a href="{{ route('katalog.digital') }}" class="flex-1 sm:flex-none px-3.5 py-2 bg-[#006830] hover:bg-[#032c21] text-white border border-emerald-400/30 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
+                        <a href="{{ route('member.digital_books') }}" class="flex-1 sm:flex-none px-3.5 py-2 bg-[#006830] hover:bg-[#032c21] text-white border border-emerald-400/30 rounded-sm text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs">
                             <i class="fa-solid fa-book-open-reader text-xs"></i>
                             <span>Buka Buku Digital</span>
                         </a>
@@ -487,7 +492,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 
                 <!-- Card 1: Buku Digital (Flipbook) -->
-                <a href="{{ route('katalog.digital') }}" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
+                <a href="{{ route('member.digital_books') }}" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
                     <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition">
                         <i class="fa-solid fa-book-open-reader"></i>
                     </div>
@@ -609,7 +614,7 @@
         </a>
 
         <!-- 3. Buku Digital -->
-        <a href="{{ route('katalog.digital') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
+        <a href="{{ route('member.digital_books') }}" class="flex-1 flex flex-col items-center justify-center py-1 text-center transition text-slate-500 hover:text-slate-800 font-medium">
             <div class="relative">
                 <i class="fa-solid fa-book-open-reader text-base"></i>
             </div>

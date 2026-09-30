@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\DigitalBook;
+use App\Models\DigitalBookBookmark;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DigitalBookController extends Controller
 {
@@ -67,6 +69,11 @@ class DigitalBookController extends Controller
             $activeBook = DigitalBook::published()->where('slug', $slug)->orWhere('id', $slug)->first();
         }
 
+        // User Bookmarked IDs
+        $bookmarkedIds = Auth::check() 
+            ? DigitalBookBookmark::where('user_id', Auth::id())->pluck('digital_book_id')->toArray() 
+            : [];
+
         // Donation Settings from SiteSetting
         $donationSettings = [
             'active'       => \App\Models\SiteSetting::get('donation_active', '1') === '1',
@@ -89,6 +96,7 @@ class DigitalBookController extends Controller
             'totalNew',
             'popularBooks',
             'activeBook',
+            'bookmarkedIds',
             'donationSettings'
         ));
     }
@@ -108,6 +116,51 @@ class DigitalBookController extends Controller
         }
 
         return redirect()->route('katalog.digital', ['baca' => $activeBook->slug]);
+    }
+
+    /**
+     * Toggle Bookmark for Digital Book (AJAX)
+     */
+    public function toggleBookmark(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json([
+                'success'       => false,
+                'require_login' => true,
+                'login_url'     => route('member.login'),
+                'message'       => 'Silakan masuk / daftar akun member terlebih dahulu untuk menyimpan buku digital ke koleksi Anda.',
+            ], 401);
+        }
+
+        $book = DigitalBook::findOrFail($id);
+        $userId = Auth::id();
+
+        $bookmark = DigitalBookBookmark::where('user_id', $userId)
+            ->where('digital_book_id', $book->id)
+            ->first();
+
+        if ($bookmark) {
+            $bookmark->delete();
+            $bookmarked = false;
+            $message = "Buku '{$book->title}' telah dihapus dari koleksi Buku Digital Anda.";
+        } else {
+            DigitalBookBookmark::create([
+                'user_id'         => $userId,
+                'digital_book_id' => $book->id,
+            ]);
+            $bookmarked = true;
+            $message = "Buku '{$book->title}' berhasil disimpan ke Buku Digital Saya!";
+        }
+
+        $totalBookmarks = DigitalBookBookmark::where('user_id', $userId)->count();
+
+        return response()->json([
+            'success'         => true,
+            'bookmarked'      => $bookmarked,
+            'message'         => $message,
+            'total_bookmarks' => $totalBookmarks,
+            'member_url'      => route('member.digital_books'),
+        ]);
     }
 
     /**
