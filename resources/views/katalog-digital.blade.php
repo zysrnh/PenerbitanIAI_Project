@@ -473,11 +473,7 @@
             </div>
 
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <!-- Direct PDF Button -->
-                <a id="btnDirectPdfOpen" href="#" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition items-center gap-1.5 border border-slate-700 cursor-pointer" title="Buka File PDF Asli di Tab Baru (Cepat)">
-                    <i class="fa-solid fa-arrow-up-right-from-square text-[10.5px] text-emerald-400"></i>
-                    <span class="hidden md:inline">Buka PDF</span>
-                </a>
+
 
                 <!-- Share Link Button -->
                 <button type="button" onclick="copyBookShareLink()" class="px-2.5 py-1.5 rounded-xs bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-bold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer" title="Salin Link Tautan Buku ini">
