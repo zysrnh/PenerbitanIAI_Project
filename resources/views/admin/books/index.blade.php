@@ -601,48 +601,48 @@
 
                             <div class="grid grid-cols-2 gap-3">
                                 
-                                <label for="in_cover_image" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
-                                    <div class="flex items-center justify-between mb-1.5">
+                                <label for="in_cover_image" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition select-none">
+                                    <div class="flex items-center justify-between mb-1.5 pointer-events-none">
                                         <span class="text-xs font-bold text-slate-800">1. Sampul Depan <span class="text-rose-500">*</span></span>
                                         <span id="badge_cover" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="thumb_box_cover" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                    <div id="thumb_box_cover" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition relative">
                                         <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'cover')" />
+                                    <input type="file" name="cover_image" id="in_cover_image" accept="image/*" class="hidden" onclick="this.value = null;" onchange="handleImageSelection(this, 'cover')" />
                                 </label>
 
-                                <label for="in_back_cover" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
-                                    <div class="flex items-center justify-between mb-1.5">
+                                <label for="in_back_cover" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition select-none">
+                                    <div class="flex items-center justify-between mb-1.5 pointer-events-none">
                                         <span class="text-xs font-bold text-slate-800">2. Sampul Belakang</span>
                                         <span id="badge_back" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="thumb_box_back" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                    <div id="thumb_box_back" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition relative">
                                         <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'back')" />
+                                    <input type="file" name="back_cover_image" id="in_back_cover" accept="image/*" class="hidden" onclick="this.value = null;" onchange="handleImageSelection(this, 'back')" />
                                 </label>
 
-                                <label for="in_inside1" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
-                                    <div class="flex items-center justify-between mb-1.5">
+                                <label for="in_inside1" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition select-none">
+                                    <div class="flex items-center justify-between mb-1.5 pointer-events-none">
                                         <span class="text-xs font-bold text-slate-800">3. Halaman Isi 1</span>
                                         <span id="badge_inside1" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="thumb_box_inside1" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                    <div id="thumb_box_inside1" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition relative">
                                         <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="inside_preview_image" id="in_inside1" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'inside1')" />
+                                    <input type="file" name="inside_preview_image" id="in_inside1" accept="image/*" class="hidden" onclick="this.value = null;" onchange="handleImageSelection(this, 'inside1')" />
                                 </label>
 
-                                <label for="in_inside2" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition">
-                                    <div class="flex items-center justify-between mb-1.5">
+                                <label for="in_inside2" class="photo-card-hover relative bg-slate-50 hover:bg-emerald-50/50 p-3 rounded-sm border border-slate-200 hover:border-emerald-500 cursor-pointer block group transition select-none">
+                                    <div class="flex items-center justify-between mb-1.5 pointer-events-none">
                                         <span class="text-xs font-bold text-slate-800">4. Halaman Isi 2</span>
                                         <span id="badge_inside2" class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600">Pilih</span>
                                     </div>
-                                    <div id="thumb_box_inside2" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition">
+                                    <div id="thumb_box_inside2" class="aspect-[3/2] bg-white rounded-sm border border-slate-200 overflow-hidden flex items-center justify-center text-slate-400 group-hover:text-emerald-600 transition relative">
                                         <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
                                     </div>
-                                    <input type="file" name="additional_image" id="in_inside2" accept="image/*" class="hidden" onchange="handleImageSelection(this, 'inside2')" />
+                                    <input type="file" name="additional_image" id="in_inside2" accept="image/*" class="hidden" onclick="this.value = null;" onchange="handleImageSelection(this, 'inside2')" />
                                 </label>
 
                             </div>
@@ -659,15 +659,15 @@
                             <p class="text-[11px] text-slate-600 leading-normal">
                                 File PDF ini otomatis dibuka dengan <strong>animasi membalik buku (3D Flipbook)</strong> di katalog digital.
                             </p>
-                            <label for="in_sample_pdf" class="relative flex items-center gap-3 p-2.5 bg-white border border-dashed border-emerald-300 hover:border-emerald-600 rounded-sm cursor-pointer transition group">
-                                <div class="w-9 h-9 rounded-sm bg-emerald-100/70 text-emerald-700 flex items-center justify-center shrink-0 text-base group-hover:scale-105 transition">
+                            <label for="in_sample_pdf" class="relative flex items-center gap-3 p-2.5 bg-white border border-dashed border-emerald-300 hover:border-emerald-600 rounded-sm cursor-pointer transition group select-none">
+                                <div class="w-9 h-9 rounded-sm bg-emerald-100/70 text-emerald-700 flex items-center justify-center shrink-0 text-base group-hover:scale-105 transition pointer-events-none">
                                     <i class="fa-solid fa-cloud-arrow-up"></i>
                                 </div>
-                                <div class="flex-1 min-w-0">
+                                <div class="flex-1 min-w-0 pointer-events-none">
                                     <p id="pdf_filename_display" class="text-xs font-bold text-slate-800 truncate">Pilih file PDF naskah...</p>
                                     <p class="text-[10px] text-slate-400 font-mono">Format: .pdf (Maks. 50MB)</p>
                                 </div>
-                                <input type="file" name="sample_pdf" id="in_sample_pdf" accept="application/pdf" class="hidden" onchange="handlePdfSelection(this)" />
+                                <input type="file" name="sample_pdf" id="in_sample_pdf" accept="application/pdf" class="hidden" onclick="this.value = null;" onchange="handlePdfSelection(this)" />
                             </label>
                             <div id="pdf_active_preview_box" class="hidden flex items-center justify-between pt-1 text-xs">
                                 <a id="pdf_view_link" href="#" target="_blank" class="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-900 transition">
@@ -1295,11 +1295,28 @@
             const box = document.getElementById('thumb_box_' + key);
             const badge = document.getElementById('badge_' + key);
             if (url) {
-                box.innerHTML = '<img src="' + url + '" class="w-full h-full object-cover" />';
+                box.innerHTML = `
+                    <div class="relative w-full h-full overflow-hidden">
+                        <img src="${url}" class="w-full h-full object-cover pointer-events-none transition duration-200 group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('err_${key}').classList.remove('hidden'); const b = document.getElementById('badge_${key}'); if(b){b.innerText='Belum Ada'; b.className='text-[9px] px-1.5 py-0.5 rounded font-bold bg-amber-100 text-amber-800';}" />
+                        <div id="err_${key}" class="hidden w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-400 p-2 text-center pointer-events-none">
+                            <i class="fa-solid fa-cloud-arrow-up text-lg text-emerald-600 mb-1"></i>
+                            <span class="text-[9px] font-bold text-slate-600">Klik untuk Ganti</span>
+                        </div>
+                        <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center text-white pointer-events-none">
+                            <i class="fa-solid fa-camera text-base mb-1"></i>
+                            <span class="text-[9px] font-bold uppercase tracking-wider">Ganti Foto</span>
+                        </div>
+                    </div>
+                `;
                 badge.innerText = 'Terunggah';
                 badge.className = 'text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800';
             } else {
-                box.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-xl"></i>';
+                box.innerHTML = `
+                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 group-hover:text-emerald-600 transition pointer-events-none">
+                        <i class="fa-solid fa-cloud-arrow-up text-xl mb-1"></i>
+                        <span class="text-[9px] font-bold">Pilih Foto</span>
+                    </div>
+                `;
                 badge.innerText = 'Pilih';
                 badge.className = 'text-[9px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-600';
             }

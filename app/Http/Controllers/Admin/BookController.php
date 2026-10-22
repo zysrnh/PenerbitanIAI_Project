@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BookController extends Controller
@@ -75,18 +74,9 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Safe Direct File Move (100% Zero finfo dependency)
+        // Safe Direct File Move across all storage targets
         $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
-
-        $photoDir1 = public_path('storage/books/photos');
-        $photoDir2 = storage_path('app/public/books/photos');
-        if (!file_exists($photoDir1)) {
-            @mkdir($photoDir1, 0777, true);
-        }
-        if (!file_exists($photoDir2)) {
-            @mkdir($photoDir2, 0777, true);
-        }
 
         foreach ($imageSlots as $slot) {
             if ($request->hasFile($slot)) {
@@ -98,19 +88,14 @@ class BookController extends Controller
                 }
 
                 $filename = Str::random(30) . '.' . $ext;
-                $dest1 = $photoDir1 . '/' . $filename;
-                $dest2 = $photoDir2 . '/' . $filename;
+                $relPath = 'books/photos/' . $filename;
 
-                $file->move($photoDir1, $filename);
-                @copy($dest1, $dest2);
-                @chmod($dest1, 0644);
-                @chmod($dest2, 0644);
-
-                $validated[$slot] = 'books/photos/' . $filename;
+                $this->saveFileToAllStorageTargets($file, $relPath);
+                $validated[$slot] = $relPath;
             }
         }
 
-        // Safe PDF Upload via move (sync dual storage path)
+        // Safe PDF Upload via multi-target storage
         if ($request->hasFile('sample_pdf')) {
             $pdfFile = $request->file('sample_pdf');
             $pdfExt = strtolower($pdfFile->getClientOriginalExtension() ?: 'pdf');
@@ -119,25 +104,11 @@ class BookController extends Controller
                 return back()->withErrors(['sample_pdf' => 'File dokumen buku/sampel harus berformat PDF.'])->withInput();
             }
 
-            $sampleDir1 = public_path('storage/books/samples');
-            $sampleDir2 = storage_path('app/public/books/samples');
-            if (!file_exists($sampleDir1)) {
-                @mkdir($sampleDir1, 0777, true);
-            }
-            if (!file_exists($sampleDir2)) {
-                @mkdir($sampleDir2, 0777, true);
-            }
-
             $pdfName = Str::random(30) . '.pdf';
-            $dest1 = $sampleDir1 . '/' . $pdfName;
-            $dest2 = $sampleDir2 . '/' . $pdfName;
+            $relPdfPath = 'books/samples/' . $pdfName;
 
-            $pdfFile->move($sampleDir1, $pdfName);
-            @copy($dest1, $dest2);
-            @chmod($dest1, 0644);
-            @chmod($dest2, 0644);
-
-            $validated['sample_pdf'] = 'books/samples/' . $pdfName;
+            $this->saveFileToAllStorageTargets($pdfFile, $relPdfPath);
+            $validated['sample_pdf'] = $relPdfPath;
         }
 
         Book::create($validated);
@@ -166,18 +137,9 @@ class BookController extends Controller
         $validated['is_new_release'] = $request->has('is_new_release');
         $validated['is_best_seller'] = $request->has('is_best_seller');
 
-        // Safe Direct File Move for Updates
+        // Safe Direct File Move for Updates with multi-target storage
         $allowedImgExt = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image'];
-
-        $photoDir1 = public_path('storage/books/photos');
-        $photoDir2 = storage_path('app/public/books/photos');
-        if (!file_exists($photoDir1)) {
-            @mkdir($photoDir1, 0777, true);
-        }
-        if (!file_exists($photoDir2)) {
-            @mkdir($photoDir2, 0777, true);
-        }
 
         foreach ($imageSlots as $slot) {
             if ($request->hasFile($slot)) {
@@ -189,28 +151,18 @@ class BookController extends Controller
                 }
 
                 if ($book->$slot) {
-                    if (file_exists(public_path('storage/' . $book->$slot))) {
-                        @unlink(public_path('storage/' . $book->$slot));
-                    }
-                    if (file_exists(storage_path('app/public/' . $book->$slot))) {
-                        @unlink(storage_path('app/public/' . $book->$slot));
-                    }
+                    $this->deleteFileFromAllStorageTargets($book->$slot);
                 }
 
                 $filename = Str::random(30) . '.' . $ext;
-                $dest1 = $photoDir1 . '/' . $filename;
-                $dest2 = $photoDir2 . '/' . $filename;
+                $relPath = 'books/photos/' . $filename;
 
-                $file->move($photoDir1, $filename);
-                @copy($dest1, $dest2);
-                @chmod($dest1, 0644);
-                @chmod($dest2, 0644);
-
-                $validated[$slot] = 'books/photos/' . $filename;
+                $this->saveFileToAllStorageTargets($file, $relPath);
+                $validated[$slot] = $relPath;
             }
         }
 
-        // Safe PDF Upload Update (sync dual storage path)
+        // Safe PDF Upload Update (multi-target storage path)
         if ($request->hasFile('sample_pdf')) {
             $pdfFile = $request->file('sample_pdf');
             $pdfExt = strtolower($pdfFile->getClientOriginalExtension() ?: 'pdf');
@@ -219,42 +171,18 @@ class BookController extends Controller
                 return back()->withErrors(['sample_pdf' => 'File dokumen buku/sampel harus berformat PDF.'])->withInput();
             }
 
-            $sampleDir1 = public_path('storage/books/samples');
-            $sampleDir2 = storage_path('app/public/books/samples');
-            if (!file_exists($sampleDir1)) {
-                @mkdir($sampleDir1, 0777, true);
-            }
-            if (!file_exists($sampleDir2)) {
-                @mkdir($sampleDir2, 0777, true);
-            }
-
             if ($book->sample_pdf) {
-                if (file_exists(public_path('storage/' . $book->sample_pdf))) {
-                    @unlink(public_path('storage/' . $book->sample_pdf));
-                }
-                if (file_exists(storage_path('app/public/' . $book->sample_pdf))) {
-                    @unlink(storage_path('app/public/' . $book->sample_pdf));
-                }
+                $this->deleteFileFromAllStorageTargets($book->sample_pdf);
             }
 
             $pdfName = Str::random(30) . '.pdf';
-            $dest1 = $sampleDir1 . '/' . $pdfName;
-            $dest2 = $sampleDir2 . '/' . $pdfName;
+            $relPdfPath = 'books/samples/' . $pdfName;
 
-            $pdfFile->move($sampleDir1, $pdfName);
-            @copy($dest1, $dest2);
-            @chmod($dest1, 0644);
-            @chmod($dest2, 0644);
-
-            $validated['sample_pdf'] = 'books/samples/' . $pdfName;
+            $this->saveFileToAllStorageTargets($pdfFile, $relPdfPath);
+            $validated['sample_pdf'] = $relPdfPath;
         } elseif ($request->boolean('remove_sample_pdf')) {
             if ($book->sample_pdf) {
-                if (file_exists(public_path('storage/' . $book->sample_pdf))) {
-                    @unlink(public_path('storage/' . $book->sample_pdf));
-                }
-                if (file_exists(storage_path('app/public/' . $book->sample_pdf))) {
-                    @unlink(storage_path('app/public/' . $book->sample_pdf));
-                }
+                $this->deleteFileFromAllStorageTargets($book->sample_pdf);
             }
             $validated['sample_pdf'] = null;
         }
@@ -282,12 +210,7 @@ class BookController extends Controller
         foreach ($books as $book) {
             foreach ($imageSlots as $slot) {
                 if ($book->$slot) {
-                    if (file_exists(public_path('storage/' . $book->$slot))) {
-                        @unlink(public_path('storage/' . $book->$slot));
-                    }
-                    if (file_exists(storage_path('app/public/' . $book->$slot))) {
-                        @unlink(storage_path('app/public/' . $book->$slot));
-                    }
+                    $this->deleteFileFromAllStorageTargets($book->$slot);
                 }
             }
             $book->delete();
@@ -301,15 +224,69 @@ class BookController extends Controller
         $title = $book->title;
         $imageSlots = ['cover_image', 'back_cover_image', 'inside_preview_image', 'additional_image', 'sample_pdf'];
         foreach ($imageSlots as $slot) {
-            if ($book->$slot && file_exists(public_path('storage/' . $book->$slot))) {
-                @unlink(public_path('storage/' . $book->$slot));
-            }
-            if ($book->$slot && file_exists(storage_path('app/public/' . $book->$slot))) {
-                @unlink(storage_path('app/public/' . $book->$slot));
+            if ($book->$slot) {
+                $this->deleteFileFromAllStorageTargets($book->$slot);
             }
         }
         $book->delete();
 
         return back()->with('success', 'Buku "' . $title . '" beserta file-filenya berhasil dihapus.');
+    }
+
+    /**
+     * Helper to get all candidate storage directories across local & cPanel hosting environments.
+     */
+    protected function getStorageBaseDirs(): array
+    {
+        return array_unique([
+            public_path('storage'),
+            storage_path('app/public'),
+            base_path('public_html/storage'),
+            base_path('../public_html/storage'),
+            '/home/persisp1/public_html/storage',
+        ]);
+    }
+
+    /**
+     * Save an uploaded file across all existing storage directories.
+     */
+    protected function saveFileToAllStorageTargets($file, string $relativePath): void
+    {
+        $firstSaved = null;
+
+        foreach ($this->getStorageBaseDirs() as $baseDir) {
+            try {
+                $fullTarget = $baseDir . '/' . $relativePath;
+                $targetDir = dirname($fullTarget);
+
+                if (!file_exists($targetDir)) {
+                    @mkdir($targetDir, 0777, true);
+                }
+
+                if (!$firstSaved) {
+                    $file->move($targetDir, basename($fullTarget));
+                    $firstSaved = $fullTarget;
+                } else {
+                    @copy($firstSaved, $fullTarget);
+                }
+
+                @chmod($fullTarget, 0644);
+            } catch (\Throwable $e) {
+                // Ignore inaccessible paths
+            }
+        }
+    }
+
+    /**
+     * Delete a relative file path across all candidate storage directories.
+     */
+    protected function deleteFileFromAllStorageTargets(string $relativePath): void
+    {
+        foreach ($this->getStorageBaseDirs() as $baseDir) {
+            $path = $baseDir . '/' . $relativePath;
+            if (file_exists($path) && !is_dir($path)) {
+                @unlink($path);
+            }
+        }
     }
 }
