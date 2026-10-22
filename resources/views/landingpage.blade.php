@@ -133,7 +133,7 @@
         </div>
     </section>
 
-    <!-- Section: Layanan Kami (Dynamic, Mobile-Optimized Grid) -->
+    <!-- Section: Layanan Kami (Tampilkan Semua Menu dengan Warna Khas Tiap Kartu - Flat & Solid) -->
     <section id="layanan" class="py-10 sm:py-14 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-7 sm:mb-10">
@@ -142,29 +142,99 @@
                 <div class="w-10 h-1 bg-emerald-700 mx-auto mt-2 rounded-full"></div>
             </div>
 
-            <!-- Dynamic Services Cards: 2-Cols on Mobile, 3-Cols on Tablet, 6-Cols on Desktop -->
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-{{ count($services) <= 4 ? count($services) : (count($services) == 5 ? '5' : '6') }} gap-3 sm:gap-4">
-                @foreach($services as $srv)
+            @php
+                // Palet warna solid flat untuk masing-masing kartu menu layanan
+                $serviceColorThemes = [
+                    [
+                        // Menu 1: Emerald / Hijau Tua (Penerbitan Buku)
+                        'top_accent'  => 'bg-emerald-600',
+                        'icon_bg'     => 'bg-emerald-50 text-emerald-700 group-hover:bg-emerald-700 group-hover:text-white',
+                        'card_hover'  => 'hover:border-emerald-600',
+                        'title_hover' => 'group-hover:text-emerald-800',
+                        'link'        => 'text-emerald-700 hover:text-emerald-950',
+                    ],
+                    [
+                        // Menu 2: Biru Royal (Konversi KTI)
+                        'top_accent'  => 'bg-blue-600',
+                        'icon_bg'     => 'bg-blue-50 text-blue-700 group-hover:bg-blue-700 group-hover:text-white',
+                        'card_hover'  => 'hover:border-blue-600',
+                        'title_hover' => 'group-hover:text-blue-800',
+                        'link'        => 'text-blue-700 hover:text-blue-950',
+                    ],
+                    [
+                        // Menu 3: Indigo / Ungu Elegan (Pengurusan ISBN)
+                        'top_accent'  => 'bg-indigo-600',
+                        'icon_bg'     => 'bg-indigo-50 text-indigo-700 group-hover:bg-indigo-700 group-hover:text-white',
+                        'card_hover'  => 'hover:border-indigo-600',
+                        'title_hover' => 'group-hover:text-indigo-800',
+                        'link'        => 'text-indigo-700 hover:text-indigo-950',
+                    ],
+                    [
+                        // Menu 4: Amber / Oranye Hangat (Cetak Custom)
+                        'top_accent'  => 'bg-amber-600',
+                        'icon_bg'     => 'bg-amber-50 text-amber-700 group-hover:bg-amber-700 group-hover:text-white',
+                        'card_hover'  => 'hover:border-amber-600',
+                        'title_hover' => 'group-hover:text-amber-800',
+                        'link'        => 'text-amber-700 hover:text-amber-950',
+                    ],
+                    [
+                        // Menu 5: Rose / Merah Bata
+                        'top_accent'  => 'bg-rose-600',
+                        'icon_bg'     => 'bg-rose-50 text-rose-700 group-hover:bg-rose-700 group-hover:text-white',
+                        'card_hover'  => 'hover:border-rose-600',
+                        'title_hover' => 'group-hover:text-rose-800',
+                        'link'        => 'text-rose-700 hover:text-rose-950',
+                    ],
+                    [
+                        // Menu 6: Teal / Tosca
+                        'top_accent'  => 'bg-teal-600',
+                        'icon_bg'     => 'bg-teal-50 text-teal-700 group-hover:bg-teal-700 group-hover:text-white',
+                        'card_hover'  => 'hover:border-teal-600',
+                        'title_hover' => 'group-hover:text-teal-800',
+                        'link'        => 'text-teal-700 hover:text-teal-950',
+                    ],
+                ];
+
+                $srvCount = count($services);
+                if ($srvCount <= 3) {
+                    $gridClass = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3';
+                } elseif ($srvCount === 4) {
+                    $gridClass = 'grid-cols-2 sm:grid-cols-2 md:grid-cols-4';
+                } elseif ($srvCount === 5) {
+                    $gridClass = 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5';
+                } else {
+                    $gridClass = 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6';
+                }
+            @endphp
+
+            <!-- Dynamic Services Cards: Menampilkan Semua Menu dalam Grid Terbuka -->
+            <div class="grid {{ $gridClass }} gap-3 sm:gap-4">
+                @foreach($services as $idx => $srv)
                     @php
                         $srvTitle = is_object($srv) ? $srv->title : ($srv['title'] ?? 'Layanan');
                         $srvIcon = is_object($srv) ? $srv->icon : ($srv['icon'] ?? 'fa-solid fa-circle-check');
                         $srvDesc = is_object($srv) ? $srv->short_desc : ($srv['desc'] ?? ($srv['short_desc'] ?? ''));
                         $srvSlug = is_object($srv) ? $srv->slug : ($srv['slug'] ?? null);
                         $srvUrl = $srvSlug ? route('layanan.show', $srvSlug) : ($srv['link'] ?? route('kontak'));
+
+                        $theme = $serviceColorThemes[$idx % count($serviceColorThemes)];
                     @endphp
-                    <div class="bg-white p-3.5 sm:p-5 rounded-sm border border-slate-200 hover:border-emerald-700 hover:shadow-md transition-all duration-200 flex flex-col justify-between shadow-2xs group">
+                    <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 {{ $theme['card_hover'] }} hover:shadow-md transition-all duration-200 flex flex-col justify-between shadow-2xs group relative overflow-hidden">
+                        <!-- Top Accent Line (Solid Color) -->
+                        <div class="absolute top-0 left-0 right-0 h-1 {{ $theme['top_accent'] }} opacity-90 group-hover:opacity-100 transition-opacity"></div>
+
                         <div>
-                            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xs bg-emerald-50 text-emerald-700 flex items-center justify-center text-base sm:text-xl mb-2.5 sm:mb-3.5 group-hover:bg-emerald-700 group-hover:text-white transition-colors duration-200">
+                            <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xs {{ $theme['icon_bg'] }} flex items-center justify-center text-base sm:text-lg mb-3 transition-colors duration-200 shadow-2xs">
                                 <i class="{{ $srvIcon }}"></i>
                             </div>
-                            <h4 class="font-bold text-xs sm:text-sm text-slate-900 mb-1 sm:mb-1.5 leading-snug group-hover:text-emerald-800 transition-colors">
+                            <h4 class="font-bold text-xs sm:text-sm text-slate-900 mb-1.5 leading-snug {{ $theme['title_hover'] }} transition-colors">
                                 <a href="{{ $srvUrl }}" class="hover:underline">{{ $srvTitle }}</a>
                             </h4>
                             <p class="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed mb-3 sm:mb-4 line-clamp-3 sm:line-clamp-none">
                                 {{ $srvDesc }}
                             </p>
                         </div>
-                        <a href="{{ $srvUrl }}" class="text-[10px] sm:text-[11px] font-bold text-emerald-700 hover:text-emerald-950 inline-flex items-center gap-1 mt-auto pt-2 border-t border-slate-100">
+                        <a href="{{ $srvUrl }}" class="text-[10px] sm:text-[11px] font-bold {{ $theme['link'] }} inline-flex items-center gap-1 mt-auto pt-2.5 border-t border-slate-100">
                             <span>Selengkapnya</span>
                             <i class="fa-solid fa-arrow-right text-[8px] sm:text-[9px] group-hover:translate-x-1 transition-transform"></i>
                         </a>

@@ -246,7 +246,68 @@ ISBN menjadi identitas unik internasional yang memudahkan pendataan, identifikas
  'order' => 3,
  'status' => 'published',
  ],
- ];
+ 
+			// LAYANAN 4: CETAK CUSTOM
+			[
+				'title' => 'Cetak Custom',
+				'slug' => 'cetak-custom',
+				'icon' => 'fa-solid fa-box-open',
+				'short_desc' => 'Layanan cetak custom untuk majalah, buletin, prosiding, modul ajar, dan berbagai produk cetak institusi dengan kualitas presisi.',
+				'tagline' => '“Kualitas Cetak Presisi, Cepat, dan Harga Bersahabat.”',
+				'banner_image' => 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=1600&auto=format&fit=crop',
+				'overview' => "Penerbit Persis menyediakan layanan percetakan berkualitas tinggi untuk berbagai kebutuhan institusi, akademisi, organisasi, dan perseorangan.\n\nDidukung mesin cetak modern dan tenaga ahli berpengalaman, kami memastikan setiap hasil cetakan memiliki warna tajam, jilid yang rapi dan kuat, serta selesai tepat waktu.",
+				'features' => [
+					'Cetak Majalah, Buletin, dan Warta Lembaga',
+					'Cetak Prosiding Seminar & Laporan Penelitian',
+					'Cetak Modul Pembelajaran & Diktat Kuliah',
+					'Cetak Sertifikat, Kalender, & Agenda Custom',
+					'Pilihan Bahan Kertas Beragam (HVS, Bookpaper, Art Paper, Art Carton)',
+					'Finishing Lengkap (Laminasi Doff/Glossy, Spot UV, Emboss, Jahit Kawat/Lem Panas)',
+				],
+				'workflow_steps' => [
+					[
+						'step' => 1,
+						'title' => 'Konsultasi & Kirim File',
+						'desc' => 'Kirim file siap cetak dan konsultasikan spesifikasi bahan serta jumlah oplah.',
+					],
+					[
+						'step' => 2,
+						'title' => 'Estimasi Biaya & Mockup',
+						'desc' => 'Tim kami memberikan penawaran harga terbaik dan pengecekan kelayakan file cetak.',
+					],
+					[
+						'step' => 3,
+						'title' => 'Proses Produksi Cetak',
+						'desc' => 'Pencetakan dilakukan dengan mesin modern serta pengawasan mutu ketat.',
+					],
+					[
+						'step' => 4,
+						'title' => 'Quality Control & Finishing',
+						'desc' => 'Pemeriksaan hasil cetak, pemotongan presisi, dan jilid rapi.',
+					],
+					[
+						'step' => 5,
+						'title' => 'Pengemasan & Pengiriman',
+						'desc' => 'Pesanan dikemas aman dan dikirim langsung ke alamat tujuan tepat waktu.',
+					],
+				],
+				'benefits' => "Keunggulan Cetak di Penerbit Persis:\n• Mesin cetak offset dan digital modern\n• Hasil cetak tajam dengan warna presisi\n• Pilihan bahan kertas dan finishing lengkap\n• Harga kompetitif untuk skala kecil maupun besar\n• Bergaransi kualitas cetak",
+				'notes' => 'Catatan: Kami melayani cetak dalam jumlah terbatas (Print on Demand) maupun partai besar dengan harga khusus.',
+				'faqs' => [
+					[
+						'q' => 'Berapa minimal pemesanan cetak?',
+						'a' => 'Kami melayani cetak dalam jumlah fleksibel, baik skala kecil puluhan eksemplar hingga ribuan eksemplar.',
+					],
+					[
+						'q' => 'Berapa lama proses pengerjaan cetak?',
+						'a' => 'Lama pengerjaan tergantung jenis produk, oplah, dan finishing yang dipilih, umumnya berkisar 3-7 hari kerja.',
+					],
+				],
+				'cta_text' => 'Konsultasi Cetak Custom',
+				'order' => 4,
+				'status' => 'published',
+			],
+];
 
  foreach ($officialServices as $srv) {
  Service::create($srv);
