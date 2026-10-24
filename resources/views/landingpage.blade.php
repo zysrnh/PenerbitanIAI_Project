@@ -285,7 +285,7 @@
                                     } elseif (str_starts_with($cleanWa, '8')) {
                                         $cleanWa = '62' . $cleanWa;
                                     }
-                                    $defaultForumUrl = 'https://wa.me/' . $cleanWa . '?text=' . urlencode('Assalamualaikum Redaksi PERSIS PERS, saya ingin konsultasi / bertanya seputar permasalahan hukum agama.');
+                                    $defaultForumUrl = route('forum.index');
                                     $forumBtnUrl = $settings['home_forum_btn_url'] ?? $defaultForumUrl;
                                 @endphp
                                 <img 

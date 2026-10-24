@@ -72,6 +72,11 @@
         $latestMessages = \App\Models\ContactMessage::latest()->take(6)->get();
         $unreadMessagesCount = \App\Models\ContactMessage::where('status', 'pending')->count();
         $pendingOrdersCount = \App\Models\Order::where('payment_status', 'completed')->where('shipping_status', 'menunggu_proses')->count();
+        try {
+            $pendingForumCount = \App\Models\ForumQuestion::where('status', 'pending')->count();
+        } catch (\Throwable $e) {
+            $pendingForumCount = 0;
+        }
     @endphp
 
     <!-- Mobile Overlay Backdrop -->
@@ -187,6 +192,18 @@
                         <a href="{{ route('admin.articles.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.articles.*') || request()->routeIs('admin.article-categories.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
                             <i class="fa-regular fa-newspaper w-4 text-center"></i>
                             <span>Berita &amp; Artikel</span>
+                        </a>
+                        @endif
+
+                        @if(Auth::user()->canAccessForum())
+                        <a href="{{ route('admin.forum-questions.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition {{ request()->routeIs('admin.forum-questions.*') ? 'bg-emerald-600/20 text-emerald-400 font-bold border border-emerald-500/30' : 'hover:bg-white/10 hover:text-white text-slate-300' }}">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-scale-balanced w-4 text-center"></i>
+                                <span>Tanya Jawab Agama</span>
+                            </div>
+                            @if($pendingForumCount > 0)
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-slate-950 font-mono">{{ $pendingForumCount }}</span>
+                            @endif
                         </a>
                         @endif
                     </div>

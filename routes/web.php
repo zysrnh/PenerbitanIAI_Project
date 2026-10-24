@@ -136,6 +136,11 @@ Route::get('/berita/{slug}', [\App\Http\Controllers\ArticleController::class, 's
 Route::get('/kontak', [ContactController::class, 'index'])->name('kontak');
 Route::post('/kontak/kirim', [ContactController::class, 'store'])->name('kontak.store')->middleware('throttle:6,1');
 
+// Forum Tanya Jawab Hukum Agama Public Routes
+Route::get('/forum-tanya-jawab', [\App\Http\Controllers\ForumController::class, 'index'])->name('forum.index');
+Route::get('/forum-tanya-jawab/{slug}', [\App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
+Route::post('/forum-tanya-jawab', [\App\Http\Controllers\ForumController::class, 'store'])->name('forum.store')->middleware('throttle:15,1');
+
 // Donation & Digital Download Public Routes
 Route::post('/donasi/kirim', [\App\Http\Controllers\DonationController::class, 'store'])->name('donasi.store')->middleware('throttle:15,1');
 Route::get('/katalog-digital/download/{slug}', [\App\Http\Controllers\DonationController::class, 'download'])->name('katalog.digital.download');
@@ -204,6 +209,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
         Route::post('/digital-books/bulk-destroy', [\App\Http\Controllers\Admin\DigitalBookController::class, 'bulkDestroy'])->name('digital-books.bulk_destroy');
         Route::resource('digital-books', \App\Http\Controllers\Admin\DigitalBookController::class);
+
+        // Forum Tanya Jawab Hukum Agama Management
+        Route::post('/forum-questions/bulk-destroy', [\App\Http\Controllers\Admin\ForumQuestionController::class, 'bulkDestroy'])->name('forum-questions.bulk_destroy');
+        Route::resource('forum-questions', \App\Http\Controllers\Admin\ForumQuestionController::class);
 
         // Donations Management
         Route::get('/donations', [\App\Http\Controllers\Admin\DonationController::class, 'index'])->name('donations.index');

@@ -79,6 +79,11 @@ class User extends Authenticatable
         return in_array($this->role, ['super_admin', 'admin', 'operator']);
     }
 
+    public function canAccessForum(): bool
+    {
+        return in_array($this->role, ['super_admin', 'admin', 'operator']);
+    }
+
     /**
      * Digital Book Bookmarks Relation
      */
