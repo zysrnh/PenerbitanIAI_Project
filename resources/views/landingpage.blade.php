@@ -257,35 +257,50 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
                 
-                <!-- Kolom 1: Tentang Kami -->
-                <div id="tentang" class="lg:col-span-4 bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
+                <!-- Kolom 1: Forum Tanya Jawab Hukum Agama -->
+                <div id="forum-tanya-jawab" class="lg:col-span-4 bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs flex flex-col justify-between">
                     <div>
-                        <span class="text-brand-800 font-bold text-[9.5px] sm:text-[10px] uppercase tracking-widest block mb-1">TENTANG KAMI</span>
-                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-2.5 sm:mb-3">{{ $settings['home_about_title'] ?? 'PERSIS PERS' }}</h4>
+                        <span class="text-brand-800 font-bold text-[9.5px] sm:text-[10px] uppercase tracking-widest block mb-1">
+                            {{ $settings['home_forum_badge'] ?? 'FORUM TANYA JAWAB' }}
+                        </span>
+                        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-2.5 sm:mb-3">
+                            {{ $settings['home_forum_title'] ?? ($settings['home_about_title'] && $settings['home_about_title'] !== 'PERSIS PERS' ? $settings['home_about_title'] : 'Tanya Jawab Hukum Agama') }}
+                        </h4>
                         
                         <div class="grid grid-cols-12 gap-3 items-center mb-3 sm:mb-4">
                             <div class="col-span-7 sm:col-span-8 text-[11px] sm:text-xs text-slate-600 leading-relaxed">
-                                {{ $settings['home_about_desc'] ?? 'Merupakan unit layanan Penerbitan dan Percetakan yang berkomitmen mendukung penyebaran ilmu pengetahuan dan karya berkualitas bagi akademisi dan masyarakat.' }}
+                                {{ $settings['home_forum_desc'] ?? ($settings['home_about_desc'] && !str_contains($settings['home_about_desc'], 'unit layanan Penerbitan') ? $settings['home_about_desc'] : 'Wadah konsultasi dan tanya jawab seputar permasalahan fiqih, ibadah, muamalah, serta problematika hukum keagamaan kontemporer berlandaskan Al-Qur\'an dan As-Sunnah.') }}
                             </div>
                             <div class="col-span-5 sm:col-span-4 h-24 sm:h-28 rounded-xs overflow-hidden bg-slate-100 border border-slate-200">
                                 @php
-                                    $aboutImg = $settings['home_about_image'] ?? 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=400&auto=format&fit=crop';
-                                    if (!empty($aboutImg) && !str_starts_with($aboutImg, 'http') && !str_starts_with($aboutImg, '//')) {
-                                        $aboutImg = asset(ltrim($aboutImg, '/'));
+                                    $forumImg = $settings['home_forum_image'] ?? ($settings['home_about_image'] ?? 'https://images.unsplash.com/photo-1584281722573-b3c9bf8ebdc3?q=80&w=400&auto=format&fit=crop');
+                                    if (!empty($forumImg) && !str_starts_with($forumImg, 'http') && !str_starts_with($forumImg, '//')) {
+                                        $forumImg = asset(ltrim($forumImg, '/'));
                                     }
+
+                                    $contactWaRaw = \App\Models\SiteSetting::get('contact_whatsapp', '082116116133');
+                                    $cleanWa = preg_replace('/[^0-9]/', '', $contactWaRaw);
+                                    if (str_starts_with($cleanWa, '0')) {
+                                        $cleanWa = '62' . substr($cleanWa, 1);
+                                    } elseif (str_starts_with($cleanWa, '8')) {
+                                        $cleanWa = '62' . $cleanWa;
+                                    }
+                                    $defaultForumUrl = 'https://wa.me/' . $cleanWa . '?text=' . urlencode('Assalamualaikum Redaksi PERSIS PERS, saya ingin konsultasi / bertanya seputar permasalahan hukum agama.');
+                                    $forumBtnUrl = $settings['home_forum_btn_url'] ?? $defaultForumUrl;
                                 @endphp
                                 <img 
-                                    src="{{ $aboutImg }}" 
-                                    alt="Kantor Redaksi Persis Pers" 
+                                    src="{{ $forumImg }}" 
+                                    alt="Forum Tanya Jawab Hukum Agama" 
                                     class="w-full h-full object-cover"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <a href="{{ route('tentang') }}" class="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition w-fit shadow-2xs">
-                        <span>Selengkapnya</span>
-                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    <a href="{{ $forumBtnUrl }}" target="{{ str_starts_with($forumBtnUrl, 'http') ? '_blank' : '_self' }}" class="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white rounded-sm text-xs font-bold transition w-fit shadow-2xs">
+                        <i class="fa-solid fa-comments text-[11px]"></i>
+                        <span>{{ $settings['home_forum_btn_text'] ?? 'Tanya Sekarang' }}</span>
+                        <i class="fa-solid fa-arrow-right text-[9px]"></i>
                     </a>
                 </div>
 

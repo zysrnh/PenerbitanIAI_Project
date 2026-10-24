@@ -155,10 +155,16 @@ class HomeSettingController extends Controller
             'home_feat4_title'      => SiteSetting::get('home_feat4_title', 'Berpengalaman'),
             'home_feat4_desc'       => SiteSetting::get('home_feat4_desc', 'Didukung tim berpengalaman'),
 
-            // Profil Singkat
+            // Profil Singkat / Forum Tanya Jawab Hukum Agama
             'home_about_title'      => SiteSetting::get('home_about_title', 'PERSIS PERS'),
             'home_about_desc'       => SiteSetting::get('home_about_desc', 'Merupakan unit layanan Penerbitan dan Percetakan yang berkomitmen mendukung penyebaran ilmu pengetahuan dan karya berkualitas bagi akademisi dan masyarakat luas.'),
             'home_about_image'      => SiteSetting::get('home_about_image', 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=600&auto=format&fit=crop'),
+            'home_forum_badge'      => SiteSetting::get('home_forum_badge', 'FORUM TANYA JAWAB'),
+            'home_forum_title'      => SiteSetting::get('home_forum_title', 'Tanya Jawab Hukum Agama'),
+            'home_forum_desc'       => SiteSetting::get('home_forum_desc', 'Wadah konsultasi dan tanya jawab seputar permasalahan fiqih, ibadah, muamalah, serta problematika hukum keagamaan kontemporer berlandaskan Al-Qur\'an dan As-Sunnah.'),
+            'home_forum_image'      => SiteSetting::get('home_forum_image', 'https://images.unsplash.com/photo-1584281722573-b3c9bf8ebdc3?q=80&w=600&auto=format&fit=crop'),
+            'home_forum_btn_text'   => SiteSetting::get('home_forum_btn_text', 'Tanya Sekarang'),
+            'home_forum_btn_url'    => SiteSetting::get('home_forum_btn_url', null),
 
             // Proses Produksi
             'home_process_title'    => SiteSetting::get('home_process_title', 'Proses Produksi Profesional'),
