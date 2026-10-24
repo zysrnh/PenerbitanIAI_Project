@@ -80,22 +80,28 @@ class ForumController extends Controller
 
     public function store(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('member.login')
+                ->with('error', 'Silakan login terlebih dahulu untuk mengajukan pertanyaan hukum agama.');
+        }
+
         $validated = $request->validate([
-            'name'     => 'required|string|max:100',
-            'email'    => 'nullable|email|max:100',
-            'phone'    => 'nullable|string|max:25',
             'category' => 'required|string|max:100',
             'title'    => 'required|string|max:255',
             'question' => 'required|string|min:15|max:5000',
+            'phone'    => 'nullable|string|max:25',
         ], [
-            'name.required'     => 'Nama lengkap wajib diisi.',
             'category.required' => 'Pilih kategori pertanyaan yang sesuai.',
             'title.required'    => 'Judul / pokok pertanyaan wajib diisi.',
             'question.required' => 'Uraian pertanyaan wajib diisi.',
             'question.min'      => 'Uraian pertanyaan minimal 15 karakter agar dapat ditelaah dengan baik.',
         ]);
 
-        $validated['user_id'] = Auth::id();
+        $user = Auth::user();
+        $validated['user_id'] = $user->id;
+        $validated['name'] = $user->name;
+        $validated['email'] = $user->email;
+        $validated['phone'] = $request->filled('phone') ? $request->input('phone') : ($user->phone ?? null);
         $validated['status'] = 'pending';
         $validated['is_published'] = false;
 

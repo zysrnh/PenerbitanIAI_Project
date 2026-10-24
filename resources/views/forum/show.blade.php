@@ -138,10 +138,17 @@
                         <p class="text-xs text-slate-300 leading-relaxed">
                             Ajukan problematika ibadah, hukum muamalah, dan fatwa keagamaan Anda kepada tim redaksi &amp; asatidz kami.
                         </p>
-                        <a href="{{ route('forum.index') }}#askQuestionModal" onclick="openAskModal(); return false;" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            <span>Ajukan Pertanyaan Baru</span>
-                        </a>
+                        @auth
+                            <a href="{{ route('forum.index') }}?ask=1" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span>Ajukan Pertanyaan Baru</span>
+                            </a>
+                        @else
+                            <a href="{{ route('member.login') }}" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-sm transition flex items-center justify-center gap-2 cursor-pointer shadow-2xs">
+                                <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+                                <span>Login untuk Bertanya</span>
+                            </a>
+                        @endauth
                     </div>
 
                     <!-- Related Questions List -->

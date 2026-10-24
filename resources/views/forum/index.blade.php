@@ -203,7 +203,13 @@
                         <i class="fa-solid fa-hand-holding-hand"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold font-heading text-white">Ajukan Pertanyaan Hukum Agama</h3>
+                        <h3 class="text-sm font-bold font-heading text-white">
+                            @auth
+                                Ajukan Pertanyaan Hukum Agama
+                            @else
+                                Masuk ke Akun untuk Bertanya
+                            @endauth
+                        </h3>
                         <p class="text-[10.5px] text-emerald-300">Konsultasi ke Dewan Redaksi &amp; Asatidz PERSIS PERS</p>
                     </div>
                 </div>
@@ -212,64 +218,105 @@
                 </button>
             </div>
 
-            <!-- Modal Form -->
-            <form action="{{ route('forum.store') }}" method="POST" class="p-4 sm:p-5 space-y-4">
-                @csrf
+            @auth
+                <!-- Modal Form (Khusus Pengguna Login) -->
+                <form action="{{ route('forum.store') }}" method="POST" class="p-4 sm:p-5 space-y-4">
+                    @csrf
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <!-- Akun Penanya Terverifikasi -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xs flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full bg-[#006830] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                                {{ Auth::user()->initials ?? 'U' }}
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider block">Penanya Terverifikasi</span>
+                                <strong class="text-slate-900 truncate block">{{ Auth::user()->name }}</strong>
+                                <span class="text-[10.5px] text-slate-500 font-mono">{{ Auth::user()->email }}</span>
+                            </div>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 shrink-0">
+                            <i class="fa-solid fa-check text-[9px]"></i> Aktif
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Masalah <span class="text-red-500">*</span></label>
+                            <select name="category" required class="w-full text-xs p-2.5 rounded-sm border border-slate-300 bg-white focus:border-emerald-600 outline-none">
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat }}" {{ old('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp <span class="text-slate-400 font-normal">(opsional)</span></label>
+                            <input type="text" name="phone" value="{{ old('phone', Auth::user()->phone ?? '') }}" placeholder="Contoh: 081234567890" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none" />
+                        </div>
+                    </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" value="{{ old('name', Auth::user()->name ?? '') }}" required placeholder="Contoh: Fulan bin Fulan" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none" />
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Pokok / Judul Pertanyaan <span class="text-red-500">*</span></label>
+                        <input type="text" name="title" value="{{ old('title') }}" required placeholder="Contoh: Hukum Shalat Berjamaah di Rumah bersama Keluarga Saat Sakit" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Uraian Lengkap Pertanyaan <span class="text-red-500">*</span></label>
+                        <textarea name="question" rows="4" required placeholder="Tuliskan latar belakang masalah atau kondisi nyata yang ditanyakan secara runtut dan jelas agar dapat dijawab secara tepat..." class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none leading-relaxed">{{ old('question') }}</textarea>
+                    </div>
+
+                    <div class="p-3 bg-amber-50 rounded-xs border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
+                        <i class="fa-solid fa-circle-info text-amber-700 mt-0.5 shrink-0"></i>
+                        <div>
+                            Pertanyaan yang masuk akan ditelaah dan diverifikasi oleh Dewan Redaksi &amp; Asatidz. Jawaban resmi akan dipublikasikan di halaman Forum Tanya Jawab ini setelah diputuskan.
+                        </div>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
+                        <button type="button" onclick="closeAskModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-sm transition cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-5 py-2 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-sm shadow-2xs transition flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                            <span>Kirim Pertanyaan</span>
+                        </button>
+                    </div>
+                </form>
+            @else
+                <!-- Modal Prompt Login (Bagi Pengunjung Tanpa Akun) -->
+                <div class="p-6 sm:p-8 text-center space-y-4">
+                    <div class="w-14 h-14 rounded-full bg-emerald-50 text-emerald-700 flex items-center justify-center text-2xl mx-auto shadow-2xs">
+                        <i class="fa-solid fa-user-lock"></i>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp <span class="text-slate-400 font-normal">(opsional)</span></label>
-                        <input type="text" name="phone" value="{{ old('phone') }}" placeholder="Contoh: 081234567890" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none" />
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 font-heading">
+                            Login atau Buat Akun Terlebih Dahulu
+                        </h4>
+                        <p class="text-xs text-slate-600 max-w-md mx-auto mt-1.5 leading-relaxed">
+                            Untuk menjaga ketertiban forum, validitas kajian hukum, serta memastikan Anda dapat menerima tanggapan atas pertanyaan Anda, Anda harus memiliki akun terlebih dahulu.
+                        </p>
+                    </div>
+
+                    <div class="pt-3 flex items-center justify-center gap-3 flex-wrap">
+                        <a href="{{ route('member.login') }}" class="px-5 py-2.5 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-sm shadow-2xs transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+                            <span>Login ke Akun Saya</span>
+                        </a>
+                        <a href="{{ route('member.register') }}" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-sm border border-slate-300 transition flex items-center gap-2">
+                            <i class="fa-solid fa-user-plus text-xs"></i>
+                            <span>Daftar Akun Baru</span>
+                        </a>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100">
+                        <span class="text-[11px] text-slate-400">
+                            Pendaftaran member gratis dan dapat digunakan untuk membaca buku digital &amp; transaksi buku.
+                        </span>
                     </div>
                 </div>
+            @endauth
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Email <span class="text-slate-400 font-normal">(opsional)</span></label>
-                        <input type="email" name="email" value="{{ old('email', Auth::user()->email ?? '') }}" placeholder="nama@email.com" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none" />
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Masalah <span class="text-red-500">*</span></label>
-                        <select name="category" required class="w-full text-xs p-2.5 rounded-sm border border-slate-300 bg-white focus:border-emerald-600 outline-none">
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat }}" {{ old('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Pokok / Judul Pertanyaan <span class="text-red-500">*</span></label>
-                    <input type="text" name="title" value="{{ old('title') }}" required placeholder="Contoh: Hukum Shalat Berjamaah di Rumah bersama Keluarga Saat Sakit" class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none" />
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">Uraian Lengkap Pertanyaan <span class="text-red-500">*</span></label>
-                    <textarea name="question" rows="4" required placeholder="Tuliskan latar belakang masalah atau kondisi nyata yang ditanyakan secara runtut dan jelas agar dapat dijawab secara tepat..." class="w-full text-xs p-2.5 rounded-sm border border-slate-300 focus:border-emerald-600 outline-none leading-relaxed">{{ old('question') }}</textarea>
-                </div>
-
-                <div class="p-3 bg-amber-50 rounded-xs border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
-                    <i class="fa-solid fa-circle-info text-amber-700 mt-0.5 shrink-0"></i>
-                    <div>
-                        Pertanyaan yang masuk akan ditelaah dan diverifikasi oleh Dewan Redaksi &amp; Asatidz. Jawaban resmi akan dipublikasikan di halaman Forum Tanya Jawab ini setelah diputuskan.
-                    </div>
-                </div>
-
-                <!-- Modal Actions -->
-                <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">
-                    <button type="button" onclick="closeAskModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-sm transition cursor-pointer">
-                        Batal
-                    </button>
-                    <button type="submit" class="px-5 py-2 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-sm shadow-2xs transition flex items-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-paper-plane text-xs"></i>
-                        <span>Kirim Pertanyaan</span>
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -289,6 +336,14 @@
                 modal.classList.remove('flex');
             }
         }
+
+        // Auto-open modal jika URL mengandung ?ask=1
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('ask') === '1') {
+                openAskModal();
+            }
+        });
 
         // Close on escape key
         document.addEventListener('keydown', function(e) {
