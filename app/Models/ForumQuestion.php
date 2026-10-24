@@ -73,6 +73,11 @@ class ForumQuestion extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function answers()
+    {
+        return $this->hasMany(ForumAnswer::class, 'forum_question_id')->oldest();
+    }
+
     public function answeredByUser()
     {
         return $this->belongsTo(User::class, 'answered_by_id');

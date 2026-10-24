@@ -140,6 +140,7 @@ Route::post('/kontak/kirim', [ContactController::class, 'store'])->name('kontak.
 Route::get('/forum-tanya-jawab', [\App\Http\Controllers\ForumController::class, 'index'])->name('forum.index');
 Route::get('/forum-tanya-jawab/{slug}', [\App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
 Route::post('/forum-tanya-jawab', [\App\Http\Controllers\ForumController::class, 'store'])->name('forum.store')->middleware('throttle:15,1');
+Route::post('/forum-tanya-jawab/{slug}/jawaban', [\App\Http\Controllers\ForumController::class, 'storeAnswer'])->name('forum.answer.store')->middleware('throttle:20,1');
 
 // Donation & Digital Download Public Routes
 Route::post('/donasi/kirim', [\App\Http\Controllers\DonationController::class, 'store'])->name('donasi.store')->middleware('throttle:15,1');

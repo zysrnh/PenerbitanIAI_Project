@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ForumAnswer;
 use App\Models\ForumQuestion;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
@@ -16,7 +17,16 @@ class ForumController extends Controller
         $search = $request->query('q');
 
         try {
-            $query = ForumQuestion::query()->where('is_published', true)->latest();
+            // Publikasikan otomatis pertanyaan yang pending agar langsung muncul di forum
+            ForumQuestion::where('is_published', false)
+                ->where('status', '!=', 'rejected')
+                ->update(['is_published' => true]);
+
+            $query = ForumQuestion::query()
+                ->withCount('answers')
+                ->with('user')
+                ->where('is_published', true)
+                ->latest();
 
             if (!empty($selectedCategory) && $selectedCategory !== 'Semua') {
                 $query->where('category', $selectedCategory);
@@ -51,7 +61,11 @@ class ForumController extends Controller
 
     public function show($slug)
     {
-        $question = ForumQuestion::where('slug', $slug)->firstOrFail();
+        $question = ForumQuestion::where('slug', $slug)
+            ->with(['answers' => function ($q) {
+                $q->with('user')->oldest();
+            }, 'user'])
+            ->firstOrFail();
 
         // Increment views
         try {
@@ -102,14 +116,76 @@ class ForumController extends Controller
         $validated['name'] = $user->name;
         $validated['email'] = $user->email;
         $validated['phone'] = $request->filled('phone') ? $request->input('phone') : ($user->phone ?? null);
-        $validated['status'] = 'pending';
-        $validated['is_published'] = false;
+        $validated['status'] = 'open';
+        $validated['is_published'] = true; // Langsung terbit di forum!
 
         try {
-            ForumQuestion::create($validated);
-            return redirect()->route('forum.index')->with('success', 'Pertanyaan Anda berhasil diajukan! Dewan Asatidz / Redaksi kami akan segera menelaah dan memberikan jawaban.');
+            $question = ForumQuestion::create($validated);
+            return redirect()->route('forum.show', $question->slug)->with('success', 'Pertanyaan Anda berhasil diajukan dan diterbitkan di forum! Anggota forum atau Dewan Asatidz dapat memberikan jawaban dan tanggapan.');
         } catch (\Throwable $e) {
             return redirect()->back()->withInput()->with('error', 'Terjadi kendala saat menyimpan pertanyaan. Silakan coba kembali.');
+        }
+    }
+
+    public function storeAnswer(Request $request, $slug)
+    {
+        $question = ForumQuestion::where('slug', $slug)->firstOrFail();
+
+        if (Auth::check()) {
+            $request->validate([
+                'answer' => 'required|string|min:5|max:5000',
+            ], [
+                'answer.required' => 'Tanggapan atau jawaban wajib diisi.',
+                'answer.min'      => 'Jawaban minimal 5 karakter.',
+            ]);
+
+            $user = Auth::user();
+            $name = $user->name;
+            $email = $user->email;
+            $userId = $user->id;
+            $userRole = strtolower($user->role ?? '');
+            $isOfficial = in_array($userRole, ['admin', 'asatidz', 'editor', 'redaksi']);
+        } else {
+            $request->validate([
+                'name'   => 'required|string|max:100',
+                'answer' => 'required|string|min:5|max:5000',
+                'email'  => 'nullable|email|max:150',
+            ], [
+                'name.required'   => 'Nama Anda wajib diisi.',
+                'answer.required' => 'Tanggapan atau jawaban wajib diisi.',
+                'answer.min'      => 'Jawaban minimal 5 karakter.',
+            ]);
+
+            $name = $request->input('name');
+            $email = $request->input('email');
+            $userId = null;
+            $isOfficial = false;
+        }
+
+        try {
+            ForumAnswer::create([
+                'forum_question_id' => $question->id,
+                'user_id'           => $userId,
+                'name'              => $name,
+                'email'             => $email,
+                'answer'            => $request->input('answer'),
+                'is_official'       => $isOfficial,
+            ]);
+
+            // Jika status masih open/pending, update ke answered bila yang menjawab Asatidz
+            if ($isOfficial && empty($question->answer)) {
+                $question->update([
+                    'answer'         => $request->input('answer'),
+                    'answered_by'    => $name,
+                    'answered_by_id' => $userId,
+                    'answered_at'    => now(),
+                    'status'         => 'answered',
+                ]);
+            }
+
+            return redirect()->route('forum.show', $slug)->with('success', 'Jawaban / tanggapan Anda berhasil ditambahkan ke forum diskusi!');
+        } catch (\Throwable $e) {
+            return redirect()->back()->withInput()->with('error', 'Terjadi kendala saat menyimpan tanggapan. Silakan coba kembali.');
         }
     }
 }

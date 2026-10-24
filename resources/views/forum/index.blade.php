@@ -139,7 +139,7 @@
                                     <div class="flex items-center justify-between gap-2 mb-1.5">
                                         <span class="text-[10.5px] font-bold uppercase tracking-wider text-emerald-900 flex items-center gap-1.5">
                                             <i class="fa-solid fa-circle-check text-emerald-700"></i>
-                                            <span>Dijawab Oleh: <strong class="text-slate-900">{{ $q->answered_by ?: 'Dewan Hisbah / Redaksi PERSIS PERS' }}</strong></span>
+                                            <span>Dijawab Oleh: <strong class="text-slate-900">{{ $q->answered_by ?: 'Ust. Gianjar Nugraha, M.Sy.' }}</strong></span>
                                         </span>
                                         @if($q->answered_at)
                                             <span class="text-[10px] text-emerald-800 font-mono">
@@ -147,20 +147,41 @@
                                             </span>
                                         @endif
                                     </div>
-                                    <p class="text-xs text-slate-700 leading-relaxed line-clamp-3">
-                                        {{ Str::limit(strip_tags($q->answer), 260) }}
+                                    <p class="text-xs text-slate-700 leading-relaxed line-clamp-2">
+                                        {{ Str::limit(strip_tags($q->answer), 240) }}
                                     </p>
+                                </div>
+                            @elseif(($q->answers_count ?? 0) > 0)
+                                <div class="p-3 bg-blue-50/60 border border-blue-200/70 rounded-xs text-[11.5px] text-blue-800 flex items-center justify-between gap-2 mb-3">
+                                    <span class="flex items-center gap-1.5 font-medium">
+                                        <i class="fa-solid fa-comments text-blue-600"></i>
+                                        <span>Terdapat <strong>{{ $q->answers_count }} jawaban/tanggapan</strong> dari anggota forum.</span>
+                                    </span>
+                                    <span class="text-[10.5px] font-bold text-blue-700 group-hover:underline">Ikut Diskusi &rarr;</span>
+                                </div>
+                            @else
+                                <div class="p-3 bg-amber-50/60 border border-amber-200/70 rounded-xs text-[11.5px] text-amber-800 flex items-center justify-between gap-2 mb-3">
+                                    <span class="flex items-center gap-1.5">
+                                        <i class="fa-solid fa-hourglass-half text-amber-600"></i>
+                                        <span>Belum ada jawaban. Siapa saja dapat memberikan tanggapan atau jawaban!</span>
+                                    </span>
+                                    <span class="text-[10.5px] font-bold text-emerald-800 group-hover:underline">Beri Jawaban &rarr;</span>
                                 </div>
                             @endif
                         </div>
 
                         <!-- Card Footer Links -->
-                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between mt-2">
-                            <span class="text-[11px] text-slate-400 flex items-center gap-1">
-                                <i class="fa-regular fa-eye text-[10px]"></i> Dibaca {{ number_format($q->views_count) }} kali
-                            </span>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between mt-2 flex-wrap gap-2">
+                            <div class="flex items-center gap-3 text-[11px] text-slate-500">
+                                <span class="flex items-center gap-1">
+                                    <i class="fa-regular fa-eye text-[10px] text-slate-400"></i> Dibaca {{ number_format($q->views_count) }}x
+                                </span>
+                                <span class="flex items-center gap-1 font-semibold text-emerald-700">
+                                    <i class="fa-regular fa-comment-dots text-[10px]"></i> {{ ($q->answers_count ?? 0) + (!empty($q->answer) ? 1 : 0) }} Diskusi &amp; Jawaban
+                                </span>
+                            </div>
                             <a href="{{ route('forum.show', $q->slug) }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-950 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                                <span>Baca Jawaban &amp; Dalil Lengkap</span>
+                                <span>Lihat Diskusi &amp; Jawab</span>
                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
                         </div>
