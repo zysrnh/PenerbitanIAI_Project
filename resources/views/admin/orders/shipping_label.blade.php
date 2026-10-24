@@ -75,7 +75,7 @@
         <!-- 1. Header: Brand Logo & Invoice Code -->
         <div class="flex items-center justify-between pb-3 border-b-2 border-slate-900 gap-3">
             <div class="flex items-center gap-2.5">
-                <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}?v=3" alt="PERSIS PERS" class="h-10 w-auto object-contain" />
+                <img src="{{ asset('images/logo/logopersin.png') }}?v=3" alt="PERSIS PERS" class="h-10 w-auto object-contain" />
             </div>
             <div class="text-right">
                 <span class="text-[9.5px] font-bold uppercase tracking-wider block font-mono text-slate-500">INVOICE PENGIRIMAN</span>

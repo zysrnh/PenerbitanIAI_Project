@@ -63,7 +63,7 @@
         <!-- Official Logo Header -->
         <div class="text-center space-y-1.5">
             <a href="{{ url('/') }}" class="inline-block transition-transform duration-300 hover:scale-105 active:scale-95" title="PERSIS PERS">
-                <img src="{{ asset('images/logo/logo_persis_pers_full_official.svg') }}?v={{ time() }}" alt="PERSIS PERS" class="h-12 sm:h-14 w-auto mx-auto object-contain" />
+                <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PERSIS PERS" class="h-12 sm:h-14 w-auto mx-auto object-contain" />
             </a>
             <p class="text-xs text-slate-500 font-medium tracking-tight">Masuk ke Akun Member</p>
         </div>
