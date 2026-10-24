@@ -3,180 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice - Pengembangan Buku Digital & Forum Tanya Jawab - PERSIS PERS</title>
+    <title>Invoice INV-2026-1024-03 - PERSIS PERS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            color: #1e293b;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #0f172a;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .font-mono-num {
+            font-family: 'JetBrains Mono', monospace;
         }
         @media print {
-            body { 
-                -webkit-print-color-adjust: exact !important; 
-                print-color-adjust: exact !important;
-                background-color: white !important; 
+            body {
+                background: #ffffff !important;
+                padding: 0 !important;
             }
-            .no-print { display: none !important; }
-            .print-border-none { border: none !important; box-shadow: none !important; }
+            .no-print {
+                display: none !important;
+            }
+            .sheet {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
             @page {
-                size: A4;
-                margin: 10mm 14mm;
+                size: A4 portrait;
+                margin: 10mm 12mm;
             }
         }
     </style>
 </head>
-<body class="bg-slate-100 py-8 print:py-0 print:bg-white text-slate-800">
+<body class="bg-slate-100 py-6 sm:py-10 print:py-0 print:bg-white text-slate-800 antialiased">
 
-<div class="max-w-3xl mx-auto bg-white p-8 md:p-10 shadow-sm border border-slate-200 print-border-none rounded-sm">
+<div class="sheet max-w-3xl mx-auto bg-white p-7 sm:p-10 border border-slate-200 shadow-sm print:border-0 rounded-xs">
     
-    <!-- Tombol Print (Sembunyi saat diprint) -->
-    <div class="flex justify-end mb-6 pb-4 border-b border-slate-100 print:hidden no-print">
-        <button onclick="window.print()" class="bg-[#006830] hover:bg-[#032c21] text-white text-xs font-semibold py-2 px-5 rounded-sm shadow-xs transition flex items-center gap-2 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <!-- Action Bar (Hidden on Print) -->
+    <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100 no-print">
+        <span class="text-xs text-slate-500 font-medium">Format: Standar Resmi A4 (Single Page)</span>
+        <button onclick="window.print()" class="px-4 py-2 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-semibold rounded-xs shadow-xs transition flex items-center gap-2 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
             <span>Print to PDF</span>
         </button>
     </div>
 
-    <!-- Header Section -->
-    <div class="flex justify-between items-start mb-6 pb-5 border-b border-slate-200">
+    <!-- Header: Title & Brand Logo -->
+    <div class="flex items-start justify-between pb-5 border-b border-slate-200">
         <div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-wider uppercase">INVOICE</h1>
-            
-            <div class="text-xs text-slate-600 space-y-0.5 mt-2.5">
-                <p class="font-bold text-slate-900 text-sm">Zaki Yusron Hasyimmi</p>
-                <p>naooolaf@gmail.com &bull; 0838-6166-9565</p>
-            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-none">INVOICE</h1>
+            <p class="text-[11px] text-slate-400 font-semibold tracking-wider uppercase mt-1">Jasa Pengembangan Sistem Web</p>
+        </div>
+        <div class="text-right">
+            <img src="public/images/logo/logo_persis_pers_full_official.svg" alt="PERSIS PERS" class="h-10 sm:h-11 w-auto object-contain ml-auto" onerror="this.src='public/images/logo/logopersin.png'" />
+        </div>
+    </div>
 
-            <!-- BILL TO -->
-            <div class="mt-5">
-                <p class="font-bold text-slate-400 uppercase text-[10.5px] tracking-wider mb-1">BILL TO:</p>
-                <div class="text-xs text-slate-800 space-y-0.5">
-                    <p class="font-bold text-sm text-slate-900">PERSIS PERS</p>
-                    <p class="text-slate-600">Penerbitan &amp; Percetakan IAI Persis Bandung</p>
-                </div>
+    <!-- Meta Info: 2 Columns (From/Bill To & Invoice Details) -->
+    <div class="grid grid-cols-2 gap-6 py-5 border-b border-slate-200 text-xs">
+        <!-- Left: Identity -->
+        <div class="space-y-4">
+            <div>
+                <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase block">DARI:</span>
+                <p class="font-bold text-slate-900 text-sm mt-0.5">Zaki Yusron Hasyimmi</p>
+                <p class="text-slate-500 text-[11px]">naooolaf@gmail.com &bull; 0838-6166-9565</p>
+            </div>
+            <div>
+                <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase block">DITUJUKAN KEPADA:</span>
+                <p class="font-bold text-slate-900 text-sm mt-0.5">PERSIS PERS</p>
+                <p class="text-slate-600 text-[11px]">Penerbitan &amp; Percetakan IAI Persis Bandung</p>
             </div>
         </div>
 
-        <div class="text-right flex flex-col items-end">
-            <div class="mb-3">
-                <img src="public/images/logo/logo_persis_pers_full_official.svg" alt="PERSIS PERS" class="h-11 w-auto object-contain ml-auto" onerror="this.src='public/images/logo/logopersin.png'" />
-            </div>
-            <div class="text-xs text-slate-700 space-y-1.5 min-w-[200px]">
-                <div class="flex justify-between gap-4">
-                    <span class="font-medium text-slate-500">Invoice #:</span>
-                    <span class="font-mono font-bold text-slate-900">INV-2026-1024-03</span>
+        <!-- Right: Invoice Metadata -->
+        <div class="flex flex-col justify-between items-end text-right">
+            <div class="space-y-1.5 w-full max-w-[210px]">
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400 text-[11px]">No. Invoice:</span>
+                    <span class="font-mono-num font-bold text-slate-900 text-xs">INV-2026-1024-03</span>
                 </div>
-                <div class="flex justify-between gap-4">
-                    <span class="font-medium text-slate-500">Date:</span>
-                    <span class="text-slate-800">24 Okt 2026</span>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400 text-[11px]">Tanggal:</span>
+                    <span class="text-slate-700 text-xs font-medium">24 Okt 2026</span>
                 </div>
-                <div class="flex justify-between gap-4">
-                    <span class="font-medium text-slate-500">Due Date:</span>
-                    <span class="text-slate-800">31 Okt 2026</span>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-400 text-[11px]">Jatuh Tempo:</span>
+                    <span class="text-slate-700 text-xs font-medium">31 Okt 2026</span>
                 </div>
-                <div class="flex justify-between gap-4">
-                    <span class="font-medium text-slate-500">Status:</span>
-                    <span class="font-bold text-amber-700 uppercase text-[10px] bg-amber-50 px-2 py-0.5 rounded-xs border border-amber-200">Menunggu Pembayaran</span>
+                <div class="flex justify-between items-center pt-1">
+                    <span class="text-slate-400 text-[11px]">Status:</span>
+                    <span class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200 uppercase tracking-wider">
+                        Menunggu Pembayaran
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Table Section -->
-    <div class="mb-6">
-        <table class="w-full text-left border border-slate-200 text-xs">
+    <!-- Table of Items (Clean Minimalist Line Style) -->
+    <div class="py-4">
+        <table class="w-full text-left text-xs">
             <thead>
-                <tr class="bg-slate-50 text-slate-800 font-bold border-b border-slate-200">
-                    <th class="py-2.5 px-3 w-10 text-center">No.</th>
-                    <th class="py-2.5 px-4">Description</th>
-                    <th class="py-2.5 px-3 w-16 text-center">Qty</th>
-                    <th class="py-2.5 px-4 w-32 text-right">Unit Price</th>
-                    <th class="py-2.5 px-4 w-32 text-right">Total</th>
+                <tr class="border-b border-slate-300 text-slate-400 uppercase text-[10px] tracking-wider">
+                    <th class="py-2.5 px-2 w-8 text-center font-bold">No.</th>
+                    <th class="py-2.5 px-3 font-bold">Deskripsi Pekerjaan</th>
+                    <th class="py-2.5 px-2 w-12 text-center font-bold">Jml</th>
+                    <th class="py-2.5 px-3 w-28 text-right font-bold">Harga Satuan</th>
+                    <th class="py-2.5 px-2 w-28 text-right font-bold text-slate-700">Subtotal</th>
                 </tr>
             </thead>
-            <tbody class="text-slate-700 divide-y divide-slate-200">
-                <!-- Item 1: Buku Digital & 3D Flipbook -->
+            <tbody class="divide-y divide-slate-100">
+                <!-- Item 1 -->
                 <tr>
-                    <td class="py-3 px-3 text-center font-medium text-slate-500 align-top">1</td>
-                    <td class="py-3 px-4">
-                        <span class="font-bold text-slate-900 block text-xs">Pengembangan Modul Buku Digital (E-Library) &amp; Interactive 3D Flipbook Reader</span>
-                        <span class="text-[11px] text-slate-500 block leading-relaxed mt-1 space-y-0.5">
-                            <span>&bull; Modul katalog buku digital publik dengan pencarian live autocomplete dan filter kategori terpisah.</span><br/>
-                            <span>&bull; Engine pembaca buku interaktif 3D Page Flip (Native Canvas 60 FPS) dengan audio efek kertas realistis.</span><br/>
-                            <span>&bull; Fitur Zoom bertingkat (100% - 250%) &amp; gesture Pan/Drag anti-terbalik pada mode fullscreen desktop &amp; mobile.</span><br/>
-                            <span>&bull; Panel Admin CRUD Buku Digital: upload berkas PDF, cover rasio buku, smart auto-detect jumlah halaman PDF via PDF.js worker, serta sistem bookmark akun member.</span>
-                        </span>
+                    <td class="py-3 px-2 text-center text-slate-400 align-top font-mono-num">1</td>
+                    <td class="py-3 px-3 align-top">
+                        <span class="font-bold text-slate-900 block text-xs">Modul Buku Digital (E-Library) &amp; Interactive 3D Flipbook Reader</span>
+                        <p class="text-[11px] text-slate-500 leading-relaxed mt-1">
+                            Pengembangan modul katalog publik buku digital, engine 3D canvas flipbook 60 FPS dengan audio realistis, zoom bertingkat &amp; pan gesture, panel CRUD admin, auto-detect jumlah halaman PDF, serta sistem bookmark member.
+                        </p>
                     </td>
-                    <td class="py-3 px-3 text-center font-medium align-top">1</td>
-                    <td class="py-3 px-4 text-right font-mono align-top">Rp 300.000</td>
-                    <td class="py-3 px-4 text-right font-mono font-semibold text-slate-900 align-top">Rp 300.000</td>
+                    <td class="py-3 px-2 text-center text-slate-600 align-top font-mono-num">1</td>
+                    <td class="py-3 px-3 text-right text-slate-600 align-top font-mono-num">Rp 300.000</td>
+                    <td class="py-3 px-2 text-right font-bold text-slate-900 align-top font-mono-num">Rp 300.000</td>
                 </tr>
 
-                <!-- Item 2: Forum Tanya Jawab Agama -->
+                <!-- Item 2 -->
                 <tr>
-                    <td class="py-3 px-3 text-center font-medium text-slate-500 align-top">2</td>
-                    <td class="py-3 px-4">
-                        <span class="font-bold text-slate-900 block text-xs">Pengembangan Modul Forum Tanya Jawab Agama (Fikih &amp; Fatwa) &amp; Diskusi Komunitas</span>
-                        <span class="text-[11px] text-slate-500 block leading-relaxed mt-1 space-y-0.5">
-                            <span>&bull; Rubrik edukasi keislaman &amp; konsultasi fatwa bersama narasumber Ust. Gianjar Nugraha, M.Sy.</span><br/>
-                            <span>&bull; Sistem thread forum multi-jawaban interaktif (seluruh anggota/pembaca dapat ikut memberikan jawaban &amp; pandangan dalil).</span><br/>
-                            <span>&bull; Sistem publikasi otomatis realtime (pertanyaan langsung tampil di daftar publik forum tanpa tertahan).</span><br/>
-                            <span>&bull; Pembeda visual jawaban resmi narasumber/dewan asatidz terverifikasi vs jawaban diskusi anggota komunitas.</span><br/>
-                            <span>&bull; Integrasi kartu layanan cepat &amp; sidebar navigasi di seluruh halaman portal member, serta perbaikan layering modal dialog.</span>
-                        </span>
+                    <td class="py-3 px-2 text-center text-slate-400 align-top font-mono-num">2</td>
+                    <td class="py-3 px-3 align-top">
+                        <span class="font-bold text-slate-900 block text-xs">Modul Forum Tanya Jawab Agama (Fikih &amp; Fatwa) &amp; Diskusi Komunitas</span>
+                        <p class="text-[11px] text-slate-500 leading-relaxed mt-1">
+                            Rubrik konsultasi fatwa bersama Ust. Gianjar Nugraha, sistem thread multi-jawaban interaktif (diskusi terbuka anggota), publikasi realtime tanpa jeda, integrasi menu &amp; kartu cepat portal member, serta perapihan modal z-index.
+                        </p>
                     </td>
-                    <td class="py-3 px-3 text-center font-medium align-top">1</td>
-                    <td class="py-3 px-4 text-right font-mono align-top">Rp 200.000</td>
-                    <td class="py-3 px-4 text-right font-mono font-semibold text-slate-900 align-top">Rp 200.000</td>
+                    <td class="py-3 px-2 text-center text-slate-600 align-top font-mono-num">1</td>
+                    <td class="py-3 px-3 text-right text-slate-600 align-top font-mono-num">Rp 200.000</td>
+                    <td class="py-3 px-2 text-right font-bold text-slate-900 align-top font-mono-num">Rp 200.000</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <!-- Total Section & Payment Method -->
-    <div class="flex flex-col sm:flex-row justify-between items-start gap-6 mb-6 pt-1">
-        <!-- Payment Details -->
-        <div class="w-full sm:w-1/2 text-xs space-y-1.5 bg-slate-50/80 p-4 rounded-xs border border-slate-200">
-            <p class="font-bold text-slate-800 mb-1.5 uppercase text-[10.5px] tracking-wide flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-[#006830]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-                <span>Instruksi Pembayaran:</span>
-            </p>
-            <p class="text-slate-600">Bank: <span class="font-semibold text-slate-900">SeaBank</span></p>
-            <p class="text-slate-600">No. Rekening: <span class="font-mono font-bold text-slate-900 text-sm select-all">901005496052</span></p>
-            <p class="text-slate-600">Atas Nama: <span class="font-semibold text-slate-900">Zaki Yusron Hasyimmi</span></p>
+    <!-- Summary & Payment Details (Compact 2 Columns) -->
+    <div class="grid grid-cols-2 gap-6 pt-3 pb-6 border-t border-slate-200 items-start">
+        <!-- Payment Instructions -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xs text-xs space-y-1">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">INSTRUKSI PEMBAYARAN:</span>
+            <div class="text-slate-700 space-y-0.5 text-[11.5px]">
+                <p>Bank: <strong class="text-slate-900">SeaBank</strong></p>
+                <p>No. Rekening: <strong class="font-mono-num text-slate-900 text-xs font-bold">901005496052</strong></p>
+                <p>Atas Nama: <strong class="text-slate-900">Zaki Yusron Hasyimmi</strong></p>
+            </div>
         </div>
 
-        <!-- Price Calculation -->
-        <div class="w-full sm:w-64 space-y-2 text-xs text-slate-700 self-end">
-            <div class="flex justify-between text-slate-600">
+        <!-- Calculation Box -->
+        <div class="space-y-1.5 text-xs text-right">
+            <div class="flex justify-between text-slate-500 text-[11.5px]">
                 <span>Subtotal:</span>
-                <span class="font-mono font-medium text-slate-900">Rp 500.000</span>
+                <span class="font-mono-num text-slate-800">Rp 500.000</span>
             </div>
-            <div class="flex justify-between text-slate-600">
+            <div class="flex justify-between text-slate-500 text-[11.5px]">
                 <span>Potongan / Diskon:</span>
-                <span class="font-mono font-medium text-slate-900">- Rp 0</span>
+                <span class="font-mono-num text-slate-800">- Rp 0</span>
             </div>
-            <div class="flex justify-between border-t border-slate-300 pt-2 font-bold text-slate-900 text-sm bg-emerald-50/60 p-2.5 rounded-xs border border-emerald-200">
-                <span>Total Tagihan:</span>
-                <span class="font-mono font-black text-base text-[#006830]">Rp 500.000</span>
+            <div class="flex justify-between items-center pt-2 pb-1 border-t border-slate-200 text-slate-900 font-bold">
+                <span class="text-xs uppercase tracking-wider text-slate-600">Total Tagihan:</span>
+                <span class="font-mono-num text-lg font-extrabold text-[#006830]">Rp 500.000</span>
             </div>
         </div>
     </div>
 
-    <!-- Footer Note -->
-    <div class="border-t border-slate-200 pt-5 text-[11px] text-slate-500 flex flex-col sm:flex-row justify-between items-end gap-4">
+    <!-- Footer: Terms & Signature -->
+    <div class="pt-5 border-t border-slate-200 flex items-end justify-between text-[11px] text-slate-500">
         <div>
-            <p class="font-semibold text-slate-700">Terima kasih atas kerja samanya!</p>
-            <p class="text-[10px] text-slate-400 mt-0.5">Termasuk garansi pemeliharaan &amp; perbaikan fitur.</p>
+            <p class="font-semibold text-slate-700">Terima kasih atas kerja samanya.</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">Termasuk dukungan teknis &amp; garansi perbaikan bug sistem.</p>
         </div>
         <div class="text-right">
             <p class="text-[10.5px] text-slate-400">Bandung, 24 Oktober 2026</p>
-            <p class="mt-6 font-bold text-slate-800 text-xs">Zaki Yusron Hasyimmi</p>
+            <p class="mt-8 font-bold text-slate-900 text-xs">Zaki Yusron Hasyimmi</p>
             <p class="text-[10px] text-slate-400">Fullstack Web Developer</p>
         </div>
     </div>
