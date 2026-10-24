@@ -12,10 +12,10 @@
                     FORUM TANYA JAWAB &amp; ISTIFTA
                 </span>
                 <h1 class="text-2xl sm:text-3xl md:text-4xl font-black font-heading tracking-tight text-white mb-2.5 sm:mb-3">
-                    Tanya Jawab Permasalahan Hukum Agama
+                    Forum Tanya Jawab Bersama Ust. Gianjar Nugraha, M.Sy.
                 </h1>
                 <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
-                    Wadah musyawarah, konsultasi syariah, dan penelaahan hukum Islam seputar fiqih ibadah, muamalah, serta problematika keagamaan kontemporer berlandaskan Al-Qur'an dan As-Sunnah bersama Dewan Hisbah &amp; Asatidz PERSIS.
+                    Rubrik edukasi keislaman dari PERSIS PERS seputar permasalahan Fiqih, Ibadah, Muamalah, serta Problematika Hukum keagamaan kontemporer berlandaskan Al-Qur’an dan As-Sunnah bersama narasumber <strong class="text-emerald-300 font-bold">Ust. Gianjar Nugraha, M.Sy.</strong>
                 </p>
 
                 <!-- Action Bar: Tombol Ajukan & Quick WA -->

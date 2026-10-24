@@ -302,26 +302,16 @@
                             <span class="text-[9px] text-emerald-800 font-mono font-bold bg-emerald-50 px-1.5 py-0.5 rounded-xs border border-emerald-200">Terbuka untuk Umum</span>
                         </div>
                         <h4 class="font-extrabold text-sm sm:text-base text-slate-900 mb-2 sm:mb-2.5">
-                            {{ $settings['home_forum_title'] ?? ($settings['home_about_title'] && $settings['home_about_title'] !== 'PERSIS PERS' ? $settings['home_about_title'] : 'Tanya Jawab Hukum Agama') }}
+                            {{ $settings['home_forum_title'] ?? 'Forum Tanya Jawab Bersama Ust. Gianjar Nugraha, M.Sy.' }}
                         </h4>
                         
-                        <p class="text-[11px] sm:text-xs text-slate-600 leading-relaxed mb-3.5">
-                            {{ $settings['home_forum_desc'] ?? ($settings['home_about_desc'] && !str_contains($settings['home_about_desc'], 'unit layanan Penerbitan') ? $settings['home_about_desc'] : 'Wadah konsultasi dan tanya jawab seputar permasalahan fiqih, ibadah, muamalah, serta problematika hukum keagamaan kontemporer berlandaskan Al-Qur\'an dan As-Sunnah.') }}
-                        </p>
-
-                        <div class="space-y-1.5 mb-4 bg-slate-50 p-2.5 rounded-xs border border-slate-200/80 text-[11px] text-slate-700">
-                            <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-emerald-600 text-xs shrink-0"></i>
-                                <span>Konsultasi Syariat, Fiqih &amp; Muamalah</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-emerald-600 text-xs shrink-0"></i>
-                                <span>Dijawab Resmi oleh Dewan Asatidz PERSIS PERS</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <i class="fa-solid fa-circle-check text-emerald-600 text-xs shrink-0"></i>
-                                <span>Akses Arsip Fatwa &amp; Tanya Jawab Lengkap</span>
-                            </div>
+                        <div class="text-[11px] sm:text-xs text-slate-600 leading-relaxed mb-3.5 space-y-2">
+                            <p>
+                                Tanya Jawab seputar permasalahan Fiqih, Ibadah, Muamalah, serta Problematika Hukum keagamaan kontemporer, merupakan rubrik edukasi keislaman dari Persis Pers yang membahas berbagai persoalan hukum Islam dalam kehidupan sehari-hari berdasarkan Al-Qur’an dan Sunnah. Melalui rubrik ini, pembaca dapat memperoleh pemahaman dan jawaban atas berbagai pertanyaan keagamaan secara jelas, ilmiah, dan mudah dipahami.
+                            </p>
+                            <p class="p-2 sm:p-2.5 bg-emerald-50/80 rounded-xs border-l-2 border-emerald-600 text-slate-700 font-medium">
+                                Rubrik ini menghadirkan <strong class="text-emerald-950 font-bold">Ust. Gianjar Nugraha, M.Sy.</strong> sebagai narasumber untuk memberikan penjelasan dan wawasan keislaman guna membantu umat memahami serta mengamalkan ajaran Islam sesuai tuntunan syariat.
+                            </p>
                         </div>
                     </div>
 
