@@ -195,7 +195,39 @@
                     ],
                 ];
 
-                $srvCount = count($services);
+                // Gabungkan $services dari database dengan Buku Digital & Tanya Jawab Agama
+                $mergedServices = collect($services);
+
+                $hasEbookSrv = $mergedServices->contains(function($srv) {
+                    $t = strtolower(is_object($srv) ? $srv->title : ($srv['title'] ?? ''));
+                    $s = strtolower(is_object($srv) ? ($srv->slug ?? '') : ($srv['slug'] ?? ''));
+                    return str_contains($t, 'e-book') || str_contains($t, 'buku digital') || str_contains($s, 'e-book') || str_contains($s, 'buku-digital');
+                });
+                if (!$hasEbookSrv) {
+                    $mergedServices->push([
+                        'icon'       => 'fa-solid fa-book-bookmark',
+                        'title'      => 'Buku Digital',
+                        'short_desc' => 'Akses dan baca koleksi buku digital dakwah serta publikasi ilmiah resmi PERSIS PERS secara praktis langsung dari perangkat Anda.',
+                        'slug'       => 'buku-digital',
+                        'link'       => route('katalog.digital'),
+                    ]);
+                }
+
+                $hasForumSrv = $mergedServices->contains(function($srv) {
+                    $t = strtolower(is_object($srv) ? $srv->title : ($srv['title'] ?? ''));
+                    return str_contains($t, 'tanya jawab');
+                });
+                if (!$hasForumSrv) {
+                    $mergedServices->push([
+                        'icon'       => 'fa-solid fa-scale-balanced',
+                        'title'      => 'Tanya Jawab Agama',
+                        'short_desc' => 'Layanan konsultasi dan forum tanya jawab hukum syariat, fikih ibadah, dan muamalah bersama dewan asatidz terpercaya.',
+                        'slug'       => 'forum-tanya-jawab',
+                        'link'       => route('forum.index'),
+                    ]);
+                }
+
+                $srvCount = $mergedServices->count();
                 if ($srvCount <= 3) {
                     $gridClass = 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3';
                 } elseif ($srvCount === 4) {
@@ -209,7 +241,7 @@
 
             <!-- Dynamic Services Cards: Menampilkan Semua Menu dalam Grid Terbuka -->
             <div class="grid {{ $gridClass }} gap-3 sm:gap-4">
-                @foreach($services as $idx => $srv)
+                @foreach($mergedServices as $idx => $srv)
                     @php
                         $srvTitle = is_object($srv) ? $srv->title : ($srv['title'] ?? 'Layanan');
                         $srvIcon = is_object($srv) ? $srv->icon : ($srv['icon'] ?? 'fa-solid fa-circle-check');
@@ -221,9 +253,12 @@
                                    str_contains(strtolower($srvTitle), 'e-book') || 
                                    str_contains(strtolower($srvTitle), 'buku digital');
 
+                        $isForum = str_contains(strtolower($srvSlug ?? ''), 'forum') ||
+                                   str_contains(strtolower($srvTitle), 'tanya jawab');
+
                         $srvUrl = $isEbook 
                             ? route('katalog.digital') 
-                            : ($srvSlug ? route('layanan.show', $srvSlug) : ($srv['link'] ?? route('kontak')));
+                            : ($isForum ? route('forum.index') : ($srvSlug ? route('layanan.show', $srvSlug) : ($srv['link'] ?? route('kontak'))));
 
                         $theme = $serviceColorThemes[$idx % count($serviceColorThemes)];
                     @endphp

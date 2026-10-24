@@ -250,6 +250,33 @@
         ];
     }
 
+    // Pastikan Buku Digital & Tanya Jawab Agama selalu ada di dropdown Layanan
+    $hasEbookNav = collect($navServices)->contains(function($item) {
+        $l = $item['link'] ?? '';
+        $t = strtolower($item['title'] ?? '');
+        return $l === route('katalog.digital') || str_contains($t, 'e-book') || str_contains($t, 'buku digital');
+    });
+    if (!$hasEbookNav) {
+        $navServices[] = [
+            'icon'  => 'fa-solid fa-book-bookmark',
+            'title' => 'Buku Digital',
+            'link'  => route('katalog.digital'),
+        ];
+    }
+
+    $hasForumNav = collect($navServices)->contains(function($item) {
+        $l = $item['link'] ?? '';
+        $t = strtolower($item['title'] ?? '');
+        return $l === route('forum.index') || str_contains($t, 'tanya jawab');
+    });
+    if (!$hasForumNav) {
+        $navServices[] = [
+            'icon'  => 'fa-solid fa-scale-balanced',
+            'title' => 'Tanya Jawab Agama',
+            'link'  => route('forum.index'),
+        ];
+    }
+
     // Topbar & Social Media Settings
     $topbarActive = \App\Models\SiteSetting::get('topbar_is_active', '1') === '1';
     $topbarTagline = \App\Models\SiteSetting::get('topbar_tagline', 'Penerbitan & Percetakan Resmi PERSIS PERS Bandung');
@@ -444,7 +471,7 @@
                     <a href="{{ route('tentang') }}" class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition">TENTANG KAMI</a>
                     
                     <div class="relative group">
-                        <button class="text-slate-700 hover:text-brand-900 font-semibold text-xs tracking-wider uppercase transition flex items-center gap-1 py-2 cursor-pointer">
+                        <button class="{{ (request()->routeIs('layanan*') || request()->routeIs('katalog.digital*') || request()->routeIs('forum*')) ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition flex items-center gap-1 py-2 cursor-pointer">
                             LAYANAN <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform duration-200"></i>
                         </button>
                         <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-200/90 rounded-sm shadow-xl py-1.5 z-50 animate-fade-in-up select-none">
@@ -465,9 +492,7 @@
 
                     <a href="{{ route('reseller') }}" class="{{ request()->routeIs('reseller*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">RESELLER &amp; AGEN</a>
                     <a href="{{ route('katalog') }}" class="{{ request()->routeIs('katalog') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KATALOG BUKU</a>
-                    <a href="{{ route('katalog.digital') }}" class="{{ request()->routeIs('katalog.digital*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">BUKU DIGITAL</a>
                     <a href="{{ route('berita.index') }}" class="{{ request()->routeIs('berita*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">BERITA</a>
-                    <a href="{{ route('forum.index') }}" class="{{ request()->routeIs('forum*') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">TANYA JAWAB</a>
                     <a href="{{ url('/kontak') }}" class="{{ request()->routeIs('kontak') ? 'text-brand-900 font-bold border-b-2 border-brand-900 pb-1' : 'text-slate-700 hover:text-brand-900 font-semibold' }} text-xs tracking-wider uppercase transition">KONTAK</a>
                 </nav>
 
@@ -630,22 +655,24 @@
                 <i class="fa-solid fa-building text-emerald-700 text-xs mr-2 w-4"></i> Tentang Kami
             </a>
             <a href="{{ url('/#layanan') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider text-slate-700 hover:bg-slate-50">
-                <i class="fa-solid fa-list-check text-emerald-700 text-xs mr-2 w-4"></i> Layanan Penerbitan
+                <i class="fa-solid fa-list-check text-emerald-700 text-xs mr-2 w-4"></i> Layanan Kami
             </a>
+            <div class="pl-4 pr-1 py-1 space-y-1 bg-slate-50/70 rounded-xs border-l-2 border-emerald-600 my-1">
+                <a href="{{ route('katalog.digital') }}" onclick="window.closeMobileMenu()" class="flex items-center gap-2 py-1.5 text-[11px] font-semibold text-slate-700 hover:text-emerald-900">
+                    <i class="fa-solid fa-book-bookmark text-emerald-700 text-[10px] w-3.5"></i> Buku Digital (e-Book)
+                </a>
+                <a href="{{ route('forum.index') }}" onclick="window.closeMobileMenu()" class="flex items-center gap-2 py-1.5 text-[11px] font-semibold text-slate-700 hover:text-emerald-900">
+                    <i class="fa-solid fa-scale-balanced text-emerald-700 text-[10px] w-3.5"></i> Tanya Jawab Agama
+                </a>
+            </div>
             <a href="{{ route('reseller') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('reseller*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-solid fa-handshake text-emerald-700 text-xs mr-2 w-4"></i> Reseller &amp; Agen
             </a>
             <a href="{{ route('katalog') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('katalog') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-solid fa-book-open text-emerald-700 text-xs mr-2 w-4"></i> Katalog Buku
             </a>
-            <a href="{{ route('katalog.digital') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('katalog.digital*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
-                <i class="fa-solid fa-book-open-reader text-emerald-700 text-xs mr-2 w-4"></i> Buku Digital
-            </a>
             <a href="{{ route('berita.index') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('berita*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-regular fa-newspaper text-emerald-700 text-xs mr-2 w-4"></i> Berita &amp; Artikel
-            </a>
-            <a href="{{ route('forum.index') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('forum*') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
-                <i class="fa-solid fa-scale-balanced text-emerald-700 text-xs mr-2 w-4"></i> Tanya Jawab Agama
             </a>
             <a href="{{ url('/kontak') }}" onclick="window.closeMobileMenu()" class="block px-3.5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider {{ request()->routeIs('kontak') ? 'bg-emerald-50 text-brand-900' : 'text-slate-700 hover:bg-slate-50' }}">
                 <i class="fa-solid fa-headset text-emerald-700 text-xs mr-2 w-4"></i> Kontak Redaksi
