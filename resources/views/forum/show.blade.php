@@ -70,10 +70,20 @@
                             {{ $question->title }}
                         </h1>
 
-                        <!-- Info Penanya -->
-                        <div class="flex items-center gap-2 text-xs text-slate-500 pb-4 border-b border-slate-100">
-                            <i class="fa-solid fa-user-circle text-slate-400 text-sm"></i>
-                            <span>Diajukan oleh: <strong class="text-slate-800">{{ $question->name }}</strong></span>
+                        <!-- Info Penanya (Avatar Profil & Detail) -->
+                        <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+                            @if($question->user && $question->user->avatar_url)
+                                <img src="{{ $question->user->avatar_url }}" alt="{{ $question->name }}" class="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0 ring-1 ring-slate-100" />
+                            @else
+                                <div class="w-10 h-10 rounded-full bg-[#006830] text-white flex items-center justify-center text-xs font-bold shrink-0 font-mono uppercase shadow-2xs">
+                                    {{ $question->user ? $question->user->initials : strtoupper(substr($question->name, 0, 2)) }}
+                                </div>
+                            @endif
+                            <div>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Diajukan Oleh:</span>
+                                <strong class="text-slate-900 text-sm">{{ $question->name }}</strong>
+                                <span class="text-[10.5px] text-slate-400 block">{{ $question->created_at ? $question->created_at->format('d M Y, H:i') : '-' }}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -145,9 +155,13 @@
                                         <!-- Header Tanggapan -->
                                         <div class="flex items-center justify-between gap-2 flex-wrap">
                                             <div class="flex items-center gap-2.5">
-                                                <div class="w-8 h-8 rounded-sm {{ $answer->is_official ? 'bg-emerald-700 text-white' : 'bg-slate-200 text-slate-700' }} flex items-center justify-center text-xs font-bold shrink-0">
-                                                    {{ strtoupper(substr($answer->name, 0, 2)) }}
-                                                </div>
+                                                @if($answer->user && $answer->user->avatar_url)
+                                                    <img src="{{ $answer->user->avatar_url }}" alt="{{ $answer->name }}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0" />
+                                                @else
+                                                    <div class="w-8 h-8 rounded-full {{ $answer->is_official ? 'bg-emerald-700 text-white' : 'bg-[#006830] text-white' }} flex items-center justify-center text-xs font-bold shrink-0 font-mono uppercase">
+                                                        {{ $answer->user ? $answer->user->initials : strtoupper(substr($answer->name, 0, 2)) }}
+                                                    </div>
+                                                @endif
                                                 <div>
                                                     <div class="flex items-center gap-2">
                                                         <span class="text-xs font-bold text-slate-900">{{ $answer->name }}</span>

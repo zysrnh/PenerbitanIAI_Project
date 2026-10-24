@@ -3,10 +3,10 @@
 @section('title', 'Forum Tanya Jawab Hukum Agama | PERSIS PERS')
 
 @section('content')
-    <!-- 1. Header Banner (Solid Flat & Clean) -->
+    <!-- 1. Header Banner (Solid Flat & Clean, Full Width max-w-7xl) -->
     <section class="bg-[#032c21] text-white py-10 sm:py-12 border-b border-emerald-950">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6">
-            <div class="space-y-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl space-y-3">
                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/10 border border-white/15 text-emerald-300 text-[10.5px] font-bold uppercase tracking-widest rounded-xs">
                     <i class="fa-solid fa-scale-balanced text-emerald-400"></i>
                     FORUM TANYA JAWAB &amp; ISTIFTA
@@ -14,7 +14,7 @@
                 <h1 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight text-white leading-tight">
                     Forum Tanya Jawab Bersama Ust. Gianjar Nugraha, M.Sy.
                 </h1>
-                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
                     Rubrik edukasi keislaman dari PERSIS PERS seputar Fiqih, Ibadah, Muamalah, serta Problematika Hukum keagamaan kontemporer berlandaskan Al-Qur’an dan As-Sunnah.
                 </p>
 
@@ -35,9 +35,9 @@
         </div>
     </section>
 
-    <!-- 2. Main Content & Listing Section -->
+    <!-- 2. Main Content & Listing Section (Normal Full Width max-w-7xl) -->
     <section class="py-8 sm:py-10 bg-slate-50 min-h-screen">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Alert Messages -->
             @if(session('success'))
@@ -54,19 +54,19 @@
                 </div>
             @endif
 
-            <!-- Search Bar & Filters (Clean & Minimalist) -->
+            <!-- Search Bar & Filters (Clean & Full Width) -->
             <div class="mb-6 space-y-3">
                 <form action="{{ route('forum.index') }}" method="GET" class="relative">
                     @if(request('category'))
                         <input type="hidden" name="category" value="{{ request('category') }}">
                     @endif
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
                     <input 
                         type="text" 
                         name="q" 
                         value="{{ request('q') }}" 
                         placeholder="Cari masalah hukum, kata kunci, misal: shalat jamaah, waris, zakat..." 
-                        class="w-full pl-9 pr-20 py-2.5 sm:py-3 text-xs sm:text-sm rounded-sm border border-slate-300 bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none text-slate-800 placeholder-slate-400 transition shadow-2xs" 
+                        class="w-full pl-10 pr-20 py-2.5 sm:py-3 text-xs sm:text-sm rounded-sm border border-slate-300 bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none text-slate-800 placeholder-slate-400 transition shadow-2xs" 
                     />
                     <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                         @if(request()->filled('q'))
@@ -74,7 +74,7 @@
                                 <i class="fa-solid fa-xmark"></i>
                             </a>
                         @endif
-                        <button type="submit" class="px-3 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-xs transition shadow-2xs cursor-pointer">
+                        <button type="submit" class="px-3.5 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-xs transition shadow-2xs cursor-pointer">
                             Cari
                         </button>
                     </div>
@@ -93,72 +93,79 @@
                 </div>
             </div>
 
-            <!-- Question Cards Feed (Streamlined & Clean) -->
-            <div class="space-y-3.5">
+            <!-- Question Cards Feed (Clean, Full Width with User Profile Avatar) -->
+            <div class="space-y-4">
                 @forelse($questions as $q)
-                    <article class="bg-white p-5 rounded-sm border border-slate-200 hover:border-emerald-500 hover:shadow-xs transition duration-150 group">
+                    <article class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 hover:border-emerald-500 hover:shadow-xs transition duration-150 group">
                         
-                        <!-- Top Row: Category, Author, and Timestamp -->
-                        <div class="flex items-center justify-between text-[11px] text-slate-400 gap-2 mb-2">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="px-2 py-0.5 font-bold uppercase tracking-wider text-[9.5px] rounded-xs border {{ $q->category_badge_class }}">
-                                    {{ $q->category }}
-                                </span>
-                                <span class="text-slate-300">&bull;</span>
-                                <span class="text-slate-600 font-medium">
-                                    <i class="fa-solid fa-user-pen text-[10px] text-slate-400 mr-1"></i>{{ $q->name }}
-                                </span>
+                        <!-- Top Row: User Avatar, Name, Timestamp & Category Badge -->
+                        <div class="flex items-center justify-between gap-3 mb-3">
+                            <div class="flex items-center gap-3 min-w-0">
+                                @if($q->user && $q->user->avatar_url)
+                                    <img src="{{ $q->user->avatar_url }}" alt="{{ $q->name }}" class="w-9 h-9 rounded-full object-cover border border-slate-200 shrink-0 ring-1 ring-slate-100" />
+                                @else
+                                    <div class="w-9 h-9 rounded-full bg-[#006830] text-white flex items-center justify-center text-xs font-bold shrink-0 font-mono uppercase shadow-2xs">
+                                        {{ $q->user ? $q->user->initials : strtoupper(substr($q->name, 0, 2)) }}
+                                    </div>
+                                @endif
+                                <div class="min-w-0">
+                                    <span class="text-xs sm:text-sm font-bold text-slate-800 block leading-tight truncate">{{ $q->name }}</span>
+                                    <span class="text-[11px] text-slate-400 block mt-0.5">
+                                        {{ $q->created_at ? $q->created_at->diffForHumans() : '-' }}
+                                    </span>
+                                </div>
                             </div>
-                            <span class="text-[10.5px] text-slate-400 shrink-0">
-                                {{ $q->created_at ? $q->created_at->diffForHumans() : '-' }}
+                            
+                            <span class="px-2.5 py-1 font-bold uppercase tracking-wider text-[10px] rounded-xs border shrink-0 {{ $q->category_badge_class }}">
+                                {{ $q->category }}
                             </span>
                         </div>
 
                         <!-- Title -->
-                        <h2 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-800 transition leading-snug mb-1.5">
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-800 transition leading-snug mb-2">
                             <a href="{{ route('forum.show', $q->slug) }}" class="hover:underline">
                                 {{ $q->title }}
                             </a>
                         </h2>
 
                         <!-- Snippet Question Content -->
-                        <p class="text-xs text-slate-600 leading-relaxed line-clamp-2 mb-3.5">
-                            {{ Str::limit(strip_tags($q->question), 200) }}
+                        <p class="text-xs sm:text-[13px] text-slate-600 leading-relaxed line-clamp-2 mb-4">
+                            {{ Str::limit(strip_tags($q->question), 220) }}
                         </p>
 
                         <!-- Card Footer: Minimalist Status & Stats -->
                         <div class="pt-3 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-xs">
                             <div class="flex items-center gap-2 flex-wrap">
                                 @if(!empty($q->answer))
-                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xs text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
                                         <i class="fa-solid fa-circle-check text-emerald-600 text-[10px]"></i>
                                         <span>Terjawab Resmi</span>
                                     </span>
                                 @elseif(($q->answers_count ?? 0) > 0)
-                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[10.5px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xs text-[10.5px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
                                         <i class="fa-solid fa-comments text-blue-600 text-[10px]"></i>
                                         <span>Ada Tanggapan</span>
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[10.5px] font-medium bg-slate-100 text-slate-500 border border-slate-200">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-xs text-[10.5px] font-medium bg-slate-100 text-slate-500 border border-slate-200">
                                         <i class="fa-regular fa-clock text-[10px]"></i>
                                         <span>Menunggu Jawaban</span>
                                     </span>
                                 @endif
 
                                 <span class="text-slate-300">&bull;</span>
-                                <span class="text-[11px] text-slate-500 flex items-center gap-1">
+                                <span class="text-[11.5px] text-slate-500 flex items-center gap-1">
                                     <i class="fa-regular fa-comment-dots text-slate-400"></i>
                                     <strong>{{ ($q->answers_count ?? 0) + (!empty($q->answer) ? 1 : 0) }}</strong> diskusi
                                 </span>
                                 <span class="text-slate-300">&bull;</span>
-                                <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                                <span class="text-[11.5px] text-slate-400 flex items-center gap-1">
                                     <i class="fa-regular fa-eye text-[10px]"></i>
                                     {{ number_format($q->views_count) }}x dibaca
                                 </span>
                             </div>
 
-                            <a href="{{ route('forum.show', $q->slug) }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                            <a href="{{ route('forum.show', $q->slug) }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1.5 group-hover:translate-x-0.5 transition-transform">
                                 <span>Buka Diskusi</span>
                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
@@ -227,9 +234,13 @@
                     <!-- Akun Penanya Terverifikasi -->
                     <div class="p-3 bg-slate-50 border border-slate-200 rounded-xs flex items-center justify-between text-xs">
                         <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-full bg-[#006830] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                                {{ Auth::user()->initials ?? 'U' }}
-                            </div>
+                            @if(Auth::user()->avatar_url)
+                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0" />
+                            @else
+                                <div class="w-8 h-8 rounded-full bg-[#006830] text-white flex items-center justify-center font-bold text-xs shrink-0 font-mono">
+                                    {{ Auth::user()->initials ?? 'U' }}
+                                </div>
+                            @endif
                             <div class="min-w-0">
                                 <span class="text-[9.5px] text-slate-400 font-bold uppercase tracking-wider block">Penanya Terverifikasi</span>
                                 <strong class="text-slate-900 truncate block">{{ Auth::user()->name }}</strong>
