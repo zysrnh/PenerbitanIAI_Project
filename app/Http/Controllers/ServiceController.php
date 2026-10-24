@@ -10,6 +10,11 @@ class ServiceController extends Controller
 {
     public function show($slug)
     {
+        // Jika membuka halaman layanan e-book / buku digital, arahkan langsung ke Katalog Buku Digital
+        if (str_contains(strtolower($slug), 'e-book') || str_contains(strtolower($slug), 'buku-digital')) {
+            return redirect()->route('katalog.digital');
+        }
+
         $service = Service::where('slug', $slug)->first();
 
         // If not found in DB, check if it matches default seeds or fallback

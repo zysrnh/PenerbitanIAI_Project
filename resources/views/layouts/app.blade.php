@@ -224,10 +224,15 @@
         $dbNavServices = \App\Models\Service::where('status', 'published')->orderBy('order')->get();
         if ($dbNavServices->isNotEmpty()) {
             $navServices = $dbNavServices->map(function($srv) {
+                $isEbook = str_contains(strtolower($srv->slug ?? ''), 'e-book') || 
+                           str_contains(strtolower($srv->slug ?? ''), 'buku-digital') || 
+                           str_contains(strtolower($srv->title ?? ''), 'e-book') || 
+                           str_contains(strtolower($srv->title ?? ''), 'buku digital');
+
                 return [
                     'icon'  => $srv->icon,
                     'title' => $srv->title,
-                    'link'  => route('layanan.show', $srv->slug),
+                    'link'  => $isEbook ? route('katalog.digital') : route('layanan.show', $srv->slug),
                 ];
             })->toArray();
         } else {

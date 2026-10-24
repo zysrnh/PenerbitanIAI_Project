@@ -215,7 +215,15 @@
                         $srvIcon = is_object($srv) ? $srv->icon : ($srv['icon'] ?? 'fa-solid fa-circle-check');
                         $srvDesc = is_object($srv) ? $srv->short_desc : ($srv['desc'] ?? ($srv['short_desc'] ?? ''));
                         $srvSlug = is_object($srv) ? $srv->slug : ($srv['slug'] ?? null);
-                        $srvUrl = $srvSlug ? route('layanan.show', $srvSlug) : ($srv['link'] ?? route('kontak'));
+
+                        $isEbook = str_contains(strtolower($srvSlug ?? ''), 'e-book') || 
+                                   str_contains(strtolower($srvSlug ?? ''), 'buku-digital') || 
+                                   str_contains(strtolower($srvTitle), 'e-book') || 
+                                   str_contains(strtolower($srvTitle), 'buku digital');
+
+                        $srvUrl = $isEbook 
+                            ? route('katalog.digital') 
+                            : ($srvSlug ? route('layanan.show', $srvSlug) : ($srv['link'] ?? route('kontak')));
 
                         $theme = $serviceColorThemes[$idx % count($serviceColorThemes)];
                     @endphp
