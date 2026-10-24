@@ -65,8 +65,8 @@
         <div class="p-5">
             <!-- Brand Header (Clean Full Logo) -->
             <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-between lg:justify-center">
-                <a href="{{ route('member.dashboard') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
+                <a href="{{ route('member.dashboard') }}" class="inline-block transition hover:opacity-90" title="PERSIS PERS">
+                    <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PERSIS PERS" class="h-11 w-auto object-contain" />
                 </a>
                 <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-sm hover:bg-white/10 transition" title="Tutup Menu">
                     <i class="fa-solid fa-xmark text-base"></i>
@@ -124,6 +124,15 @@
                         <a href="{{ route('member.digital_books') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
                             <i class="fa-solid fa-book-open-reader w-4 text-center"></i>
                             <span>Buku Digital</span>
+                        </a>
+
+                        <!-- Tanya Jawab Agama (Forum) -->
+                        <a href="{{ route('forum.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-scale-balanced w-4 text-center text-emerald-400"></i>
+                                <span>Tanya Jawab Agama</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 font-mono">Forum</span>
                         </a>
                     </div>
                 </div>

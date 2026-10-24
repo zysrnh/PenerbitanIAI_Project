@@ -192,32 +192,34 @@
         </div>
     </section>
 
-    <!-- 4. MODAL AJUKAN PERTANYAAN (Clean Flat) -->
-    <div id="askQuestionModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-4 backdrop-blur-xs">
-        <div class="bg-white rounded-sm border border-slate-200 shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto animate-fade-in-up">
+    <!-- 4. MODAL AJUKAN PERTANYAAN (Clean Flat & Top Level z-[9999]) -->
+    <div id="askQuestionModal" class="fixed inset-0 z-[9999] bg-black/75 hidden items-center justify-center p-3 sm:p-5 backdrop-blur-xs overflow-y-auto">
+        <div class="bg-white rounded-sm border border-slate-200 shadow-2xl w-full max-w-xl my-auto max-h-[92vh] flex flex-col animate-fade-in-up overflow-hidden">
             
-            <!-- Modal Header -->
-            <div class="p-4 sm:p-5 bg-brand-950 text-white flex items-center justify-between border-b border-brand-900">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xs bg-emerald-700 text-white flex items-center justify-center text-sm font-bold">
-                        <i class="fa-solid fa-hand-holding-hand"></i>
+            <!-- Modal Header (Always Visible & Stays on Top) -->
+            <div class="p-4 sm:p-5 bg-brand-950 text-white flex items-center justify-between border-b border-brand-900 shrink-0 select-none">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-sm bg-emerald-700 text-white flex items-center justify-center text-base font-bold shadow-2xs shrink-0">
+                        <i class="fa-solid fa-scale-balanced"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold font-heading text-white">
+                        <h3 class="text-sm sm:text-base font-bold font-heading text-white leading-tight">
                             @auth
                                 Ajukan Pertanyaan Hukum Agama
                             @else
                                 Masuk ke Akun untuk Bertanya
                             @endauth
                         </h3>
-                        <p class="text-[10.5px] text-emerald-300">Konsultasi ke Dewan Redaksi &amp; Asatidz PERSIS PERS</p>
+                        <p class="text-[11px] text-emerald-300 font-medium">Bersama Narasumber Ust. Gianjar Nugraha, M.Sy.</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeAskModal()" class="text-slate-300 hover:text-white p-1 text-sm cursor-pointer" title="Tutup">
+                <button type="button" onclick="closeAskModal()" class="w-8 h-8 rounded-sm bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-sm transition cursor-pointer" title="Tutup">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
+            <!-- Modal Body Scrollable -->
+            <div class="overflow-y-auto flex-1">
             @auth
                 <!-- Modal Form (Khusus Pengguna Login) -->
                 <form action="{{ route('forum.store') }}" method="POST" class="p-4 sm:p-5 space-y-4">
@@ -316,6 +318,7 @@
                     </div>
                 </div>
             @endauth
+            </div>
 
         </div>
     </div>

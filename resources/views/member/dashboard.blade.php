@@ -83,8 +83,8 @@
         <div class="p-5">
             <!-- Brand Header (Clean Full Logo) -->
             <div class="pb-4 mb-4 border-b border-white/10 flex items-center justify-between lg:justify-center">
-                <a href="{{ route('member.dashboard') }}" class="inline-block transition hover:opacity-90" title="PENERBIT PERSIS">
-                    <img src="{{ asset('images/logo/logo_penerbit_persis_horizontal_white.png') }}" alt="PENERBIT PERSIS" class="h-11 w-auto object-contain" />
+                <a href="{{ route('member.dashboard') }}" class="inline-block transition hover:opacity-90" title="PERSIS PERS">
+                    <img src="{{ asset('images/logo/logopersin.png') }}?v={{ time() }}" alt="PERSIS PERS" class="h-10 w-auto object-contain" />
                 </a>
                 <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-sm hover:bg-white/10 transition" title="Tutup Menu">
                     <i class="fa-solid fa-xmark text-base"></i>
@@ -147,6 +147,14 @@
                             @if(($totalMemberBookmarks ?? 0) > 0)
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-slate-900 font-mono">{{ $totalMemberBookmarks }}</span>
                             @endif
+                        </a>
+
+                        <a href="{{ route('forum.index') }}" class="flex items-center justify-between px-3 py-2.5 rounded-sm font-semibold transition hover:bg-white/10 hover:text-white text-slate-300">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-scale-balanced w-4 text-center text-emerald-400"></i>
+                                <span>Tanya Jawab Agama</span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 font-mono">Forum</span>
                         </a>
                     </div>
                 </div>
@@ -488,8 +496,8 @@
                 </div>
             @endif
 
-            <!-- 4. Layanan Cepat Member (3 Clean Cards) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <!-- 4. Layanan Cepat Member (4 Clean Cards) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 
                 <!-- Card 1: Buku Digital (Flipbook) -->
                 <a href="{{ route('member.digital_books') }}" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
@@ -504,7 +512,20 @@
                     </div>
                 </a>
 
-                <!-- Card 2: Pengajuan Naskah -->
+                <!-- Card 2: Tanya Jawab Hukum Agama -->
+                <a href="{{ route('forum.index') }}" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
+                    <div class="w-10 h-10 rounded-sm bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="font-extrabold text-xs sm:text-sm text-slate-900 font-heading group-hover:text-amber-800 transition">
+                            Tanya Jawab Agama
+                        </h3>
+                        <p class="text-[11px] text-slate-500 mt-0.5 line-clamp-2">Konsultasi fikih bersama Ust. Gianjar Nugraha, M.Sy.</p>
+                    </div>
+                </a>
+
+                <!-- Card 3: Pengajuan Naskah -->
                 <a href="javascript:void(0)" onclick="openAdminContactDrawer()" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
                     <div class="w-10 h-10 rounded-sm bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition">
                         <i class="fa-solid fa-feather-pointed"></i>
@@ -517,7 +538,7 @@
                     </div>
                 </a>
 
-                <!-- Card 3: Konsultasi Redaksi -->
+                <!-- Card 4: Konsultasi Redaksi -->
                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $contactWa ?? '6282116116133') }}?text={{ urlencode('Assalamualaikum Redaksi Penerbit Persis, saya member ' . $user->name . ' ingin berkonsultasi.') }}" target="_blank" class="p-4 bg-white hover:bg-slate-50 border border-slate-200/90 rounded-sm shadow-2xs transition group flex items-start gap-3.5">
                     <div class="w-10 h-10 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center text-base shrink-0 group-hover:scale-105 transition">
                         <i class="fa-brands fa-whatsapp text-lg text-emerald-600"></i>
