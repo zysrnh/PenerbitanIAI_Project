@@ -4,28 +4,28 @@
 
 @section('content')
     <!-- 1. Header Banner (Solid Flat & Clean) -->
-    <section class="bg-brand-950 text-white py-10 sm:py-14 border-b border-brand-900 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-3xl">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-900/60 border border-emerald-700/60 text-emerald-300 text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-xs mb-3">
+    <section class="bg-[#032c21] text-white py-10 sm:py-12 border-b border-emerald-950">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="space-y-3">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/10 border border-white/15 text-emerald-300 text-[10.5px] font-bold uppercase tracking-widest rounded-xs">
                     <i class="fa-solid fa-scale-balanced text-emerald-400"></i>
                     FORUM TANYA JAWAB &amp; ISTIFTA
                 </span>
-                <h1 class="text-2xl sm:text-3xl md:text-4xl font-black font-heading tracking-tight text-white mb-2.5 sm:mb-3">
+                <h1 class="text-2xl sm:text-3xl font-extrabold font-heading tracking-tight text-white leading-tight">
                     Forum Tanya Jawab Bersama Ust. Gianjar Nugraha, M.Sy.
                 </h1>
-                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-6">
-                    Rubrik edukasi keislaman dari PERSIS PERS seputar permasalahan Fiqih, Ibadah, Muamalah, serta Problematika Hukum keagamaan kontemporer berlandaskan Al-Qur’an dan As-Sunnah bersama narasumber <strong class="text-emerald-300 font-bold">Ust. Gianjar Nugraha, M.Sy.</strong>
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+                    Rubrik edukasi keislaman dari PERSIS PERS seputar Fiqih, Ibadah, Muamalah, serta Problematika Hukum keagamaan kontemporer berlandaskan Al-Qur’an dan As-Sunnah.
                 </p>
 
                 <!-- Action Bar: Tombol Ajukan & Quick WA -->
-                <div class="flex items-center gap-3 flex-wrap">
-                    <button type="button" onclick="openAskModal()" class="px-4 sm:px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-sm transition flex items-center gap-2 cursor-pointer shadow-2xs">
+                <div class="pt-2 flex items-center gap-3 flex-wrap">
+                    <button type="button" onclick="openAskModal()" class="px-4 py-2 bg-[#006830] hover:bg-emerald-700 text-white text-xs font-bold rounded-sm transition flex items-center gap-2 cursor-pointer shadow-2xs">
                         <i class="fa-solid fa-pen-to-square"></i>
-                        <span>Ajukan Pertanyaan Sekarang</span>
+                        <span>Ajukan Pertanyaan</span>
                     </button>
                     @if(!empty($cleanWa))
-                    <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Assalamualaikum Redaksi PERSIS PERS, saya ingin konsultasi hukum agama:') }}" target="_blank" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-sm border border-white/20 transition flex items-center gap-2">
+                    <a href="https://wa.me/{{ $cleanWa }}?text={{ urlencode('Assalamualaikum Redaksi PERSIS PERS, saya ingin konsultasi hukum agama:') }}" target="_blank" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-sm border border-white/20 transition flex items-center gap-2">
                         <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i>
                         <span>Konsultasi via WhatsApp</span>
                     </a>
@@ -36,152 +36,130 @@
     </section>
 
     <!-- 2. Main Content & Listing Section -->
-    <section class="py-8 sm:py-12 bg-slate-50 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-8 sm:py-10 bg-slate-50 min-h-screen">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
             
             <!-- Alert Messages -->
             @if(session('success'))
-                <div class="mb-6 p-4 rounded-sm bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm font-semibold flex items-start gap-3 shadow-2xs">
+                <div class="mb-5 p-4 rounded-sm bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs sm:text-sm font-semibold flex items-start gap-3 shadow-2xs">
                     <i class="fa-solid fa-circle-check text-emerald-600 text-base mt-0.5 shrink-0"></i>
                     <div>{{ session('success') }}</div>
                 </div>
             @endif
 
             @if(session('error'))
-                <div class="mb-6 p-4 rounded-sm bg-rose-50 border border-rose-300 text-rose-900 text-xs sm:text-sm font-semibold flex items-start gap-3 shadow-2xs">
+                <div class="mb-5 p-4 rounded-sm bg-rose-50 border border-rose-300 text-rose-900 text-xs sm:text-sm font-semibold flex items-start gap-3 shadow-2xs">
                     <i class="fa-solid fa-circle-exclamation text-rose-600 text-base mt-0.5 shrink-0"></i>
                     <div>{{ session('error') }}</div>
                 </div>
             @endif
 
-            <!-- Search Bar & Filters Grid -->
-            <div class="bg-white p-4 sm:p-5 rounded-sm border border-slate-200 shadow-2xs mb-6 sm:mb-8">
-                <form action="{{ route('forum.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-center">
-                    
-                    <!-- Search Input -->
-                    <div class="md:col-span-8 relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari masalah hukum, kata kunci, misal: shalat jamaah, waris, zakat..." class="w-full pl-9 pr-4 py-2.5 text-xs rounded-sm border border-slate-300 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none text-slate-800" />
-                    </div>
-
-                    <!-- Category Filter Dropdown -->
-                    <div class="md:col-span-3">
-                        <select name="category" onchange="this.form.submit()" class="w-full py-2.5 px-3 text-xs rounded-sm border border-slate-300 bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none text-slate-700">
-                            <option value="">Semua Kategori</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Submit / Reset -->
-                    <div class="md:col-span-1 flex gap-1">
-                        <button type="submit" class="w-full py-2.5 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-sm transition flex items-center justify-center cursor-pointer shadow-2xs" title="Cari">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                        @if(request()->filled('q') || request()->filled('category'))
-                            <a href="{{ route('forum.index') }}" class="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs rounded-sm transition flex items-center justify-center" title="Reset Filter">
-                                <i class="fa-solid fa-rotate-left"></i>
+            <!-- Search Bar & Filters (Clean & Minimalist) -->
+            <div class="mb-6 space-y-3">
+                <form action="{{ route('forum.index') }}" method="GET" class="relative">
+                    @if(request('category'))
+                        <input type="hidden" name="category" value="{{ request('category') }}">
+                    @endif
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input 
+                        type="text" 
+                        name="q" 
+                        value="{{ request('q') }}" 
+                        placeholder="Cari masalah hukum, kata kunci, misal: shalat jamaah, waris, zakat..." 
+                        class="w-full pl-9 pr-20 py-2.5 sm:py-3 text-xs sm:text-sm rounded-sm border border-slate-300 bg-white focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 outline-none text-slate-800 placeholder-slate-400 transition shadow-2xs" 
+                    />
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                        @if(request()->filled('q'))
+                            <a href="{{ route('forum.index', array_filter(['category' => request('category')])) }}" class="p-1 text-slate-400 hover:text-slate-600 text-xs" title="Hapus Pencarian">
+                                <i class="fa-solid fa-xmark"></i>
                             </a>
                         @endif
+                        <button type="submit" class="px-3 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white text-xs font-bold rounded-xs transition shadow-2xs cursor-pointer">
+                            Cari
+                        </button>
                     </div>
                 </form>
 
-                <!-- Quick Category Badges (Pills) -->
-                <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center gap-1.5 flex-wrap">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1">Kategori:</span>
-                    <a href="{{ route('forum.index') }}" class="px-2.5 py-1 text-[11px] rounded-xs font-semibold transition {{ empty(request('category')) ? 'bg-[#006830] text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
-                        Semua
+                <!-- Category Tabs (Clean Minimalist Horizontal Scroll) -->
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs select-none">
+                    <a href="{{ route('forum.index', array_filter(['q' => request('q')])) }}" class="px-3 py-1.5 rounded-xs font-semibold whitespace-nowrap transition {{ empty(request('category')) ? 'bg-[#006830] text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' }}">
+                        Semua Kategori
                     </a>
-                    @foreach(array_slice($categories, 0, 5) as $c)
-                        <a href="{{ route('forum.index', ['category' => $c]) }}" class="px-2.5 py-1 text-[11px] rounded-xs font-semibold transition {{ request('category') === $c ? 'bg-[#006830] text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
+                    @foreach($categories as $c)
+                        <a href="{{ route('forum.index', array_filter(['category' => $c, 'q' => request('q')])) }}" class="px-3 py-1.5 rounded-xs font-semibold whitespace-nowrap transition {{ request('category') === $c ? 'bg-[#006830] text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' }}">
                             {{ $c }}
                         </a>
                     @endforeach
                 </div>
             </div>
 
-            <!-- 3. Question Cards Feed -->
-            <div class="space-y-4">
+            <!-- Question Cards Feed (Streamlined & Clean) -->
+            <div class="space-y-3.5">
                 @forelse($questions as $q)
-                    <article class="bg-white p-5 sm:p-6 rounded-sm border border-slate-200 shadow-2xs hover:border-emerald-600 transition flex flex-col justify-between group">
-                        <div>
-                            <!-- Header Info Card -->
-                            <div class="flex items-center justify-between gap-2 flex-wrap mb-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-xs border {{ $q->category_badge_class }}">
-                                        {{ $q->category }}
-                                    </span>
-                                    <span class="text-[11px] text-slate-400">
-                                        <i class="fa-regular fa-clock text-[10px]"></i> {{ $q->created_at ? $q->created_at->format('d M Y') : '-' }}
-                                    </span>
-                                </div>
-                                <span class="text-[11px] font-medium text-slate-500">
-                                    <i class="fa-solid fa-user-pen text-slate-400 text-[10px]"></i> Penanya: <strong class="text-slate-700">{{ $q->name }}</strong>
+                    <article class="bg-white p-5 rounded-sm border border-slate-200 hover:border-emerald-500 hover:shadow-xs transition duration-150 group">
+                        
+                        <!-- Top Row: Category, Author, and Timestamp -->
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 gap-2 mb-2">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2 py-0.5 font-bold uppercase tracking-wider text-[9.5px] rounded-xs border {{ $q->category_badge_class }}">
+                                    {{ $q->category }}
+                                </span>
+                                <span class="text-slate-300">&bull;</span>
+                                <span class="text-slate-600 font-medium">
+                                    <i class="fa-solid fa-user-pen text-[10px] text-slate-400 mr-1"></i>{{ $q->name }}
                                 </span>
                             </div>
-
-                            <!-- Title / Pertanyaan Pokok -->
-                            <h2 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-800 transition mb-2">
-                                <a href="{{ route('forum.show', $q->slug) }}" class="hover:underline">
-                                    {{ $q->title }}
-                                </a>
-                            </h2>
-
-                            <!-- Uraian Pertanyaan -->
-                            <p class="text-xs text-slate-600 leading-relaxed mb-4 line-clamp-2">
-                                {{ Str::limit(strip_tags($q->question), 220) }}
-                            </p>
-
-                            <!-- Snippet Jawaban / Ulasan Resmi -->
-                            @if(!empty($q->answer))
-                                <div class="p-3.5 bg-emerald-50/70 border-l-4 border-emerald-700 rounded-r-xs mb-3">
-                                    <div class="flex items-center justify-between gap-2 mb-1.5">
-                                        <span class="text-[10.5px] font-bold uppercase tracking-wider text-emerald-900 flex items-center gap-1.5">
-                                            <i class="fa-solid fa-circle-check text-emerald-700"></i>
-                                            <span>Dijawab Oleh: <strong class="text-slate-900">{{ $q->answered_by ?: 'Ust. Gianjar Nugraha, M.Sy.' }}</strong></span>
-                                        </span>
-                                        @if($q->answered_at)
-                                            <span class="text-[10px] text-emerald-800 font-mono">
-                                                {{ $q->answered_at->format('d M Y') }}
-                                            </span>
-                                        @endif
-                                    </div>
-                                    <p class="text-xs text-slate-700 leading-relaxed line-clamp-2">
-                                        {{ Str::limit(strip_tags($q->answer), 240) }}
-                                    </p>
-                                </div>
-                            @elseif(($q->answers_count ?? 0) > 0)
-                                <div class="p-3 bg-blue-50/60 border border-blue-200/70 rounded-xs text-[11.5px] text-blue-800 flex items-center justify-between gap-2 mb-3">
-                                    <span class="flex items-center gap-1.5 font-medium">
-                                        <i class="fa-solid fa-comments text-blue-600"></i>
-                                        <span>Terdapat <strong>{{ $q->answers_count }} jawaban/tanggapan</strong> dari anggota forum.</span>
-                                    </span>
-                                    <span class="text-[10.5px] font-bold text-blue-700 group-hover:underline">Ikut Diskusi &rarr;</span>
-                                </div>
-                            @else
-                                <div class="p-3 bg-amber-50/60 border border-amber-200/70 rounded-xs text-[11.5px] text-amber-800 flex items-center justify-between gap-2 mb-3">
-                                    <span class="flex items-center gap-1.5">
-                                        <i class="fa-solid fa-hourglass-half text-amber-600"></i>
-                                        <span>Belum ada jawaban. Siapa saja dapat memberikan tanggapan atau jawaban!</span>
-                                    </span>
-                                    <span class="text-[10.5px] font-bold text-emerald-800 group-hover:underline">Beri Jawaban &rarr;</span>
-                                </div>
-                            @endif
+                            <span class="text-[10.5px] text-slate-400 shrink-0">
+                                {{ $q->created_at ? $q->created_at->diffForHumans() : '-' }}
+                            </span>
                         </div>
 
-                        <!-- Card Footer Links -->
-                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between mt-2 flex-wrap gap-2">
-                            <div class="flex items-center gap-3 text-[11px] text-slate-500">
-                                <span class="flex items-center gap-1">
-                                    <i class="fa-regular fa-eye text-[10px] text-slate-400"></i> Dibaca {{ number_format($q->views_count) }}x
+                        <!-- Title -->
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-emerald-800 transition leading-snug mb-1.5">
+                            <a href="{{ route('forum.show', $q->slug) }}" class="hover:underline">
+                                {{ $q->title }}
+                            </a>
+                        </h2>
+
+                        <!-- Snippet Question Content -->
+                        <p class="text-xs text-slate-600 leading-relaxed line-clamp-2 mb-3.5">
+                            {{ Str::limit(strip_tags($q->question), 200) }}
+                        </p>
+
+                        <!-- Card Footer: Minimalist Status & Stats -->
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-xs">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                @if(!empty($q->answer))
+                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                        <i class="fa-solid fa-circle-check text-emerald-600 text-[10px]"></i>
+                                        <span>Terjawab Resmi</span>
+                                    </span>
+                                @elseif(($q->answers_count ?? 0) > 0)
+                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[10.5px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                        <i class="fa-solid fa-comments text-blue-600 text-[10px]"></i>
+                                        <span>Ada Tanggapan</span>
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs text-[10.5px] font-medium bg-slate-100 text-slate-500 border border-slate-200">
+                                        <i class="fa-regular fa-clock text-[10px]"></i>
+                                        <span>Menunggu Jawaban</span>
+                                    </span>
+                                @endif
+
+                                <span class="text-slate-300">&bull;</span>
+                                <span class="text-[11px] text-slate-500 flex items-center gap-1">
+                                    <i class="fa-regular fa-comment-dots text-slate-400"></i>
+                                    <strong>{{ ($q->answers_count ?? 0) + (!empty($q->answer) ? 1 : 0) }}</strong> diskusi
                                 </span>
-                                <span class="flex items-center gap-1 font-semibold text-emerald-700">
-                                    <i class="fa-regular fa-comment-dots text-[10px]"></i> {{ ($q->answers_count ?? 0) + (!empty($q->answer) ? 1 : 0) }} Diskusi &amp; Jawaban
+                                <span class="text-slate-300">&bull;</span>
+                                <span class="text-[11px] text-slate-400 flex items-center gap-1">
+                                    <i class="fa-regular fa-eye text-[10px]"></i>
+                                    {{ number_format($q->views_count) }}x dibaca
                                 </span>
                             </div>
-                            <a href="{{ route('forum.show', $q->slug) }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-950 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                                <span>Lihat Diskusi &amp; Jawab</span>
+
+                            <a href="{{ route('forum.show', $q->slug) }}" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                                <span>Buka Diskusi</span>
                                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
                             </a>
                         </div>
@@ -291,7 +269,7 @@
                     <div class="p-3 bg-amber-50 rounded-xs border border-amber-200 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
                         <i class="fa-solid fa-circle-info text-amber-700 mt-0.5 shrink-0"></i>
                         <div>
-                            Pertanyaan yang masuk akan ditelaah dan diverifikasi oleh Dewan Redaksi &amp; Asatidz. Jawaban resmi akan dipublikasikan di halaman Forum Tanya Jawab ini setelah diputuskan.
+                            Pertanyaan yang diajukan akan langsung terbit di forum untuk dibahas bersama dan ditelaah oleh Dewan Redaksi &amp; Asatidz.
                         </div>
                     </div>
 
