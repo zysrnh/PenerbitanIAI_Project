@@ -694,22 +694,57 @@
 
                 <!-- 1. TAB QRIS CONTENT -->
                 <div id="contentTabQris" class="space-y-3">
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xs flex flex-col sm:flex-row items-center gap-3">
-                        <div class="w-32 h-32 bg-white p-1 border border-slate-300 rounded-xs flex items-center justify-center shrink-0 shadow-2xs">
-                            @php
-                                $qrisUrl = $donationSettings['qris_image'] ?? '';
-                                if (!empty($qrisUrl) && !str_starts_with($qrisUrl, 'http') && !str_starts_with($qrisUrl, '//')) {
-                                    $qrisUrl = asset(ltrim($qrisUrl, '/'));
-                                }
-                            @endphp
-                            <img src="{{ $qrisUrl ?: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PERSIS-PERS-DONASI' }}" alt="QRIS PERSIS PERS" class="w-full h-full object-contain" />
+                    @php
+                        $qrisUrl = $donationSettings['qris_image'] ?? '';
+                        if (!empty($qrisUrl) && !str_starts_with($qrisUrl, 'http') && !str_starts_with($qrisUrl, '//')) {
+                            $qrisUrl = asset(ltrim($qrisUrl, '/'));
+                        }
+                        $finalQrisUrl = $qrisUrl ?: 'https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=PERSIS-PERS-DONASI';
+                    @endphp
+                    <div class="p-3 sm:p-3.5 bg-slate-50 border border-slate-200 rounded-xs flex flex-col sm:flex-row items-center sm:items-stretch gap-3 sm:gap-4">
+                        <!-- Thumbnail QRIS Interaktif (Click to Zoom) -->
+                        <div onclick="openQrisPreviewModal('{{ $finalQrisUrl }}')" 
+                             class="group relative w-36 h-36 sm:w-40 sm:h-40 bg-white p-1.5 border-2 border-emerald-600/60 hover:border-emerald-700 rounded-xs flex items-center justify-center shrink-0 shadow-xs cursor-pointer overflow-hidden transition-all duration-200 hover:shadow-md"
+                             title="Klik untuk melihat preview QRIS ukuran penuh">
+                            <img src="{{ $finalQrisUrl }}" alt="QRIS PERSIS PERS" class="w-full h-full object-contain transition-transform duration-200 group-hover:scale-105" />
+                            
+                            <!-- Overlay Hover Prompt -->
+                            <div class="absolute inset-0 bg-slate-950/65 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white p-2 text-center backdrop-blur-[1px]">
+                                <i class="fa-solid fa-magnifying-glass-plus text-lg text-emerald-400 mb-1"></i>
+                                <span class="text-[10px] font-bold tracking-tight leading-tight">Klik untuk<br/>Perbesar QR</span>
+                            </div>
+
+                            <!-- Small Corner Badge -->
+                            <div class="absolute bottom-1 right-1 bg-emerald-700 text-white text-[9px] font-bold px-1 py-0.5 rounded-xs flex items-center gap-0.5 group-hover:hidden">
+                                <i class="fa-solid fa-magnifying-glass text-[8px]"></i>
+                                <span>Zoom</span>
+                            </div>
                         </div>
-                        <div class="text-left space-y-1">
-                            <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">QRIS Persis Pers</span>
-                            <h4 class="font-extrabold text-slate-900 text-xs sm:text-sm">Scan untuk Berdonasi</h4>
-                            <p class="text-[11px] text-slate-500 leading-snug">
-                                Buka GoPay, OVO, Dana, ShopeePay, BCA, Mandiri, BSI, atau m-banking Anda lalu scan barcode di samping.
-                            </p>
+
+                        <!-- Info & Tombol Aksi Preview -->
+                        <div class="text-left flex flex-col justify-between space-y-2 flex-1 min-w-0">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[10px] font-black text-emerald-800 uppercase tracking-wider bg-emerald-100 px-1.5 py-0.5 rounded-xs">QRIS Persis Pers</span>
+                                    <span class="text-[10px] text-slate-400 font-medium">Semua Pembayaran</span>
+                                </div>
+                                <h4 class="font-extrabold text-slate-900 text-xs sm:text-sm">Scan Barcode untuk Berdonasi</h4>
+                                <p class="text-[11px] text-slate-600 leading-snug">
+                                    Buka aplikasi GoPay, OVO, Dana, ShopeePay, BCA, Mandiri, BSI, atau m-banking Anda lalu scan barcode QRIS.
+                                </p>
+                            </div>
+
+                            <!-- Tombol Aksi: Preview Ukuran Penuh & Download -->
+                            <div class="flex items-center gap-2 pt-1 flex-wrap">
+                                <button type="button" onclick="openQrisPreviewModal('{{ $finalQrisUrl }}')" class="px-3 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer">
+                                    <i class="fa-solid fa-magnifying-glass-plus text-xs text-emerald-300"></i>
+                                    <span>Perbesar QR (Preview)</span>
+                                </button>
+                                <a href="{{ $finalQrisUrl }}" target="_blank" download="QRIS-Donasi-Persis-Pers.jpg" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-900 rounded-xs text-xs font-bold border border-slate-300 transition flex items-center gap-1.5 cursor-pointer" title="Buka gambar di tab baru atau unduh">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                    <span>Buka Gambar Asli</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -815,6 +850,58 @@
             <button type="button" onclick="directDownloadCurrentBook()" class="w-full sm:w-auto px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xs text-xs font-bold transition flex items-center justify-center gap-2 shrink-0 shadow-2xs cursor-pointer">
                 <i class="fa-solid fa-download text-xs text-lime-400"></i>
                 <span>Download Buku Sekarang</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- MODAL PREVIEW QRIS UKURAN BESAR (LIGHTBOX FULLSCREEN)      -->
+<!-- ========================================================== -->
+<div id="modalPreviewQrisLarge" onclick="if(event.target === this) closeQrisPreviewModal()" class="fixed inset-0 z-[9999999] bg-slate-950/85 backdrop-blur-xs hidden items-center justify-center p-3 sm:p-5 select-none animate-fade-in" style="display: none;">
+    <div class="bg-white rounded-sm border border-slate-300 w-full max-w-lg max-h-[94vh] flex flex-col justify-between shadow-2xl overflow-hidden animate-cascade-up">
+        
+        <!-- Header Modal Preview QRIS -->
+        <div class="bg-[#032c21] px-4 py-3 text-white flex items-center justify-between shrink-0 border-b border-white/10">
+            <div class="flex items-center gap-2.5 min-w-0 pr-2">
+                <div class="w-7 h-7 rounded-xs bg-emerald-700 flex items-center justify-center text-white shrink-0 text-xs">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs sm:text-sm font-black text-white truncate font-heading">
+                        QRIS Donasi Penerbit Persis
+                    </h3>
+                    <p class="text-[10px] text-emerald-300">
+                        Scan menggunakan m-Banking atau e-Wallet apapun
+                    </p>
+                </div>
+            </div>
+
+            <button type="button" onclick="closeQrisPreviewModal()" class="w-7 h-7 bg-white/10 hover:bg-rose-600 text-white rounded-xs flex items-center justify-center transition cursor-pointer text-xs" title="Tutup Preview">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Body: Gambar QRIS Besar & Jernih -->
+        <div class="p-4 sm:p-5 overflow-y-auto flex flex-col items-center justify-center bg-slate-50 space-y-3">
+            <div class="bg-white p-3 sm:p-4 rounded-xs border border-slate-300 shadow-md max-w-sm w-full flex items-center justify-center">
+                <img id="largeQrisPreviewImg" src="" alt="QRIS Donasi Persis Pers" class="max-w-full max-h-[58vh] sm:max-h-[62vh] object-contain mx-auto" />
+            </div>
+            
+            <p class="text-[11px] text-slate-500 text-center leading-snug max-w-sm">
+                Arahkan kamera smartphone atau upload gambar barcode ini ke aplikasi pembayaran Anda (BSI, BCA, Mandiri, GoPay, OVO, ShopeePay, DANA, dll).
+            </p>
+        </div>
+
+        <!-- Footer / Action Modal Preview -->
+        <div class="bg-slate-100 px-4 py-3 border-t border-slate-200 shrink-0 flex items-center justify-between gap-2">
+            <a id="btnDownloadQrisImage" href="#" target="_blank" download="QRIS-Donasi-Persis-Pers.jpg" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xs text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-download text-[11px]"></i>
+                <span>Unduh Gambar QRIS</span>
+            </a>
+            <button type="button" onclick="closeQrisPreviewModal()" class="px-4 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-xs font-bold transition cursor-pointer">
+                Tutup Preview
             </button>
         </div>
 
@@ -1722,6 +1809,40 @@
             methodInput.value = 'transfer';
         }
     };
+
+    // =========================================================================
+    // MODAL PREVIEW QRIS UKURAN BESAR (LIGHTBOX ZOOM)
+    // =========================================================================
+    window.openQrisPreviewModal = function(imageUrl) {
+        const modal = document.getElementById('modalPreviewQrisLarge');
+        const img = document.getElementById('largeQrisPreviewImg');
+        const downloadBtn = document.getElementById('btnDownloadQrisImage');
+
+        if (!modal || !img) return;
+
+        const targetUrl = imageUrl || '{{ $finalQrisUrl ?? '' }}';
+        img.src = targetUrl;
+        if (downloadBtn) {
+            downloadBtn.href = targetUrl;
+        }
+
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+    };
+
+    window.closeQrisPreviewModal = function() {
+        const modal = document.getElementById('modalPreviewQrisLarge');
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+        }
+    };
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            window.closeQrisPreviewModal();
+        }
+    });
 
     window.formatNumberWithDots = function(num) {
         if (!num && num !== 0) return '';
