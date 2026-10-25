@@ -608,6 +608,50 @@
         <!-- Modal Body (Scrollable) -->
         <div class="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs">
 
+            <!-- Card Preview Buku Digital -->
+            <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm flex items-start gap-3 sm:gap-4">
+                <!-- Cover Preview Thumbnail -->
+                <div class="w-20 sm:w-24 aspect-[3/4.2] rounded-xs overflow-hidden shrink-0 border border-slate-300 bg-[#032c21] shadow-2xs relative">
+                    <img id="donModalBookCover" src="" alt="Cover Buku" class="w-full h-full object-cover" onerror="this.style.display='none'; document.getElementById('donModalCoverFallback').style.display='flex';" />
+                    <div id="donModalCoverFallback" class="w-full h-full flex items-center justify-center text-center p-2 text-white bg-[#032c21]" style="display:none;">
+                        <span id="donModalFallbackTitle" class="text-[9px] font-bold leading-tight">PERSIS PERS</span>
+                    </div>
+                </div>
+
+                <!-- Info Buku & Tombol Preview Flipbook -->
+                <div class="flex-1 min-w-0 space-y-1.5">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span id="donModalBookCategoryBadge" class="px-2 py-0.5 rounded-xs text-[9.5px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 uppercase tracking-wide">
+                            Buku Islam
+                        </span>
+                        <span id="donModalBookPages" class="text-[10.5px] text-slate-400 font-mono">
+                            240 hlm
+                        </span>
+                    </div>
+
+                    <h4 id="donModalPreviewTitle" class="text-xs sm:text-sm font-bold text-slate-900 leading-snug line-clamp-2">
+                        Judul Buku Digital
+                    </h4>
+
+                    <p id="donModalPreviewAuthor" class="text-[11px] text-slate-500 truncate flex items-center gap-1">
+                        <i class="fa-solid fa-pen-nib text-[9px] text-emerald-700"></i>
+                        <span>Penulis Buku</span>
+                    </p>
+
+                    <p id="donModalPreviewSynopsis" class="text-[11px] text-slate-600 leading-relaxed line-clamp-2 pt-0.5">
+                        Sinopsis atau ringkasan isi buku digital.
+                    </p>
+
+                    <!-- Tombol Preview Lembaran Buku (Live Flipbook) -->
+                    <div class="pt-1.5 flex items-center gap-2">
+                        <button type="button" onclick="previewCurrentBookFromDonationModal()" class="px-3 py-1.5 bg-[#006830] hover:bg-[#032c21] text-white rounded-xs text-[11px] font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer" title="Buka dan baca lembaran buku">
+                            <i class="fa-solid fa-book-open-reader text-xs text-lime-300"></i>
+                            <span>Buka Preview Buku (Flipbook)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Ajakan Dukung Penerbitan -->
             <div class="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-sm space-y-2">
                 <div class="flex items-center gap-2 text-[#006830] font-black text-xs">
@@ -1144,8 +1188,17 @@
             const renderScale = Math.min(2.0, Math.max(1.3, 1100 / unscaledVp.width));
             const images = [];
 
-            for (let i = 1; i <= totalPages; i++) {
-                if (loadText) loadText.innerText = `Memproses halaman ${i} dari ${totalPages}...`;
+            // Tampilkan tombol buka PDF langsung jika buku tebal
+            const btnDirect = document.getElementById('btnLoadingOpenDirectPdf');
+            if (btnDirect) {
+                btnDirect.href = pdfUrl;
+                btnDirect.classList.remove('hidden');
+                btnDirect.style.display = 'inline-flex';
+            }
+
+            const maxPages = Math.min(totalPages, 26);
+            for (let i = 1; i <= maxPages; i++) {
+                if (loadText) loadText.innerText = `Memproses halaman ${i} dari ${maxPages} (Total ${totalPages} hlm)...`;
                 const page = (i === 1) ? firstPage : await pdfDoc.getPage(i);
                 const vp = page.getViewport({ scale: renderScale });
 
@@ -1163,7 +1216,29 @@
                 }).promise;
 
                 // High quality JPEG data URL for smooth hardware accelerated flip
-                images.push(canvas.toDataURL('image/jpeg', 0.90));
+                images.push(canvas.toDataURL('image/jpeg', 0.88));
+            }
+
+            // Jika buku tebal (> 26 hlm), tambahkan halaman penutup yang rapi
+            if (totalPages > 26) {
+                const noticeCanvas = document.createElement('canvas');
+                noticeCanvas.width = Math.round(unscaledVp.width * renderScale);
+                noticeCanvas.height = Math.round(unscaledVp.height * renderScale);
+                const nCtx = noticeCanvas.getContext('2d');
+                nCtx.fillStyle = '#f8fafc';
+                nCtx.fillRect(0, 0, noticeCanvas.width, noticeCanvas.height);
+                nCtx.fillStyle = '#006830';
+                nCtx.font = 'bold 22px sans-serif';
+                nCtx.textAlign = 'center';
+                nCtx.fillText('PERSIS PERS - E-LIBRARY', noticeCanvas.width / 2, 120);
+                nCtx.fillStyle = '#0f172a';
+                nCtx.font = 'bold 24px sans-serif';
+                nCtx.fillText('Akhir Lembaran Preview', noticeCanvas.width / 2, 220);
+                nCtx.fillStyle = '#475569';
+                nCtx.font = '16px sans-serif';
+                nCtx.fillText(`Buku ini memiliki total ${totalPages} halaman lengkap.`, noticeCanvas.width / 2, 270);
+                nCtx.fillText('Unduh buku atau buka PDF langsung untuk membaca seluruh isi.', noticeCanvas.width / 2, 305);
+                images.push(noticeCanvas.toDataURL('image/jpeg', 0.88));
             }
 
             currentBookPages = images;
@@ -1570,14 +1645,54 @@
         }
         if (!book) return;
         currentDonationBook = book;
+        window.currentReadingBook = book;
         
         document.getElementById('donModalBookTitle').innerText = book.title || 'Buku Digital Persis Pers';
         document.getElementById('donModalBookAuthor').innerText = (book.author || 'PERSIS PERS') + ' • ' + (book.category || 'Buku Digital');
         document.getElementById('formBookId').value = book.id || '';
+
+        // Update Card Preview Data
+        const coverEl = document.getElementById('donModalBookCover');
+        const fallbackEl = document.getElementById('donModalCoverFallback');
+        const fallbackTitle = document.getElementById('donModalFallbackTitle');
+        const coverSrc = book.cover_url || (book.cover_image ? ('/storage/' + book.cover_image) : null);
+        
+        if (coverSrc && coverEl) {
+            coverEl.src = coverSrc;
+            coverEl.style.display = 'block';
+            if (fallbackEl) fallbackEl.style.display = 'none';
+        } else {
+            if (coverEl) coverEl.style.display = 'none';
+            if (fallbackEl) fallbackEl.style.display = 'flex';
+            if (fallbackTitle) fallbackTitle.innerText = book.title || 'PERSIS PERS';
+        }
+
+        const prevTitle = document.getElementById('donModalPreviewTitle');
+        if (prevTitle) prevTitle.innerText = book.title || 'Buku Digital Persis Pers';
+
+        const prevAuthor = document.getElementById('donModalPreviewAuthor');
+        if (prevAuthor) prevAuthor.innerHTML = `<i class="fa-solid fa-pen-nib text-[9px] text-emerald-700 mr-1"></i><span>${book.author || 'PERSIS PERS'}</span>`;
+
+        const prevCat = document.getElementById('donModalBookCategoryBadge');
+        if (prevCat) prevCat.innerText = book.category || 'Buku Islam';
+
+        const prevPages = document.getElementById('donModalBookPages');
+        if (prevPages) prevPages.innerText = (book.pages ? book.pages : '240 hlm') + (book.year ? ' • ' + book.year : '');
+
+        const prevSynopsis = document.getElementById('donModalPreviewSynopsis');
+        if (prevSynopsis) {
+            prevSynopsis.innerText = book.synopsis || 'Koleksi publikasi ilmiah dan literasi keislaman resmi terbitan PERSIS PERS Bandung.';
+        }
         
         const modal = document.getElementById('downloadDonationModal');
         modal.style.display = 'flex';
         modal.classList.remove('hidden');
+    };
+
+    window.previewCurrentBookFromDonationModal = function() {
+        if (!currentDonationBook) return;
+        closeDownloadDonationModal();
+        openFlipbookReader(currentDonationBook);
     };
 
     window.closeDownloadDonationModal = function() {
